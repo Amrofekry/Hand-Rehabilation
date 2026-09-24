@@ -1,0 +1,3 @@
+Unity XR Hands 1.5.0
+https://download.packages.unity.com/com.unity.xr.hands/-/com.unity.xr.hands-1.5.0.tgz
+Model assets extracted from the official package samples. See LICENSE.md.

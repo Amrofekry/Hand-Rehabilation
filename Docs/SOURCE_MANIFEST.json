@@ -1,0 +1,10 @@
+{
+  "source": "../unity-phase3",
+  "phase2_target": "Nano 33 IoT + HX711, BLE protocol v1",
+  "hardware_tested": false,
+  "bridge_sha256": {
+    "unity_bridge.py": "87c396dc8a6eeaa39411fe14e62de17faf05a6dfe7a216e130934f78129080cc",
+    "monitor.py": "123279afcebcc5e0c96804dea3f6f4ef20ef58b859a2b1d5cc0d8d6244c793e4",
+    "protocol.py": "0fa8e19f685f5e52c0f0de5ecc42ba6ddb81d32d37b8809e01954955dbb8babc"
+  }
+}
