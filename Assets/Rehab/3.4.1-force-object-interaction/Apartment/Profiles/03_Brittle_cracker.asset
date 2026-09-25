@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c5ea3eab69720b4b96733b37b8f9634, type: 3}
+  m_Name: 03_Brittle_cracker
+  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.PhysicalMaterialProfile
+  kind: 4
+  massKg: 0.045
+  friction: 0.7
+  restitution: 0.02
+  deformable: 1
+  fullCompressionNewtons: 100
+  maxDepthMeters: 0.003
+  deformationRadiusMeters: 0.025
+  plasticity: 0.3
+  recoveryPerSecond: 1
+  breakable: 1
+  impactEnergyJoules: 0.08
+  sustainedForceNewtons: 55
+  forceDwellSeconds: 0.25
+  damageCapacity: 0.4
+  showContactGizmos: 0

@@ -4,26 +4,32 @@ using UnityEngine.UI;
 namespace GripRehab {
 public sealed class ApartmentExperience:MonoBehaviour {
  public ApartmentPlayer player;public ApartmentSettings settings;public LiveForceReceiver forceReceiver;public VisionUdpReceiver vision;
- public Transform holdAnchor;public FingerPoseDriver rightHand,leftHand;
+ public Transform holdAnchor;public FingerPoseDriver rightHand,leftHand;public FingerContactRig contactRig;
  public Text statusText,contextText,forceText;public Image progressFill;
  public SqueezableObject[] objects;public SeatPoint[] seats;
  public SqueezableObject Held{get;private set;}
  public bool Hardware{get;private set;}
  public float ForceNewtons{get;private set;}
+ public float ContactForceNewtons{get;private set;}
+ public bool IsSensorLive=>Hardware&&ForceValid&&!forceReceiver.State.IsSynthetic;
+ public double ContactMeanMs{get;private set;}
+ public double ContactMaxMs{get;private set;}
  public bool ForceValid{get;private set;}
  public float DemoSetpoint{get;private set;}
  public float ProgressSeconds => _task.ProgressSeconds;
  public float TestForce=-1; // Used only when an explicit acceptance-test command-line flag is present.
  public string Status{get;private set;}="Ready";
  private Vector3 _lastHeld;private Vector3 _velocity;
- private int _generation,_lastSamples;private long _lastMs;
+ private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
  private ForceHoldTask _task=new ForceHoldTask(18,3,3);
- private bool _testing;private float _nextUi;
+ private long _contactTicks;
+ private static readonly Unity.Profiling.ProfilerMarker ContactMarker=new Unity.Profiling.ProfilerMarker("GripRehab.FingerContacts");
+ private bool _testing;private float _nextUi;private readonly GripForceFilter _filter=new GripForceFilter();private int _filteredSamples,_sessionValidSamples;
  #if UNITY_EDITOR
  public void EnableAcceptanceInput(){_testing=true;}
 #endif
- private void Start(){Hardware=settings.startWithHardware;DemoSetpoint=settings.demoForceNewtons;_testing=Array.Exists(Environment.GetCommandLineArgs(),x=>x.StartsWith("-apartment-"));}
- public void SetHardware(bool hardware){Release();Hardware=hardware;ForceNewtons=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
+ private void Start(){_rightRest=rightHand.transform.localPosition;_leftRest=leftHand.transform.localPosition;Hardware=settings.startWithHardware;DemoSetpoint=settings.demoForceNewtons;_testing=Array.Exists(Environment.GetCommandLineArgs(),x=>x.StartsWith("-apartment-"));}
+ public void SetHardware(bool hardware){Release();Hardware=hardware;if(!hardware)rightHand.UseDemoPose();ForceNewtons=ContactForceNewtons=0;_filter.Reset();_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
  private void Update(){
   if(Input.GetKeyDown(KeyCode.B))SetHardware(!Hardware);
   if(!player.Paused){
@@ -44,14 +50,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
   }
   if(Hardware){
    ForceValid=forceReceiver.Latest.Valid&&!player.Paused;ForceNewtons=ForceValid?forceReceiver.Latest.Newtons:0;
-   if(_generation!=forceReceiver.State.Generation){_generation=forceReceiver.State.Generation;Release();_task.Reset();Status="Connection/calibration changed";}
+   if(_generation!=forceReceiver.State.Generation){_generation=forceReceiver.State.Generation;Release();_filter.Reset();_filter.Push(0,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);_sessionValidSamples=1;_filteredSamples=forceReceiver.State.SampleCount;ContactForceNewtons=0;_task.Reset();Status="Connection/calibration changed";}
    if(!ForceValid&&Held!=null){Release();Status="Input stale: object released";}
   } else {
    ForceValid=!player.Paused;float requested=ForceValid&&(Input.GetMouseButton(0)||Input.GetKey(KeyCode.Space))?DemoSetpoint:0;
    if(_testing&&TestForce>=0)requested=TestForce;
    ForceNewtons=Mathf.MoveTowards(ForceNewtons,requested,90*Time.deltaTime);
   }
-  foreach(var item in objects)if(item!=null)item.ApplyForce(item==Held&&ForceValid?ForceNewtons:0,Time.deltaTime);
+
+  if(!ForceValid){_filter.Reset();ContactForceNewtons=0;}
+  else if(!Hardware)ContactForceNewtons=_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);
+  else if(_filteredSamples!=forceReceiver.State.SampleCount){_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples++;ContactForceNewtons=_sessionValidSamples<2?0:_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);}
   if(Held!=null&&Held.IsBroken){Held=null;Status="Virtual brittle object fractured — R to reset";}
   if(Held!=null&&ForceValid){
    if(!Hardware)_task.Step(new ForceReading(ForceNewtons,Time.realtimeSinceStartupAsDouble,true,true),Time.deltaTime);
@@ -59,24 +68,36 @@ public sealed class ApartmentExperience:MonoBehaviour {
   }
   var tracked=vision!=null&&vision.TrackingValid;
   float closure=Held!=null?Mathf.Lerp(.45f,.95f,Mathf.Clamp01(ForceNewtons/45)):Mathf.Clamp01(ForceNewtons/55);
+  float handLift=player.IsSeated?settings.seatedHandsLiftMeters:0;
+  rightHand.transform.localPosition=_rightRest+Vector3.up*handLift;leftHand.transform.localPosition=_leftRest+Vector3.up*handLift;
   rightHand.Pose(vision.Latest,tracked,closure,Time.deltaTime,settings.trackingSmoothing);
   leftHand.Pose(null,false,Held!=null?.16f:0,Time.deltaTime,settings.trackingSmoothing);
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
  }
  private void FixedUpdate(){
+  long before=System.Diagnostics.Stopwatch.GetTimestamp();
+  if(contactRig!=null)contactRig.ClearForces();
+  using(ContactMarker.Auto())foreach(var item in objects)if(item!=null)item.ApplyContacts(contactRig,item==Held&&ForceValid?ContactForceNewtons:0,Time.fixedDeltaTime);
+  double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+  _contactTicks++;ContactMeanMs+= (elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
   if(Held==null)return;
   var origin=player.view.transform.position;
-  var requested=holdAnchor.position;var direction=requested-origin;
+  var requested=GripTarget(Held);var direction=requested-origin;
   if(Physics.SphereCast(origin,Held.radius,direction.normalized,out var hit,direction.magnitude,~((1<<8)|(1<<9)),QueryTriggerInteraction.Ignore))requested=origin+direction.normalized*Mathf.Max(.15f,hit.distance-.015f);
   _velocity=(requested-_lastHeld)/Mathf.Max(Time.fixedDeltaTime,.001f);_lastHeld=requested;
   Held.MoveHeld(requested,holdAnchor.rotation);
+ }
+ private Vector3 GripTarget(SqueezableObject item){
+  var target=holdAnchor.position+Vector3.up*(player.IsSeated?settings.seatedHoldLiftMeters:0);
+  if(item!=null){var toward=rightHand.transform.position-target;float correction=Mathf.Clamp(.12f-item.radius,0,.05f);if(toward.sqrMagnitude>.0001f)target+=toward.normalized*correction;}
+  return target;
  }
  public bool TryGrab(SqueezableObject item){
   if(item==null||Held!=null||item.IsBroken||player.Paused||Hardware&&!forceReceiver.Latest.Valid)return false;
   var eye=player.view.transform.position;var direction=item.transform.position-eye;
   if(direction.magnitude>settings.reachMeters)return false;
   if(Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.03f,~(1<<8),QueryTriggerInteraction.Ignore)&&hit.collider.GetComponentInParent<SqueezableObject>()!=item)return false;
-  if(!item.Grab())return false;Held=item;_lastHeld=holdAnchor.position;_velocity=Vector3.zero;_task.Reset();_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;Status="Holding "+item.displayName;return true;
+  if(!item.Grab())return false;Held=item;_lastHeld=GripTarget(item);_velocity=Vector3.zero;_task.Reset();_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;Status="Holding "+item.displayName;return true;
  }
  public void Release(){if(Held!=null){Held.Release(_velocity*.15f);Held=null;}_task.Reset();}
  public void ResetObjects(){Release();foreach(var item in objects)item.ResetObject();Status="Objects restored to their stations";}

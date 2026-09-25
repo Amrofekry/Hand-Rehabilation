@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c5ea3eab69720b4b96733b37b8f9634, type: 3}
+  m_Name: 01_Silicone_ball
+  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.PhysicalMaterialProfile
+  kind: 0
+  massKg: 0.2
+  friction: 0.58
+  restitution: 0.58
+  deformable: 1
+  fullCompressionNewtons: 35
+  maxDepthMeters: 0.018
+  deformationRadiusMeters: 0.07
+  plasticity: 0
+  recoveryPerSecond: 9
+  breakable: 0
+  impactEnergyJoules: 1
+  sustainedForceNewtons: 55
+  forceDwellSeconds: 0.4
+  damageCapacity: 1
+  showContactGizmos: 0

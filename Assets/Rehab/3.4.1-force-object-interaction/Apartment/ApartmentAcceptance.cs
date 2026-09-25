@@ -26,6 +26,10 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return new WaitForSeconds(1.5f);
   app=FindAnyObjectByType<ApartmentExperience>();
   Check(app!=null&&app.objects.All(x=>x!=null)&&app.statusText!=null&&app.rightHand!=null,"Serialized scene bindings survive reload");
+  var forceFilter=new GripForceFilter();forceFilter.Push(10,.05f,.06f,30,250);
+  Check(Mathf.Abs(forceFilter.Push(100,.05f,.06f,30,250)-10)<.001f,"Single isolated force spike is rejected");
+  Check(forceFilter.Push(100,.05f,.06f,30,250)>10,"Repeated high force is accepted with smoothing");
+  Check(forceFilter.Push(float.NaN,.05f,.06f,30,250)==0,"Impossible force resets the contact filter");
   Check(!app.Hardware&&app.ForceValid,"Keyboard/mouse demo is the default");
   Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
   var player=app.player;player.enabled=false;player.SetPaused(false);
@@ -38,8 +42,21 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return new WaitForSeconds(.2f);
   Check(app.TryGrab(ball),"Therapy ball can be reached and grabbed from the chair");
   // In Editor the test drives the same force application explicitly; the executable uses its test flag.
+  var ballMesh=ball.visual.GetComponent<MeshFilter>().sharedMesh;
+  var ballRest=ballMesh.vertices;
   yield return DriveForce(18,3.7f);
-  Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball is kinematic and deforms under grip force");
+  Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball is kinematic and deforms under grip force; held="+ball.IsHeld+" kinematic="+ball.Body.isKinematic+" compression="+ball.Compression+" contacts="+ball.ContactCount+" ball="+ball.transform.position+" anchor="+app.holdAnchor.position+" hand="+app.rightHand.transform.position+" eye="+player.view.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+(p.Contact==ball)+"@"+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
+  var touching=app.contactRig.probes.Where(p=>p.Contact==ball).ToArray();
+  Check(touching.Length==ball.ContactCount&&touching.Length>0&&touching.Length<app.contactRig.ProbeCount,"Independent finger capsules contribute only when touching the ball ("+touching.Length+"/15)");
+  Check(touching.All(p=>p.ResolvedForceNewtons>0&&p.ContactAreaSquareMeters>0)&&app.contactRig.probes.Where(p=>p.Contact!=ball).All(p=>p.ResolvedForceNewtons==0),"Noncontacting fingers resolve exactly zero force");
+  var moved=ballMesh.vertices;int changed=0,far=0,farMoved=0;
+  for(int vertex=0;vertex<moved.Length;vertex++){
+   float displacement=Vector3.Distance(moved[vertex],ballRest[vertex])*ball.visual.lossyScale.x;
+   if(displacement>.00005f)changed++;
+   var world=ball.visual.TransformPoint(ballRest[vertex]);
+   if(touching.All(p=>Vector3.Distance(world,p.Point)>ball.profile.deformationRadiusMeters+.015f)){far++;if(displacement>.0005f)farMoved++;}
+  }
+  Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
   Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise");
   Check(app.rightHand.Closure>.4f,"Rigged fingers close around a held object");
   yield return Screenshot("apartment-seated-grip");
@@ -53,6 +70,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(app.TryGrab(mug),"Porcelain mug can be picked up from the chair");
   yield return DriveForce(70,1.5f);
   Check(mug.IsBroken,"Porcelain mug fractures under sustained excessive demo force");
+  mug.ResetObject();mug.transform.position+=Vector3.up*.85f;mug.Body.position=mug.transform.position;
+  yield return new WaitForSeconds(.85f);
+  Check(mug.IsBroken,"A sufficiently energetic porcelain-mug drop causes impact fracture");
   app.TestForce=0;menu.objectButtons[2].onClick.Invoke();yield return null;
   Check(cracker.gameObject.activeSelf&&!mug.gameObject.activeSelf,"Living room button selects the brittle cracker");
   player.view.transform.LookAt(cracker.transform.position);
@@ -94,6 +114,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    int samples=app.forceReceiver.State.SampleCount;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.05f);
    Check(app.forceReceiver.State.SampleCount==samples,"Duplicate UDP sample does not advance force input");
    Check(app.TryGrab(sponge),"Validated Phase 2 envelope enables gripping");
+   frame.sequence++;frame.sampleMs+=50;frame.forceMilliNewtons=500000;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.07f);
+   Check(app.ContactForceNewtons<30,"One isolated calibrated-force spike does not reach contact damage");frame.forceMilliNewtons=18000;
+
    yield return new WaitForSeconds(.65f);
    Check(!app.ForceValid&&app.Held==null&&app.ForceNewtons==0,"Stale hardware input releases object and stops force within 500 ms plus a frame");
    frame.sequence++;frame.sampleMs+=1000;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.08f);
@@ -128,10 +151,10 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
  private static void Send(UdpClient socket,int port,string json){var bytes=Encoding.UTF8.GetBytes(json);socket.Send(bytes,bytes.Length,"127.0.0.1",port);}
  private void End(bool passed,string error){
   Finished=true;Passed=passed;Directory.CreateDirectory("Logs");
-  File.WriteAllText("Logs/apartment-runtime-checks.json",JsonUtility.ToJson(new Result{passed=passed,utc=DateTime.UtcNow.ToString("O"),checks=checks.ToArray(),error=error},true));
+  File.WriteAllText("Logs/apartment-runtime-checks.json",JsonUtility.ToJson(new Result{passed=passed,utc=DateTime.UtcNow.ToString("O"),checks=checks.ToArray(),error=error,contactMeanMs=app!=null?app.ContactMeanMs:0,contactMaxMs=app!=null?app.ContactMaxMs:0},true));
   if(passed)Debug.Log("[APARTMENT_TEST] PASS: "+checks.Count+" runtime checks");else Debug.LogError("[APARTMENT_TEST] FAIL: "+error);
   if(!Application.isEditor)Application.Quit(passed?0:1);
  }
- [Serializable]private class Result{public bool passed;public string utc,error;public string[] checks;}
+ [Serializable]private class Result{public bool passed;public string utc,error;public string[] checks;public double contactMeanMs,contactMaxMs;}
 }
 }

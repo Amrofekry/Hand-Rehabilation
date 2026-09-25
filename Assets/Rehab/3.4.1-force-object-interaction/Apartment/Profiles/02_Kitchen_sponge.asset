@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c5ea3eab69720b4b96733b37b8f9634, type: 3}
+  m_Name: 02_Kitchen_sponge
+  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.PhysicalMaterialProfile
+  kind: 1
+  massKg: 0.09
+  friction: 0.85
+  restitution: 0.03
+  deformable: 1
+  fullCompressionNewtons: 30
+  maxDepthMeters: 0.03
+  deformationRadiusMeters: 0.08
+  plasticity: 0.05
+  recoveryPerSecond: 4
+  breakable: 0
+  impactEnergyJoules: 1
+  sustainedForceNewtons: 55
+  forceDwellSeconds: 0.4
+  damageCapacity: 1
+  showContactGizmos: 0
