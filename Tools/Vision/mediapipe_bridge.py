@@ -1,14 +1,13 @@
-"""Local webcam/video -> MediaPipe hand landmarks -> Unity loopback UDP.
+"""Local camera/video -> MediaPipe's two 21-landmark hands -> Unity loopback UDP.
 
-No images leave this process. This bridge does not perform YOLO gesture recognition.
+This bridge sends landmark coordinates only; it does not estimate metric depth,
+individual finger force, or a clinically validated hand pose.
 """
-
 import argparse
 import json
 import socket
 import time
 from pathlib import Path
-
 
 DEFAULT_MODEL = Path(__file__).resolve().parents[2] / "models" / "hand_landmarker.task"
 
@@ -16,13 +15,36 @@ DEFAULT_MODEL = Path(__file__).resolve().parents[2] / "models" / "hand_landmarke
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     source = parser.add_mutually_exclusive_group()
-    source.add_argument("--camera", type=int, default=0, help="Open a local camera by index (default: 0)")
-    source.add_argument("--video", type=Path, help="Read a local video file instead of a camera")
+    source.add_argument("--camera", type=int, default=0, help="Local camera index (default: 0)")
+    source.add_argument("--video", type=Path, help="Local video file instead of a camera")
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL)
     parser.add_argument("--port", type=int, default=27817)
-    parser.add_argument("--seconds", type=float, default=0, help="Stop after this many seconds; 0 runs until Ctrl+C")
-    parser.add_argument("--self-test", action="store_true", help="Initialize model and infer on a blank image; no camera")
+    parser.add_argument("--seconds", type=float, default=0, help="0 runs until Ctrl+C")
+    parser.add_argument("--mirror", action="store_true", help="Mirror image before inference, for a selfie camera")
+    parser.add_argument("--swap-handedness", action="store_true", help="Swap left/right labels if camera mounting reverses them")
+    parser.add_argument("--self-test", action="store_true", help="Initialize model on blank image; no camera")
     return parser.parse_args()
+
+
+def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool, age_ms: float = 0) -> dict:
+    label = category.category_name
+    if label not in ("Left", "Right"):
+        raise ValueError(f"Unknown hand label: {label}")
+    if swap:
+        label = "Left" if label == "Right" else "Right"
+    return {
+        "schemaVersion": 1,
+        "source": f"mediapipe-{version}",
+        "captureSeconds": captured,
+        "ageMs": age_ms,
+        "sequence": sequence,
+        "handedness": label,
+        # Handedness classification score is not a per-joint tracking accuracy guarantee.
+        "confidence": max(0.0, min(1.0, category.score)),
+        "gesture": "unknown",
+        "gestureConfidence": 0.0,
+        "landmarks": [{"x": p.x, "y": p.y, "z": p.z} for p in hand],
+    }
 
 
 def main() -> None:
@@ -36,7 +58,7 @@ def main() -> None:
     options = mp.tasks.vision.HandLandmarkerOptions(
         base_options=mp.tasks.BaseOptions(model_asset_path=str(args.model)),
         running_mode=mp.tasks.vision.RunningMode.IMAGE if args.self_test else mp.tasks.vision.RunningMode.VIDEO,
-        num_hands=1,
+        num_hands=2,
         min_hand_detection_confidence=0.65,
         min_hand_presence_confidence=0.65,
         min_tracking_confidence=0.65,
@@ -50,13 +72,13 @@ def main() -> None:
 
         capture = cv2.VideoCapture(str(args.video) if args.video else args.camera)
         if not capture.isOpened():
-            raise SystemExit("Could not open the selected camera/video source. Check device access and index.")
+            raise SystemExit("Could not open camera/video. Check device access and index.")
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         started = time.monotonic()
         last_timestamp_ms = -1
-        frames = detections = 0
+        frames = detections = sequence = 0
         try:
             while args.seconds <= 0 or time.monotonic() - started < args.seconds:
                 ok, frame = capture.read()
@@ -64,6 +86,8 @@ def main() -> None:
                     if args.video:
                         break
                     continue
+                if args.mirror:
+                    frame = cv2.flip(frame, 1)
                 captured = time.monotonic()
                 timestamp_ms = max(int((captured - started) * 1000), last_timestamp_ms + 1)
                 last_timestamp_ms = timestamp_ms
@@ -71,32 +95,24 @@ def main() -> None:
                 image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
                 result = landmarker.detect_for_video(image, timestamp_ms)
                 frames += 1
-                if not result.hand_landmarks:
-                    continue  # Unity marks the last detection stale after 500 ms.
-                detections += 1
-                hand = result.hand_landmarks[0]
-                payload = {
-                    "schemaVersion": 1,
-                    "source": f"mediapipe-{mp.__version__}",
-                    "captureSeconds": captured,
-                    # The task does not expose a calibrated per-hand probability here.
-                    # 1 means it passed the configured detection/presence thresholds.
-                    "confidence": 1.0,
-                    "gesture": "unknown",
-                    "gestureConfidence": 0.0,
-                    "landmarks": [
-                        {"x": point.x, "y": point.y, "z": point.z} for point in hand
-                    ],
-                }
-                sock.sendto(json.dumps(payload, separators=(",", ":")).encode("utf-8"),
-                            ("127.0.0.1", args.port))
+                # No detection packet: Unity expires that hand independently after 500 ms.
+                for hand, handedness in zip(result.hand_landmarks, result.handedness):
+                    if len(hand) != 21 or not handedness:
+                        continue
+                    sequence += 1
+                    payload = make_payload(hand, handedness[0], captured, sequence,
+                                           mp.__version__, args.swap_handedness,
+                                           max(0.0, (time.monotonic() - captured) * 1000))
+                    sock.sendto(json.dumps(payload, separators=(",", ":")).encode("utf-8"),
+                                ("127.0.0.1", args.port))
+                    detections += 1
         except KeyboardInterrupt:
             pass
         finally:
             capture.release()
             sock.close()
         elapsed = max(time.monotonic() - started, 1e-6)
-        print(f"Processed {frames} frames ({frames / elapsed:.1f}/s), detected {detections}; sent landmarks only to loopback")
+        print(f"Processed {frames} frames ({frames / elapsed:.1f}/s), sent {detections} hand detections to loopback")
 
 
 if __name__ == "__main__":

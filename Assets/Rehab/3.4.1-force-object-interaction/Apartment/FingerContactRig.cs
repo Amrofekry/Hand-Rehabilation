@@ -23,7 +23,7 @@ public sealed class FingerContactRig : MonoBehaviour {
    var probe=go.AddComponent<FingerContactProbe>();probe.finger=i/3;probe.segment=i%3;probe.rig=this;probes[i]=probe;
   }
  }
- void Awake(){Configure();}
+ void Awake(){Configure();if(probes!=null)foreach(var probe in probes)if(probe!=null)probe.GetComponent<Rigidbody>().interpolation=RigidbodyInterpolation.None;}
  void FixedUpdate(){
   if(probes==null||pose==null||pose.joints==null)return;
   for(int i=0;i<Mathf.Min(15,probes.Length);i++) {
@@ -37,7 +37,8 @@ public sealed class FingerContactRig : MonoBehaviour {
    var capsule=probe.GetComponent<CapsuleCollider>();capsule.radius=radiusMeters/capsule.transform.lossyScale.x;
    capsule.height=Mathf.Max(capsule.radius*2,length/capsule.transform.lossyScale.y+capsule.radius*2);
    var body=probe.GetComponent<Rigidbody>();var midpoint=(a+b)*.5f;
-   body.MovePosition(midpoint);body.MoveRotation(Quaternion.FromToRotation(Vector3.up,b-a));
+   // Contact sensors have a moving camera parent; assign world pose immediately after station teleports.
+   body.position=midpoint;body.rotation=Quaternion.FromToRotation(Vector3.up,b-a);
   }
  }
  void OnDrawGizmos(){if(!showGizmos||probes==null)return;Gizmos.color=Color.cyan;foreach(var p in probes)if(p!=null&&p.Contact!=null)Gizmos.DrawWireSphere(p.Point,radiusMeters);}

@@ -26,6 +26,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return new WaitForSeconds(1.5f);
   app=FindAnyObjectByType<ApartmentExperience>();
   Check(app!=null&&app.objects.All(x=>x!=null)&&app.statusText!=null&&app.rightHand!=null,"Serialized scene bindings survive reload");
+  Check(app.player.GetComponentsInChildren<Renderer>(true).All(r=>r.transform.IsChildOf(app.rightHand.transform)||r.transform.IsChildOf(app.leftHand.transform)),"Only the two hand meshes render on the player");
   var forceFilter=new GripForceFilter();forceFilter.Push(10,.05f,.06f,30,250);
   Check(Mathf.Abs(forceFilter.Push(100,.05f,.06f,30,250)-10)<.001f,"Single isolated force spike is rejected");
   Check(forceFilter.Push(100,.05f,.06f,30,250)>10,"Repeated high force is accepted with smoothing");
@@ -33,6 +34,11 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(!app.Hardware&&app.ForceValid,"Keyboard/mouse demo is the default");
   Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
   var player=app.player;player.enabled=false;player.SetPaused(false);
+  var rightRest=app.rightHand.transform.localPosition;var leftRest=app.leftHand.transform.localPosition;
+  app.SetDemoHandOffset(false,new Vector3(.08f,0,0));app.SetDemoHandOffset(true,new Vector3(-.08f,0,0));
+  yield return new WaitForSeconds(.25f);
+  Check(app.rightHand.transform.localPosition.x>rightRest.x+.04f&&app.leftHand.transform.localPosition.x<leftRest.x-.04f,"Keyboard/demo workspace moves each hand independently");
+  app.SetDemoHandOffset(false,Vector3.zero);app.SetDemoHandOffset(true,Vector3.zero);yield return new WaitForSeconds(.25f);
   Check(player.transform.position.y>-.2f&&Physics.Raycast(player.transform.position+Vector3.up*.5f,Vector3.down,1f,~(1<<8)),"Player spawn is above the apartment floor");
   var ball=app.objects[0];var cracker=app.objects[2];var sponge=app.objects[1];
   var menu=FindAnyObjectByType<ApartmentChoices>();Check(menu!=null&&menu.objectButtons.Length==3&&menu.livingObjects.Length==3&&menu.kitchenObjects.Length==3,"Saved station and object UI references survive reload");
@@ -59,6 +65,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
   Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise");
   Check(app.rightHand.Closure>.4f,"Rigged fingers close around a held object");
+  var beforeHandMove=ball.transform.position;app.SetDemoHandOffset(false,new Vector3(.07f,0,0));yield return new WaitForSeconds(.35f);
+  Check(Vector3.Dot(ball.transform.position-beforeHandMove,player.view.transform.right)>.025f,"Held object follows right hand workspace movement");
+  app.SetDemoHandOffset(false,Vector3.zero);yield return new WaitForSeconds(.25f);
   yield return Screenshot("apartment-seated-grip");
   var height=ball.transform.position.y;app.TestForce=0;app.Release();
   yield return new WaitForSeconds(.9f);
@@ -87,7 +96,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(menu.Kitchen&&!player.IsSeated,"Kitchen station button takes player to the kitchen");
   menu.objectButtons[1].onClick.Invoke();yield return null;
   var cup=menu.kitchenObjects[1];Check(cup.gameObject.activeSelf&&app.TryGrab(cup),"Kitchen silicone cup is selectable and can be gripped");
-  yield return DriveForce(30,.6f);Check(cup.Compression>.2f,"Silicone cup visibly yields to demo grip force");
+  yield return DriveForce(30,.6f);Check(cup.Compression>.2f,"Silicone cup visibly yields to demo grip force; compression="+cup.Compression+" contacts="+cup.ContactCount+" force="+app.ContactForceNewtons+" hand="+app.rightHand.transform.position+" cup="+cup.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,cup.transform.position).ToString("F3"))));
   app.TestForce=0;menu.objectButtons[2].onClick.Invoke();yield return null;
   var tomato=menu.kitchenObjects[2];Check(tomato.gameObject.activeSelf&&app.TryGrab(tomato),"Kitchen tomato is selectable and can be gripped");
   yield return DriveForce(30,.6f);Check(tomato.Compression>.18f,"Tomato deforms under demo grip force");
@@ -125,11 +134,35 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    frame.sequence++;frame.sampleMs+=100;frame.calibrationRevision++;frame.calibrationCrc++;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.08f);
    Check(app.Held==null,"Calibration change ends the previous grip");
    Send(udp,27818,"not json");yield return null;
-   var landmarks=new Vector3[21];for(int i=0;i<21;i++)landmarks[i]=new Vector3(.4f+i*.004f,.5f-i*.004f,0);
-   var vision=new LandmarkFrame{schemaVersion=1,source="synthetic acceptance",confidence=.95f,landmarks=landmarks};
-   Send(udp,27817,JsonUtility.ToJson(vision));yield return new WaitForSeconds(.08f);
-   Check(app.vision.TrackingValid,"Vision UDP accepts a valid 21-landmark frame");
-   yield return new WaitForSeconds(.6f);Check(!app.vision.TrackingValid,"Vision pose expires after input loss");
+   var left=HandFixture("Left",.34f,1,1);
+   var right=HandFixture("Right",.66f,1,1);
+   Send(udp,27817,JsonUtility.ToJson(left));Send(udp,27817,JsonUtility.ToJson(right));
+   yield return new WaitForSeconds(.15f);
+   Check(app.vision.LeftValid&&app.vision.RightValid&&app.leftHand.TrackingUsed&&app.rightHand.TrackingUsed,"Both independent MediaPipe-style 21-point hands drive the two skinned rigs");
+   Check(app.statusText.text.Contains("R SYNTHETIC")&&app.statusText.text.Contains("L SYNTHETIC"),"HUD identifies synthetic vision frames instead of claiming a live camera");
+   Check(app.leftHand.JointAngles[4]>5&&app.rightHand.JointAngles[4]>5,"Measured middle finger PIP bending reaches both rigs");
+   yield return Screenshot("apartment-two-hands-tracked");
+   var leftBefore=app.leftHand.transform.localPosition;
+   left.sequence=2;left.captureSeconds=2;
+   for(int i=0;i<left.landmarks.Length;i++)left.landmarks[i].x+=.08f;
+   Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.15f);
+   Check(app.leftHand.transform.localPosition.x>leftBefore.x+.005f,"Tracked wrist displacement moves the left hand");
+   var acceptedLeft=app.vision.LatestLeft;
+   Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.04f);
+   Check(ReferenceEquals(app.vision.LatestLeft,acceptedLeft),"Duplicate vision frame is rejected");
+   var aged=HandFixture("Left",.34f,2.5,3);aged.ageMs=600;Send(udp,27817,JsonUtility.ToJson(aged));yield return new WaitForSeconds(.04f);
+   Check(ReferenceEquals(app.vision.LatestLeft,acceptedLeft),"Already stale captured frame is rejected before queueing");
+   left.captureSeconds=1.5;left.sequence=3;
+   Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.04f);
+   Check(ReferenceEquals(app.vision.LatestLeft,acceptedLeft),"Out-of-order vision frame is rejected");
+   left.handedness="Unknown";Send(udp,27817,JsonUtility.ToJson(left));yield return null;
+   Check(ReferenceEquals(app.vision.LatestLeft,acceptedLeft),"Invalid handedness cannot overwrite a valid pose");
+   right.sequence=2;right.captureSeconds=3;
+   Send(udp,27817,JsonUtility.ToJson(right));
+   yield return new WaitForSeconds(.33f);
+   Check(!app.vision.LeftValid&&app.vision.RightValid,"One lost hand expires independently while the other remains tracked");
+   yield return new WaitForSeconds(.6f);
+   Check(!app.vision.TrackingValid&&!app.leftHand.TrackingUsed&&!app.rightHand.TrackingUsed,"Both hands leave tracking mode after the 500 ms timeout");
   }
   app.SetHardware(false);app.ResetObjects();player.Teleport(player.Spawn,Quaternion.Euler(0,90,0));player.view.transform.localRotation=Quaternion.Euler(12,0,0);
   yield return Screenshot("apartment-overview");
@@ -147,6 +180,16 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   if(!Application.isBatchMode&&SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null){
    yield return new WaitForEndOfFrame();Directory.CreateDirectory("Docs/images");ScreenCapture.CaptureScreenshot(Path.GetFullPath("Docs/images/"+name+".png"));yield return null;
   }
+ }
+ private static LandmarkFrame HandFixture(string side,float center,double captured,long sequence){
+  var points=new Vector3[21];points[0]=new Vector3(center,.82f,0);
+  for(int finger=0;finger<5;finger++)for(int joint=0;joint<4;joint++){
+   float x=center+(finger-2)*.025f;
+   float y=.65f-joint*.07f+(joint>=2?(joint-1)*.025f:0);
+   float z=joint>=2?-(joint-1)*.065f:0;
+   points[1+finger*4+joint]=new Vector3(x,y,z);
+  }
+  return new LandmarkFrame{schemaVersion=1,source="synthetic acceptance",handedness=side,captureSeconds=captured,sequence=sequence,confidence=.95f,landmarks=points};
  }
  private static void Send(UdpClient socket,int port,string json){var bytes=Encoding.UTF8.GetBytes(json);socket.Send(bytes,bytes.Length,"127.0.0.1",port);}
  private void End(bool passed,string error){

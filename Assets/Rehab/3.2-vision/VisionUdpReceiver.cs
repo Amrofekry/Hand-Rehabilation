@@ -8,36 +8,47 @@ using UnityEngine;
 
 namespace GripRehab
 {
-    // Optional localhost adapter. An external MediaPipe/YOLO process must provide actual inference.
-    // UDP is limited to loopback so frames do not leave the machine. Never use timestamps as
-    // synchronized clock truth until Phase 4 alignment is implemented.
+    // Two independent 21-point streams on loopback. A legacy packet without handedness is Right.
+    // Receive age includes time spent queued for Unity's main thread.
     public sealed class VisionUdpReceiver : MonoBehaviour
     {
         public int port = 27817;
-        public LandmarkFrame Latest { get; private set; }
-        public bool TrackingValid => Latest != null && HandKinematics.IsUsable(Latest) &&
-                                     Time.realtimeSinceStartupAsDouble - _receivedAt < 0.5;
+        public LandmarkFrame LatestRight { get; private set; }
+        public LandmarkFrame LatestLeft { get; private set; }
+        public bool RightValid => Valid(LatestRight, _rightReceivedAt);
+        public bool LeftValid => Valid(LatestLeft, _leftReceivedAt);
+        // Backward compatibility for the other training modules.
+        public LandmarkFrame Latest => RightValid ? LatestRight : LeftValid ? LatestLeft : null;
+        public bool TrackingValid => RightValid || LeftValid;
+
         private readonly ConcurrentQueue<ReceivedDatagram> _pending = new ConcurrentQueue<ReceivedDatagram>();
         private UdpClient _socket;
         private Thread _thread;
         private volatile bool _running;
-        private double _receivedAt;
+        private double _rightReceivedAt, _leftReceivedAt;
+        private double _rightCapture, _leftCapture;
+        private long _rightSequence, _leftSequence;
+
+        private static bool Valid(LandmarkFrame frame, double at) =>
+            frame != null && HandKinematics.IsUsable(frame) &&
+            Time.realtimeSinceStartupAsDouble - at < 0.5;
 
         private void OnEnable()
         {
             if (!Application.isPlaying) return;
+            ResetFrames();
             while (_pending.TryDequeue(out _)) { }
             try
             {
                 _socket = new UdpClient(new IPEndPoint(IPAddress.Loopback, port));
                 _socket.Client.ReceiveTimeout = 200;
                 _running = true;
-                _thread = new Thread(ReceiveLoop) { IsBackground = true, Name = "Rehab vision loopback" };
+                _thread = new Thread(ReceiveLoop) { IsBackground = true, Name = "Rehab bimanual vision loopback" };
                 _thread.Start();
             }
-            catch (SocketException e)
+            catch (SocketException error)
             {
-                Debug.LogWarning($"Vision loopback unavailable: {e.Message}");
+                Debug.LogWarning("Vision loopback unavailable: " + error.Message);
                 _running = false;
                 _socket?.Close();
                 _socket = null;
@@ -52,7 +63,7 @@ namespace GripRehab
                 try
                 {
                     var bytes = _socket.Receive(ref remote);
-                    if (remote.Address.Equals(IPAddress.Loopback) && bytes.Length <= 8192 && _pending.Count < 4)
+                    if (remote.Address.Equals(IPAddress.Loopback) && bytes.Length <= 8192 && _pending.Count < 32)
                         _pending.Enqueue(new ReceivedDatagram(Encoding.UTF8.GetString(bytes)));
                 }
                 catch (SocketException) { /* timeout or closed socket */ }
@@ -64,16 +75,41 @@ namespace GripRehab
         {
             while (_pending.TryDequeue(out var received))
             {
+                if (received.ElapsedSeconds >= 0.5) continue;
                 try
                 {
-                    var parsed = JsonUtility.FromJson<LandmarkFrame>(received.Json);
-                    if (!HandKinematics.IsUsable(parsed)) continue;
-                    Latest = parsed;
-                    _receivedAt = Time.realtimeSinceStartupAsDouble - received.ElapsedSeconds;
+                    var frame = JsonUtility.FromJson<LandmarkFrame>(received.Json);
+                    if (!HandKinematics.IsUsable(frame) || received.ElapsedSeconds + frame.ageMs / 1000.0 >= 0.5) continue;
+                    var left = HandKinematics.IsLeft(frame);
+                    var oldCapture = left ? _leftCapture : _rightCapture;
+                    var oldSequence = left ? _leftSequence : _rightSequence;
+                    // The Python bridge supplies both. Legacy packets may omit either value.
+                    if (frame.captureSeconds > 0 && oldCapture > 0 && frame.captureSeconds <= oldCapture) continue;
+                    if (frame.sequence > 0 && oldSequence > 0 && frame.sequence <= oldSequence) continue;
+                    var receivedAt = Time.realtimeSinceStartupAsDouble - received.ElapsedSeconds - frame.ageMs / 1000.0;
+                    if (left)
+                    {
+                        LatestLeft = frame; _leftReceivedAt = receivedAt;
+                        _leftCapture = frame.captureSeconds; _leftSequence = frame.sequence;
+                    }
+                    else
+                    {
+                        LatestRight = frame; _rightReceivedAt = receivedAt;
+                        _rightCapture = frame.captureSeconds; _rightSequence = frame.sequence;
+                    }
                 }
                 catch (ArgumentException) { /* malformed frame is ignored */ }
             }
-            if (!TrackingValid) Latest = null;
+            if (!RightValid) LatestRight = null;
+            if (!LeftValid) LatestLeft = null;
+        }
+
+        private void ResetFrames()
+        {
+            LatestRight = LatestLeft = null;
+            _rightReceivedAt = _leftReceivedAt = 0;
+            _rightCapture = _leftCapture = 0;
+            _rightSequence = _leftSequence = 0;
         }
 
         private void OnDisable()
@@ -84,8 +120,7 @@ namespace GripRehab
             _socket = null;
             _thread = null;
             while (_pending.TryDequeue(out _)) { }
-            Latest = null;
+            ResetFrames();
         }
     }
 }
-

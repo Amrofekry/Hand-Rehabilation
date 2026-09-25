@@ -5,13 +5,11 @@ namespace GripRehab {
 public sealed class ApartmentPlayer:MonoBehaviour {
  public ApartmentSettings settings;
  public Camera view;
- public Transform bodyVisual;
- public Transform leftThigh,rightThigh,leftShin,rightShin;
  public bool IsSeated{get;private set;}
  public bool Paused{get;private set;}
  public CharacterController Controller{get;private set;}
  public Vector3 Spawn{get;private set;}
- private float _pitch,_vertical,_walkPhase;private SeatPoint _seat;private Vector3 _returnPosition;private Quaternion _returnRotation;
+ private float _pitch,_vertical;private SeatPoint _seat;private Vector3 _returnPosition;private Quaternion _returnRotation;
  private void Awake(){Controller=GetComponent<CharacterController>();Spawn=transform.position;}
  private void Start(){SetPaused(false);}
  private void OnDisable(){Cursor.lockState=CursorLockMode.None;Cursor.visible=true;}
@@ -27,8 +25,6 @@ public sealed class ApartmentPlayer:MonoBehaviour {
    if(Controller.isGrounded&&_vertical<0)_vertical=-2;
    _vertical=Mathf.Max(-15,_vertical-9.81f*Time.deltaTime);
    Controller.Move((transform.TransformDirection(motion)*settings.walkSpeed+Vector3.up*_vertical)*Time.deltaTime);
-   _walkPhase+=motion.magnitude*Time.deltaTime*7;
-   if(leftThigh!=null){leftThigh.localRotation=Quaternion.Euler(Mathf.Sin(_walkPhase)*12*motion.magnitude,0,0);rightThigh.localRotation=Quaternion.Euler(-Mathf.Sin(_walkPhase)*12*motion.magnitude,0,0);}
   }
   if(transform.position.y<-3)Teleport(Spawn,Quaternion.identity);
  }
@@ -37,7 +33,6 @@ public sealed class ApartmentPlayer:MonoBehaviour {
   _seat=seat;_returnPosition=seat.standFeet!=null?seat.standFeet.position:transform.position;_returnRotation=transform.rotation;
   Controller.enabled=false;transform.SetPositionAndRotation(seat.seatedFeet.position,seat.seatedFeet.rotation);
   view.transform.localPosition=new Vector3(0,seat.seatedEyeHeight,0);_pitch=0;IsSeated=true;
-  if(leftThigh!=null){leftThigh.localRotation=rightThigh.localRotation=Quaternion.Euler(-70,0,0);leftShin.localRotation=rightShin.localRotation=Quaternion.Euler(75,0,0);}
   return true;
  }
  public bool Stand(){
@@ -45,7 +40,6 @@ public sealed class ApartmentPlayer:MonoBehaviour {
   if(Physics.CheckCapsule(_returnPosition+Vector3.up*.34f,_returnPosition+Vector3.up*1.36f,.25f,~(1<<8),QueryTriggerInteraction.Ignore))return false;
   transform.SetPositionAndRotation(_returnPosition,_returnRotation);view.transform.localPosition=new Vector3(0,1.62f,0);
   Controller.enabled=true;_vertical=0;IsSeated=false;
-  if(leftThigh!=null){leftThigh.localRotation=rightThigh.localRotation=Quaternion.identity;leftShin.localRotation=rightShin.localRotation=Quaternion.identity;}
   return true;
  }
  public void LookAt(Vector3 target){

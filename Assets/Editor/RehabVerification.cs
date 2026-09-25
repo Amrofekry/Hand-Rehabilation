@@ -160,6 +160,14 @@ namespace GripRehab.Editor
             Require(HandKinematics.IsUsable(frame), "valid hand landmarks rejected");
             frame.confidence = .2f;
             Require(!HandKinematics.IsUsable(frame), "low-confidence landmarks accepted");
+            frame.confidence = .9f; frame.handedness = "Left";
+            Require(HandKinematics.IsUsable(frame) && HandKinematics.IsLeft(frame), "left hand label rejected");
+            frame.handedness = "unknown";
+            Require(!HandKinematics.IsUsable(frame), "unknown handedness accepted");
+            frame.handedness = "Right"; frame.landmarks[0].z = float.NaN;
+            Require(!HandKinematics.IsUsable(frame), "non-finite hand depth accepted");
+            frame.landmarks[0].z = 0; frame.ageMs = 500;
+            Require(!HandKinematics.IsUsable(frame), "already stale camera frame accepted");
             Debug.Log("[REHAB_VERIFY] PASS: force, memory, assembly, maze, trace, and tracking contracts");
         }
 
