@@ -115,18 +115,25 @@ namespace GripRehab
                 // the real wrist toward an on-screen object moves the virtual wrist.
                 // Relative mode stays available for the older synthetic/demo contract.
                 var delta = absoluteImageSpace ? points[0] - new Vector3(.5f, .5f, 0) : points[0] - _wristReference;
+                // The local preview is mirrored for the patient. Compensate its
+                // horizontal wrist motion without reversing real vertical travel
+                // or reflecting the anatomical finger joints.
+                if (absoluteImageSpace) delta.x = -delta.x;
                 var requested = restingPosition + new Vector3(
                     Mathf.Clamp(delta.x * travelMeters, -.23f, .23f),
                     Mathf.Clamp(delta.y * travelMeters, -.20f, .20f),
                     Mathf.Clamp((width / _palmWidthReference - 1f) * (absoluteImageSpace ? .75f : .08f), absoluteImageSpace ? -.20f : -.12f, absoluteImageSpace ? .65f : .12f));
                 transform.localPosition = Vector3.Lerp(transform.localPosition, requested, alpha);
-                // Calibrate the imported hand's rest pose against the first
-                // observed palm, then apply its 3D turn relative to that pose.
-                // An absolute webcam quaternion does not share the FBX basis.
-                var measured = Basis(palmSide, palmUp) * Quaternion.Inverse(_cameraPalmReference) * _rootRest;
-                var limited = Quaternion.RotateTowards(_rootRest, measured, maxPalmRotationDegrees);
+                // Calibrate the imported hand against the first observed palm,
+                // then apply its 3D turn. The webcam starts from an upright
+                // palm; the vendor hand's authored rest points downward.
+                var poseRest = absoluteImageSpace
+                    ? Quaternion.AngleAxis(180f, Vector3.forward) * _rootRest
+                    : _rootRest;
+                var measured = Basis(palmSide, palmUp) * Quaternion.Inverse(_cameraPalmReference) * poseRest;
+                var limited = Quaternion.RotateTowards(poseRest, measured, maxPalmRotationDegrees);
                 transform.localRotation = Quaternion.Slerp(transform.localRotation,
-                    Quaternion.Slerp(_rootRest, limited, palmRotationWeight), alpha);
+                    Quaternion.Slerp(poseRest, limited, palmRotationWeight), alpha);
             }
             else
             {

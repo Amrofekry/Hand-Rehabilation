@@ -13,7 +13,9 @@ def run(name, extra, rendered=False):
     else: flags+=['-batchmode','-nographics']
     process=subprocess.Popen([str(EXE),*flags,*extra],cwd=ROOT)
     try:
-        code=process.wait(timeout=100)
+        # The rendered run also captures screenshots and exercises the full
+        # camera hand workspace; slower integrated GPUs can take several minutes.
+        code=process.wait(timeout=300 if rendered else 100)
         output=log.read_text(errors='replace')
         result=json.loads((ROOT/'Logs/apartment-runtime-checks.json').read_text(encoding='utf-8-sig'))
         if code!=0 or not result['passed'] or '[APARTMENT_TEST] PASS:' not in output:

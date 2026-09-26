@@ -14,7 +14,10 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
  private readonly List<string> checks=new List<string>();private ApartmentExperience app;
  [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)] static void Boot(){
   Finished=false;Passed=false;
-  if(Array.IndexOf(Environment.GetCommandLineArgs(),"-apartment-smoke")>=0)new GameObject("Acceptance runner").AddComponent<ApartmentAcceptance>();
+  if(Array.IndexOf(Environment.GetCommandLineArgs(),"-apartment-smoke")>=0){
+   Application.runInBackground=true;
+   new GameObject("Acceptance runner").AddComponent<ApartmentAcceptance>();
+  }
  }
  private IEnumerator Start(){
   Finished=false;Passed=false;
@@ -75,6 +78,31 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(Quaternion.Angle(rightPalmRest,app.rightHand.transform.localRotation)<5&&
         Quaternion.Angle(leftPalmRest,app.leftHand.transform.localRotation)<5,
    "Camera C recenter aligns either tracked hand with its vendor rest pose");
+  // The vendor palm needs a half-turn, while the mirrored webcam needs only
+  // horizontal travel compensation. Vertical wrist travel must remain natural.
+  app.rightHand.UseDemoPose();app.leftHand.UseDemoPose();
+  var cameraRightRest=app.rightHand.transform.localPosition;
+  var cameraLeftRest=app.leftHand.transform.localPosition;
+  for(int i=0;i<16;i++){
+   app.rightHand.Pose(neutral,true,0,.05f,.045f,cameraRightRest,.85f,true);
+   app.leftHand.Pose(leftNeutral,true,0,.05f,.045f,cameraLeftRest,.85f,true);
+  }
+  Check(Quaternion.Angle(rightPalmRest,app.rightHand.transform.localRotation)>175&&
+        Quaternion.Angle(leftPalmRest,app.leftHand.transform.localRotation)>175,
+   "Live camera palm faces the corrected direction for right and left hands");
+  var cameraRightCenter=app.rightHand.transform.localPosition;
+  var cameraLeftCenter=app.leftHand.transform.localPosition;
+  var upperLeftRight=CameraFixture(.35f,.35f,false,2,2);
+  var upperLeftLeft=CameraFixture(.35f,.35f,false,2,2,"Left");
+  for(int i=0;i<16;i++){
+   app.rightHand.Pose(upperLeftRight,true,0,.05f,.045f,cameraRightRest,.85f,true);
+   app.leftHand.Pose(upperLeftLeft,true,0,.05f,.045f,cameraLeftRest,.85f,true);
+  }
+  Check(app.rightHand.transform.localPosition.x>cameraRightCenter.x+.08f&&
+        app.leftHand.transform.localPosition.x>cameraLeftCenter.x+.08f&&
+        app.rightHand.transform.localPosition.y>cameraRightCenter.y+.08f&&
+        app.leftHand.transform.localPosition.y>cameraLeftCenter.y+.08f,
+   "Mirrored camera horizontal travel is corrected while both wrists still rise with the real hand");
   app.rightHand.UseDemoPose();app.leftHand.UseDemoPose();
   for(int i=0;i<16;i++){app.rightHand.Pose(null,false,0,.05f,.045f);app.leftHand.Pose(null,false,0,.05f,.045f);}
   app.SelectHand(false);yield return new WaitForSeconds(.3f);
@@ -253,8 +281,8 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.32f,.5f,false,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
    }
-   Check(app.rightHand.transform.localPosition.x<wristBefore.x-.05f,"Absolute camera wrist motion moves the selected vendor input toward objects");
-   foreach(var imageY in new[]{.45f,.5f,.55f}){
+   Check(app.rightHand.transform.localPosition.x>wristBefore.x+.05f,"Corrected camera wrist motion reverses the observed horizontal movement");
+   foreach(var imageY in new[]{.45f,.5f,.55f,.65f,.75f,.85f}){
     foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f}){
      for(int i=0;i<4;i++){
       Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,true,++seq,captured+=.06)));
