@@ -17,9 +17,11 @@ public sealed class SqueezableObject : MonoBehaviour {
  public float Compression{get;private set;}
  public int ContactCount{get;private set;}
  public int DeformedVertices{get;private set;}
+ public float MaxDisplacementMeters{get;private set;}
+ public float BreakThresholdNewtons=>profile!=null&&profile.breakable?profile.sustainedForceNewtons:0;
  public Rigidbody Body{get;private set;}
  Vector3 origin,restScale;Quaternion rotation;
- Mesh mesh;Vector3[] rest,vertices,permanent;bool[] touched;
+ Mesh mesh;Vector3[] rest,vertices,permanent,displacements;bool[] touched;
  PhysicsMaterial physicsMaterial;GameObject fragments;Rigidbody[] shards;Vector3[] shardPositions;Quaternion[] shardRotations;
  float dwell;Vector3 lastPoint;float lastRadius;
  void Awake(){
@@ -34,7 +36,7 @@ public sealed class SqueezableObject : MonoBehaviour {
   var filter=visual.GetComponent<MeshFilter>();
   if(filter!=null&&filter.sharedMesh!=null&&filter.sharedMesh.isReadable&&filter.sharedMesh.vertexCount<=(profile!=null?profile.maxVertices:4096)&&(profile==null||profile.deformable)){
    mesh=Instantiate(filter.sharedMesh);mesh.name=displayName+" contact mesh";filter.sharedMesh=mesh;
-   rest=mesh.vertices;vertices=(Vector3[])rest.Clone();permanent=new Vector3[rest.Length];touched=new bool[rest.Length];
+   rest=mesh.vertices;vertices=(Vector3[])rest.Clone();permanent=new Vector3[rest.Length];touched=new bool[rest.Length];displacements=new Vector3[rest.Length];
   }
  }
  public bool Grab(){
@@ -54,12 +56,12 @@ public sealed class SqueezableObject : MonoBehaviour {
   float radiusWorld=profile!=null?profile.deformationRadiusMeters:Mathf.Max(.015f,radius*.55f);
   float full=profile!=null?profile.fullCompressionNewtons:fullCompressionNewtons;
   float maxMeters=profile!=null?profile.maxDepthMeters:maximumCompression*radius;
-  if(touched!=null)System.Array.Clear(touched,0,touched.Length);
+  if(touched!=null){System.Array.Clear(touched,0,touched.Length);System.Array.Clear(displacements,0,displacements.Length);}
   if(IsHeld&&rig!=null&&rig.probes!=null){
    foreach(var p in rig.probes)if(p!=null&&p.Contact==this)ContactCount++;
    if(ContactCount>0&&force>0){foreach(var p in rig.probes)if(p!=null&&p.Contact==this)p.SetForce(force/ContactCount);}
    if(ContactCount>0&&force>0&&mesh!=null){
-    float depth=Mathf.Min(maxMeters,force/Mathf.Max(1,full)*maxMeters/ContactCount);
+    float depth=Mathf.Min(maxMeters,force/Mathf.Max(1,full)*maxMeters);
     foreach(var p in rig.probes)if(p!=null&&p.Contact==this){
      lastPoint=p.Point;lastRadius=radiusWorld;DeformAt(p.Point,p.Normal,depth,radiusWorld,dt);
     }
@@ -73,25 +75,35 @@ public sealed class SqueezableObject : MonoBehaviour {
  // Retained for compatibility; force alone cannot deform an object.
  public void ApplyForce(float newtons,float dt){ApplyContacts(null,0,dt);}
  void DeformAt(Vector3 point,Vector3 normal,float depth,float worldRadius,float dt){
-  Vector3 local=visual.InverseTransformPoint(point);
-  Vector3 direction=visual.InverseTransformDirection(-normal).normalized;
-  float scale=Mathf.Max(.0001f,visual.lossyScale.x),radiusLocal=worldRadius/scale,depthLocal=depth/scale;
+  // Project onto the undeformed surface. Collider.ClosestPoint returns an interior
+  // point when a phalanx penetrates deeply; that must not erase the indentation.
+  int nearest=0;float best=float.PositiveInfinity;
+  for(int i=0;i<rest.Length;i++){float d=(visual.TransformPoint(rest[i])-point).sqrMagnitude;if(d<best){best=d;nearest=i;}}
+  Vector3 surface=visual.TransformPoint(rest[nearest]);
+  Vector3 inward=-normal.normalized;
+  if(inward.sqrMagnitude<.5f)inward=(visual.TransformPoint(mesh.bounds.center)-surface).normalized;
   for(int i=0;i<rest.Length;i++){
-   float distance=Vector3.Distance(rest[i],local);
-   if(distance>=radiusLocal)continue;
-   float t=1-distance/radiusLocal,falloff=t*t*(3-2*t);
+   Vector3 world=visual.TransformPoint(rest[i]);float distance=Vector3.Distance(world,surface);
+   if(distance>=worldRadius)continue;
+   float t=1-distance/worldRadius,falloff=t*t*(3-2*t);
+   // Deterministic small asymmetry; no frame-to-frame random jitter.
+   float irregular=.88f+.12f*Mathf.Sin(rest[i].x*29+rest[i].y*17+rest[i].z*23);
+   Vector3 target=visual.InverseTransformVector(inward*(depth*falloff*irregular));
+   if(target.sqrMagnitude>displacements[i].sqrMagnitude)displacements[i]=target;
    touched[i]=true;
-   Vector3 target=direction*(depthLocal*falloff);
-   vertices[i]=Vector3.Lerp(vertices[i],rest[i]+permanent[i]+target,1-Mathf.Exp(-20*dt));
-   if(profile!=null&&profile.plasticity>0&&target.magnitude>depthLocal*.6f)
-    permanent[i]=Vector3.ClampMagnitude(permanent[i]+target*(profile.plasticity*dt*.08f),depthLocal*.45f);
   }
  }
+
  void UpdateMesh(float dt){
   float alpha=1-Mathf.Exp(-(profile!=null?profile.recoveryPerSecond:12)*Mathf.Max(0,dt));
-  bool changed=false;DeformedVertices=0;
+  bool changed=false;DeformedVertices=0;MaxDisplacementMeters=0;
   for(int i=0;i<rest.Length;i++){
+   if(touched[i]){
+    vertices[i]=Vector3.Lerp(vertices[i],rest[i]+permanent[i]+displacements[i],1-Mathf.Exp(-20*dt));
+    if(profile!=null&&profile.plasticity>0)permanent[i]=Vector3.Lerp(permanent[i],displacements[i]*.45f,profile.plasticity*dt);
+   }
    Vector3 target=rest[i]+permanent[i];
+   MaxDisplacementMeters=Mathf.Max(MaxDisplacementMeters,visual.TransformVector(vertices[i]-rest[i]).magnitude);
    if((vertices[i]-target).sqrMagnitude>1e-10f){
     if(!touched[i])vertices[i]=Vector3.Lerp(vertices[i],target,alpha);
     changed=true;DeformedVertices++;

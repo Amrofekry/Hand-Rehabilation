@@ -10,3 +10,4 @@ EditorBuildSettings:
     guid: 0d609e8f6ef162e45a37a4c467a3d5bf
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 95fdfa30aeaf846418d5c576cae89e0c, type: 2}

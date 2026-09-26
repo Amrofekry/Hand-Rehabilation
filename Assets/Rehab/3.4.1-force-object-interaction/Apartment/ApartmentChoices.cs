@@ -5,6 +5,7 @@ namespace GripRehab {
 // Saved uGUI controls; subscriptions are paired across every Play/enable cycle.
 public sealed class ApartmentChoices:MonoBehaviour {
  public ApartmentExperience experience;
+ public Button handButton;
  public Button livingButton,kitchenButton,resumeButton,inputButton;
  public Button[] objectButtons;
  public Text heading,inputLabel;
@@ -16,18 +17,20 @@ public sealed class ApartmentChoices:MonoBehaviour {
  public int KitchenSelection{get;private set;}
  private UnityAction[] callbacks;
  private void OnEnable(){
-  livingButton.onClick.AddListener(Living);kitchenButton.onClick.AddListener(KitchenRoom);resumeButton.onClick.AddListener(Resume);inputButton.onClick.AddListener(ToggleInput);
+  if(handButton!=null)handButton.onClick.AddListener(ToggleHand);livingButton.onClick.AddListener(Living);kitchenButton.onClick.AddListener(KitchenRoom);resumeButton.onClick.AddListener(Resume);inputButton.onClick.AddListener(ToggleInput);
   callbacks=new UnityAction[objectButtons.Length];for(int i=0;i<objectButtons.Length;i++){int choice=i;callbacks[i]=()=>SelectObject(choice);objectButtons[i].onClick.AddListener(callbacks[i]);}
  }
  private void OnDisable(){
-  livingButton.onClick.RemoveListener(Living);kitchenButton.onClick.RemoveListener(KitchenRoom);resumeButton.onClick.RemoveListener(Resume);inputButton.onClick.RemoveListener(ToggleInput);
+  if(handButton!=null)handButton.onClick.RemoveListener(ToggleHand);livingButton.onClick.RemoveListener(Living);kitchenButton.onClick.RemoveListener(KitchenRoom);resumeButton.onClick.RemoveListener(Resume);inputButton.onClick.RemoveListener(ToggleInput);
   if(callbacks!=null)for(int i=0;i<objectButtons.Length;i++)objectButtons[i].onClick.RemoveListener(callbacks[i]);
  }
- private void Start(){Refresh();}
+ private void Start(){experience.SelectHand(false);experience.player.SetPaused(true);Refresh();}
+ private void ToggleHand(){experience.SelectHand(!experience.LeftSelected);Refresh();}
  private void Update(){
   if(Input.GetKeyDown(KeyCode.Tab))experience.player.SetPaused(!experience.player.Paused);
   controls.interactable=experience.player.Paused;controls.blocksRaycasts=experience.player.Paused;controls.alpha=experience.player.Paused?1f:0f;
   heading.text=experience.player.Paused?"CHOOSE A STATION + OBJECT":"ESC / TAB  •  STATIONS & OBJECTS";
+  if(handButton!=null)handButton.GetComponentInChildren<Text>().text=experience.LeftSelected?"LEFT HAND (SWITCH)":"RIGHT HAND (SWITCH)";
   inputLabel.text=experience.Hardware?"INPUT: PHASE 2":"INPUT: DEMO";
  }
  private void Living()=>SelectStation(false);

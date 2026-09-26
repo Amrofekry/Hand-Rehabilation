@@ -2,6 +2,16 @@
 
 The standalone Unity project was checked in Editor 6000.4.4f1 and in its Windows player. Every result below is a software result. Physical hardware does not exist yet.
 
+## Selectable VirtualGrasp hand update — 26 September 2026 (WBS 3.4.1)
+
+The scene now uses the imported Gleechi VirtualGrasp 1.7.0 hand model, with RIGHT/LEFT selection and exactly one rendered hand. Keyboard controls target each of five fingers and three joints; the external controller passes 16 wrist/joint poses to the SDK output. Phase 2 force packets and 21-point vision frames still feed the separate input rigs. Fifteen contact capsules switch to the selected vendor output hand. Local asymmetric mesh indentation and object-specific fracture were added to the six interaction objects. This replaces the hand implementation described in the 25 September historical sections below.
+
+Unity Editor 6000.4.4f1 passed **69/69 runtime checks on each of three Play/Stop cycles**, releasing ports 27817 and 27818 each time (`Logs/editor-qa.txt`, `Logs/vg-final-editor-qa4.log`). The final Windows build passed (`Logs/vg-final-windows-build3.log`). Its headless demo, opt-in synthetic replay and rendered Direct3D runs each passed **69/69 checks** (`Docs/player-checks.json`). The rendered screenshots include `Docs/images/vg-ball-before.png`, `vg-ball-deformed.png`, `vg-mug-fractured.png`, and `vg-left-kitchen-grip.png`. The selected-hand HUD and menu button are asserted in both directions. The final rendered player measured a 0.51 ms mean and 3.67 ms maximum around the contact loop. These local code-loop timings are not FPS or device performance guarantees.
+
+Known SDK diagnostic: at the beginning of each Play run the imported VirtualGrasp free SDK emits two `No controller for RehabVGController` errors, one per hand, before its external controllers become active. Subsequent 16-bone motion and every acceptance test pass. This startup log remains unresolved and should not be described as a clean Console. The purchased/test asset remains in this local project, and its original source was not modified except repair of one malformed `.meta` GUID line. The contact simulation uses the vendor output bones but keeps the project's E-key pickup; the vendor automatic grasp database has not been baked for the six objects. In the head-on first-person view a held ball can hide much of the hand; the pre-grab screenshot shows its complete visible model.
+
+Synthetic force/vision fixtures do not validate a real load cell, BLE device, camera accuracy, grasp accuracy, material strain, or clinical use.
+
 ## Results
 
 | Check | Actual result |

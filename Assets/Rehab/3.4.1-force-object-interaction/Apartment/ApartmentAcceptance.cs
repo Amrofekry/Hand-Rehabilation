@@ -1,4 +1,5 @@
 using System;
+using VirtualGrasp.Controllers;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,10 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return new WaitForSeconds(1.5f);
   app=FindAnyObjectByType<ApartmentExperience>();
   Check(app!=null&&app.objects.All(x=>x!=null)&&app.statusText!=null&&app.rightHand!=null,"Serialized scene bindings survive reload");
-  Check(app.player.GetComponentsInChildren<Renderer>(true).All(r=>r.transform.IsChildOf(app.rightHand.transform)||r.transform.IsChildOf(app.leftHand.transform)),"Only the two hand meshes render on the player");
+  Check(app.virtualGrasp!=null&&app.virtualGrasp.Ready,"VirtualGrasp native SDK and external controllers initialize");
+  Check(app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.rightOnlyMesh,"Only selected right hand is rendered");
+  app.SelectHand(true);Check(app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.leftOnlyMesh&&app.contactRig.pose==app.leftHand,"Left selection swaps visible mesh and contact hand");app.SelectHand(false);
+  app.player.SetPaused(false);yield return null;
   var forceFilter=new GripForceFilter();forceFilter.Push(10,.05f,.06f,30,250);
   Check(Mathf.Abs(forceFilter.Push(100,.05f,.06f,30,250)-10)<.001f,"Single isolated force spike is rejected");
   Check(forceFilter.Push(100,.05f,.06f,30,250)>10,"Repeated high force is accepted with smoothing");
@@ -34,11 +38,29 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(!app.Hardware&&app.ForceValid,"Keyboard/mouse demo is the default");
   Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
   var player=app.player;player.enabled=false;player.SetPaused(false);
+  var sdk=app.virtualGrasp;
+  VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.RIGHT,1,1,out Transform outputIndex);
+  VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.RIGHT,2,1,out Transform outputMiddle);
+  Check(outputIndex!=null&&outputMiddle!=null,"SDK exposes the rendered finger joints");
+  var indexBefore=outputIndex.localRotation;var middleBefore=outputMiddle.localRotation;
+  app.rightHand.independentKeyboard=true;app.rightHand.AdjustFinger(0,1);yield return new WaitForSeconds(.45f);
+  Check(Quaternion.Angle(indexBefore,outputIndex.localRotation)>20&&Quaternion.Angle(middleBefore,outputMiddle.localRotation)<5,"Independent index input moves the SDK output without curling middle finger");
+  app.rightHand.ResetFingers();yield return new WaitForSeconds(.4f);
+  app.SelectHand(true);
+  VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.LEFT,0,1,out Transform leftThumb);
+  VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.LEFT,1,1,out Transform leftIndex);
+  Check(leftThumb!=null&&leftIndex!=null&&sdk.outputMesh.sharedMesh==sdk.leftOnlyMesh,"Left hand selection uses the vendor mesh and joints");
+  var leftThumbBefore=leftThumb.localRotation;var leftIndexBefore=leftIndex.localRotation;
+  app.leftHand.independentKeyboard=true;app.leftHand.AdjustFinger(4,1);yield return new WaitForSeconds(.45f);
+  Check(Quaternion.Angle(leftThumbBefore,leftThumb.localRotation)>20&&Quaternion.Angle(leftIndexBefore,leftIndex.localRotation)<5,"Left thumb bends independently on the SDK output");
+  Check(app.statusText.text.Contains("SELECTED HAND: LEFT")&&FindAnyObjectByType<ApartmentChoices>().handButton.GetComponentInChildren<UnityEngine.UI.Text>().text=="LEFT HAND (SWITCH)","HUD and button identify the selected left hand");
+  app.SelectHand(false);yield return new WaitForSeconds(.3f);
   var rightRest=app.rightHand.transform.localPosition;var leftRest=app.leftHand.transform.localPosition;
   app.SetDemoHandOffset(false,new Vector3(.08f,0,0));app.SetDemoHandOffset(true,new Vector3(-.08f,0,0));
   yield return new WaitForSeconds(.25f);
   Check(app.rightHand.transform.localPosition.x>rightRest.x+.04f&&app.leftHand.transform.localPosition.x<leftRest.x-.04f,"Keyboard/demo workspace moves each hand independently");
   app.SetDemoHandOffset(false,Vector3.zero);app.SetDemoHandOffset(true,Vector3.zero);yield return new WaitForSeconds(.25f);
+  Check(app.statusText.text.Contains("SELECTED HAND: RIGHT")&&FindAnyObjectByType<ApartmentChoices>().handButton.GetComponentInChildren<UnityEngine.UI.Text>().text=="RIGHT HAND (SWITCH)","HUD and button identify the selected right hand");
   Check(player.transform.position.y>-.2f&&Physics.Raycast(player.transform.position+Vector3.up*.5f,Vector3.down,1f,~(1<<8)),"Player spawn is above the apartment floor");
   var ball=app.objects[0];var cracker=app.objects[2];var sponge=app.objects[1];
   var menu=FindAnyObjectByType<ApartmentChoices>();Check(menu!=null&&menu.objectButtons.Length==3&&menu.livingObjects.Length==3&&menu.kitchenObjects.Length==3,"Saved station and object UI references survive reload");
@@ -50,7 +72,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   // In Editor the test drives the same force application explicitly; the executable uses its test flag.
   var ballMesh=ball.visual.GetComponent<MeshFilter>().sharedMesh;
   var ballRest=ballMesh.vertices;
+  yield return Screenshot("vg-ball-before");
   yield return DriveForce(18,3.7f);
+  yield return Screenshot("vg-ball-deformed");
   Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball is kinematic and deforms under grip force; held="+ball.IsHeld+" kinematic="+ball.Body.isKinematic+" compression="+ball.Compression+" contacts="+ball.ContactCount+" ball="+ball.transform.position+" anchor="+app.holdAnchor.position+" hand="+app.rightHand.transform.position+" eye="+player.view.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+(p.Contact==ball)+"@"+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
   var touching=app.contactRig.probes.Where(p=>p.Contact==ball).ToArray();
   Check(touching.Length==ball.ContactCount&&touching.Length>0&&touching.Length<app.contactRig.ProbeCount,"Independent finger capsules contribute only when touching the ball ("+touching.Length+"/15)");
@@ -62,7 +86,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    var world=ball.visual.TransformPoint(ballRest[vertex]);
    if(touching.All(p=>Vector3.Distance(world,p.Point)>ball.profile.deformationRadiusMeters+.015f)){far++;if(displacement>.0005f)farMoved++;}
   }
-  Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
+  Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0&&ball.MaxDisplacementMeters>.003f,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
   Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise");
   Check(app.rightHand.Closure>.4f,"Rigged fingers close around a held object");
   var beforeHandMove=ball.transform.position;app.SetDemoHandOffset(false,new Vector3(.07f,0,0));yield return new WaitForSeconds(.35f);
@@ -78,7 +102,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(mug.gameObject.activeSelf&&!ball.gameObject.activeSelf,"Living room button selects the hollow porcelain mug");
   Check(app.TryGrab(mug),"Porcelain mug can be picked up from the chair");
   yield return DriveForce(70,1.5f);
-  Check(mug.IsBroken,"Porcelain mug fractures under sustained excessive demo force");
+  Check(mug.IsBroken,"Porcelain mug fractures under sustained excessive demo force");yield return Screenshot("vg-mug-fractured");
   mug.ResetObject();mug.transform.position+=Vector3.up*.85f;mug.Body.position=mug.transform.position;
   yield return new WaitForSeconds(.85f);
   Check(mug.IsBroken,"A sufficiently energetic porcelain-mug drop causes impact fracture");
@@ -96,10 +120,10 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(menu.Kitchen&&!player.IsSeated,"Kitchen station button takes player to the kitchen");
   menu.objectButtons[1].onClick.Invoke();yield return null;
   var cup=menu.kitchenObjects[1];Check(cup.gameObject.activeSelf&&app.TryGrab(cup),"Kitchen silicone cup is selectable and can be gripped");
-  yield return DriveForce(30,.6f);Check(cup.Compression>.2f,"Silicone cup visibly yields to demo grip force; compression="+cup.Compression+" contacts="+cup.ContactCount+" force="+app.ContactForceNewtons+" hand="+app.rightHand.transform.position+" cup="+cup.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,cup.transform.position).ToString("F3"))));
+  yield return DriveForce(30,.6f);Check(cup.Compression>.2f&&cup.MaxDisplacementMeters>.003f,"Silicone cup visibly yields to demo grip force; compression="+cup.Compression+" contacts="+cup.ContactCount+" force="+app.ContactForceNewtons+" hand="+app.rightHand.transform.position+" cup="+cup.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,cup.transform.position).ToString("F3"))));
   app.TestForce=0;menu.objectButtons[2].onClick.Invoke();yield return null;
   var tomato=menu.kitchenObjects[2];Check(tomato.gameObject.activeSelf&&app.TryGrab(tomato),"Kitchen tomato is selectable and can be gripped");
-  yield return DriveForce(30,.6f);Check(tomato.Compression>.18f,"Tomato deforms under demo grip force");
+  yield return DriveForce(30,.6f);Check(tomato.Compression>.18f&&tomato.MaxDisplacementMeters>.003f,"Tomato deforms under demo grip force");
   app.TestForce=0;menu.objectButtons[0].onClick.Invoke();yield return null;
   Check(sponge.gameObject.activeSelf&&!tomato.gameObject.activeSelf,"Kitchen object button restores the sponge");
   player.Teleport(kitchen.position,kitchen.rotation);player.view.transform.LookAt(sponge.transform.position);
@@ -138,9 +162,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    var right=HandFixture("Right",.66f,1,1);
    Send(udp,27817,JsonUtility.ToJson(left));Send(udp,27817,JsonUtility.ToJson(right));
    yield return new WaitForSeconds(.15f);
-   Check(app.vision.LeftValid&&app.vision.RightValid&&app.leftHand.TrackingUsed&&app.rightHand.TrackingUsed,"Both independent MediaPipe-style 21-point hands drive the two skinned rigs");
-   Check(app.statusText.text.Contains("R SYNTHETIC")&&app.statusText.text.Contains("L SYNTHETIC"),"HUD identifies synthetic vision frames instead of claiming a live camera");
-   Check(app.leftHand.JointAngles[4]>5&&app.rightHand.JointAngles[4]>5,"Measured middle finger PIP bending reaches both rigs");
+   Check(app.vision.LeftValid&&app.vision.RightValid&&app.leftHand.TrackingUsed&&app.rightHand.TrackingUsed,"Both independent MediaPipe-style 21-point hands drive the SDK input rigs");
+   Check(app.statusText.text.Contains("SYNTHETIC"),"HUD identifies synthetic vision frames instead of claiming a live camera");
+   Check(app.leftHand.JointAngles[4]>5&&app.rightHand.JointAngles[4]>5,"Measured middle finger PIP bending reaches both input rigs");
    yield return Screenshot("apartment-two-hands-tracked");
    var leftBefore=app.leftHand.transform.localPosition;
    left.sequence=2;left.captureSeconds=2;
@@ -162,9 +186,15 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    yield return new WaitForSeconds(.33f);
    Check(!app.vision.LeftValid&&app.vision.RightValid,"One lost hand expires independently while the other remains tracked");
    yield return new WaitForSeconds(.6f);
-   Check(!app.vision.TrackingValid&&!app.leftHand.TrackingUsed&&!app.rightHand.TrackingUsed,"Both hands leave tracking mode after the 500 ms timeout");
+   Check(!app.vision.TrackingValid&&!app.leftHand.TrackingUsed&&!app.rightHand.TrackingUsed,"Both input hands leave tracking mode after the 500 ms timeout");
   }
-  app.SetHardware(false);app.ResetObjects();player.Teleport(player.Spawn,Quaternion.Euler(0,90,0));player.view.transform.localRotation=Quaternion.Euler(12,0,0);
+  app.SetHardware(false);app.ResetObjects();
+  menu.SelectStation(true);menu.SelectObject(0);app.SelectHand(true);yield return new WaitForSeconds(.3f);
+  Check(app.TryGrab(sponge),"Left hand can pick up the kitchen sponge");
+  yield return DriveForce(35,.8f);
+  Check(sponge.ContactCount>0&&sponge.MaxDisplacementMeters>.003f,"Left hand vendor joints make visible, localized sponge deformation: contacts="+sponge.ContactCount+" depth="+sponge.MaxDisplacementMeters);
+  yield return Screenshot("vg-left-kitchen-grip");app.TestForce=0;app.Release();app.SelectHand(false);
+  player.Teleport(player.Spawn,Quaternion.Euler(0,90,0));player.view.transform.localRotation=Quaternion.Euler(12,0,0);
   yield return Screenshot("apartment-overview");
   player.enabled=true;player.SetPaused(true);
  }

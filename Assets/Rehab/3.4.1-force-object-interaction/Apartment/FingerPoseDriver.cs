@@ -8,6 +8,13 @@ namespace GripRehab
     {
         [Tooltip("Index, middle, ring, little, thumb; proximal/intermediate/distal for each.")]
         public Transform[] joints;
+        public bool independentKeyboard;
+        public readonly float[] ManualCurl=new float[5];
+        public int SelectedFinger;
+        public int SelectedJoint=-1;
+        public readonly float[] ManualJoint=new float[15];
+        public void AdjustFinger(int finger,float delta){finger=Mathf.Clamp(finger,0,4);if(SelectedJoint<0)ManualCurl[finger]=Mathf.Clamp01(ManualCurl[finger]+delta);else{int n=finger*3+SelectedJoint;ManualJoint[n]=Mathf.Clamp01(ManualJoint[n]+delta);}}
+        public void ResetFingers(){System.Array.Clear(ManualCurl,0,5);System.Array.Clear(ManualJoint,0,15);}
         [Header("Rig axes — tune against the imported hand mesh")]
         public Vector3 curlAxis = Vector3.right;
         public float curlSign = 1;
@@ -153,10 +160,12 @@ namespace GripRehab
                 }
                 else
                 {
-                    var closure = Mathf.Clamp01(demoClosure);
+                    var closure = Mathf.Clamp01(Mathf.Max(demoClosure, independentKeyboard ? ManualCurl[finger] : 0));
+                    closure=Mathf.SmoothStep(0,1,Mathf.Clamp01((closure-finger*.025f)/(1-finger*.025f)));
                     _angles[finger * 3] = closure * (finger == 4 ? 45 : 65);
                     _angles[finger * 3 + 1] = closure * 85;
                     _angles[finger * 3 + 2] = closure * 55;
+                    if(independentKeyboard){_angles[finger*3]=Mathf.Max(_angles[finger*3],ManualJoint[finger*3]*65);_angles[finger*3+1]=Mathf.Max(_angles[finger*3+1],ManualJoint[finger*3+1]*85);_angles[finger*3+2]=Mathf.Max(_angles[finger*3+2],ManualJoint[finger*3+2]*55);}
                     _spread[finger] = 0;
                 }
                 _spreadSmoothed[finger] = Mathf.Lerp(_spreadSmoothed[finger], _spread[finger], alpha);

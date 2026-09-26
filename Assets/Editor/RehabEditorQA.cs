@@ -27,7 +27,7 @@ namespace GripRehab.Editor {
     int cycle=UnityEditor.SessionState.GetInt(Cycle,0)+1;UnityEditor.SessionState.SetInt(Cycle,cycle);
     File.AppendAllText("Logs/editor-qa.txt",$"PASS: cycle {cycle}, runtime suite and both UDP sockets released\n");
     if(cycle<3)EditorApplication.delayCall+=()=>EditorApplication.EnterPlaymode();
-    else{UnityEditor.SessionState.SetBool(Active,false);ApartmentAuthoring.VerifyScene();File.AppendAllText("Logs/editor-qa.txt","PASS: THREE PLAY CYCLES\n");if(Application.isBatchMode)EditorApplication.Exit(0);else OpenWorkspace();}
+    else{UnityEditor.SessionState.SetBool(Active,false);ApartmentAuthoring.VerifyScene();File.AppendAllText("Logs/editor-qa.txt","PASS: THREE PLAY CYCLES\n");if(Application.isBatchMode||Array.IndexOf(Environment.GetCommandLineArgs(),"-rehab-qa-exit")>=0)EditorApplication.Exit(0);else OpenWorkspace();}
    }catch(Exception e){Fail(e.ToString());}
   }
  }
@@ -36,7 +36,7 @@ namespace GripRehab.Editor {
   if(ApartmentAcceptance.Finished){UnityEditor.SessionState.SetBool("ApartmentQA.LastPassed",ApartmentAcceptance.Passed);EditorApplication.ExitPlaymode();}
   else if(deadline>0&&EditorApplication.timeSinceStartup>deadline)Fail("Runtime timeout");
  }
- static void Fail(string message){UnityEditor.SessionState.SetBool(Active,false);File.AppendAllText("Logs/editor-qa.txt","FAIL: "+message+"\n");if(Application.isBatchMode)EditorApplication.Exit(1);else if(EditorApplication.isPlaying)EditorApplication.ExitPlaymode();}
+ static void Fail(string message){UnityEditor.SessionState.SetBool(Active,false);File.AppendAllText("Logs/editor-qa.txt","FAIL: "+message+"\n");if(Application.isBatchMode||Array.IndexOf(Environment.GetCommandLineArgs(),"-rehab-qa-exit")>=0)EditorApplication.Exit(1);else if(EditorApplication.isPlaying)EditorApplication.ExitPlaymode();}
  public static void VerifyEditPersistence(){
   var scene=EditorSceneManager.OpenScene(ApartmentAuthoring.ScenePath);var item=UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>().holdAnchor;
   var original=item.localPosition;item.localPosition=original+Vector3.right*.01f;PrefabUtility.RecordPrefabInstancePropertyModifications(item);EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);

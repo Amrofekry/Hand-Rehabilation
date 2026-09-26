@@ -5,6 +5,7 @@ namespace GripRehab {
 public sealed class FingerContactRig : MonoBehaviour {
  [Header("Hand Tracking")][Tooltip("Existing animated 15-bone hand rig.")]
  public FingerPoseDriver pose;
+ [System.NonSerialized] public Transform[] contactBones;
  [Header("Contact")][Min(.003f)] public float radiusMeters=.009f;
  [Tooltip("Layer 9 = grippable objects only.")] public LayerMask objectLayers=1<<9;
  [SerializeField] public FingerContactProbe[] probes;
@@ -27,7 +28,7 @@ public sealed class FingerContactRig : MonoBehaviour {
  void FixedUpdate(){
   if(probes==null||pose==null||pose.joints==null)return;
   for(int i=0;i<Mathf.Min(15,probes.Length);i++) {
-   var probe=probes[i];var bone=i<pose.joints.Length?pose.joints[i]:null;
+   var probe=probes[i];var bones=contactBones??pose.joints;var bone=i<bones.Length?bones[i]:null;
    if(probe==null||bone==null){if(probe!=null)probe.gameObject.SetActive(false);continue;}
    Transform end=bone.childCount>0?bone.GetChild(0):null;
    Vector3 a=bone.position,b=end!=null?end.position:a+bone.forward*.025f;
@@ -36,10 +37,11 @@ public sealed class FingerContactRig : MonoBehaviour {
    if(!probe.gameObject.activeSelf)probe.gameObject.SetActive(true);
    var capsule=probe.GetComponent<CapsuleCollider>();capsule.radius=radiusMeters/capsule.transform.lossyScale.x;
    capsule.height=Mathf.Max(capsule.radius*2,length/capsule.transform.lossyScale.y+capsule.radius*2);
-   var body=probe.GetComponent<Rigidbody>();var midpoint=(a+b)*.5f;
+   var midpoint=(a+b)*.5f;
    // Contact sensors have a moving camera parent; assign world pose immediately after station teleports.
-   body.position=midpoint;body.rotation=Quaternion.FromToRotation(Vector3.up,b-a);
+   probe.transform.SetPositionAndRotation(midpoint,Quaternion.FromToRotation(Vector3.up,b-a));
   }
+  Physics.SyncTransforms();
  }
  void OnDrawGizmos(){if(!showGizmos||probes==null)return;Gizmos.color=Color.cyan;foreach(var p in probes)if(p!=null&&p.Contact!=null)Gizmos.DrawWireSphere(p.Point,radiusMeters);}
 }

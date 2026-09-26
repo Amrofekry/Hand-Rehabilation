@@ -5,7 +5,7 @@
 ```mermaid
 flowchart LR
   A[21 MediaPipe landmarks :27817] --> B[FingerPoseDriver]
-  B --> C[15 capsule probes / right hand]
+  B --> C[15 capsule probes / selected hand]
   D[Nano 33 IoT + HX711] --> E[Phase 2 BLE bridge :27818]
   E --> F[LiveForceState: calibration + age + sequence]
   F --> G[GripForceFilter]

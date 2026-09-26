@@ -4,6 +4,10 @@ using UnityEngine.UI;
 namespace GripRehab {
 public sealed class ApartmentExperience:MonoBehaviour {
  public ApartmentPlayer player;public ApartmentSettings settings;public LiveForceReceiver forceReceiver;public VisionUdpReceiver vision;
+ public RehabVirtualGrasp virtualGrasp;
+ public bool LeftSelected{get;private set;}
+ public FingerPoseDriver ActiveHand=>LeftSelected?leftHand:rightHand;
+ public void SelectHand(bool left){Release();LeftSelected=left;_leftDemoSelected=left;if(contactRig!=null){contactRig.pose=ActiveHand;foreach(var p in contactRig.probes){p.Clear();p.transform.SetParent(ActiveHand.transform,true);}Physics.SyncTransforms();}if(virtualGrasp!=null){virtualGrasp.ShowLeft(left);virtualGrasp.BindContacts(contactRig,left);}rightHand.ResetFingers();leftHand.ResetFingers();}
  public Transform holdAnchor;public FingerPoseDriver rightHand,leftHand;public FingerContactRig contactRig;
  public Text statusText,contextText,forceText;public Image progressFill;
  public SqueezableObject[] objects;public SeatPoint[] seats;
@@ -53,7 +57,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
    if(_generation!=forceReceiver.State.Generation){_generation=forceReceiver.State.Generation;Release();_filter.Reset();_filter.Push(0,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);_sessionValidSamples=1;_filteredSamples=forceReceiver.State.SampleCount;ContactForceNewtons=0;_task.Reset();Status="Connection/calibration changed";}
    if(!ForceValid&&Held!=null){Release();Status="Input stale: object released";}
   } else {
-   ForceValid=!player.Paused;float requested=ForceValid&&(Input.GetMouseButton(0)||Input.GetKey(KeyCode.Space))?DemoSetpoint:0;
+   ForceValid=!player.Paused;float requested=ForceValid&&(Input.GetMouseButton(0)||Input.GetKey(KeyCode.Space))?(Input.GetKey(KeyCode.LeftShift)?80:DemoSetpoint):0;
    if(_testing&&TestForce>=0)requested=TestForce;
    ForceNewtons=Mathf.MoveTowards(ForceNewtons,requested,90*Time.deltaTime);
   }
@@ -70,9 +74,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var leftTracked=vision!=null&&vision.LeftValid;
   float closure=Held!=null?Mathf.Lerp(.45f,.95f,Mathf.Clamp01(ForceNewtons/45)):Mathf.Clamp01(ForceNewtons/55);
   float handLift=player.IsSeated?settings.seatedHandsLiftMeters:0;
-  rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+Vector3.up*handLift,settings.trackingTravelMeters);
-  float leftDemo=!Hardware&&!player.Paused&&(Input.GetMouseButton(1)||Input.GetKey(KeyCode.LeftShift))?.8f:0f;
-  leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+Vector3.up*handLift,settings.trackingTravelMeters);
+  rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,LeftSelected?0:closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+Vector3.up*handLift,settings.trackingTravelMeters);
+  float leftDemo=LeftSelected?closure:0;
+  leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters);
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
  }
  public void SetDemoHandOffset(bool left,Vector3 offset){
@@ -81,7 +85,12 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(left)_manualLeft=offset;else _manualRight=offset;
  }
  private void UpdateDemoHandMovement(){
-  if(Input.GetKeyDown(KeyCode.T))_leftDemoSelected=!_leftDemoSelected;
+  for(int f=0;f<5;f++)if(Input.GetKeyDown(KeyCode.Alpha1+f))ActiveHand.SelectedFinger=f;
+  ActiveHand.independentKeyboard=true;
+  if(Input.GetKeyDown(KeyCode.J))ActiveHand.SelectedJoint=ActiveHand.SelectedJoint==2?-1:ActiveHand.SelectedJoint+1;
+  float bend=(Input.GetKey(KeyCode.X)?1:0)-(Input.GetKey(KeyCode.Z)?1:0);
+  if(bend!=0)ActiveHand.AdjustFinger(ActiveHand.SelectedFinger,bend*Time.deltaTime);
+  if(Input.GetKeyDown(KeyCode.C))ActiveHand.ResetFingers();
   if(Input.GetKeyDown(KeyCode.Alpha0))SetDemoHandOffset(_leftDemoSelected,Vector3.zero);
   var motion=new Vector3((Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.LeftArrow)?1:0),
     (Input.GetKey(KeyCode.UpArrow)?1:0)-(Input.GetKey(KeyCode.DownArrow)?1:0),
@@ -103,9 +112,19 @@ public sealed class ApartmentExperience:MonoBehaviour {
  }
  private Vector3 GripTarget(SqueezableObject item){
   var lift=player.IsSeated?settings.seatedHandsLiftMeters:0;
-  var handOffset=rightHand.transform.localPosition-_rightRest-Vector3.up*lift;
-  var target=holdAnchor.position+player.view.transform.TransformVector(handOffset)+Vector3.up*(player.IsSeated?settings.seatedHoldLiftMeters:0);
-  if(item!=null){var toward=rightHand.transform.position-target;float correction=Mathf.Clamp(.12f-item.radius,0,.05f);if(toward.sqrMagnitude>.0001f)target+=toward.normalized*correction;}
+  var handOffset=ActiveHand.transform.localPosition-(LeftSelected?_leftRest:_rightRest)-Vector3.up*lift;
+  var anchor=holdAnchor.localPosition;if(LeftSelected)anchor.x=-Mathf.Abs(anchor.x);
+  var target=holdAnchor.parent.TransformPoint(anchor)+player.view.transform.TransformVector(handOffset)+Vector3.up*(player.IsSeated?settings.seatedHoldLiftMeters:0);
+  // The mirrored Gleechi hand has a different palm-to-fingertip reach. Place a
+  // left-hand held object at the actual finger pad cluster, not a mirrored HUD anchor.
+  if(LeftSelected&&contactRig!=null&&contactRig.contactBones!=null&&contactRig.contactBones.Length==15){
+   var bones=contactRig.contactBones;
+   if(bones[1]!=null&&bones[4]!=null&&bones[7]!=null&&bones[10]!=null){
+    Vector3 pads=(bones[1].position+bones[4].position+bones[7].position+bones[10].position)*.25f;
+    target+=Vector3.ClampMagnitude(pads-target,.23f);
+   }
+  }
+  if(item!=null){var toward=ActiveHand.transform.position-target;float correction=Mathf.Clamp(.12f-item.radius,0,.05f);if(toward.sqrMagnitude>.0001f)target+=toward.normalized*correction;}
   return target;
  }
  public bool TryGrab(SqueezableObject item){
@@ -120,17 +139,16 @@ public sealed class ApartmentExperience:MonoBehaviour {
  private static string VisionLabel(LandmarkFrame frame)=>frame!=null&&(frame.source??"").StartsWith("synthetic",StringComparison.OrdinalIgnoreCase)?"SYNTHETIC":"CAMERA";
  private void RefreshHUD(){
   string source=Hardware?(forceReceiver.State.IsSynthetic?"SYNTHETIC REPLAY":"PHASE 2 / BLE"):"KEYBOARD + MOUSE DEMO";
-  string rightPose=vision.RightValid?VisionLabel(vision.LatestRight):Hardware?(ForceValid?"FORCE":"REST"):"DEMO";
-  string leftPose=vision.LeftValid?VisionLabel(vision.LatestLeft):Hardware?"REST":"DEMO";
-  statusText.text="GRIP / REHAB     â€¢     APARTMENT LAB\n"+source+"   |   "+(player.IsSeated?"SEATED":"WALKING")+"\nHANDS: R "+rightPose+"  L "+leftPose+" â€” UNVALIDATED TRACKING";
-  forceText.text=(ForceValid?ForceNewtons.ToString("F1"):"--")+" N\n"+(Hardware?forceReceiver.State.Status:"Demo setpoint "+DemoSetpoint.ToString("F0")+" N")+"\n"+(Held!=null?Held.displayName+"  Â·  "+(Held.Compression*100).ToString("F0")+"% compression":"Aim at an object and press E")+"\nHOLD  "+_task.ProgressSeconds.ToString("F1")+" / 3 s  Â·  target 18 Â± 3 N";
+  string handPose=LeftSelected?(vision.LeftValid?VisionLabel(vision.LatestLeft):Hardware?(ForceValid?"FORCE":"REST"):"DEMO"):(vision.RightValid?VisionLabel(vision.LatestRight):Hardware?(ForceValid?"FORCE":"REST"):"DEMO");
+  statusText.text="GRIP / REHAB     •     APARTMENT LAB\n"+source+"   |   "+(player.IsSeated?"SEATED":"WALKING")+"\nSELECTED HAND: "+(LeftSelected?"LEFT ":"RIGHT ")+handPose+" — UNVALIDATED TRACKING";
+  forceText.text=(ForceValid?ForceNewtons.ToString("F1"):"--")+" N\n"+(Hardware?forceReceiver.State.Status:"Demo setpoint "+DemoSetpoint.ToString("F0")+" N")+"\n"+(Held!=null?Held.displayName+"  Â·  "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm deformation | "+Held.Damage+(Held.BreakThresholdNewtons>0?" | break > "+Held.BreakThresholdNewtons+" N":""):"Aim at an object and press E")+"\nHOLD  "+_task.ProgressSeconds.ToString("F1")+" / 3 s  Â·  target 18 Â± 3 N";
   progressFill.rectTransform.localScale=new Vector3(Mathf.Clamp01(_task.ProgressSeconds/3),1,1);
   string prompt=Status;
   if(Held==null&&Physics.Raycast(player.view.ViewportPointToRay(new Vector3(.5f,.5f,0)),out var hit,settings.reachMeters,~(1<<8),QueryTriggerInteraction.Ignore)){
    var item=hit.collider.GetComponentInParent<SqueezableObject>();if(item!=null)prompt="E  â€¢  Pick up "+item.displayName;
    else if(hit.collider.GetComponentInParent<ApartmentDoor>()!=null)prompt="E  â€¢  Open / close door";
   }
-  contextText.text=(player.Paused?"PAUSED â€” ESC to resume":prompt)+"\nWASD move  â€¢  Mouse look  â€¢  E grab  â€¢  Q release  â€¢  F sit / stand\nSpace/left mouse: right grip  â€¢  Shift/right mouse: left grip  â€¢  T select hand, arrows/PgUp/PgDn move, 0 recenter  â€¢  B input  â€¢  TAB options  â€¢  ESC pause";
+  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"\n"+(player.Paused?"PAUSED — ESC to resume":prompt)+"\nWASD move  •  Mouse look  •  E grab  •  Q release  •  F sit / stand\nSpace/click squeeze  •  1–5 finger  •  J joint  •  X/Z bend/open  •  C reset  •  arrows/PgUp/PgDn move  •  TAB hand/object menu";
  }
 }
 }
