@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-09-26T22:56:22.2166393Z",
+  "utc": "2026-09-26T23:37:20.8983469Z",
   "error": "",
   "checks": [
     "Serialized scene bindings survive reload",
@@ -107,6 +107,8 @@
     "Saved main menu, profile, module, dashboard and gameplay HUD references are complete",
     "Main menu backdrop hides gameplay text and Continue is labelled as practice recovery",
     "Saved profile dropdowns have visible chevrons instead of missing sprite squares",
+    "Premium menu background and rounded controls retain imported sprite references",
+    "Saved in-game HUD has readable station, source, unit, guidance and progress bindings",
     "First launch opens a paused home menu and disables Continue without a saved session",
     "Start Game directs an unregistered patient to profile creation",
     "Incomplete profile stays on the form with a visible validation message",
@@ -122,8 +124,8 @@
     "A new patient cannot continue another patient's checkpoint",
     "Profile picker signs back into the original patient's saved session"
   ],
-  "contactMeanMs": 0.35619040169133104,
-  "contactMaxMs": 2.8582,
+  "contactMeanMs": 0.3666926489226863,
+  "contactMaxMs": 3.3301,
   "name": "apartment-player-headless",
   "exit": 0,
   "rendered": false

@@ -22,6 +22,9 @@ namespace GripRehab
         public Dropdown profilePicker, genderPicker, affectedPicker, dominantPicker;
         public InputField nameField, ageField, concernField, goalField, painField;
         public Text homeGreeting, formError, moduleGreeting, patientSummary, doctorSummary, telemetry;
+        // Saved, presentation-only view of the existing Module 01 state. No second input pipeline.
+        public Text hudRoom, hudHand, hudValue, hudUnit, hudSource, hudObject, hudPrompt, hudProgress;
+        public Image hudProgressFill;
 
         public bool BlocksGameplay { get; private set; }
         public RehabProfileStore Store { get; private set; }
@@ -79,11 +82,11 @@ namespace GripRehab
 
         void Update()
         {
-            if (testing || Time.unscaledTime < nextRefresh) return;
+            if (Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + .25f;
             if (BlocksGameplay) return;
             UpdateTelemetry();
-            SaveCheckpointIfChanged();
+            if (!testing) SaveCheckpointIfChanged();
         }
 
         static void Set(CanvasGroup panel, bool visible)
@@ -260,14 +263,37 @@ namespace GripRehab
 
         void UpdateTelemetry()
         {
-            if (telemetry == null) return;
+            if (telemetry == null && hudValue == null) return;
             string input = experience.CameraMode ? "CAMERA · VISUAL ESTIMATE" :
                 experience.Hardware ? "PHASE 2 · " + (experience.ForceValid ? "LIVE" : "WAITING") : "KEYBOARD DEMO";
-            string value = experience.CameraMode ? (experience.CameraGripScore * 100).ToString("F0") + "% closure" :
-                experience.ForceValid ? experience.ForceNewtons.ToString("F1") + " N" : "-- N";
-            telemetry.text = "MODULE 01  /  " + (choices.Kitchen ? "KITCHEN" : "LIVING ROOM") +
-                "    •    " + (experience.LeftSelected ? "LEFT" : "RIGHT") + " HAND    •    " + input +
-                "    •    " + value;
+            if (telemetry != null)
+                telemetry.text = "GRIP REHAB   /   FORCE + OBJECT   /   MODULE 01";
+            if (hudRoom == null) return;
+            hudRoom.text = choices.Kitchen ? "Kitchen station" : "Living room station";
+            hudHand.text = (experience.LeftSelected ? "LEFT" : "RIGHT") + " HAND  ·  MODULE 01";
+            hudSource.text = input;
+            hudValue.text = experience.CameraMode ? (experience.CameraGripScore * 100).ToString("F0") :
+                experience.ForceValid ? experience.ForceNewtons.ToString("F1") : "--";
+            hudUnit.text = experience.CameraMode ? "% closure" : "newtons";
+            hudObject.text = experience.Held == null ? "OBJECT  /  " + choices.SelectedObject.displayName :
+                "HOLDING  /  " + experience.Held.displayName + "  ·  " +
+                (experience.Held.MaxDisplacementMeters * 1000).ToString("F1") + " mm";
+            hudPrompt.text = experience.player.Paused ? "Choose a room, object and input. Press Resume when ready." :
+                experience.CameraMode ? (experience.ForceValid ?
+                    experience.Held == null ? "Close your tracked hand to grasp, or press G to summon." :
+                    "Move your tracked hand to deform the object. Open it to release." :
+                    "Show one complete hand to the camera to begin tracking.") :
+                experience.Hardware ? (experience.ForceValid ?
+                    experience.Held == null ? "Close your hand around the selected object." :
+                    "Grip the object with controlled force; release when ready." :
+                    "Waiting for a fresh calibrated Phase 2 force sample.") :
+                experience.Held == null ? "Aim at the object and press E. Hold Space or click to squeeze." :
+                    "Hold Space or click to squeeze. Press Q to release.";
+            float progress = experience.CameraMode ? experience.CameraGripScore :
+                Mathf.Clamp01(experience.ProgressSeconds / 3f);
+            hudProgressFill.fillAmount = progress;
+            hudProgress.text = experience.CameraMode ? "VISUAL HAND CLOSURE" :
+                "CONTROLLED HOLD  " + experience.ProgressSeconds.ToString("F1") + " / 3.0 S";
         }
 
         void Quit()

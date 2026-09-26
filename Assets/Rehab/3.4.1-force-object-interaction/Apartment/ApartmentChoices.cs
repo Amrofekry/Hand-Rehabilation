@@ -32,7 +32,7 @@ public sealed class ApartmentChoices:MonoBehaviour {
   if(shell!=null&&shell.BlocksGameplay){controls.interactable=false;controls.blocksRaycasts=false;controls.alpha=0;return;}
   if(Input.GetKeyDown(KeyCode.Tab))experience.player.SetPaused(!experience.player.Paused);
   controls.interactable=experience.player.Paused;controls.blocksRaycasts=experience.player.Paused;controls.alpha=experience.player.Paused?1f:0f;
-  heading.text=experience.player.Paused?"CHOOSE A STATION + OBJECT":"ESC / TAB  •  STATIONS & OBJECTS";
+  heading.text="SESSION OPTIONS";
   if(handButton!=null)handButton.GetComponentInChildren<Text>().text=experience.LeftSelected?"LEFT HAND (SWITCH)":"RIGHT HAND (SWITCH)";
   inputLabel.text=experience.CameraMode?"INPUT: CAMERA":experience.Hardware?"INPUT: PHASE 2":"INPUT: DEMO";
  }

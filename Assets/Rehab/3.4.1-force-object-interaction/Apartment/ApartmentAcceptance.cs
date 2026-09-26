@@ -386,6 +386,12 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(new[]{shell.profilePicker,shell.genderPicker,shell.affectedPicker,shell.dominantPicker}
    .All(d=>d.transform.Find("Arrow/Chevron")!=null),
    "Saved profile dropdowns have visible chevrons instead of missing sprite squares");
+  Check(shell.root.GetComponent<UnityEngine.UI.Image>().sprite!=null&&
+   shell.startButton.image.sprite!=null&&shell.openModuleButton.image.sprite!=null,
+   "Premium menu background and rounded controls retain imported sprite references");
+  Check(shell.hudRoom!=null&&shell.hudValue!=null&&shell.hudUnit!=null&&
+   shell.hudPrompt!=null&&shell.hudProgressFill!=null,
+   "Saved in-game HUD has readable station, source, unit, guidance and progress bindings");
   var testProfileDirectory=Path.Combine(Application.temporaryCachePath,"grip-profile-qa-"+Guid.NewGuid().ToString("N"));
   shell.SetStoreForAcceptance(new RehabProfileStore(testProfileDirectory));
   shell.ShowHome();

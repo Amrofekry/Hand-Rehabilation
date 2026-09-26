@@ -124,3 +124,11 @@ Local `profiles.json` persists validated, self-reported patient context and a pe
 **Outstanding physical validation:** No Nano 33 IoT/HX711, clinical user, measured force, or observed live-hand tracking was part of these UI tests. Existing Module 01 simulation checks are not proof of clinical correctness. The screenshot flows and software fixtures show the interface and Phase 2 protocol boundary, not a hardware end-to-end trial.
 
 ---
+
+# Visual redesign and live HUD — 27 September 2026 (WBS 3.4)
+
+The existing scene now stores a two-column Main Menu, restyled profile and module screens, dashboard preview cards, a compact in-game HUD, and a central session-options panel. Rounded Sprite assets and the backdrop are stored under `Assets/Rehab/3.4-game-modules/UI`; the one-shot authoring command is `Grip Rehab → Apply Premium UI Design`. Build and Verify never invoke that command, so later scene edits survive verification. [The Figma board](https://www.figma.com/design/2xyEji05scuske6RwWG8g4/GripRehab-Phase-3-Menu-and-HUD) has four editable concept frames. `Docs/UI_DESIGN_SYSTEM_AR.md` maps them to Unity.
+
+HUD room, hand, object, input source, value, unit, contextual instruction and progress read the existing Module 01 state. Camera closure is shown as `% closure`; valid Phase 2 and explicit Demo force use `newtons` with distinct source labels. A stale Phase 2 sample shows `--`, and button enablement, profile isolation, module locks and the Phase 2 replay boundary remain covered by acceptance checks. The prompt changes once an object is held, and the keyboard legend includes E, G, Q, F, Tab and B. The session-options heading remains consistent when paused.
+
+**Verification:** Unity Editor 6000.4.4f1 passed **120/120 runtime checks** across three Play/Stop cycles with UDP cleanup. Windows build and headless, replay and rendered player checks passed **120/120** each. Screenshots were inspected at 1280×720: `Docs/images/ui-main-menu.png`, `ui-new-profile.png`, `ui-module-selection.png`, `apartment-overview.png`, and `apartment-options.png`. These are software checks and rendered evidence; real-patient usability, clinical validation and physical Nano/HX711 force measurements were not performed.
