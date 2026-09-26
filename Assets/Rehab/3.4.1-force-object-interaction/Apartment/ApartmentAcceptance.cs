@@ -36,7 +36,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(forceFilter.Push(100,.05f,.06f,30,250)>10,"Repeated high force is accepted with smoothing");
   Check(forceFilter.Push(float.NaN,.05f,.06f,30,250)==0,"Impossible force resets the contact filter");
   Check(!app.Hardware&&app.ForceValid,"Keyboard/mouse demo is the default");
-  Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
+  Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionPreviewReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
   var player=app.player;player.enabled=false;player.SetPaused(false);
   var sdk=app.virtualGrasp;
   VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.RIGHT,1,1,out Transform outputIndex);
@@ -169,7 +169,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    var leftBefore=app.leftHand.transform.localPosition;
    left.sequence=2;left.captureSeconds=2;
    for(int i=0;i<left.landmarks.Length;i++)left.landmarks[i].x+=.08f;
-   Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.15f);
+   Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.26f);
    Check(app.leftHand.transform.localPosition.x>leftBefore.x+.005f,"Tracked wrist displacement moves the left hand");
    var acceptedLeft=app.vision.LatestLeft;
    Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.04f);
@@ -196,7 +196,77 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return Screenshot("vg-left-kitchen-grip");app.TestForce=0;app.Release();app.SelectHand(false);
   player.Teleport(player.Spawn,Quaternion.Euler(0,90,0));player.view.transform.localRotation=Quaternion.Euler(12,0,0);
   yield return Screenshot("apartment-overview");
-  player.enabled=true;player.SetPaused(true);
+  // Camera interaction contract uses explicit synthetic 21-point frames; the
+  // physical webcam stays closed in this suite so the replay is reproducible.
+  app.SetCameraMode();
+  Check(app.CameraMode&&!app.Hardware&&!app.cameraLauncher.IsRunning,"Camera test mode does not silently open the physical webcam");
+  menu.SelectStation(false);menu.SelectObject(0);app.SelectHand(false);player.SetPaused(false);
+  using(var cameraUdp=new UdpClient()){
+   long seq=100;double captured=100;
+   for(int i=0;i<6;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.CameraMode&&app.ForceValid&&HandKinematics.GripScore(app.vision.LatestRight)<.2f,"Open camera hand drives valid pose without squeezing");
+   var wristBefore=app.rightHand.transform.localPosition;
+   for(int i=0;i<5;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.32f,.5f,false,++seq,captured+=.06)));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.rightHand.transform.localPosition.x<wristBefore.x-.05f,"Absolute camera wrist motion moves the selected vendor input toward objects");
+   foreach(var imageY in new[]{.45f,.5f,.55f}){
+    foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f}){
+     for(int i=0;i<4;i++){
+      Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,true,++seq,captured+=.06)));
+      yield return new WaitForSeconds(.06f);
+     }
+     if(app.Held==ball)break;
+    }
+    if(app.Held==ball)break;
+   }
+   float nearest=float.PositiveInfinity;var ballCollider=ball.GetComponent<Collider>();
+   foreach(var bone in app.contactRig.contactBones)if(bone!=null)nearest=Mathf.Min(nearest,Vector3.Distance(bone.position,ballCollider.ClosestPoint(bone.position)));
+   Check(app.Held==ball,"Closing the camera hand near the ball grabs without E; nearest finger="+nearest.ToString("F3")+"m hand="+app.rightHand.transform.position+" ball="+ball.transform.position+" score="+app.CameraGripScore.ToString("F2"));
+   for(int i=0;i<6;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.Held==null&&app.CameraMode,"Opening the tracked hand releases the ball");
+   for(int i=0;i<5;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++seq,captured+=.06)));
+    yield return new WaitForSeconds(.06f);
+   }
+   yield return new WaitForSeconds(.6f);
+   Check(!app.ForceValid&&app.ForceNewtons==0&&app.Held==null,"Stale camera landmarks clear visual pressure and cannot keep holding");
+   app.SelectHand(true);menu.SelectStation(true);menu.SelectObject(0);player.SetPaused(false);
+   Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++seq,captured+=.06)));
+   yield return new WaitForSeconds(.08f);
+   Check(!app.ForceValid&&app.Held==null,"Right-hand camera data cannot squeeze the selected left hand");
+   long leftSeq=1000;double leftCaptured=1000;
+   for(int i=0;i<6;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.ForceValid&&app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.leftOnlyMesh,"Selected left camera stream drives only the left vendor mesh");
+   foreach(var imageY in new[]{.5f,.7f,.85f}){
+    foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f,.8f}){
+     for(int i=0;i<4;i++){
+      Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,true,++leftSeq,leftCaptured+=.06,"Left",2.2f)));
+      yield return new WaitForSeconds(.06f);
+     }
+     if(app.Held==sponge)break;
+    }
+    if(app.Held==sponge)break;
+   }
+   float leftNearest=float.PositiveInfinity;var spongeCollider=sponge.GetComponent<Collider>(); foreach(var bone in app.contactRig.contactBones)if(bone!=null)leftNearest=Mathf.Min(leftNearest,Vector3.Distance(bone.position,spongeCollider.ClosestPoint(bone.position)));
+   Check(app.Held==sponge,"Selected left camera fist can pick up the kitchen sponge without E; nearest="+leftNearest.ToString("F3")+" hand="+app.leftHand.transform.position+" sponge="+sponge.transform.position+" score="+app.CameraGripScore.ToString("F2"));
+   for(int i=0;i<6;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.Held==null,"Opening the left camera hand drops the sponge");
+  }
+  app.SetHardware(false);app.ResetObjects();player.enabled=true;player.SetPaused(true);
  }
  private IEnumerator DriveForce(float force,float seconds){
   app.TestForce=force;
@@ -210,6 +280,19 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   if(!Application.isBatchMode&&SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null){
    yield return new WaitForEndOfFrame();Directory.CreateDirectory("Docs/images");ScreenCapture.CaptureScreenshot(Path.GetFullPath("Docs/images/"+name+".png"));yield return null;
   }
+ }
+ private static LandmarkFrame CameraFixture(float center,float wristY,bool closed,long sequence,double captured,string side="Right",float palmScale=1){
+  var frame=new LandmarkFrame{schemaVersion=1,source="mediapipe-test",handedness=side,confidence=.96f,sequence=sequence,captureSeconds=captured,landmarks=new Vector3[21]};
+  frame.landmarks[0]=new Vector3(center,wristY,0);
+  for(int finger=0;finger<4;finger++){
+   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1.5f)*.045f*palmScale;
+   frame.landmarks[n]=new Vector3(x,wristY-.10f,0);
+   frame.landmarks[n+1]=new Vector3(x,wristY-.18f,0);
+   frame.landmarks[n+2]=new Vector3(x,wristY+(closed?-.12f:-.26f),0);
+   frame.landmarks[n+3]=new Vector3(x,wristY+(closed?-.04f:-.34f),0);
+  }
+  for(int i=1;i<5;i++)frame.landmarks[i]=new Vector3(center+(side=="Left"?1:-1)*(.12f-i*.015f),wristY-.06f-i*.03f,0);
+  return frame;
  }
  private static LandmarkFrame HandFixture(string side,float center,double captured,long sequence){
   var points=new Vector3[21];points[0]=new Vector3(center,.82f,0);

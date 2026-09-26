@@ -1,24 +1,17 @@
-## Current hand controls
+# Grip Rehab — Unity apartment and live hand tracking
 
-The current scene uses the imported Gleechi VirtualGrasp hand model and a single visible selected hand. See [Arabic hand/keyboard guide](Docs/HANDS_AND_MEDIAPIPE_AR.md). Older bimanual screenshots below describe previous versions. Native automatic object-specific grasp synthesis still requires a baked Grasp DB; the project uses its own pickup/contact/material simulation.
+Open `E:\GP\codex\GripRehab-Unity` in Unity Hub with Editor **6000.4.4f1**. The saved main scene is `Assets/Scenes/GripRehab.unity`. For first-time instructions, read [START_HERE_AR.html](START_HERE_AR.html) and the [Arabic camera/hand guide](Docs/HANDS_AND_MEDIAPIPE_AR.md).
 
-# Grip Rehab — apartment interaction project
+**Default Play mode is now live MediaPipe camera.** The project-local Python worker opens webcam index 0, estimates 21 landmarks, and streams them on loopback UDP 27817. The annotated local preview is shown in Game view via UDP 27819. Select RIGHT or LEFT in the menu; exactly one imported Gleechi VirtualGrasp hand is rendered. Approach a chosen object with the tracked hand, close the fingers briefly to pick it up, and open them to release. Tracking loss also releases it. The visual grip percentage and object indentation are demonstrations, not measured force or clinical validation.
 
-Open this folder using Unity Hub → Projects → Add → Add project from disk, with Editor **6000.4.4f1**. Open `Assets/Scenes/GripRehab.unity` and press Play.
+Press **B** to cycle Camera → Keyboard Demo → Phase 2 → Camera. The keyboard demo works without camera or hardware: WASD/mouse navigate, E picks up, Q releases, Space/click squeezes, 1–5 selects fingers, J chooses a joint, X/Z bends/opens, C resets, arrows/PageUp/PageDown move the hand, F sits or stands, and V toggles the preview. Phase 2 expects Nano 33 IoT + HX711 through the supplied bridge on UDP 27818; no such physical hardware has been tested. There is no automatic fallback from an invalid Phase 2 sample to demo force.
 
-**ابدأ من [الدليل العربي المصوّر](START_HERE_AR.html).**
+The single furnished apartment from Brick Project Studio has seated living-room and kitchen stations with three selectable objects each. Their local deformation and breakage are approximations. The imported VirtualGrasp package supplies the visible rig, output bones and controller; automatic object-specific Grasp DB baking has not been performed. Older screenshots in `Docs/images` may show previous modes or synthetic tracking and are labelled as such.
 
-Hand-only rig, two-hand MediaPipe stream and setup: [Docs/HANDS_AND_MEDIAPIPE_AR.md](Docs/HANDS_AND_MEDIAPIPE_AR.md).
+- Scene settings: `Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset`.
+- Camera bridge: `Tools/Vision/mediapipe_bridge.py`; Unity lifecycle and preview: `Assets/Rehab/3.2-vision/`.
+- Hand interaction: `Assets/Rehab/3.4.1-force-object-interaction/Apartment/`.
+- Phase 2 protocol: [Docs/BLE_INTEGRATION.md](Docs/BLE_INTEGRATION.md).
+- Verification and remaining limits: [Docs/QA.md](Docs/QA.md).
 
-The current playable scene contains one furnished apartment from the supplied Brick Project Studio asset, a first-person patient with one selectable rigged vendor hand, a seated dining station and a kitchen station. The current iteration focuses on force/object interaction. The saved menu chooses living room or kitchen and three objects at each station. Previous cognitive and coordination task logic remains in its WBS folders for later integration; those tasks are not presented as playable apartment activities yet.
-
-- **Default: keyboard + mouse demo**, no hardware or Python required. Choose RIGHT or LEFT in the opening menu; only that vendor hand appears. WASD walk, mouse look, E grab, Q drop, F sit/stand, Space or left mouse squeeze, Shift+Space 80 N demo force, 1�5 choose a finger, J choose a joint, X/Z bend/open, C reset fingers, arrows/PageUp/PageDown move the selected hand, 0 recenter, wheel or +/- set demo force, R reset objects, B explicitly switch to Phase 2, Esc/Tab open the menu.
-- Therapy ball and sponge deform; the virtual cracker fractures under sustained force above its configured threshold. These are visual demonstrations, not measured material models.
-- Settings: `Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset`.
-- Runtime: `Assets/Rehab/3.4.1-force-object-interaction/Apartment/`.
-- Phase 2 bridge: [Docs/BLE_INTEGRATION.md](Docs/BLE_INTEGRATION.md).
-- Verification and known limits: [Docs/QA.md](Docs/QA.md).
-- Build and Verify preserve the authored scene. Edit Scene/Prefabs normally and save outside Play.
-- This is the new Unity working folder. Original `../unity-phase3` and Phase 2 hardware files are preserved; there is no automatic synchronization.
-
-Force input targets Nano 33 IoT + HX711 BLE v1. Real hardware testing remains pending. A load cell measures aggregate grip force, not individual finger angles; camera landmarks optionally drive finger pose. Demo hand motion, approximate camera retargeting, mesh deformation and fracture are not clinically validated. No licensed Obi asset, trained YOLO gesture classifier or fatigue model is included.
+Build and Verify preserve the authored scene. Edit scene assets outside Play and save. This is the standalone Unity working folder; the former `../unity-phase3` and Phase 2 firmware remain separate, with no automatic synchronization. A real-person live-camera landmark/grasp trial and real load-cell validation remain outstanding.

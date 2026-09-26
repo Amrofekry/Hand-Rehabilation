@@ -17,4 +17,17 @@ MonoBehaviour:
   demoForceNewtons: 18
   reachMeters: 1.6
   trackingSmoothing: 0.08
+  trackingTravelMeters: 0.85
+  startWithCamera: 1
+  cameraCloseAt: 0.55
+  cameraOpenAt: 0.28
+  cameraGestureDwellSeconds: 0.12
+  cameraGrabRadiusMeters: 0.09
+  cameraVisualMaxNewtons: 38
+  leftWristSetbackMeters: 0.18
+  seatedHoldLiftMeters: 0.28
+  seatedHandsLiftMeters: 0.22
+  forceSmoothingSeconds: 0.06
+  isolatedSpikeNewtons: 30
+  maxForceSlewNewtonsPerSecond: 250
   startWithHardware: 0

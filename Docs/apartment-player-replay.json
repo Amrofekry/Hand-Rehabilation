@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-09-26T06:21:06.0455747Z",
+  "utc": "2026-09-26T11:42:42.8667732Z",
   "error": "",
   "checks": [
     "Serialized scene bindings survive reload",
@@ -24,7 +24,7 @@
     "Object menu appears when input is paused",
     "Living room chair can be used from the approach position",
     "Therapy ball can be reached and grabbed from the chair",
-    "Held ball is kinematic and deforms under grip force; held=True kinematic=True compression=0.5142853 contacts=13 ball=(2.39, 0.95, -4.53) anchor=(2.39, 0.67, -4.53) hand=(2.45, 1.04, -4.54) eye=(1.97, 1.11, -4.41) probes=0:0=False@0.091;0:1=True@0.081;0:2=True@0.072;1:0=True@0.076;1:1=True@0.067;1:2=True@0.060;2:0=True@0.056;2:1=True@0.049;2:2=True@0.047;3:0=True@0.035;3:1=True@0.032;3:2=True@0.034;4:0=False@0.096;4:1=True@0.076;4:2=True@0.054",
+    "Held ball is kinematic and deforms under grip force; held=True kinematic=True compression=0.514285 contacts=13 ball=(2.39, 0.95, -4.53) anchor=(2.39, 0.67, -4.53) hand=(2.45, 1.04, -4.54) eye=(1.97, 1.11, -4.41) probes=0:0=False@0.091;0:1=True@0.081;0:2=True@0.072;1:0=True@0.076;1:1=True@0.067;1:2=True@0.060;2:0=True@0.056;2:1=True@0.049;2:2=True@0.047;3:0=True@0.035;3:1=True@0.032;3:2=True@0.034;4:0=False@0.096;4:1=True@0.076;4:2=True@0.054",
     "Independent finger capsules contribute only when touching the ball (13/15)",
     "Noncontacting fingers resolve exactly zero force",
     "Mesh vertices deform near finger contacts while distant regions remain stable (233 moved, 106 distant, 0 distant moved)",
@@ -71,10 +71,20 @@
     "One lost hand expires independently while the other remains tracked",
     "Both input hands leave tracking mode after the 500 ms timeout",
     "Left hand can pick up the kitchen sponge",
-    "Left hand vendor joints make visible, localized sponge deformation: contacts=15 depth=0.03009848"
+    "Left hand vendor joints make visible, localized sponge deformation: contacts=15 depth=0.03009842",
+    "Camera test mode does not silently open the physical webcam",
+    "Open camera hand drives valid pose without squeezing",
+    "Absolute camera wrist motion moves the selected vendor input toward objects",
+    "Closing the camera hand near the ball grabs without E; nearest finger=0.021m hand=(2.47, 1.08, -4.54) ball=(2.41, 0.99, -4.52) score=0.76",
+    "Opening the tracked hand releases the ball",
+    "Stale camera landmarks clear visual pressure and cannot keep holding",
+    "Right-hand camera data cannot squeeze the selected left hand",
+    "Selected left camera stream drives only the left vendor mesh",
+    "Selected left camera fist can pick up the kitchen sponge without E; nearest=0.083 hand=(0.46, 1.04, -1.60) sponge=(0.45, 1.09, -1.68) score=0.76",
+    "Opening the left camera hand drops the sponge"
   ],
-  "contactMeanMs": 0.47374531143052684,
-  "contactMaxMs": 3.2719,
+  "contactMeanMs": 0.3008858981860734,
+  "contactMaxMs": 2.3133,
   "name": "apartment-player-replay",
   "exit": 0,
   "rendered": false

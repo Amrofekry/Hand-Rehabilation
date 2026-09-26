@@ -168,6 +168,30 @@ namespace GripRehab.Editor
             Require(!HandKinematics.IsUsable(frame), "non-finite hand depth accepted");
             frame.landmarks[0].z = 0; frame.ageMs = 500;
             Require(!HandKinematics.IsUsable(frame), "already stale camera frame accepted");
+            var open = new LandmarkFrame { schemaVersion = 1, source = "mediapipe-test", handedness = "Right", confidence = .95f, landmarks = new Vector3[21] };
+            var closed = new LandmarkFrame { schemaVersion = 1, source = "mediapipe-test", handedness = "Right", confidence = .95f, landmarks = new Vector3[21] };
+            open.landmarks[0] = closed.landmarks[0] = new Vector3(.5f, .8f, 0);
+            for (int finger = 0; finger < 4; finger++)
+            {
+                int n = 5 + finger * 4; float x = .38f + finger * .08f;
+                open.landmarks[n] = closed.landmarks[n] = new Vector3(x, .54f, 0);
+                open.landmarks[n + 1] = closed.landmarks[n + 1] = new Vector3(x, .46f, 0);
+                open.landmarks[n + 2] = new Vector3(x, .38f, 0); open.landmarks[n + 3] = new Vector3(x, .30f, 0);
+                closed.landmarks[n + 2] = new Vector3(x, .52f, 0); closed.landmarks[n + 3] = new Vector3(x, .60f, 0);
+            }
+            Require(HandKinematics.GripScore(open) < .2f && HandKinematics.GripScore(closed) > .7f,
+                    "camera open/fist landmarks did not separate");
+            var gate = new CameraGripGate();
+            gate.Step(.8f, true, .06f, .55f, .28f, .12f);
+            Require(!gate.Closed, "one short camera frame closed the grasp");
+            gate.Step(.8f, true, .06f, .55f, .28f, .12f);
+            Require(gate.Closed, "sustained fist did not close the grasp");
+            gate.Step(.35f, true, .2f, .55f, .28f, .12f);
+            Require(gate.Closed, "hysteresis released an intermediate grip");
+            gate.Step(.1f, true, .12f, .55f, .28f, .12f);
+            Require(!gate.Closed, "open hand did not release");
+            gate.Step(.8f, true, .12f, .55f, .28f, .12f); gate.Step(.8f, false, .01f, .55f, .28f, .12f);
+            Require(!gate.Closed, "lost camera tracking kept a grip");
             Debug.Log("[REHAB_VERIFY] PASS: force, memory, assembly, maze, trace, and tracking contracts");
         }
 

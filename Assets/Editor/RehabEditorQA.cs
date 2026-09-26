@@ -23,9 +23,9 @@ namespace GripRehab.Editor {
   if(state==PlayModeStateChange.EnteredEditMode){
    try {
     if(!UnityEditor.SessionState.GetBool("ApartmentQA.LastPassed",false))throw new Exception("Runtime suite failed; see apartment-runtime-checks.json");
-    foreach(int port in new[]{27817,27818})using(var socket=new UdpClient(new IPEndPoint(IPAddress.Loopback,port))){}
+    foreach(int port in new[]{27817,27818,27819})using(var socket=new UdpClient(new IPEndPoint(IPAddress.Loopback,port))){}
     int cycle=UnityEditor.SessionState.GetInt(Cycle,0)+1;UnityEditor.SessionState.SetInt(Cycle,cycle);
-    File.AppendAllText("Logs/editor-qa.txt",$"PASS: cycle {cycle}, runtime suite and both UDP sockets released\n");
+    File.AppendAllText("Logs/editor-qa.txt",$"PASS: cycle {cycle}, runtime suite and all three UDP sockets released\n");
     if(cycle<3)EditorApplication.delayCall+=()=>EditorApplication.EnterPlaymode();
     else{UnityEditor.SessionState.SetBool(Active,false);ApartmentAuthoring.VerifyScene();File.AppendAllText("Logs/editor-qa.txt","PASS: THREE PLAY CYCLES\n");if(Application.isBatchMode||Array.IndexOf(Environment.GetCommandLineArgs(),"-rehab-qa-exit")>=0)EditorApplication.Exit(0);else OpenWorkspace();}
    }catch(Exception e){Fail(e.ToString());}

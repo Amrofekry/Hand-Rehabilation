@@ -1,8 +1,19 @@
+# Live MediaPipe camera integration — 26 September 2026 (WBS 3.2)
+
+The saved scene now starts in camera mode. The project-local Python worker opens webcam index 0 through DirectShow, runs MediaPipe Hand Landmarker on live frames, sends 21-point Right/Left frames over loopback UDP 27817, and sends a reduced annotated preview over UDP 27819. The imported Gleechi VirtualGrasp selected hand follows the accepted joint pose. A closed tracked hand near a chosen object picks it up; opening it, changing hands, or losing tracking releases it. Keyboard demo and Phase 2 force remain explicit modes via B. Camera "VISUAL GRIP" is an estimated closure percentage; any virtual contact pressure derived from it is not a load-cell measurement.
+
+**Editor 6000.4.4f1:** three Play/Stop cycles passed **79/79** runtime assertions each, including right-ball and left-sponge gesture pickup/release, stale camera release, rejecting the unselected hand, independent finger motion, force protocol, deformation and fracture software fixtures. All three loopback ports 27817/27818/27819 rebound after each stop (`Logs/editor-qa.txt`, `Logs/vision-editor-qa6.log`). **Windows:** `Builds/Windows/GripRehab.exe` built successfully (`Logs/vision-windows-build2.log`); headless, explicit synthetic-force replay and rendered player each passed **79/79** checks (`Docs/player-checks.json`). The tests use deterministic, labelled synthetic landmark frames for grasp behavior.
+
+**Real camera smoke test:** the rendered Windows player exited 0 with `camera_open`, 22.6 processed frames/s and 7 local preview packets (`Logs/vision-live-acceptance.json`, `Logs/vision-live-player-final.log`). No real hand was present during that run: both `rightTracked` and `leftTracked` were false. This confirms device opening and frame delivery, **not** real-person landmark fidelity, left/right correctness on this webcam, object pickup, depth accuracy, or measured latency. The user plans to put a hand before the camera after the game is ready; that supervised acceptance test remains pending. No Nano 33 IoT or load cell was available, so physical force/BLE testing also remains pending.
+
+The camera-to-virtual-depth mapping estimates forward travel from apparent palm width relative to the first tracked frame. It is approximate and can drift with rotation or perspective; a single RGB camera does not provide metric 3D hand position or grip force. The free VirtualGrasp SDK still emits two transient `No controller for RehabVGController` startup diagnostics before its external controllers become active. Its vendor Grasp DB was not baked for these objects; the project handles proximity pickup and material effects. This is a development demonstration, not clinically validated rehabilitation software.
+
+---
 # Phase 3 apartment QA — 24 September 2026
 
 The standalone Unity project was checked in Editor 6000.4.4f1 and in its Windows player. Every result below is a software result. Physical hardware does not exist yet.
 
-## Selectable VirtualGrasp hand update � 26 September 2026 (WBS 3.4.1)
+## Selectable VirtualGrasp hand update � 26 September 2026 (WBS 3.4.1)
 
 The scene now uses the imported Gleechi VirtualGrasp 1.7.0 hand model, with RIGHT/LEFT selection and exactly one rendered hand. Keyboard controls target each of five fingers and three joints; the external controller passes 16 wrist/joint poses to the SDK output. Phase 2 force packets and 21-point vision frames still feed the separate input rigs. Fifteen contact capsules switch to the selected vendor output hand. Local asymmetric mesh indentation and object-specific fracture were added to the six interaction objects. This replaces the hand implementation described in the 25 September historical sections below.
 

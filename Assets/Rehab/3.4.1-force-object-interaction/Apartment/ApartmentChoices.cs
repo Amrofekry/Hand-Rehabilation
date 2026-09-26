@@ -31,12 +31,12 @@ public sealed class ApartmentChoices:MonoBehaviour {
   controls.interactable=experience.player.Paused;controls.blocksRaycasts=experience.player.Paused;controls.alpha=experience.player.Paused?1f:0f;
   heading.text=experience.player.Paused?"CHOOSE A STATION + OBJECT":"ESC / TAB  •  STATIONS & OBJECTS";
   if(handButton!=null)handButton.GetComponentInChildren<Text>().text=experience.LeftSelected?"LEFT HAND (SWITCH)":"RIGHT HAND (SWITCH)";
-  inputLabel.text=experience.Hardware?"INPUT: PHASE 2":"INPUT: DEMO";
+  inputLabel.text=experience.CameraMode?"INPUT: CAMERA":experience.Hardware?"INPUT: PHASE 2":"INPUT: DEMO";
  }
  private void Living()=>SelectStation(false);
  private void KitchenRoom()=>SelectStation(true);
  private void Resume()=>experience.player.SetPaused(false);
- private void ToggleInput(){experience.SetHardware(!experience.Hardware);Refresh();}
+ private void ToggleInput(){experience.CycleInputMode();Refresh();}
  public bool SelectStation(bool kitchen){
   var player=experience.player;experience.Release();
   if(player.IsSeated&&!player.Stand())return false;

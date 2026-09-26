@@ -99,7 +99,7 @@ namespace GripRehab
         }
 
         public void Pose(LandmarkFrame frame, bool tracking, float demoClosure, float dt,
-                         float smoothing, Vector3 restingPosition, float travelMeters)
+                         float smoothing, Vector3 restingPosition, float travelMeters, bool absoluteImageSpace = false)
         {
             TrackingUsed = tracking && HandKinematics.IsUsable(frame);
             var alpha = 1f - Mathf.Exp(-Mathf.Max(0, dt) / Mathf.Max(.02f, smoothing));
@@ -123,11 +123,14 @@ namespace GripRehab
                     _palmWidthReference = Mathf.Max(.025f, width);
                     _anchored = true;
                 }
-                var delta = points[0] - _wristReference;
+                // Camera mode maps the image center to the resting hand, so moving
+                // the real wrist toward an on-screen object moves the virtual wrist.
+                // Relative mode stays available for the older synthetic/demo contract.
+                var delta = absoluteImageSpace ? points[0] - new Vector3(.5f, .5f, 0) : points[0] - _wristReference;
                 var requested = restingPosition + new Vector3(
                     Mathf.Clamp(delta.x * travelMeters, -.23f, .23f),
                     Mathf.Clamp(delta.y * travelMeters, -.20f, .20f),
-                    Mathf.Clamp((width / _palmWidthReference - 1f) * .08f, -.07f, .07f));
+                    Mathf.Clamp((width / _palmWidthReference - 1f) * (absoluteImageSpace ? .75f : .08f), absoluteImageSpace ? -.20f : -.12f, absoluteImageSpace ? .65f : .12f));
                 transform.localPosition = Vector3.Lerp(transform.localPosition, requested, alpha);
                 var measured = Basis(palmSide, palmUp) * Quaternion.Inverse(_modelPalmBasis);
                 var limited = Quaternion.RotateTowards(_rootRest, measured, maxPalmRotationDegrees);

@@ -8,6 +8,13 @@ public sealed class ApartmentSettings:ScriptableObject {
  [Range(.5f,2)] public float reachMeters=1.6f;
  [Range(.02f,.3f)] public float trackingSmoothing=.08f;
  [Tooltip("Camera image displacement to approximate hand travel. Monocular depth is not metric.")] [Range(.2f,1.5f)] public float trackingTravelMeters=.85f;
+ [Header("Camera interaction - visual estimate, not measured force")]
+ [Tooltip("Open the local webcam and select camera control when Play starts. Acceptance smoke runs remain demo-only.")] public bool startWithCamera=true;
+ [Range(.25f,.9f)] public float cameraCloseAt=.55f;
+ [Range(.05f,.5f)] public float cameraOpenAt=.28f;
+ [Range(.05f,.4f)] public float cameraGestureDwellSeconds=.12f;
+ [Range(.03f,.2f)] public float cameraGrabRadiusMeters=.09f;
+ [Range(5,80)] public float cameraVisualMaxNewtons=38f;
  [Header("Vendor hand calibration")]
  [Tooltip("Pull the left Gleechi wrist toward the camera so its fingertips align with the carried object.")] [Range(0,.3f)] public float leftWristSetbackMeters=.18f;
  [Header("Seated grip clearance")]
