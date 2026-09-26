@@ -9,12 +9,13 @@ public sealed class ApartmentPlayer:MonoBehaviour {
  public bool Paused{get;private set;}
  public CharacterController Controller{get;private set;}
  public Vector3 Spawn{get;private set;}
- private float _pitch,_vertical;private SeatPoint _seat;private Vector3 _returnPosition;private Quaternion _returnRotation;
+ private float _pitch,_vertical;private SeatPoint _seat;private Vector3 _returnPosition;private Quaternion _returnRotation;private RehabAppShell _shell;
  private void Awake(){Controller=GetComponent<CharacterController>();Spawn=transform.position;}
- private void Start(){SetPaused(true);}
+ private void Start(){_shell=FindAnyObjectByType<RehabAppShell>();SetPaused(true);}
  private void OnDisable(){Cursor.lockState=CursorLockMode.None;Cursor.visible=true;}
  public void SetPaused(bool paused){Paused=paused;Cursor.lockState=paused?CursorLockMode.None:CursorLockMode.Locked;Cursor.visible=paused;}
  private void Update(){
+  if(_shell!=null&&_shell.BlocksGameplay){if(!Paused)SetPaused(true);return;}
   if(Input.GetKeyDown(KeyCode.Escape))SetPaused(!Paused);
   if(Paused)return;
   transform.Rotate(0,Input.GetAxisRaw("Mouse X")*settings.mouseSensitivity,0);

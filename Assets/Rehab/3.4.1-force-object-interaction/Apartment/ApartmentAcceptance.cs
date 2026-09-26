@@ -376,6 +376,71 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     "Camera restart accepts a new MediaPipe sequence starting at one");
   }
   app.SetHardware(false);app.ResetObjects();player.enabled=true;player.SetPaused(true);
+  var shell=FindAnyObjectByType<RehabAppShell>();
+  Check(shell!=null&&shell.root!=null&&shell.homePanel!=null&&shell.modulePanel!=null&&shell.profilePanel!=null&&
+   shell.patientPanel!=null&&shell.doctorPanel!=null&&shell.gameplayLayers.Length>=4,
+   "Saved main menu, profile, module, dashboard and gameplay HUD references are complete");
+  Check(shell.root.GetComponent<UnityEngine.UI.Image>().color.a>=.999f&&
+   shell.continueButton.GetComponentInChildren<UnityEngine.UI.Text>().text=="CONTINUE PRACTICE",
+   "Main menu backdrop hides gameplay text and Continue is labelled as practice recovery");
+  Check(new[]{shell.profilePicker,shell.genderPicker,shell.affectedPicker,shell.dominantPicker}
+   .All(d=>d.transform.Find("Arrow/Chevron")!=null),
+   "Saved profile dropdowns have visible chevrons instead of missing sprite squares");
+  var testProfileDirectory=Path.Combine(Application.temporaryCachePath,"grip-profile-qa-"+Guid.NewGuid().ToString("N"));
+  shell.SetStoreForAcceptance(new RehabProfileStore(testProfileDirectory));
+  shell.ShowHome();
+  Check(shell.BlocksGameplay&&shell.CurrentPage=="Home"&&player.Paused&&!shell.continueButton.interactable,
+   "First launch opens a paused home menu and disables Continue without a saved session");
+  yield return Screenshot("ui-main-menu");
+  shell.startButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Profile","Start Game directs an unregistered patient to profile creation");
+  yield return Screenshot("ui-new-profile");
+  shell.saveProfileButton.onClick.Invoke();
+  Check(shell.Store.Active==null&&shell.formError.text.Contains("age"),
+   "Incomplete profile stays on the form with a visible validation message");
+  shell.nameField.text="Acceptance Patient";shell.ageField.text="29";shell.concernField.text="Reduced grip comfort";
+  shell.goalField.text="Hold a cup";shell.painField.text="4";
+  shell.affectedPicker.value=1;shell.dominantPicker.value=0;
+  shell.saveProfileButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Modules"&&shell.Store.Active!=null&&shell.Store.Active.affectedHand=="Left"&&
+   shell.Store.Active.painToday==4&&shell.Store.Active.goal=="Hold a cup",
+   "New profile saves self-reported hand, goal and optional pain accurately");
+  Check(!shell.cognitiveLockedButton.interactable&&!shell.visuomotorLockedButton.interactable&&
+   shell.openModuleButton.interactable,"Only Module 01 is playable; GP2 modules remain visibly locked");
+  yield return Screenshot("ui-module-selection");
+  shell.openModuleButton.onClick.Invoke();
+  Check(!shell.BlocksGameplay&&!player.Paused&&app.CameraMode&&shell.Store.Active.hasSession,
+   "Open Module 01 begins camera mode and creates a resumable checkpoint");
+  menu.SelectStation(true);menu.SelectObject(1);app.SelectHand(true);app.SetHardware(false);
+  shell.gameplayHomeButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Home"&&shell.BlocksGameplay&&shell.continueButton.interactable&&
+   shell.Store.Active.kitchen&&shell.Store.Active.kitchenObject==1&&shell.Store.Active.leftHand&&
+   shell.Store.Active.inputMode==1,"Main Menu saves kitchen, object, hand and demo mode for Continue");
+  var reloaded=new RehabProfileStore(testProfileDirectory);
+  Check(reloaded.Active!=null&&reloaded.Active.id==shell.Store.Active.id&&reloaded.Active.kitchenObject==1,
+   "Saved profile and session checkpoint survive a fresh disk load");
+  shell.continueButton.onClick.Invoke();
+  Check(!shell.BlocksGameplay&&!player.Paused&&!app.CameraMode&&!app.Hardware&&menu.Kitchen&&
+   menu.KitchenSelection==1&&app.LeftSelected,"Continue restores Module 01 location, object, hand and input mode");
+  shell.gameplayHomeButton.onClick.Invoke();
+  shell.patientButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Patient"&&shell.patientSummary.text.Contains("Acceptance Patient")&&
+   shell.patientSummary.text.Contains("No saved session")==false,
+   "Patient preview shows the selected profile and a real saved-session state");
+  shell.homeFromPatientButton.onClick.Invoke();shell.doctorButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Doctor"&&shell.doctorSummary.text.Contains("Preview only"),
+   "Doctor dashboard is clearly labelled as an unimplemented preview");
+  shell.homeFromDoctorButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Home"&&player.Paused,"Dashboard navigation returns to the home menu");
+  shell.newProfileButton.onClick.Invoke();
+  shell.nameField.text="Second Patient";shell.ageField.text="44";
+  shell.saveProfileButton.onClick.Invoke();shell.homeFromModulesButton.onClick.Invoke();
+  Check(shell.Store.Active.name=="Second Patient"&&!shell.continueButton.interactable,
+   "A new patient cannot continue another patient's checkpoint");
+  shell.profilePicker.value=0;shell.chooseProfileButton.onClick.Invoke();
+  Check(shell.Store.Active.name=="Acceptance Patient"&&shell.continueButton.interactable,
+   "Profile picker signs back into the original patient's saved session");
+  Directory.Delete(testProfileDirectory,true);
  }
  private IEnumerator DriveForce(float force,float seconds){
   app.TestForce=force;

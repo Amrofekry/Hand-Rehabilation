@@ -17,6 +17,7 @@ public sealed class ApartmentChoices:MonoBehaviour {
  public int KitchenSelection{get;private set;}
  public SqueezableObject SelectedObject=>Kitchen?kitchenObjects[KitchenSelection]:livingObjects[LivingSelection];
  private UnityAction[] callbacks;
+ private RehabAppShell shell;
  private void OnEnable(){
   if(handButton!=null)handButton.onClick.AddListener(ToggleHand);livingButton.onClick.AddListener(Living);kitchenButton.onClick.AddListener(KitchenRoom);resumeButton.onClick.AddListener(Resume);inputButton.onClick.AddListener(ToggleInput);
   callbacks=new UnityAction[objectButtons.Length];for(int i=0;i<objectButtons.Length;i++){int choice=i;callbacks[i]=()=>SelectObject(choice);objectButtons[i].onClick.AddListener(callbacks[i]);}
@@ -25,9 +26,10 @@ public sealed class ApartmentChoices:MonoBehaviour {
   if(handButton!=null)handButton.onClick.RemoveListener(ToggleHand);livingButton.onClick.RemoveListener(Living);kitchenButton.onClick.RemoveListener(KitchenRoom);resumeButton.onClick.RemoveListener(Resume);inputButton.onClick.RemoveListener(ToggleInput);
   if(callbacks!=null)for(int i=0;i<objectButtons.Length;i++)objectButtons[i].onClick.RemoveListener(callbacks[i]);
  }
- private void Start(){experience.SelectHand(false);experience.player.SetPaused(true);Refresh();}
+ private void Start(){shell=FindAnyObjectByType<RehabAppShell>();experience.SelectHand(false);experience.player.SetPaused(true);Refresh();}
  private void ToggleHand(){experience.SelectHand(!experience.LeftSelected);Refresh();}
  private void Update(){
+  if(shell!=null&&shell.BlocksGameplay){controls.interactable=false;controls.blocksRaycasts=false;controls.alpha=0;return;}
   if(Input.GetKeyDown(KeyCode.Tab))experience.player.SetPaused(!experience.player.Paused);
   controls.interactable=experience.player.Paused;controls.blocksRaycasts=experience.player.Paused;controls.alpha=experience.player.Paused?1f:0f;
   heading.text=experience.player.Paused?"CHOOSE A STATION + OBJECT":"ESC / TAB  •  STATIONS & OBJECTS";
@@ -56,8 +58,9 @@ public sealed class ApartmentChoices:MonoBehaviour {
  public void ResetSelectionForTests(){Kitchen=false;LivingSelection=KitchenSelection=0;}
  private void Refresh(){
   var list=Kitchen?kitchenObjects:livingObjects;int selected=Kitchen?KitchenSelection:LivingSelection;
-  for(int i=0;i<objectButtons.Length;i++){objectButtons[i].GetComponentInChildren<Text>().text=list[i].displayName;objectButtons[i].image.color=i==selected?new Color(.10f,.40f,.62f):new Color(.10f,.19f,.29f);}
-  livingButton.image.color=!Kitchen?new Color(.10f,.40f,.62f):new Color(.10f,.19f,.29f);kitchenButton.image.color=Kitchen?new Color(.10f,.40f,.62f):new Color(.10f,.19f,.29f);
+  var active=new Color(.12f,.49f,.47f);var inactive=new Color(.08f,.20f,.25f);
+  for(int i=0;i<objectButtons.Length;i++){objectButtons[i].GetComponentInChildren<Text>().text=list[i].displayName;objectButtons[i].image.color=i==selected?active:inactive;}
+  livingButton.image.color=!Kitchen?active:inactive;kitchenButton.image.color=Kitchen?active:inactive;
  }
 }
 }
