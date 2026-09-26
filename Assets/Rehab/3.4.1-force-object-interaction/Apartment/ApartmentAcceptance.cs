@@ -207,7 +207,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
    }
-   Check(app.CameraMode&&app.ForceValid&&HandKinematics.GripScore(app.vision.LatestRight)<.2f,"Open camera hand drives valid pose without squeezing");
+   Check(app.CameraMode&&!app.LeftSelected&&app.ForceValid&&HandKinematics.GripScore(app.vision.LatestRight)<.2f,"Detected right hand automatically selects and drives the right vendor hand");
    player.SetPaused(true);
    for(int i=0;i<3;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
@@ -240,22 +240,38 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     yield return new WaitForSeconds(.06f);
    }
    Check(app.Held==null&&app.CameraMode,"Opening the tracked hand releases the ball");
+   Check(app.TryCameraSummonSelectedObject()&&app.CameraMode&&app.Held==ball,
+    "G brings the selected living-room object into the tracked right hand without changing camera mode");
+   yield return new WaitForFixedUpdate();
+   Check(Vector3.Distance(ball.transform.position,app.rightHand.transform.position)<.5f,
+    "Summoned object is positioned at the right hand without requiring camera depth alignment");
+   for(int i=0;i<24;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.Held==null&&app.CameraMode,"Summoned object drops if the tracked hand stays open beyond the grace period");
    for(int i=0;i<5;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
    }
    yield return new WaitForSeconds(.6f);
    Check(!app.ForceValid&&app.ForceNewtons==0&&app.Held==null,"Stale camera landmarks clear visual pressure and cannot keep holding");
+   Check(!app.TryCameraSummonSelectedObject(),"G cannot summon an object without a fresh tracked hand");
    app.SelectHand(true);menu.SelectStation(true);menu.SelectObject(0);player.SetPaused(false);
    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++seq,captured+=.06)));
    yield return new WaitForSeconds(.08f);
-   Check(!app.ForceValid&&app.Held==null,"Right-hand camera data cannot squeeze the selected left hand");
+   Check(!app.LeftSelected&&app.ForceValid&&app.Held==null,"Right camera data automatically switches the selected hand from left to right");
    long leftSeq=1000;double leftCaptured=1000;
    for(int i=0;i<6;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
     yield return new WaitForSeconds(.06f);
    }
-   Check(app.ForceValid&&app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.leftOnlyMesh,"Selected left camera stream drives only the left vendor mesh");
+   Check(app.LeftSelected&&app.ForceValid&&app.leftHand.TrackingUsed&&app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.leftOnlyMesh,
+    "Left camera data automatically selects and drives the left vendor mesh");
+   Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
+   Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
+   yield return new WaitForSeconds(.07f);
+   Check(app.LeftSelected,"Seeing both hands briefly does not switch away from the actively tracked left hand");
    foreach(var imageY in new[]{.5f,.7f,.85f}){
     foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f,.8f}){
      for(int i=0;i<4;i++){
@@ -273,6 +289,21 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     yield return new WaitForSeconds(.06f);
    }
    Check(app.Held==null,"Opening the left camera hand drops the sponge");
+   Check(app.TryCameraSummonSelectedObject()&&app.CameraMode&&app.Held==sponge,
+    "G brings the selected kitchen object into the tracked left hand without changing camera mode");
+   yield return new WaitForFixedUpdate();
+   Check(Vector3.Distance(sponge.transform.position,app.leftHand.transform.position)<.5f,
+    "Summoned kitchen object is positioned at the left hand");
+   for(int i=0;i<24;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++leftSeq,leftCaptured+=.06,"Left")));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.Held==sponge&&app.CameraMode,"Closing the left hand within the G grace period keeps the summoned object held");
+   for(int i=0;i<6;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.Held==null,"Opening the left hand after a G grip releases the object");
    app.SelectHand(false);menu.SelectStation(false);menu.SelectObject(0);player.SetPaused(false);
    player.view.transform.LookAt(ball.transform.position);
    Check(app.TryKeyboardAction()&&!app.CameraMode&&app.Held==ball,

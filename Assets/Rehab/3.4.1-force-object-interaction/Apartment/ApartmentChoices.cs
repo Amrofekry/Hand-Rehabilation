@@ -15,6 +15,7 @@ public sealed class ApartmentChoices:MonoBehaviour {
  public bool Kitchen{get;private set;}
  public int LivingSelection{get;private set;}
  public int KitchenSelection{get;private set;}
+ public SqueezableObject SelectedObject=>Kitchen?kitchenObjects[KitchenSelection]:livingObjects[LivingSelection];
  private UnityAction[] callbacks;
  private void OnEnable(){
   if(handButton!=null)handButton.onClick.AddListener(ToggleHand);livingButton.onClick.AddListener(Living);kitchenButton.onClick.AddListener(KitchenRoom);resumeButton.onClick.AddListener(Resume);inputButton.onClick.AddListener(ToggleInput);

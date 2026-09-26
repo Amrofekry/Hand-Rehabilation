@@ -17,6 +17,8 @@ namespace GripRehab
         public LandmarkFrame LatestLeft { get; private set; }
         public bool RightValid => Valid(LatestRight, _rightReceivedAt);
         public bool LeftValid => Valid(LatestLeft, _leftReceivedAt);
+        public double RightAgeSeconds => RightValid ? Time.realtimeSinceStartupAsDouble - _rightReceivedAt : double.PositiveInfinity;
+        public double LeftAgeSeconds => LeftValid ? Time.realtimeSinceStartupAsDouble - _leftReceivedAt : double.PositiveInfinity;
         // Backward compatibility for the other training modules.
         public LandmarkFrame Latest => RightValid ? LatestRight : LeftValid ? LatestLeft : null;
         public bool TrackingValid => RightValid || LeftValid;

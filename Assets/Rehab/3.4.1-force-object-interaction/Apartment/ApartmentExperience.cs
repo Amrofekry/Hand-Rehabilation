@@ -12,6 +12,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public FingerPoseDriver ActiveHand=>LeftSelected?leftHand:rightHand;
  public void SelectHand(bool left){Release();_cameraGrip.Reset();CameraGripScore=0;LeftSelected=left;_leftDemoSelected=left;if(contactRig!=null){contactRig.pose=ActiveHand;foreach(var p in contactRig.probes){p.Clear();p.transform.SetParent(ActiveHand.transform,true);}Physics.SyncTransforms();}if(virtualGrasp!=null){virtualGrasp.ShowLeft(left);virtualGrasp.BindContacts(contactRig,left);}rightHand.ResetFingers();leftHand.ResetFingers();}
  public Transform holdAnchor;public FingerPoseDriver rightHand,leftHand;public FingerContactRig contactRig;
+ public ApartmentChoices choices;
  public Text statusText,contextText,forceText;public Image progressFill;
  public SqueezableObject[] objects;public SeatPoint[] seats;
  public SqueezableObject Held{get;private set;}
@@ -26,7 +27,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public float ProgressSeconds => _task.ProgressSeconds;
  public float TestForce=-1; // Used only when an explicit acceptance-test command-line flag is present.
  public string Status{get;private set;}="Ready";
- private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;
+ private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil;
  private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
  private ForceHoldTask _task=new ForceHoldTask(18,3,3);
  private long _contactTicks;
@@ -35,7 +36,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  #if UNITY_EDITOR
  public void EnableAcceptanceInput(){_testing=true;}
 #endif
- private void Start(){_rightRest=rightHand.transform.localPosition;_leftRest=leftHand.transform.localPosition;DemoSetpoint=settings.demoForceNewtons;_testing=Array.Exists(Environment.GetCommandLineArgs(),x=>x.StartsWith("-apartment-"));
+ private void Start(){_rightRest=rightHand.transform.localPosition;_leftRest=leftHand.transform.localPosition;choices=choices!=null?choices:FindAnyObjectByType<ApartmentChoices>();DemoSetpoint=settings.demoForceNewtons;_testing=Array.Exists(Environment.GetCommandLineArgs(),x=>x.StartsWith("-apartment-"));
 #if UNITY_EDITOR
  _testing|=UnityEditor.SessionState.GetBool("ApartmentQA.Active",false);
 #endif
@@ -44,6 +45,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public void CycleInputMode(){if(CameraMode)SetHardware(false);else if(Hardware)SetCameraMode();else SetHardware(true);}
  public void SetHardware(bool hardware){Release();CameraMode=false;CameraGripScore=0;_cameraGrip.Reset();cameraLauncher?.StopWorker();Hardware=hardware;_manualRight=_manualLeft=Vector3.zero;if(!hardware){rightHand.UseDemoPose();leftHand.UseDemoPose();}ForceNewtons=ContactForceNewtons=0;_filter.Reset();_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
  private void Update(){
+  AutoSelectCameraHand();
   if(Input.GetKeyDown(KeyCode.B))CycleInputMode();
   if(!player.Paused){
    if(!Hardware&&!CameraMode){DemoSetpoint=Mathf.Clamp(DemoSetpoint+Input.mouseScrollDelta.y*3+(Input.GetKey(KeyCode.Equals)?25*Time.deltaTime:Input.GetKey(KeyCode.Minus)?-25*Time.deltaTime:0),1,80);UpdateDemoHandMovement();}
@@ -57,6 +59,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
     if(Held!=null)Release();
     else TryKeyboardAction();
    }
+   if(Input.GetKeyDown(KeyCode.G))TryCameraSummonSelectedObject();
   }
   var selectedFrame=LeftSelected?vision.LatestLeft:vision.LatestRight;
   bool cameraTracked=CameraMode&&(LeftSelected?vision.LeftValid:vision.RightValid)&&
@@ -68,7 +71,8 @@ public sealed class ApartmentExperience:MonoBehaviour {
    CameraGripScore=cameraTracked?HandKinematics.GripScore(selectedFrame):0;
    _cameraGrip.Step(CameraGripScore,cameraValid,Time.deltaTime,settings.cameraCloseAt,settings.cameraOpenAt,settings.cameraGestureDwellSeconds);
    if(!cameraValid&&Held!=null){Release();Status="Camera tracking lost - object released";}
-   else if(!_cameraGrip.Closed&&Held!=null){Release();Status="Hand opened - object released";}
+   else if(_cameraGrip.Closed&&CameraGripScore>=settings.cameraCloseAt)_summonGraceUntil=0;
+   else if(Held!=null&&Time.unscaledTime>=_summonGraceUntil){Release();Status="Hand opened - object released";}
    ForceNewtons=cameraValid?Mathf.MoveTowards(ForceNewtons,CameraGripScore*settings.cameraVisualMaxNewtons,90*Time.deltaTime):0;
   } else if(Hardware){
    ForceValid=forceReceiver.Latest.Valid&&!player.Paused;ForceNewtons=ForceValid?forceReceiver.Latest.Newtons:0;
@@ -97,6 +101,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
   leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
   if(CameraMode&&cameraValid&&_cameraGrip.Closed&&Held==null)TryCameraGrab();
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
+ }
+ // Follow the only actively observed physical hand. When both are visible,
+ // retain the selected side until its stream has stopped refreshing.
+ private void AutoSelectCameraHand(){
+  if(!CameraMode||vision==null)return;
+  double selectedAge=LeftSelected?vision.LeftAgeSeconds:vision.RightAgeSeconds;
+  double otherAge=LeftSelected?vision.RightAgeSeconds:vision.LeftAgeSeconds;
+  if(otherAge<.15&&(double.IsPositiveInfinity(selectedAge)||selectedAge>.25)){
+   SelectHand(!LeftSelected);
+   Status=LeftSelected?"Camera selected LEFT hand":"Camera selected RIGHT hand";
+  }
  }
  public void SetDemoHandOffset(bool left,Vector3 offset){
   if(Hardware||CameraMode)return;
@@ -163,6 +178,25 @@ public sealed class ApartmentExperience:MonoBehaviour {
   }
   if(nearest!=null&&TryGrab(nearest))Status="Camera grip: holding "+nearest.displayName;
  }
+ // G brings the station's selected object into the tracked hand without
+ // changing input mode. The patient must close the hand within a short grace
+ // period; tracking loss always releases immediately.
+ public bool TryCameraSummonSelectedObject(){
+  if(!CameraMode||player.Paused||Held!=null||choices==null||vision==null)return false;
+  var frame=LeftSelected?vision.LatestLeft:vision.LatestRight;
+  if(!(LeftSelected?vision.LeftValid:vision.RightValid)||frame==null||
+     !(cameraLauncher!=null&&cameraLauncher.CameraOpened||_testing)||
+     !((frame.source??"").StartsWith("mediapipe-",StringComparison.OrdinalIgnoreCase)||_testing)){
+   Status="Show the selected hand to the camera before pressing G";return false;
+  }
+  var item=choices.SelectedObject;
+  if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.Grab())return false;
+  Held=item;_summonGraceUntil=Time.unscaledTime+1.25f;
+  var target=GripTarget(item);item.Body.position=target;item.Body.rotation=holdAnchor.rotation;
+  Physics.SyncTransforms();_lastHeld=target;_velocity=Vector3.zero;_task.Reset();
+  Status="Camera hand: close fingers to keep "+item.displayName;
+  return true;
+ }
  // E is an explicit request for keyboard pickup. It switches camera mode to
  // demo before grasping, so missing camera frames cannot imply measured force.
  public bool TryKeyboardAction(){
@@ -186,7 +220,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.03f,~(1<<8),QueryTriggerInteraction.Ignore)&&hit.collider.GetComponentInParent<SqueezableObject>()!=item)return false;
   if(!item.Grab())return false;Held=item;_lastHeld=GripTarget(item);_velocity=Vector3.zero;_task.Reset();_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;Status="Holding "+item.displayName;return true;
  }
- public void Release(){if(Held!=null){Held.Release(_velocity*.15f);Held=null;}_task.Reset();}
+ public void Release(){if(Held!=null){Held.Release(_velocity*.15f);Held=null;}_summonGraceUntil=0;_task.Reset();}
  public void ResetObjects(){Release();foreach(var item in objects)item.ResetObject();Status="Objects restored to their stations";}
  private static string VisionLabel(LandmarkFrame frame)=>frame!=null&&(frame.source??"").StartsWith("synthetic",StringComparison.OrdinalIgnoreCase)?"SYNTHETIC":"CAMERA";
  private void RefreshHUD(){
@@ -196,12 +230,12 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(CameraMode){
    string cameraState=cameraLauncher==null?"NOT CONFIGURED":cameraLauncher.State;
    forceText.text=(CameraGripScore*100).ToString("F0")+"% VISUAL GRIP\nCAMERA: "+cameraState+"  "+(cameraLauncher==null?"":cameraLauncher.FramesPerSecond.ToString("F0")+" FPS")+"  R:"+(vision.RightValid?"YES":"NO")+" L:"+(vision.LeftValid?"YES":"NO")+"  OK:"+vision.AcceptedPackets+" REJ:"+vision.RejectedPackets+"\n"+
-    (Held!=null?Held.displayName+" | "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm indentation":"Move hand to object, then close fingers")+"\nNo measured force; open hand to release";
+    (Held!=null?Held.displayName+" | "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm indentation":"Close near object, or press G to bring selected object to hand")+"\nNo measured force; open hand to release";
   } else forceText.text=(ForceValid?ForceNewtons.ToString("F1"):"--")+" N\n"+(Hardware?forceReceiver.State.Status:"Demo setpoint "+DemoSetpoint.ToString("F0")+" N")+"\n"+(Held!=null?Held.displayName+"  ·  "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm deformation | "+Held.Damage+(Held.BreakThresholdNewtons>0?" | break > "+Held.BreakThresholdNewtons+" N":""):"Aim at an object and press E")+"\nHOLD  "+_task.ProgressSeconds.ToString("F1")+" / 3 s  ·  target 18 ± 3 N";
   progressFill.rectTransform.localScale=new Vector3(CameraMode?CameraGripScore:Mathf.Clamp01(_task.ProgressSeconds/3),1,1);
   string prompt=Status;
   if(Held==null&&Physics.Raycast(player.view.ViewportPointToRay(new Vector3(.5f,.5f,0)),out var hit,settings.reachMeters,~(1<<8),QueryTriggerInteraction.Ignore)){
-   var item=hit.collider.GetComponentInParent<SqueezableObject>();if(item!=null)prompt=CameraMode?"Close tracked fingers, or press E for keyboard grip: "+item.displayName:"E  •  Pick up "+item.displayName;
+   var item=hit.collider.GetComponentInParent<SqueezableObject>();if(item!=null)prompt=CameraMode?"Close tracked fingers, or G to summon selected object; E uses keyboard: "+item.displayName:"E  •  Pick up "+item.displayName;
    else if(hit.collider.GetComponentInParent<ApartmentDoor>()!=null)prompt="E  •  Open / close door";
   }
   if(CameraMode&&!ActiveHand.TrackingUsed&&vision.TrackingValid)
@@ -209,7 +243,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   else if(CameraMode&&!ActiveHand.TrackingUsed&&vision.RejectedPackets>0)
    prompt="Camera frames rejected: "+vision.LastRejection;
   if(CameraMode&&cameraLauncher!=null&&!string.IsNullOrEmpty(cameraLauncher.LastError))prompt=cameraLauncher.LastError;
-  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"\n"+(player.Paused?"PAUSED � ESC to resume":prompt)+"\nWASD move  �  Mouse look  �  E grab  �  Q release  �  F sit / stand\nSpace/click squeeze  �  1�5 finger  �  J joint  �  X/Z bend/open  �  C reset  �  arrows/PgUp/PgDn move  �  TAB hand/object menu";
+  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"\n"+(player.Paused?"PAUSED � ESC to resume":prompt)+"\nWASD move  �  Mouse look  �  G camera summon  �  E keyboard grab  �  Q release  �  F sit / stand\nSpace/click squeeze  �  1�5 finger  �  J joint  �  X/Z bend/open  �  C reset  �  arrows/PgUp/PgDn move  �  TAB hand/object menu";
  }
 }
 }
