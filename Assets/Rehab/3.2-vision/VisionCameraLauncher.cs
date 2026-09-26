@@ -15,6 +15,7 @@ namespace GripRehab
         [Min(0)] public int cameraIndex = 0;
         [Tooltip("Mirror a front-facing webcam before MediaPipe so Right/Left match the patient.")]
         public bool mirror = true;
+        [Tooltip("Swap MediaPipe RIGHT/LEFT labels when this webcam reports the opposite physical hand. Enabled for the current laptop camera.")]
         public bool swapHandedness;
         [Tooltip("Request a stable 30 FPS webcam stream with fixed exposure when supported. Disable if the preview becomes too dark.")]
         public bool lowLatencyCapture = true;

@@ -1,3 +1,15 @@
+# Laptop handedness, palm tracking and player recoil — 26 September 2026 (WBS 3.2 / 3.4.1)
+
+The user observed that their real right hand selected the left virtual hand and vice versa. The saved scene now enables `VisionCameraLauncher.swapHandedness`, which swaps labels in both the UDP landmark stream and annotated preview. Python's label-swap contract test passed; the actual corrected mapping still needs the user's next live-hand observation.
+
+The imported VirtualGrasp palm had been limited to a 55-degree turn at 75% weight. Both hand drivers now allow up to 160 degrees at full weight. Their first accepted 21-point frame calibrates the vendor hand's rest orientation, and subsequent frames apply the 3D palm rotation relative to that reference. Pressing C in camera mode releases any held object and recenters the palm. The earlier absolute mapping moved fingertips away from grippable objects; that failed an acceptance test and was replaced by relative calibration, which retained the existing close-range grip behavior. Single-RGB-camera depth and occluded joints remain estimates, not exact physical pose measurements.
+
+Held objects now ignore collisions against the player's CharacterController until release or fracture. This prevents the carried object's collider from displacing the player while it follows the hand. Acceptance also overlaps a held kitchen cup with the standing controller, calls `CharacterController.Move`, and checks for less than 15 mm horizontal drift before restoring ordinary collision on release.
+
+**Final verification:** Unity Editor 6000.4.4f1 passed **99/99 checks in each of three Play/Stop cycles** and released UDP 27817/27818/27819 (`Logs/editor-qa.txt`, `Logs/hand-pose-recoil-editor-qa-final.log`). The Windows build succeeded (`Logs/hand-pose-recoil-windows-build-final.log`), and headless, explicit Phase 2 replay, and rendered players each passed **99/99 checks** (`Docs/player-checks.json`). The final built player opened the webcam/MediaPipe preview at **30.5 FPS** and delivered 17 preview packets (`Logs/vision-live-acceptance.json`, `Logs/hand-pose-recoil-vision-live-final.log`). The two Python bridge contract tests passed. No hand was in view for that camera smoke test, so live human left/right correctness, rotation fidelity and physical grip behavior after these changes are **not yet directly verified**.
+
+---
+
 # Automatic camera hand selection and G summon — 26 September 2026 (WBS 3.2 / 3.4.1)
 
 The reported live right hand worked while the left did not. Camera mode previously used only the manually selected side and the menu always initialized that choice to Right. The game now selects the sole fresh MediaPipe Right/Left stream automatically. If both streams are present, it keeps the selected side until that stream has stopped refreshing; switching sides releases a held object and rebinds the imported VirtualGrasp mesh and contact bones. The menu hand switch remains available. This change does not alter the Phase 2 force protocol.

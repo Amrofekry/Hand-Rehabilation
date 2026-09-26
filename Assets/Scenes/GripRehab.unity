@@ -7560,8 +7560,8 @@ MonoBehaviour:
   curlAxis: {x: 0, y: 0, z: 1}
   curlSign: 1
   spreadAxis: {x: 0, y: 1, z: 0}
-  palmRotationWeight: 0.75
-  maxPalmRotationDegrees: 55
+  palmRotationWeight: 1
+  maxPalmRotationDegrees: 160
   holdLastTrackedPoseOnLoss: 0
 --- !u!1 &1470110621
 GameObject:
@@ -9295,8 +9295,8 @@ MonoBehaviour:
   curlAxis: {x: 0, y: 0, z: 1}
   curlSign: -1
   spreadAxis: {x: 0, y: 1, z: 0}
-  palmRotationWeight: 0.75
-  maxPalmRotationDegrees: 55
+  palmRotationWeight: 1
+  maxPalmRotationDegrees: 160
   holdLastTrackedPoseOnLoss: 0
 --- !u!1 &1950054695
 GameObject:
@@ -10556,7 +10556,7 @@ MonoBehaviour:
   autoStartOnPlay: 0
   cameraIndex: 0
   mirror: 1
-  swapHandedness: 0
+  swapHandedness: 1
   lowLatencyCapture: 1
   manualExposure: -5
 --- !u!114 &8737890429124235522

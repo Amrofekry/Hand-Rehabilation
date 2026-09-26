@@ -60,6 +60,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
     else TryKeyboardAction();
    }
    if(Input.GetKeyDown(KeyCode.G))TryCameraSummonSelectedObject();
+   if(CameraMode&&Input.GetKeyDown(KeyCode.C)){Release();ActiveHand.RecenterTracking();Status="Camera hand orientation recentered";}
   }
   var selectedFrame=LeftSelected?vision.LatestLeft:vision.LatestRight;
   bool cameraTracked=CameraMode&&(LeftSelected?vision.LeftValid:vision.RightValid)&&
@@ -87,7 +88,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(!ForceValid){_filter.Reset();ContactForceNewtons=0;}
   else if(!Hardware)ContactForceNewtons=_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);
   else if(_filteredSamples!=forceReceiver.State.SampleCount){_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples++;ContactForceNewtons=_sessionValidSamples<2?0:_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);}
-  if(Held!=null&&Held.IsBroken){Held=null;Status="Virtual brittle object fractured — R to reset";}
+  if(Held!=null&&Held.IsBroken){IgnoreHeldPlayerCollision(false);Held=null;Status="Virtual brittle object fractured — R to reset";}
   if(Held!=null&&ForceValid){
    if(!Hardware&&!CameraMode)_task.Step(new ForceReading(ForceNewtons,Time.realtimeSinceStartupAsDouble,true,true),Time.deltaTime);
    else if(Hardware&&_lastSamples!=forceReceiver.State.SampleCount){_task.Step(forceReceiver.Latest,Mathf.Min(.1f,(uint)((uint)forceReceiver.State.SampleMs-(uint)_lastMs)/1000f));_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;}
@@ -191,7 +192,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   }
   var item=choices.SelectedObject;
   if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.Grab())return false;
-  Held=item;_summonGraceUntil=Time.unscaledTime+1.25f;
+  Held=item;IgnoreHeldPlayerCollision(true);_summonGraceUntil=Time.unscaledTime+1.25f;
   var target=GripTarget(item);item.Body.position=target;item.Body.rotation=holdAnchor.rotation;
   Physics.SyncTransforms();_lastHeld=target;_velocity=Vector3.zero;_task.Reset();
   Status="Camera hand: close fingers to keep "+item.displayName;
@@ -218,9 +219,14 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var eye=player.view.transform.position;var direction=item.transform.position-eye;
   if(direction.magnitude>settings.reachMeters)return false;
   if(Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.03f,~(1<<8),QueryTriggerInteraction.Ignore)&&hit.collider.GetComponentInParent<SqueezableObject>()!=item)return false;
-  if(!item.Grab())return false;Held=item;_lastHeld=GripTarget(item);_velocity=Vector3.zero;_task.Reset();_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;Status="Holding "+item.displayName;return true;
+  if(!item.Grab())return false;Held=item;IgnoreHeldPlayerCollision(true);_lastHeld=GripTarget(item);_velocity=Vector3.zero;_task.Reset();_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;Status="Holding "+item.displayName;return true;
  }
- public void Release(){if(Held!=null){Held.Release(_velocity*.15f);Held=null;}_summonGraceUntil=0;_task.Reset();}
+ private void IgnoreHeldPlayerCollision(bool ignore){
+  if(Held==null||player==null||player.Controller==null)return;
+  foreach(var collider in Held.GetComponentsInChildren<Collider>())
+   if(collider!=null)Physics.IgnoreCollision(collider,player.Controller,ignore);
+ }
+ public void Release(){if(Held!=null){IgnoreHeldPlayerCollision(false);Held.Release(_velocity*.15f);Held=null;}_summonGraceUntil=0;_task.Reset();}
  public void ResetObjects(){Release();foreach(var item in objects)item.ResetObject();Status="Objects restored to their stations";}
  private static string VisionLabel(LandmarkFrame frame)=>frame!=null&&(frame.source??"").StartsWith("synthetic",StringComparison.OrdinalIgnoreCase)?"SYNTHETIC":"CAMERA";
  private void RefreshHUD(){
@@ -243,7 +249,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   else if(CameraMode&&!ActiveHand.TrackingUsed&&vision.RejectedPackets>0)
    prompt="Camera frames rejected: "+vision.LastRejection;
   if(CameraMode&&cameraLauncher!=null&&!string.IsNullOrEmpty(cameraLauncher.LastError))prompt=cameraLauncher.LastError;
-  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"\n"+(player.Paused?"PAUSED � ESC to resume":prompt)+"\nWASD move  �  Mouse look  �  G camera summon  �  E keyboard grab  �  Q release  �  F sit / stand\nSpace/click squeeze  �  1�5 finger  �  J joint  �  X/Z bend/open  �  C reset  �  arrows/PgUp/PgDn move  �  TAB hand/object menu";
+  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"\n"+(player.Paused?"PAUSED � ESC to resume":prompt)+"\nWASD move  �  Mouse look  �  G camera summon  �  E keyboard grab  �  Q release  �  F sit / stand\nSpace/click squeeze  �  1�5 finger  �  J joint  �  X/Z bend/open  �  C recenter camera / reset demo  �  arrows/PgUp/PgDn move  �  TAB hand/object menu";
  }
 }
 }

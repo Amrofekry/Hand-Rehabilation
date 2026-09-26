@@ -19,8 +19,8 @@ namespace GripRehab
         public Vector3 curlAxis = Vector3.right;
         public float curlSign = 1;
         public Vector3 spreadAxis = Vector3.up;
-        [Range(0, 1)] public float palmRotationWeight = .75f;
-        [Range(0, 90)] public float maxPalmRotationDegrees = 55;
+        [Range(0, 1)] public float palmRotationWeight = 1f;
+        [Range(0, 180)] public float maxPalmRotationDegrees = 160;
         [Header("Tracking loss")]
         [Tooltip("If false, blend to the visible demo/rest pose when this hand disappears.")]
         public bool holdLastTrackedPoseOnLoss = false;
@@ -32,7 +32,7 @@ namespace GripRehab
         public float Closure { get; private set; }
 
         private Quaternion[] _rest;
-        private Quaternion _rootRest, _modelPalmBasis;
+        private Quaternion _rootRest, _cameraPalmReference;
         private Vector3 _wristReference;
         private float _palmWidthReference;
         private bool _anchored, _everTracked;
@@ -49,23 +49,10 @@ namespace GripRehab
             for (int i = 0; i < joints.Length; i++)
                 if (joints[i] != null) _rest[i] = joints[i].localRotation;
 
-            // This is the imported mesh's own palm basis, so the same mapping works
-            // for either hand without assuming the FBX has Unity-standard axes.
-            if (joints.Length >= 10 && joints[0] && joints[3] && joints[9])
-            {
-                var index = transform.InverseTransformPoint(joints[0].position);
-                var middle = transform.InverseTransformPoint(joints[3].position);
-                var little = transform.InverseTransformPoint(joints[9].position);
-                var wrist = Vector3.zero;
-                var palm = joints[3].parent;
-                if (palm != null && palm.parent != null)
-                    wrist = transform.InverseTransformPoint(palm.parent.position);
-                _modelPalmBasis = Basis(index - little, middle - wrist);
-            }
-            else _modelPalmBasis = Quaternion.identity;
         }
 
         public void UseDemoPose() { _everTracked = false; _anchored = false; }
+        public void RecenterTracking() { _anchored = false; }
 
         public static float Bend(Vector3 a, Vector3 b, Vector3 c)
         {
@@ -121,6 +108,7 @@ namespace GripRehab
                 {
                     _wristReference = points[0];
                     _palmWidthReference = Mathf.Max(.025f, width);
+                    _cameraPalmReference = Basis(palmSide, palmUp);
                     _anchored = true;
                 }
                 // Camera mode maps the image center to the resting hand, so moving
@@ -132,7 +120,10 @@ namespace GripRehab
                     Mathf.Clamp(delta.y * travelMeters, -.20f, .20f),
                     Mathf.Clamp((width / _palmWidthReference - 1f) * (absoluteImageSpace ? .75f : .08f), absoluteImageSpace ? -.20f : -.12f, absoluteImageSpace ? .65f : .12f));
                 transform.localPosition = Vector3.Lerp(transform.localPosition, requested, alpha);
-                var measured = Basis(palmSide, palmUp) * Quaternion.Inverse(_modelPalmBasis);
+                // Calibrate the imported hand's rest pose against the first
+                // observed palm, then apply its 3D turn relative to that pose.
+                // An absolute webcam quaternion does not share the FBX basis.
+                var measured = Basis(palmSide, palmUp) * Quaternion.Inverse(_cameraPalmReference) * _rootRest;
                 var limited = Quaternion.RotateTowards(_rootRest, measured, maxPalmRotationDegrees);
                 transform.localRotation = Quaternion.Slerp(transform.localRotation,
                     Quaternion.Slerp(_rootRest, limited, palmRotationWeight), alpha);

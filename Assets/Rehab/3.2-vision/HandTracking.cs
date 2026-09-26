@@ -20,7 +20,8 @@ namespace GripRehab
 
     public static class HandKinematics
     {
-        // MediaPipe image x goes right and y goes down. Its relative z is negative towards the camera.
+        // MediaPipe image x goes right and y goes down. The imported
+        // VirtualGrasp palm basis uses the opposite local depth convention.
         public static Vector3 ToCameraSpace(Vector3 point) =>
             new Vector3(point.x, 1f - point.y, -point.z);
 

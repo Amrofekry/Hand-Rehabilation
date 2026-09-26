@@ -28,6 +28,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   app=FindAnyObjectByType<ApartmentExperience>();
   Check(app!=null&&app.objects.All(x=>x!=null)&&app.statusText!=null&&app.rightHand!=null,"Serialized scene bindings survive reload");
   Check(app.virtualGrasp!=null&&app.virtualGrasp.Ready,"VirtualGrasp native SDK and external controllers initialize");
+  Check(app.cameraLauncher.swapHandedness,"Saved laptop camera calibration reverses the observed right/left labels");
   Check(app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.rightOnlyMesh,"Only selected right hand is rendered");
   app.SelectHand(true);Check(app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.leftOnlyMesh&&app.contactRig.pose==app.leftHand,"Left selection swaps visible mesh and contact hand");app.SelectHand(false);
   app.player.SetPaused(false);yield return null;
@@ -54,6 +55,28 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   app.leftHand.independentKeyboard=true;app.leftHand.AdjustFinger(4,1);yield return new WaitForSeconds(.45f);
   Check(Quaternion.Angle(leftThumbBefore,leftThumb.localRotation)>20&&Quaternion.Angle(leftIndexBefore,leftIndex.localRotation)<5,"Left thumb bends independently on the SDK output");
   Check(app.statusText.text.Contains("SELECTED HAND: LEFT")&&FindAnyObjectByType<ApartmentChoices>().handButton.GetComponentInChildren<UnityEngine.UI.Text>().text=="LEFT HAND (SWITCH)","HUD and button identify the selected left hand");
+  var neutral=CameraFixture(.5f,.5f,false,1,1);
+  var leftNeutral=CameraFixture(.5f,.5f,false,1,1,"Left");
+  for(int i=0;i<16;i++){app.rightHand.Pose(neutral,true,0,.05f,.045f);app.leftHand.Pose(leftNeutral,true,0,.05f,.045f);}
+  var rightPalmRest=app.rightHand.transform.localRotation;
+  var leftPalmRest=app.leftHand.transform.localRotation;
+  foreach(var turn in new[]{new Vector3(75,0,0),new Vector3(0,75,0),new Vector3(0,0,75)}){
+   var rotated=RotateCameraFixture(neutral,Quaternion.Euler(turn));
+   var rotatedLeft=RotateCameraFixture(leftNeutral,Quaternion.Euler(turn));
+   for(int i=0;i<16;i++){app.rightHand.Pose(rotated,true,0,.05f,.045f);app.leftHand.Pose(rotatedLeft,true,0,.05f,.045f);}
+   Check(Quaternion.Angle(rightPalmRest,app.rightHand.transform.localRotation)>55&&
+         Quaternion.Angle(leftPalmRest,app.leftHand.transform.localRotation)>55,
+    "Both vendor hands follow a 75-degree physical palm turn around "+turn+" without the old 55-degree cap");
+  }
+  app.rightHand.RecenterTracking();app.leftHand.RecenterTracking();
+  var recenterRight=RotateCameraFixture(neutral,Quaternion.Euler(0,0,75));
+  var recenterLeft=RotateCameraFixture(leftNeutral,Quaternion.Euler(0,0,75));
+  for(int i=0;i<16;i++){app.rightHand.Pose(recenterRight,true,0,.05f,.045f);app.leftHand.Pose(recenterLeft,true,0,.05f,.045f);}
+  Check(Quaternion.Angle(rightPalmRest,app.rightHand.transform.localRotation)<5&&
+        Quaternion.Angle(leftPalmRest,app.leftHand.transform.localRotation)<5,
+   "Camera C recenter aligns either tracked hand with its vendor rest pose");
+  app.rightHand.UseDemoPose();app.leftHand.UseDemoPose();
+  for(int i=0;i<16;i++){app.rightHand.Pose(null,false,0,.05f,.045f);app.leftHand.Pose(null,false,0,.05f,.045f);}
   app.SelectHand(false);yield return new WaitForSeconds(.3f);
   var rightRest=app.rightHand.transform.localPosition;var leftRest=app.leftHand.transform.localPosition;
   app.SetDemoHandOffset(false,new Vector3(.08f,0,0));app.SetDemoHandOffset(true,new Vector3(-.08f,0,0));
@@ -120,7 +143,16 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(menu.Kitchen&&!player.IsSeated,"Kitchen station button takes player to the kitchen");
   menu.objectButtons[1].onClick.Invoke();yield return null;
   var cup=menu.kitchenObjects[1];Check(cup.gameObject.activeSelf&&app.TryGrab(cup),"Kitchen silicone cup is selectable and can be gripped");
+  var cupCollider=cup.GetComponent<Collider>();
+  Check(Physics.GetIgnoreCollision(cupCollider,player.Controller),"A held object cannot push the standing player's CharacterController backwards");
   yield return DriveForce(30,.6f);Check(cup.Compression>.2f&&cup.MaxDisplacementMeters>.003f,"Silicone cup visibly yields to demo grip force; compression="+cup.Compression+" contacts="+cup.ContactCount+" force="+app.ContactForceNewtons+" hand="+app.rightHand.transform.position+" cup="+cup.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,cup.transform.position).ToString("F3"))));
+  var playerBeforeCupOverlap=player.transform.position;
+  cup.Body.position=player.Controller.bounds.center;Physics.SyncTransforms();
+  player.Controller.Move(Vector3.down*.01f);
+  var drift=Vector2.Distance(new Vector2(playerBeforeCupOverlap.x,playerBeforeCupOverlap.z),
+                             new Vector2(player.transform.position.x,player.transform.position.z));
+  Check(drift<.015f,"Overlapping held cup cannot displace the standing player horizontally; drift="+drift.ToString("F4")+" m");
+  app.Release();Check(!Physics.GetIgnoreCollision(cupCollider,player.Controller),"Releasing an object restores normal player collision");
   app.TestForce=0;menu.objectButtons[2].onClick.Invoke();yield return null;
   var tomato=menu.kitchenObjects[2];Check(tomato.gameObject.activeSelf&&app.TryGrab(tomato),"Kitchen tomato is selectable and can be gripped");
   yield return DriveForce(30,.6f);Check(tomato.Compression>.18f&&tomato.MaxDisplacementMeters>.003f,"Tomato deforms under demo grip force");
@@ -341,6 +373,17 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    frame.landmarks[n+3]=new Vector3(x,wristY+(closed?-.04f:-.34f),0);
   }
   for(int i=1;i<5;i++)frame.landmarks[i]=new Vector3(center+(side=="Left"?1:-1)*(.12f-i*.015f),wristY-.06f-i*.03f,0);
+  return frame;
+ }
+ private static LandmarkFrame RotateCameraFixture(LandmarkFrame source,Quaternion rotation){
+  var frame=new LandmarkFrame{schemaVersion=source.schemaVersion,source=source.source,
+   handedness=source.handedness,confidence=source.confidence,sequence=source.sequence,
+   captureSeconds=source.captureSeconds,landmarks=new Vector3[21]};
+  var wrist=HandKinematics.ToCameraSpace(source.landmarks[0]);
+  for(int i=0;i<21;i++){
+   var point=wrist+rotation*(HandKinematics.ToCameraSpace(source.landmarks[i])-wrist);
+   frame.landmarks[i]=new Vector3(point.x,1-point.y,-point.z);
+  }
   return frame;
  }
  private static LandmarkFrame HandFixture(string side,float center,double captured,long sequence){
