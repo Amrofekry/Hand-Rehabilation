@@ -20,6 +20,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL)
     parser.add_argument("--port", type=int, default=27817)
     parser.add_argument("--preview-port", type=int, default=0, help="Optional local JPEG preview for Unity")
+    parser.add_argument("--low-latency", action="store_true", help="Request 30 FPS and fixed webcam exposure when supported")
+    parser.add_argument("--exposure", type=float, default=-5, help="DirectShow exposure used with --low-latency")
     parser.add_argument("--seconds", type=float, default=0, help="0 runs until Ctrl+C")
     parser.add_argument("--mirror", action="store_true", help="Mirror image before inference, for a selfie camera")
     parser.add_argument("--swap-handedness", action="store_true", help="Swap left/right labels if camera mounting reverses them")
@@ -79,6 +81,14 @@ def main() -> None:
             raise SystemExit("Could not open camera/video. Check device access and index.")
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        if args.low_latency and not args.video:
+            capture.set(cv2.CAP_PROP_FPS, 30)
+            if __import__("sys").platform == "win32":
+                # A fixed exposure avoids the 15 FPS auto-exposure mode on this laptop.
+                # Unsupported webcams simply ignore these requests.
+                capture.set(cv2.CAP_PROP_AUTO_EXPOSURE, .25)
+                capture.set(cv2.CAP_PROP_EXPOSURE, args.exposure)
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         preview_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) if args.preview_port else None
         next_preview = 0.0
@@ -122,20 +132,27 @@ def main() -> None:
                     interval_detections += 1
                 now = time.monotonic()
                 if preview_sock is not None and now >= next_preview:
-                    preview = cv2.resize(frame, (320, 240), interpolation=cv2.INTER_AREA)
-                    for hand in result.hand_landmarks:
+                    preview = cv2.resize(frame, (256, 192), interpolation=cv2.INTER_AREA)
+                    for hand_index, hand in enumerate(result.hand_landmarks):
                         for a, b in ((0,1),(1,2),(2,3),(3,4),(0,5),(5,6),(6,7),(7,8),
                                      (5,9),(9,10),(10,11),(11,12),(9,13),(13,14),(14,15),(15,16),
                                      (13,17),(17,18),(18,19),(19,20),(17,0)):
-                            start = (int(hand[a].x*320), int(hand[a].y*240))
-                            end = (int(hand[b].x*320), int(hand[b].y*240))
+                            start = (int(hand[a].x*256), int(hand[a].y*192))
+                            end = (int(hand[b].x*256), int(hand[b].y*192))
                             cv2.line(preview, start, end, (100, 235, 240), 2)
                         for point in hand:
-                            cv2.circle(preview, (int(point.x*320), int(point.y*240)), 3, (60, 255, 110), -1)
-                    encoded, jpeg = cv2.imencode('.jpg', preview, [cv2.IMWRITE_JPEG_QUALITY, 58])
+                            cv2.circle(preview, (int(point.x*256), int(point.y*192)), 2, (60, 255, 110), -1)
+                        if hand_index < len(result.handedness) and result.handedness[hand_index]:
+                            side = result.handedness[hand_index][0].category_name
+                            if args.swap_handedness:
+                                side = "Left" if side == "Right" else "Right"
+                            cv2.putText(preview, side.upper(), (max(0, min(205, int(hand[0].x*256))),
+                                        max(15, min(180, int(hand[0].y*192)))),
+                                        cv2.FONT_HERSHEY_SIMPLEX, .45, (80, 250, 250), 1, cv2.LINE_AA)
+                    encoded, jpeg = cv2.imencode('.jpg', preview, [cv2.IMWRITE_JPEG_QUALITY, 50])
                     if encoded and len(jpeg) < 60000:
                         preview_sock.sendto(jpeg.tobytes(), ("127.0.0.1", args.preview_port))
-                    next_preview = now + .125
+                    next_preview = now + .2
                 if now - status_at >= 1:
                     print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':frames,'detections':detections,'fps':round(interval_frames/(now-status_at),1),'hands':interval_detections}), flush=True)
                     status_at = now

@@ -6,7 +6,7 @@ public sealed class ApartmentSettings:ScriptableObject {
  [Range(.2f,4)] public float mouseSensitivity=1.2f;
  [Header("Demo only — not treatment prescriptions")][Range(1,80)] public float demoForceNewtons=18;
  [Range(.5f,2)] public float reachMeters=1.6f;
- [Range(.02f,.3f)] public float trackingSmoothing=.08f;
+ [Range(.02f,.3f)] public float trackingSmoothing=.045f;
  [Tooltip("Camera image displacement to approximate hand travel. Monocular depth is not metric.")] [Range(.2f,1.5f)] public float trackingTravelMeters=.85f;
  [Header("Camera interaction - visual estimate, not measured force")]
  [Tooltip("Open the local webcam and select camera control when Play starts. Acceptance smoke runs remain demo-only.")] public bool startWithCamera=true;

@@ -158,6 +158,12 @@ namespace GripRehab.Editor
 
             var frame = new LandmarkFrame { schemaVersion = 1, confidence = .9f, landmarks = new Vector3[21] };
             Require(HandKinematics.IsUsable(frame), "valid hand landmarks rejected");
+            frame.confidence = .54f; frame.landmarks[0].x = 1.05f;
+            Require(HandKinematics.IsUsable(frame), "real camera edge landmark or handedness confidence rejected");
+            frame.landmarks[0].x = 1.5f;
+            Require(!HandKinematics.IsUsable(frame), "far outside image landmark accepted");
+            frame.landmarks[0].x = 0;
+
             frame.confidence = .2f;
             Require(!HandKinematics.IsUsable(frame), "low-confidence landmarks accepted");
             frame.confidence = .9f; frame.handedness = "Left";

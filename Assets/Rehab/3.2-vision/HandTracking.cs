@@ -35,7 +35,7 @@ namespace GripRehab
                 string.Equals(frame.handedness, "Left", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(frame.handedness, "Right", StringComparison.OrdinalIgnoreCase));
 
-        public static bool IsUsable(LandmarkFrame frame, float minConfidence = 0.65f)
+        public static bool IsUsable(LandmarkFrame frame, float minConfidence = 0.5f)
         {
             if (frame == null || frame.schemaVersion != 1 || frame.landmarks == null ||
                 frame.landmarks.Length != 21 || !HasKnownHandedness(frame) ||
@@ -47,7 +47,7 @@ namespace GripRehab
             foreach (var p in frame.landmarks)
                 if (float.IsNaN(p.x) || float.IsNaN(p.y) || float.IsNaN(p.z) ||
                     float.IsInfinity(p.x) || float.IsInfinity(p.y) || float.IsInfinity(p.z) ||
-                    p.x < 0 || p.x > 1 || p.y < 0 || p.y > 1 || Mathf.Abs(p.z) > 4f) return false;
+                    p.x < -.2f || p.x > 1.2f || p.y < -.2f || p.y > 1.2f || Mathf.Abs(p.z) > 4f) return false;
             return true;
         }
 

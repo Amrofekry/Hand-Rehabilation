@@ -20,6 +20,11 @@ namespace GripRehab
         // Backward compatibility for the other training modules.
         public LandmarkFrame Latest => RightValid ? LatestRight : LeftValid ? LatestLeft : null;
         public bool TrackingValid => RightValid || LeftValid;
+        public int ReceivedPackets { get; private set; }
+        public int AcceptedPackets { get; private set; }
+        public int RejectedPackets { get; private set; }
+        public string LastRejection { get; private set; } = "";
+        void Reject(string reason) { RejectedPackets++; LastRejection = reason; }
 
         private readonly ConcurrentQueue<ReceivedDatagram> _pending = new ConcurrentQueue<ReceivedDatagram>();
         private UdpClient _socket;
@@ -75,17 +80,19 @@ namespace GripRehab
         {
             while (_pending.TryDequeue(out var received))
             {
-                if (received.ElapsedSeconds >= 0.5) continue;
+                ReceivedPackets++;
+                if (received.ElapsedSeconds >= 0.5) { Reject("queued >500 ms"); continue; }
                 try
                 {
                     var frame = JsonUtility.FromJson<LandmarkFrame>(received.Json);
-                    if (!HandKinematics.IsUsable(frame) || received.ElapsedSeconds + frame.ageMs / 1000.0 >= 0.5) continue;
+                    if (!HandKinematics.IsUsable(frame)) { Reject("invalid landmarks/handedness/confidence"); continue; }
+                    if (received.ElapsedSeconds + frame.ageMs / 1000.0 >= 0.5) { Reject("capture >500 ms"); continue; }
                     var left = HandKinematics.IsLeft(frame);
                     var oldCapture = left ? _leftCapture : _rightCapture;
                     var oldSequence = left ? _leftSequence : _rightSequence;
                     // The Python bridge supplies both. Legacy packets may omit either value.
-                    if (frame.captureSeconds > 0 && oldCapture > 0 && frame.captureSeconds <= oldCapture) continue;
-                    if (frame.sequence > 0 && oldSequence > 0 && frame.sequence <= oldSequence) continue;
+                    if (frame.captureSeconds > 0 && oldCapture > 0 && frame.captureSeconds <= oldCapture) { Reject("old capture"); continue; }
+                    if (frame.sequence > 0 && oldSequence > 0 && frame.sequence <= oldSequence) { Reject("duplicate sequence"); continue; }
                     var receivedAt = Time.realtimeSinceStartupAsDouble - received.ElapsedSeconds - frame.ageMs / 1000.0;
                     if (left)
                     {
@@ -97,11 +104,18 @@ namespace GripRehab
                         LatestRight = frame; _rightReceivedAt = receivedAt;
                         _rightCapture = frame.captureSeconds; _rightSequence = frame.sequence;
                     }
+                    AcceptedPackets++;
                 }
-                catch (ArgumentException) { /* malformed frame is ignored */ }
+                catch (ArgumentException) { Reject("malformed JSON"); }
             }
             if (!RightValid) LatestRight = null;
             if (!LeftValid) LatestLeft = null;
+        }
+
+        public void BeginNewSession()
+        {
+            ResetFrames();
+            while (_pending.TryDequeue(out _)) { }
         }
 
         private void ResetFrames()
@@ -110,6 +124,8 @@ namespace GripRehab
             _rightReceivedAt = _leftReceivedAt = 0;
             _rightCapture = _leftCapture = 0;
             _rightSequence = _leftSequence = 0;
+            ReceivedPackets = AcceptedPackets = RejectedPackets = 0;
+            LastRejection = "";
         }
 
         private void OnDisable()

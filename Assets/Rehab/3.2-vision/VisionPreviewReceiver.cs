@@ -72,15 +72,15 @@ namespace GripRehab
                 {
                     lastFrameAt = Time.unscaledTime;
                 }
-                else
+                else if (visible && experience != null && experience.CameraMode)
                 {
-                if (texture == null) texture = new Texture2D(2, 2, TextureFormat.RGB24, false);
-                if (ImageConversion.LoadImage(texture, data, false))
-                {
-                    if (image != null) image.texture = texture;
-                    lastFrameAt = Time.unscaledTime;
-                    FrameCount++;
-                }
+                    if (texture == null) texture = new Texture2D(2, 2, TextureFormat.RGB24, false);
+                    if (ImageConversion.LoadImage(texture, data, false))
+                    {
+                        if (image != null) image.texture = texture;
+                        lastFrameAt = Time.unscaledTime;
+                        FrameCount++;
+                    }
                 }
             }
             if (panel != null)

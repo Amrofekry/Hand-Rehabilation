@@ -20,12 +20,16 @@ namespace GripRehab
         {
             var app = FindAnyObjectByType<ApartmentExperience>();
             var preview = FindAnyObjectByType<VisionPreviewReceiver>();
-            float deadline = Time.realtimeSinceStartup + 25;
+            float deadline = Time.realtimeSinceStartup + 30;
+            float streamReadyAt = -1;
             while (Time.realtimeSinceStartup < deadline)
             {
-                if (app != null && app.cameraLauncher != null && preview != null && app.CameraMode &&
-                    app.cameraLauncher.CameraOpened && app.cameraLauncher.FramesPerSecond >= 5 &&
-                    preview.ReceivedPackets >= 3) break;
+                bool streaming = app != null && app.cameraLauncher != null && preview != null &&
+                                 app.CameraMode && app.cameraLauncher.CameraOpened &&
+                                 preview.ReceivedPackets >= 3;
+                if (streaming && streamReadyAt < 0) streamReadyAt = Time.realtimeSinceStartup;
+                if (streaming && Time.realtimeSinceStartup - streamReadyAt >= 3 &&
+                    app.cameraLauncher.FramesPerSecond >= 5) break;
                 yield return new WaitForSecondsRealtime(.2f);
             }
             bool passed = app != null && app.cameraLauncher != null && preview != null &&

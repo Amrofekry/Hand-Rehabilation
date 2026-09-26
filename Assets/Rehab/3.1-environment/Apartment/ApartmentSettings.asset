@@ -16,7 +16,7 @@ MonoBehaviour:
   mouseSensitivity: 1.2
   demoForceNewtons: 18
   reachMeters: 1.6
-  trackingSmoothing: 0.08
+  trackingSmoothing: 0.045
   trackingTravelMeters: 0.85
   startWithCamera: 1
   cameraCloseAt: 0.55

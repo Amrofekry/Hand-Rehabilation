@@ -10557,6 +10557,8 @@ MonoBehaviour:
   cameraIndex: 0
   mirror: 1
   swapHandedness: 0
+  lowLatencyCapture: 1
+  manualExposure: -5
 --- !u!114 &8737890429124235522
 MonoBehaviour:
   m_ObjectHideFlags: 0

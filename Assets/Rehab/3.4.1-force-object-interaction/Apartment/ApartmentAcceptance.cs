@@ -73,7 +73,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   var ballMesh=ball.visual.GetComponent<MeshFilter>().sharedMesh;
   var ballRest=ballMesh.vertices;
   yield return Screenshot("vg-ball-before");
-  yield return DriveForce(18,3.7f);
+  yield return DriveForce(18,4.5f);
   yield return Screenshot("vg-ball-deformed");
   Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball is kinematic and deforms under grip force; held="+ball.IsHeld+" kinematic="+ball.Body.isKinematic+" compression="+ball.Compression+" contacts="+ball.ContactCount+" ball="+ball.transform.position+" anchor="+app.holdAnchor.position+" hand="+app.rightHand.transform.position+" eye="+player.view.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+(p.Contact==ball)+"@"+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
   var touching=app.contactRig.probes.Where(p=>p.Contact==ball).ToArray();
@@ -87,7 +87,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    if(touching.All(p=>Vector3.Distance(world,p.Point)>ball.profile.deformationRadiusMeters+.015f)){far++;if(displacement>.0005f)farMoved++;}
   }
   Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0&&ball.MaxDisplacementMeters>.003f,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
-  Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise");
+  Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise; progress="+app.ProgressSeconds.ToString("F2"));
   Check(app.rightHand.Closure>.4f,"Rigged fingers close around a held object");
   var beforeHandMove=ball.transform.position;app.SetDemoHandOffset(false,new Vector3(.07f,0,0));yield return new WaitForSeconds(.35f);
   Check(Vector3.Dot(ball.transform.position-beforeHandMove,player.view.transform.right)>.025f,"Held object follows right hand workspace movement");
@@ -208,6 +208,14 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     yield return new WaitForSeconds(.06f);
    }
    Check(app.CameraMode&&app.ForceValid&&HandKinematics.GripScore(app.vision.LatestRight)<.2f,"Open camera hand drives valid pose without squeezing");
+   player.SetPaused(true);
+   for(int i=0;i<3;i++){
+    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
+    yield return new WaitForSeconds(.06f);
+   }
+   Check(app.rightHand.TrackingUsed&&!app.ForceValid,"Live camera fingers keep moving while the start menu is open without enabling grasp");
+   player.SetPaused(false);
+
    var wristBefore=app.rightHand.transform.localPosition;
    for(int i=0;i<5;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.32f,.5f,false,++seq,captured+=.06)));
@@ -265,6 +273,16 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     yield return new WaitForSeconds(.06f);
    }
    Check(app.Held==null,"Opening the left camera hand drops the sponge");
+   app.SelectHand(false);menu.SelectStation(false);menu.SelectObject(0);player.SetPaused(false);
+   player.view.transform.LookAt(ball.transform.position);
+   Check(app.TryKeyboardAction()&&!app.CameraMode&&app.Held==ball,
+    "E keyboard grip works immediately from camera mode and explicitly selects demo");
+   app.Release();
+   app.SetCameraMode();
+   Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,1,1)));
+   yield return new WaitForSeconds(.08f);
+   Check(app.vision.RightValid&&app.rightHand.TrackingUsed,
+    "Camera restart accepts a new MediaPipe sequence starting at one");
   }
   app.SetHardware(false);app.ResetObjects();player.enabled=true;player.SetPaused(true);
  }

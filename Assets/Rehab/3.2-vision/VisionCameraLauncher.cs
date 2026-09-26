@@ -16,6 +16,9 @@ namespace GripRehab
         [Tooltip("Mirror a front-facing webcam before MediaPipe so Right/Left match the patient.")]
         public bool mirror = true;
         public bool swapHandedness;
+        [Tooltip("Request a stable 30 FPS webcam stream with fixed exposure when supported. Disable if the preview becomes too dark.")]
+        public bool lowLatencyCapture = true;
+        [Range(-10, 0)] public float manualExposure = -5;
 
         public string State { get; private set; } = "OFF";
         public string LastError { get; private set; } = "";
@@ -56,7 +59,9 @@ namespace GripRehab
                 {
                     FileName = python,
                     Arguments = "-u " + Quote(script) + " --camera " + cameraIndex + " --model " + Quote(model) +
-                                (mirror ? " --mirror" : "") + (swapHandedness ? " --swap-handedness" : "") + " --preview-port 27819",
+                                (mirror ? " --mirror" : "") + (swapHandedness ? " --swap-handedness" : "") +
+                                (lowLatencyCapture ? " --low-latency --exposure " + manualExposure.ToString(System.Globalization.CultureInfo.InvariantCulture) : "") +
+                                " --preview-port 27819",
                     WorkingDirectory = projectRoot,
                     UseShellExecute = false,
                     CreateNoWindow = true,
