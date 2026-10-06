@@ -1,5 +1,7 @@
 # GripRehab task list
 
+This file keeps the original repair task numbers 1-11. For the newly requested **full graduation software scope**, see [SOFTWARE_GRADUATION_PLAN.md](SOFTWARE_GRADUATION_PLAN.md): source review item 1 is complete; its new items 2-21 cover the remaining architecture work. A completed repair release does not mean those expanded requirements are implemented.
+
 Updated 2026-10-06. Keep the original task numbers for follow-up requests. Original WBS IDs and dates are unchanged.
 
 The overnight follow-up automation was deleted on 2026-10-06 at the user's request. Continue authorized work in the active conversation only; do not create or resume scheduled follow-ups. Current repaired source and Windows managed assemblies still match the verified closeout hashes.
