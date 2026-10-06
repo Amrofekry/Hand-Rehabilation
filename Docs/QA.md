@@ -1,3 +1,49 @@
+# Current QA — 6 October 2026
+
+[Current closeout](CLOSEOUT_2026_10_06.md) supersedes the pending native/build statements in the historical entries below. The repaired Windows build passes 168/169/168 gameplay checks, 60 UI checks at each of two resolutions and 87 gallery checks at each of three resolutions. Three Play/Stop cycles pass after the TMP font fix. Live human-camera and physical hardware trials remain unverified. Voice remains future task 7; UI remains English.
+
+## 2026-10-02 menu input status
+
+Mouse, keyboard and the whole-hand MediaPipe pointer remain available. Five-second palm dwell and the managed-event cache repair are retained. Voice commands are not implemented; task 7 in [TASKS.md](TASKS.md) is future work. Earlier native/build evidence predates this removal; current file compilation and source-test evidence is separate.
+
+# Latest item 6 checkpoint — 1 October 2026
+
+[HAND_RIG_ITEM_6.md](HAND_RIG_ITEM_6.md) and evidence/item6-hand-rig-checks.json record the current saved joint/SDK adapter revision. All 641 unique mixed-scope software checks and five Editor/four player cached-reference compilations passed. Four deliberately broken variants were rejected. Native VirtualGrasp execution, rendered skin/finger accuracy, live right/left camera behavior, contact/Play/Stop, performance and a fresh Windows build remain pending under the files-only instruction. SDK doubles establish adapter behavior only. Earlier runtime results below do not validate this revision.
+
+# Latest item 2 checkpoint — 1 October 2026
+
+[POINTER_ITEM_2.md](POINTER_ITEM_2.md) and evidence/item2-pointer-checks.json record the current saved pointer revision. 524 unique mixed-scope positive checks passed; five Editor/four player assemblies compiled; the exact old policy failed seven new checks and three deliberately broken variants were rejected. These are pure-source managed-math/static tests, not native uGUI or a live webcam trial. Native menu activation/occlusion, both-hand usability, focus/Play/Stop, performance and a fresh Windows build remain pending. Earlier pointer runtime results below are historical.
+
+# Latest item 5 checkpoint — 1 October 2026
+
+[DEFORMATION_ITEM_5.md](DEFORMATION_ITEM_5.md) and evidence/item5-deformation-checks.json record the saved deformation/fracture repair. 401 unique positive software checks and five Editor/four player cached-reference compilations passed; three isolated mutations were rejected. Python suites pass from the canonical project root. These are source/managed-math/static tests, not native PhysX/rendering. Live hand, material appearance, contact/collision behavior, Play/Stop and a fresh Windows build remain pending. Earlier runtime results below are historical and do not validate this revision.
+
+# Latest item 4 checkpoint — 1 October 2026
+
+[GRASP_ITEM_4.md](GRASP_ITEM_4.md) and evidence/item4-grasp-checks.json record the current grasp/release repair. 331 positive software/static checks and cached-reference compilation passed; two negative mutations were rejected. The collider-pair recorder is not PhysX. Native drop/clearance/recoil, Play/Stop, live hand behavior and a fresh Windows build remain pending. Earlier results below are historical; the immediate release-collision expectation is superseded by restoring pairs after separation.
+
+# Latest item 3 checkpoint — 1 October 2026
+
+[KEYBOARD_ITEM_3.md](KEYBOARD_ITEM_3.md) records the current keyboard/mouse source repair and 256 positive software/static/regression checks. Compilation passed; native input/Play/Stop and the Windows rebuild remain pending. No Unity or Computer Use was launched for this revision. Earlier runtime results below do not verify this input revision.
+
+# Latest camera direction checkpoint — 1 October 2026
+
+[CAMERA_DIRECTION_FIX.md](CAMERA_DIRECTION_FIX.md) records the current file-only correction. Compilation and 130 managed pose-source / 37 domain / 8 Python checks passed. No native Unity or live-hand test was performed for this revision. Earlier results below are historical and do not verify the new direction/facing correction.
+
+# Current repair verification — 30 September 2026
+
+See [REPAIR_REPORT.md](REPAIR_REPORT.md): native Editor QA completed at 16:08:04 UTC; Windows build at 16:13:15 UTC; fresh normal/replay/rendered player runs passed 137/138/137 checks; two UI resolutions passed 60 checks each, and three gallery resolutions passed 79 checks each. A separate ordinary, non-fixture Editor startup and Start → Modules → Home navigation was observed with zero Console errors. No new features were added in this repair run. The following sections preserve earlier findings.
+
+# Visible pointer / no click — 30 September 2026 (WBS 3.2 / 3.4)
+
+The user confirmed a visible cursor without activation. Review found immediate dwell resets on classifier flicker and absolute finger-chain cutoffs, while the previous ideal-pointer fixture only used a 0.6-second duration. New checks cover distant hands, both sides, open-palm/closed-index rejection, preferred-side stability, paused qualified-time accumulation, long interruption reset, one activation per hold and frame-hitch limits. The real player sends fresh 21-point loopback frames through VisionUdpReceiver and raycasts Start using the five-second production duration, intermittent unqualified index frames and a visible relaxed right hand.
+
+The first extended test exposed a cursor jump onto Continue during a briefly curled index; its failed result is preserved in `evidence/pointer-flicker-first-failure.json`. Pausing the cursor during the short gesture grace resolved it. Final Windows checks: **137 normal, 138 explicit synthetic force replay, 137 rendered at 1280×720**, all PASS at 11:41:13–11:42:45 UTC. Fresh results: `player-checks.json`. Editor `dwell-check` and `verify` passed; Python vision (2) and bridge (4) contracts passed. These are software fixtures, not a live human five-second usability test. The force and vision freshness contracts remain unchanged.
+
+Three fresh Editor Play/Stop cycles passed **137 checks each**, including production dwell, with sockets 27817/27818/27819 released after every cycle. Completion: 11:45:30 UTC. `evidence/pointer-editor-qa.txt` and `evidence/pointer-repair-checks.json` retain the evidence; `evidence/pointer-editor-ready.json` confirms the canonical main scene outside Play.
+
+---
+
 # Laptop handedness, palm tracking and player recoil — 26 September 2026 (WBS 3.2 / 3.4.1)
 
 The user observed that their real right hand selected the left virtual hand and vice versa. The saved scene now enables `VisionCameraLauncher.swapHandedness`, which swaps labels in both the UDP landmark stream and annotated preview. Python's label-swap contract test passed; the actual corrected mapping still needs the user's next live-hand observation.
@@ -132,3 +178,29 @@ The existing scene now stores a two-column Main Menu, restyled profile and modul
 HUD room, hand, object, input source, value, unit, contextual instruction and progress read the existing Module 01 state. Camera closure is shown as `% closure`; valid Phase 2 and explicit Demo force use `newtons` with distinct source labels. A stale Phase 2 sample shows `--`, and button enablement, profile isolation, module locks and the Phase 2 replay boundary remain covered by acceptance checks. The prompt changes once an object is held, and the keyboard legend includes E, G, Q, F, Tab and B. The session-options heading remains consistent when paused.
 
 **Verification:** Unity Editor 6000.4.4f1 passed **120/120 runtime checks** across three Play/Stop cycles with UDP cleanup. Windows build and headless, replay and rendered player checks passed **120/120** each. Screenshots were inspected at 1280×720: `Docs/images/ui-main-menu.png`, `ui-new-profile.png`, `ui-module-selection.png`, `apartment-overview.png`, and `apartment-options.png`. These are software checks and rendered evidence; real-patient usability, clinical validation and physical Nano/HX711 force measurements were not performed.
+# Unity audit and repair — 27 September 2026 (WBS 3.2 / 3.4 / 6.1)
+
+This review targets the current standalone project at `E:\GP\codex\GripRehab-Unity`. Code corrections cover paused-menu input isolation, unambiguous synthetic/expired-input HUD labels, safe seated station changes when the old stand-up point is obstructed, and rollback of a newly created in-memory profile when disk persistence fails. The MediaPipe Python tests now run both directly and through root-level `python -m unittest`. The Arabic startup and BLE guides now describe the actual Main Menu → Module 01 → camera sequence. New Unity acceptance assertions cover the corrected HUD states, profile-save failure, obstructed station teleport, and whether primary buttons can actually be clicked. Menu screenshots are delayed until button color transitions settle.
+
+**Final software verification:** Unity Editor 6000.4.4f1 compiled the repaired project without C# errors and passed **127 runtime checks in each of three Play/Stop cycles**, releasing UDP 27817/27818/27819 every time (`Logs/editor-qa.txt`). The new Windows build succeeded (`[REHAB_BUILD] PASS` in `Editor.log`). `Tools/run_player_checks.py` then passed **127 headless**, **128 explicit Phase 2 synthetic-replay**, and **127 rendered** checks on that build (`Docs/player-checks.json`); the additional replay check asserts its opt-in label. The 1280×720 rendered menu, module selection and apartment screenshots in `Docs/images/` were reviewed for clipping and readable source/unit labels. Six Python vision/Phase 2 bridge tests pass from the project root. The MediaPipe 1.0.1 blank-image self-test passes. The three project-local Phase 2 bridge files match `SOURCE_MANIFEST.json` SHA-256 hashes; 681 `.meta` GUIDs showed no duplicates or missing metadata. The player-check runner now rejects stale log/JSON results when a process fails to start.
+
+**Remaining physical verification:** Unity Hub's GUI session obtained a valid Editor entitlement and completed the tests above; the earlier batch-license failure describes only the prior CLI session. The built game opened visibly, including its camera preview, but no supervised right/left hand motion, orientation, live grasp/release, or end-to-end latency measurement was recorded in this audit. A standalone camera-0 CLI smoke test returned `camera_error`; the GUI preview opening does not by itself prove 21-landmark fidelity. No Nano 33 IoT/HX711 device exists yet, so physical force/BLE calibration and clinical safety are unverified. Module 2, Module 3 and the doctor dashboard remain clearly marked previews.
+
+---
+# Current Unity review — 29 September 2026 (WBS 3.2 / 3.4 / 3.4.2 / 3.4.3)
+
+The current scene has saved high-contrast dropdown and top-bar repairs. Module 02 (sequence memory, spatial assembly) and Module 03 (visual tracing, maze navigation) now have playable local research exercises; they are not clinical assessments. Start permits a no-profile guest route so camera-only menu users need not type personal data. `RehabDwellPointer` projects a fresh MediaPipe index tip to a screen cursor, requires an extended index and at least two curled fingers, and activates an interactable button, dropdown or toggle after **5 seconds** on the same target. Lost tracking or leaving the target resets the dwell; keyboard and mouse remain available. The local camera preview and Phase 2 force interface are separate.
+
+**Verified:** the Editor imported and compiled the new C# without compile errors; the scene/reference/logic and hand-pointer fixture gates passed. The final Windows Mono build completed (`Logs/editor-gate-result.json`). Three Editor Play/Stop cycles passed and released UDP ports 27817/27818/27819 (`Logs/editor-qa.txt`). The final built player passed 134 headless, 135 Phase 2 replay, and 134 rendered acceptance checks (`Docs/player-checks.json`). The built player was opened visually: the dark module-selection cards rendered and Module 02 opened its sequence-memory screen. Two Vision bridge and four Phase 2 bridge Python tests passed. A test-only `Editor acceptance` object accidentally saved in the scene was removed, and verification now rejects its return. A real-hand five-second dwell, 1280×720 layout, and live hardware have **not** been verified on this revision.
+
+The UI guide `Docs/UI_UX_AR.md` describes the new controls. Historical results below are for older revisions and must not be substituted for this revision's acceptance.
+
+---
+
+## Current software checkpoint — 30 September 2026 (WBS 3.2 / 3.4 / 3.4.1)
+
+The current Windows player passed **136 headless / 137 explicit synthetic Phase 2 replay / 136 rendered** checks on the same build (`Docs/player-checks.json`). The rendered run captured 12 fresh 1280×720 images in `Docs/screenshots/player-1280x720`. In particular, the acceptance suite checks localized VirtualGrasp finger-probe contact and mesh deformation, independent non-contact force, grip/release, both selected hands, menu navigation, profile migration/recovery, and a complete 21-landmark index-pointer dwell that raycasts Start and opens Modules. The pointer test uses loopback landmarks and deliberately does not open the physical camera. `ProjectSettings/InputManager.asset` no longer maps Space to uGUI Submit; the scene verifier checks that mapping and runtime checks confirm navigation is disabled during active gameplay. The ball-contact issue seen in an earlier rendered run was reproduced, measured, fixed and rerun in the built player.
+
+`Logs/editor-gate-result.json` records the current scene/reference/logic verification. `Logs/editor-qa.txt` records three Editor Play/Stop cycles and release of UDP 27817/27818/27819. The Windows build completed in Unity 6000.4.4f1. Fifty-one Python `unittest` cases passed across the vision bridge, Phase 2 contracts, and other research fixtures. A transient `File.Replace` failure during profile checkpoint saving prompted bounded I/O retries that retain the previous encrypted copy; subsequent player tests passed. The imported VirtualGrasp startup still reports "No baked grasps found" because the vendor grasp database has not been authored for these objects; the project's own contact/hold implementation supplies the interaction tested here.
+
+These fixture and rendered checks do **not** establish five-second pointer usability with a real impaired hand, measured MediaPipe latency/pose accuracy, Nano 33 IoT/HX711 connectivity, material strain fidelity, or clinical suitability. Physical trials remain separate acceptance work.

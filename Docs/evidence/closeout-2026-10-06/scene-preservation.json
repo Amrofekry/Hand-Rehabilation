@@ -1,0 +1,10 @@
+{
+  "initialSha256": "3b64bce0fc18e7479d926afddfcedd0d275e5b351864df3249214def2fa80a56",
+  "afterSha256": "7e7eb50ce3c1c019cafaca446a4c75d614a4dade8c8234bb042200d7ca100634",
+  "normalizedContentEqual": false,
+  "sameObjectIds": true,
+  "blocks": 1513,
+  "allBlockChangesFloat32Equivalent": true,
+  "normalizedNumericLines": 279,
+  "note": "Unity save normalized line endings, object ordering and float formatting. Every serialized object retains its ID, fields and IEEE-754 float32 values. Persistence gate verifies post-save bytes remain identical through Build."
+}

@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-06",
+  "surface": "User-session Unity Editor, QHD Game view",
+  "passed": true,
+  "checks": [
+    "Home opens with zero Console errors",
+    "New Profile opens from the actual button",
+    "Gender popup text visible against dark template",
+    "Selecting Male updates caption",
+    "Hand popup shows Right/Left choices",
+    "Selecting Left updates caption",
+    "No profile was saved",
+    "Stopped Play after review"
+  ],
+  "images": [
+    "editor-profile-dropdown.jpg",
+    "editor-profile-selection.jpg"
+  ],
+  "limits": "Only the default dark popup was inspected directly; synthetic fixtures cover other shared UI themes. No hand or hardware trial."
+}

@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-06T17:31:23.754439+00:00",
+  "files": {
+    "Builds/Windows/GripRehab_Data/Managed/Assembly-CSharp.dll": "ab057a8bed9d6fff52f73da0ac1fa4201f774efda23e5bdc70ca250fdcc09e82",
+    "Builds/Windows/GripRehab_Data/Managed/GripRehab.UI.dll": "27e9d6a8f9cd562c615e4e672e5a6281ab7132befa25716a62f5dba82249adc4",
+    "Assets/UI/GripUiThemeController.cs": "8519c0a057765213c79d170abf5df60655ca675044e3f186ae06a466a199d8cf",
+    "Assets/UI/GripUiGalleryChecks.cs": "d5bec4684e54fec5caab88853ccd065743a97cd9440f9cf9cec6db7a8fe9aa54"
+  },
+  "buildGate": "persistence.json"
+}
