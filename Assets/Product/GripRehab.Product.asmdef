@@ -1,0 +1,6 @@
+{
+  "name": "GripRehab.Product", "rootNamespace": "GripRehab.Product",
+  "references": [], "autoReferenced": true, "noEngineReferences": true,
+  "allowUnsafeCode": false, "overrideReferences": false,
+  "includePlatforms": [], "excludePlatforms": []
+}

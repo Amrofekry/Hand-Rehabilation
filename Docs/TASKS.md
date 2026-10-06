@@ -1,10 +1,10 @@
 # GripRehab task list
 
-This file keeps the original repair task numbers 1-11. For the newly requested **full graduation software scope**, see [SOFTWARE_GRADUATION_PLAN.md](SOFTWARE_GRADUATION_PLAN.md): source review item 1 is complete; its new items 2-21 cover the remaining architecture work. A completed repair release does not mean those expanded requirements are implemented.
+This file keeps the original repair task numbers 1-11. For the newly requested **full graduation software scope**, see [SOFTWARE_GRADUATION_PLAN.md](SOFTWARE_GRADUATION_PLAN.md): source review item 1 is complete; its new items 2-21 cover the remaining architecture work. Graduation item 2 source is now integrated; native acceptance remains pending as detailed in [JOURNEY_ITEM_2.md](JOURNEY_ITEM_2.md). A completed repair release does not mean those expanded requirements are implemented.
 
 Updated 2026-10-06. Keep the original task numbers for follow-up requests. Original WBS IDs and dates are unchanged.
 
-The overnight follow-up automation was deleted on 2026-10-06 at the user's request. Continue authorized work in the active conversation only; do not create or resume scheduled follow-ups. Current repaired source and Windows managed assemblies still match the verified closeout hashes.
+The overnight follow-up automation was deleted on 2026-10-06 at the user's request. Continue authorized work in the active conversation only; do not create or resume scheduled follow-ups. Those closeout hashes describe the historical repair release. Graduation item 2 has subsequent source changes; the existing Windows build has not been rebuilt for them.
 
 ## Completion pass
 
@@ -31,4 +31,4 @@ These are software completion states, not live-human or physical-device validati
 | 10 | Real Nano 33 IoT/HX711 calibration, BLE and load-cell trial | **PENDING HARDWARE**; synthetic replay cannot close this item |
 | 11 | Supplied HandMate design across existing menus, HUD and controls | **COMPLETE for current English presentation**; native font fault repaired, themes/screenshots reviewed |
 
-Current input: mouse, keyboard or MediaPipe whole-hand pointer. Interface: English. The doctor screen remains a local research preview; future AI/clinical/product-portal work is outside this repair closeout.
+Current input: mouse, keyboard or MediaPipe whole-hand pointer. Interface: English. Graduation item 2 now integrates the local patient/doctor account routes around the current demos; their new native acceptance is pending. The original repair checklist above retains its historical scope. Full dashboards, AI and remaining module requirements stay open in the graduation list.

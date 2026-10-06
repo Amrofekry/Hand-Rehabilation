@@ -9,3 +9,8 @@
 | B05 live tracking | Open | Previous GUI camera preview opened, but supervised left/right human-hand mapping, grip pickup and end-to-end latency have not been measured after the last code changes. |
 | B06 current Unity build | Resolved for current software fixtures | User-session Unity 6000.4.4f1 builds successfully; 6 October repaired build passes 168/169/168 player checks, 60 UI checks at two resolutions and 87 gallery checks at three resolutions, plus three Play/Stop cycles. Headless session licensing exit 198 is a separate observation. See CLOSEOUT_2026_10_06.md; B02/B03/B05 remain open. |
 | B07 historical UI branch | Historical attempt; no new branch required for this pass | Earlier sandbox branch creation was denied. This repair pass preserves `3.2-bimanual-tracking` and records a scoped checkpoint using reviewed Git metadata access; no `ui-redesign` branch or tag is claimed. |
+
+
+## 2026-10-06 graduation item 2 update
+
+B08 graduation item 2 native acceptance: OPEN. Editor launch reached Unity Editor Software Terms. User unavailable and requested file-only tests; no terms accepted or queued automatic Play/build. Earlier B06 closure applies to the repair release only. Newly integrated journey must pass native three-cycle QA and fresh build/player before DONE.

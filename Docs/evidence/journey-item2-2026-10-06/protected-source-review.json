@@ -1,0 +1,35 @@
+{
+  "scope": "User-authorized graduation software item 2. Original HandMate design baseline retained, not rewritten.",
+  "changes": {
+    "Assets/Editor/RehabGateRunner.cs": {
+      "originalSha256": "6476f73d3818ebd7132d13acc2649f1cf89ddb2304d82e084e9f1e672470bcf5",
+      "currentSha256": "5f341d9a350b16f1c3b6fbfbca58b7030de4c29e967f6974b9a00d497f1d2a45",
+      "reason": "Add opt-in journey-qa command; no queued request and no scene generation."
+    },
+    "Assets/Product/ProductRepository.cs": {
+      "originalSha256": "edab1eeca96091049743f87186753557dd2d28ee2cd0b5eb8dca855f601b78d3",
+      "currentSha256": "1dfe9649f3359877ffa1641a5a33a9a1e4a42d95fb9c3ef2137b143e532593bf",
+      "reason": "Require profile-linked session ownership; transactional owner-scoped interrupted-session recovery."
+    },
+    "Assets/ProductIntegration/ResearchPortalHost.cs": {
+      "originalSha256": "ecafdd92a20b2938ffde2696aa7be85944e5ea630d22a25af5b0b059c9b4c8c2",
+      "currentSha256": "5654b51124d6685f883ed4a868b36c3298872a2cb47086057b3d953b166c352a",
+      "reason": "Compose account/profile/preparation/consent/Continue routes with guest and doctor guards."
+    },
+    "Assets/ProductIntegration/ResearchSessionRuntime.cs": {
+      "originalSha256": "b3d8942d545918a6622e1522b7963f45adf6fbc056e02cf8b042d1ccd3f961f0",
+      "currentSha256": "8bcc17b4aee028b64248af91ec35804bf28733aff3f3e5aab0eb46c841b6f413",
+      "reason": "Guard session starts and save failures before navigation; persist interruption on teardown."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
+      "originalSha256": "15a7811252e8b0f4855c0e30bef0132a33e3cbca357f853249821481e4e5045b",
+      "currentSha256": "9b350bf2a728d5e24fe7d073188e3ed1ed990a81b282307915f884f7b8bb4bf3",
+      "reason": "Activate one portal around authored panels and preserve linked Continue. Isolate explicit journey acceptance storage."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "originalSha256": "6e8b7c343e1100cdd2ea8efb9436e67518ce827b1d74286a7156089e220527ec",
+      "currentSha256": "3a3467075e144a59e6e3a968237a2a7874967eadf1452948ccdd3589cd120a89",
+      "reason": "Recognize opt-in journey fixture to prevent opening a physical camera during tests; ordinary gameplay unchanged."
+    }
+  }
+}

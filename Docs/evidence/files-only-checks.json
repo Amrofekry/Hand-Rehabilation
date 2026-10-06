@@ -1,11 +1,11 @@
 {
-  "utc": "2026-10-06T17:15:53.951154+00:00",
+  "utc": "2026-10-06T20:30:42.590696+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 817
+      "count": 819
     },
     {
       "name": "assembly-graph",
@@ -16,27 +16,27 @@
       "name": "compile-editor",
       "passed": true,
       "assemblies": {
-        "GripRehab.Product.dll": "69950f80e3194fff98628ac144dd6af1f18b710678467bbb96e7273f329eeddb",
+        "GripRehab.Product.dll": "43813647b4da5ba220459a4145612a2b55162661dd9f94d2d4745bda4b2d6ff0",
         "GripRehab.Core.dll": "69a1dfa68a84d231dd8d2b3dbea161bcd44efde84e69d35e966ff61767c9c219",
-        "GripRehab.UI.dll": "94d53184c5c57d346ccfcc7f742dc19955edfd935b65252b76e2f7e4bf0d095c",
-        "Assembly-CSharp.dll": "18542c2cd7b324e5847095a4c34c85f64900013b1b1787f70da537daf357b59b",
-        "Assembly-CSharp-Editor.dll": "fc1b8dfe1fb6a2b05b62c4b6de15ecb1b9f0bb8f6aabcfb35ffc480bbf985db7"
+        "GripRehab.UI.dll": "4a4dd106108059e5c1dd81ef16b66258f0cc3766e538fa92a68e60a4156aea87",
+        "Assembly-CSharp.dll": "c19835cf3bf288eee49d6cdf8a651bca554c45f055909eb78d6cd1708d9fe54b",
+        "Assembly-CSharp-Editor.dll": "76d094819536cbc5a23c4d1ffd2a704bb8ec468c580614c03589b5c6154bfc19"
       }
     },
     {
       "name": "compile-player",
       "passed": true,
       "assemblies": {
-        "GripRehab.Product.dll": "8c605a7721318c88692e7f70c973a1fb965f25b2158acae51efabd5bc1429118",
+        "GripRehab.Product.dll": "312d70ff7ee246a250e7fdda90d412ad11ba0e545bb720a4338413c4c9d0565d",
         "GripRehab.Core.dll": "11099d4747129b121575a4cbf67deb5ed5bca6a4a8233319f0af30b6f7daa0bc",
-        "GripRehab.UI.dll": "3f71b7bc35ad94bf5f419467852ce57f36c004f8cfb736387ef357498a4183e6",
-        "Assembly-CSharp.dll": "b0a7f4c641d5f0d0333bb3f087ab8ba65fb612ea3ce659b3d3972b171895235f"
+        "GripRehab.UI.dll": "0f02315ed2b717c3dc5a82060ac8f5e86484f3a891c19113be68228d3701a305",
+        "Assembly-CSharp.dll": "711f1ffc60ebad30bd200e7c646b2cb845fde1ac5621ebbbb0936c9387ea3c75"
       }
     },
     {
       "name": "product-domain-tests",
       "passed": true,
-      "result": "PASS PBKDF2 password verification\nPASS Verifier corruption and iteration bounds\nPASS Patient cannot read another patient's results\nPASS Returned account cannot grant doctor privileges\nPASS Doctor can read patients and author audited notes\nPASS Patient cannot create an additional doctor\nPASS First doctor setup is explicit and persisted\nPASS Sign-in throttle and sign-out\nPASS Duplicate profile assignment rejected\nPASS Failed save does not change in-memory account\nPASS Session snapshot prevents alias mutation\nPASS Session identity and terminal state immutable\nPASS Invalid and excessive metrics rejected\nPASS Baseline source and ownership preserved\nPASS Camera baseline never stores inferred force\nPASS Catalog corruption fails closed\nPASS 500 ms freshness and invalid sample bounds\nPASS Baseline rejects duplicates and stale samples\nPASS Baseline calibration change requires restart\nPASS Baseline frame hitch cannot fake elapsed time\nPASS Window ignores duplicated sensor samples\nPASS Window resets across source/calibration changes\nPASS Bad hand kinematics cannot poison the window\nPASS Force and motion are independent sign categories\nPASS One persistent sign pauses until explicit resume\nPASS Two persistent signs stop and remain latched\nPASS Invalid inputs cannot increase difficulty\nPASS Difficulty cooldown and upper bound\nPASS Bad policy clock and threshold settings rejected\nPASS CSV formula escaping and numeric culture\nPASS PDF pagination and xref offsets\nPASS Windows DPAPI roundtrip and corruption rejection\nPASS Pointer fires exactly once after five qualified seconds\nPASS Pointer gesture flicker pauses qualified dwell\nPASS Pointer target changes and frame hitches cannot click early\nPASS Memory task repeatability, errors and completion\nPASS Spatial assembly rejects wrong piece and completes ordered set\nRESULT 37 passed, 0 failed; fabricated fixtures only"
+      "result": "PASS PBKDF2 password verification\nPASS Verifier corruption and iteration bounds\nPASS Patient cannot read another patient's results\nPASS Returned account cannot grant doctor privileges\nPASS Doctor can read patients and author audited notes\nPASS Patient cannot create an additional doctor\nPASS First doctor setup is explicit and persisted\nPASS Sign-in throttle and sign-out\nPASS Duplicate profile assignment rejected\nPASS Failed save does not change in-memory account\nPASS Session snapshot prevents alias mutation\nPASS Session identity and terminal state immutable\nPASS Invalid and excessive metrics rejected\nPASS Baseline source and ownership preserved\nPASS Camera baseline never stores inferred force\nPASS Catalog corruption fails closed\nPASS 500 ms freshness and invalid sample bounds\nPASS Baseline rejects duplicates and stale samples\nPASS Baseline calibration change requires restart\nPASS Baseline frame hitch cannot fake elapsed time\nPASS Window ignores duplicated sensor samples\nPASS Window resets across source/calibration changes\nPASS Bad hand kinematics cannot poison the window\nPASS Force and motion are independent sign categories\nPASS One persistent sign pauses until explicit resume\nPASS Two persistent signs stop and remain latched\nPASS Invalid inputs cannot increase difficulty\nPASS Difficulty cooldown and upper bound\nPASS Bad policy clock and threshold settings rejected\nPASS CSV formula escaping and numeric culture\nPASS PDF pagination and xref offsets\nPASS Windows DPAPI roundtrip and corruption rejection\nPASS Pointer fires exactly once after five qualified seconds\nPASS Pointer gesture flicker pauses qualified dwell\nPASS Pointer target changes and frame hitches cannot click early\nPASS Memory task repeatability, errors and completion\nPASS Spatial assembly rejects wrong piece and completes ordered set\nPASS Crash recovery is owner-scoped and terminal-state preserving\nPASS Crash recovery failure preserves the saved checkpoint\nPASS Patient session cannot start without a linked profile\nRESULT 40 passed, 0 failed; fabricated fixtures only"
     },
     {
       "name": "tracking-source-tests",
@@ -71,7 +71,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.089s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.070s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -83,25 +83,25 @@
     {
       "name": "pointer-static-bindings",
       "passed": true,
-      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.011s\n\nOK",
+      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.007s\n\nOK",
       "scope": "Static runtime integration contracts; no native uGUI"
     },
     {
       "name": "deformation-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.016s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.012s\n\nOK",
       "scope": "Static integration contracts; no native Unity"
     },
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.013s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.008s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.006s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.005s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],

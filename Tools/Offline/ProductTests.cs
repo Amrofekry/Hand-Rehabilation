@@ -1,0 +1,122 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+using System.Runtime.Serialization.Json;
+using GripRehab;
+using GripRehab.Product;
+
+// Fabricated accounts only. Never opens Application.persistentDataPath or a user's catalog.
+static class ProductTests
+{
+    const string Secret = "Fabricated-password-2026";
+    static int passed, failed;
+    static PasswordVerifier verifier;
+    static void Check(bool value, string reason) { if (!value) throw new Exception(reason); }
+    static void Reject<T>(Action action) where T : Exception
+    { try { action(); } catch (T) { return; } throw new Exception("Expected " + typeof(T).Name); }
+    static void Test(string name, Action action)
+    { try { action(); passed++; Console.WriteLine("PASS " + name); } catch (Exception e) { failed++; Console.WriteLine("FAIL " + name + ": " + e); } }
+    sealed class Clock : IProductClock { public double now; public double Seconds => now; public string Utc => "2026-09-30T12:00:00.0000000Z"; }
+    sealed class MemoryStore : IProductPersistence
+    {
+        public LocalProductCatalog data = new LocalProductCatalog(); public bool fail;
+        public LocalProductCatalog Clone(LocalProductCatalog source)
+        {
+            using (var stream = new MemoryStream())
+            { var codec = new DataContractJsonSerializer(typeof(LocalProductCatalog)); codec.WriteObject(stream, source); stream.Position = 0; return (LocalProductCatalog)codec.ReadObject(stream); }
+        }
+        public LocalProductCatalog Load() => Clone(data);
+        public void Save(LocalProductCatalog value) { if (fail) throw new IOException("Injected storage fault"); data = Clone(value); }
+    }
+    sealed class Fixture
+    {
+        public readonly MemoryStore store = new MemoryStore(); public readonly Clock clock = new Clock(); public readonly ProductRepository repo;
+        public Fixture()
+        {
+            foreach (var pair in new[] { "patient.one", "patient.two", "doctor.one" })
+                store.data.accounts.Add(new LocalAccount { id = pair, username = pair, displayName = pair, profileId = pair == "doctor.one" ? null : "profile-" + pair,
+                    role = pair == "doctor.one" ? LocalRole.Doctor : LocalRole.Patient, password = verifier, createdUtc = clock.Utc });
+            repo = new ProductRepository(store, clock);
+        }
+        public void Login(string id = "patient.one") { Check(repo.SignIn(id, Secret), "Fixture sign in"); }
+    }
+    static TrialSample Sample(int i, InputUnit unit = InputUnit.Newtons, float value = 20)
+        => new TrialSample { now = i * .1, capturedAt = i * .1, sequence = i, source = "Test simulator", shape = "Sphere", calibrationRevision = "1", unit = unit,
+            value = value, closure = .5f, speed = .1f, jitter = .01f, valid = true, handValid = true, synthetic = true };
+    static CapabilityProfile Baseline(InputUnit unit = InputUnit.Newtons)
+    {
+        var trial = new CapabilityTrial("patient.one", "profile-patient.one", true, 1);
+        for (int i = 1; i <= 12; i++) trial.Step(Sample(i, unit, unit == InputUnit.Newtons ? 20 : .5f), .1f);
+        return trial.Finish();
+    }
+    static GuidanceLimits Limits() => new GuidanceLimits { persistence = 1, stableSeconds = 2, cooldown = 3 };
+    static int Main()
+    {
+        verifier = PasswordKdf.Create(Secret);
+        Test("PBKDF2 password verification", () => { Check(PasswordKdf.Verify(Secret, verifier), "Correct password"); Check(!PasswordKdf.Verify("wrong", verifier), "Wrong password"); Check(verifier.hashBase64 != Secret, "No plaintext password"); });
+        Test("Verifier corruption and iteration bounds", () => {
+            Check(!PasswordKdf.Verify(Secret, new PasswordVerifier { iterations = 10000000, saltBase64 = verifier.saltBase64, hashBase64 = verifier.hashBase64 }), "Iteration cap");
+            Check(!PasswordKdf.Verify(Secret, new PasswordVerifier { iterations = verifier.iterations, saltBase64 = "invalid", hashBase64 = verifier.hashBase64 }), "Broken salt");
+            Reject<ArgumentException>(() => PasswordKdf.Create("short")); });
+        Test("Patient cannot read another patient's results", () => { var f = new Fixture(); f.Login(); Reject<UnauthorizedAccessException>(() => f.repo.Sessions("patient.two")); Reject<UnauthorizedAccessException>(() => f.repo.Patients()); });
+        Test("Returned account cannot grant doctor privileges", () => { var f = new Fixture(); f.Login(); f.repo.Current.role = LocalRole.Doctor; Reject<UnauthorizedAccessException>(() => f.repo.Patients()); Check(f.repo.Current.password == null, "Password verifier not exposed"); });
+        Test("Doctor can read patients and author audited notes", () => { var f = new Fixture(); f.Login("doctor.one"); Check(f.repo.Patients().Length == 2, "Patients listed"); f.repo.AddNote("patient.one", "Fabricated research note"); var note = f.repo.Notes("patient.one")[0]; Check(note.doctorId == "doctor.one" && note.createdUtc == f.clock.Utc, "Author and time retained"); Reject<UnauthorizedAccessException>(() => f.repo.Begin(1, 0, true)); });
+        Test("Patient cannot create an additional doctor", () => { var f = new Fixture(); f.Login(); Reject<UnauthorizedAccessException>(() => f.repo.Register("new.doctor", "Doctor", Secret, LocalRole.Doctor)); });
+        Test("First doctor setup is explicit and persisted", () => { var store = new MemoryStore(); var repo = new ProductRepository(store, new Clock()); Check(repo.NeedsDoctorSetup, "Setup offered"); repo.Register("first.doctor", "Fabricated Doctor", Secret, LocalRole.Doctor); Check(!repo.NeedsDoctorSetup && store.data.accounts.Count == 1, "Setup saved"); });
+        Test("Sign-in throttle and sign-out", () => { var f = new Fixture(); for (int i = 0; i < 5; i++) Check(!f.repo.SignIn("unknown.user", Secret), "Unknown login denied"); f.repo.Register("unknown.user", "Fabricated User", Secret, LocalRole.Patient); Check(!f.repo.SignIn("unknown.user", Secret), "Correct login throttled"); f.clock.now = 31; Check(f.repo.SignIn("unknown.user", Secret), "Throttle expires"); f.repo.SignOut(); Reject<UnauthorizedAccessException>(() => f.repo.Begin(1, 0, true)); });
+        Test("Duplicate profile assignment rejected", () => { var f = new Fixture(); f.Login(); Reject<ArgumentException>(() => f.repo.LinkProfile("profile-patient.two")); Reject<UnauthorizedAccessException>(() => f.repo.LinkProfile("imported", true)); });
+        Test("Failed save does not change in-memory account", () => { var f = new Fixture(); f.Login(); f.store.fail = true; Reject<IOException>(() => f.repo.LinkProfile("replacement")); Check(f.repo.Current.profileId == "profile-patient.one", "Rollback retained profile"); });
+        Test("Session snapshot prevents alias mutation", () => { var f = new Fixture(); f.Login(); var s = f.repo.Begin(2, 0, true); s.score = 77; Check(f.repo.Sessions("patient.one")[0].score == 0, "Begin isolated"); s.durationSeconds = 2; s.state = RecordState.Completed; f.repo.SaveSession(s); s.score = 1; var snapshot = f.repo.Sessions("patient.one"); snapshot[0].score = 5; Check(f.repo.Sessions("patient.one")[0].score == 77, "Stored score isolated"); });
+        Test("Session identity and terminal state immutable", () => { var f = new Fixture(); f.Login(); var s = f.repo.Begin(1, 0, true); s.module = 3; Reject<ArgumentException>(() => f.repo.SaveSession(s)); s.module = 1; s.durationSeconds = 1; s.state = RecordState.Completed; f.repo.SaveSession(s); s.state = RecordState.InProgress; Reject<ArgumentException>(() => f.repo.SaveSession(s)); });
+        Test("Invalid and excessive metrics rejected", () => { var f = new Fixture(); f.Login(); var s = f.repo.Begin(1, 0, true); s.durationSeconds = float.NaN; Reject<ArgumentException>(() => f.repo.SaveSession(s)); s.durationSeconds = 1; s.validSeconds = 2; Reject<ArgumentException>(() => f.repo.SaveSession(s)); s.validSeconds = 0; s.metrics.Add(new MetricRecord { seconds = 0, unit = InputUnit.ClosureRatio, source = "Camera", value = 3 }); Reject<ArgumentException>(() => f.repo.SaveSession(s)); });
+        Test("Baseline source and ownership preserved", () => { var f = new Fixture(); f.Login(); var b = Baseline(); f.repo.SaveBaseline(b); b.meanNewtons = 99; Check(f.repo.LatestBaseline("patient.one").meanNewtons == 20, "Baseline isolated"); b.accountId = "patient.two"; Reject<UnauthorizedAccessException>(() => f.repo.SaveBaseline(b)); });
+        Test("Camera baseline never stores inferred force", () => { var b = Baseline(InputUnit.ClosureRatio); Check(!b.hasForce && b.peakNewtons == 0 && b.meanClosure == .5f, "Camera unit provenance"); var f = new Fixture(); f.Login(); b.hasForce = true; Reject<ArgumentException>(() => f.repo.SaveBaseline(b)); });
+        Test("Catalog corruption fails closed", () => { var f = new Fixture(); var broken = f.store.Clone(f.store.data); broken.accounts[0].password.hashBase64 = "broken"; Reject<ArgumentException>(() => ProductRepository.Validate(broken)); });
+        Test("500 ms freshness and invalid sample bounds", () => { var s = Sample(1); s.now = .6; Check(!s.Fresh, "Boundary expires"); s.now = .59; Check(s.Fresh, "Below boundary"); s.value = float.NaN; Check(!s.Fresh, "NaN rejected"); s = Sample(1, InputUnit.ClosureRatio, 1.1f); Check(!s.Fresh, "Closure range"); });
+        Test("Baseline rejects duplicates and stale samples", () => { var trial = new CapabilityTrial("p", "profile", true, 1); var s = Sample(1); trial.Step(s, .1f); trial.Step(s, .1f); s.now += 1; trial.Step(s, .1f); Check(trial.Progress < .11f && !trial.Complete, "Rejected input cannot advance"); });
+        Test("Baseline calibration change requires restart", () => { var trial = new CapabilityTrial("p", "profile", true, 1); trial.Step(Sample(1), .1f); var s = Sample(2); s.calibrationRevision = "2"; trial.Step(s, .1f); Check(trial.Problem != null && !trial.Complete, "Calibration invalidates"); Reject<InvalidOperationException>(() => trial.Finish()); });
+        Test("Baseline frame hitch cannot fake elapsed time", () => { var trial = new CapabilityTrial("p", "profile", true, 1); trial.Step(Sample(1), 20); Check(trial.Progress <= .11f, "Hitch cap"); Reject<InvalidOperationException>(() => new CapabilityTrial("p", "profile", false)); });
+        Test("Window ignores duplicated sensor samples", () => { var window = new FeatureWindow(); var s = Sample(1); for (int i = 0; i < 20; i++) window.Add(s); Check(!window.Read(.2).forceValid && window.Read(.2).count == 1, "No repeated sample inflation"); });
+        Test("Window resets across source/calibration changes", () => { var window = new FeatureWindow(); for (int i = 1; i <= 12; i++) window.Add(Sample(i)); Check(window.Read(1.2).forceValid, "Initial window"); var s = Sample(13); s.calibrationRevision = "2"; window.Add(s); Check(!window.Read(1.3).forceValid && window.Read(1.3).count == 1, "Calibration reset"); Check(window.Read(20).count == 0, "Old window expires"); });
+        Test("Bad hand kinematics cannot poison the window", () => { var window = new FeatureWindow(); for (int i = 1; i <= 12; i++) { var s = Sample(i); s.jitter = float.NaN; window.Add(s); } Check(!window.Read(1.2).motionValid && !float.IsNaN(window.Read(1.2).jitter), "Invalid kinematics ignored"); });
+        Test("Force and motion are independent sign categories", () => { var b = Baseline(); var f = new WindowFeatures { forceValid = true, motionValid = true, forceMean = 10, jitter = .1f }; Check(StatisticalPredictor.Evaluate(f, b, Limits()) == (ResearchSigns.Force | ResearchSigns.Motion), "Two distinct categories"); });
+        Test("One persistent sign pauses until explicit resume", () => { var p = new GuidancePolicy(Limits()); p.Step(0, true, false, ResearchSigns.Force); p.Step(1.1, true, false, ResearchSigns.Force); Check(p.State == GuidanceState.Warning, "Warning"); Reject<InvalidOperationException>(() => p.Resume()); p.Step(1.2, true, false, ResearchSigns.None); Check(p.State == GuidanceState.Warning, "No auto-resume"); p.Resume(); Check(p.State == GuidanceState.Active, "Explicit resume"); });
+        Test("Two persistent signs stop and remain latched", () => { var p = new GuidancePolicy(Limits()); p.Step(0, true, false, ResearchSigns.Force | ResearchSigns.Motion); p.Step(1.1, true, false, ResearchSigns.Force | ResearchSigns.Motion); Check(p.State == GuidanceState.Stopped, "Stopped"); p.Step(2, true, true, ResearchSigns.None); Check(p.State == GuidanceState.Stopped, "Latched stop"); Reject<InvalidOperationException>(() => p.Resume()); });
+        Test("Invalid inputs cannot increase difficulty", () => { var p = new GuidancePolicy(Limits()); p.Step(0, false, true, ResearchSigns.None); p.Step(100, false, true, ResearchSigns.None); Check(p.Level == 1 && p.State == GuidanceState.MissingInput, "No increase"); });
+        Test("Difficulty cooldown and upper bound", () => { var p = new GuidancePolicy(Limits()); p.Step(0, true, true, ResearchSigns.None); p.Step(2.1, true, true, ResearchSigns.None); Check(p.Level == 2, "Stable increase"); p.Step(4.2, true, true, ResearchSigns.None); Check(p.Level == 2, "Cooldown respected"); for (int i = 5; i < 100; i++) p.Step(i, true, true, ResearchSigns.None); Check(p.Level == 5, "Bounded maximum"); });
+        Test("Bad policy clock and threshold settings rejected", () => { var p = new GuidancePolicy(Limits()); p.Step(1, true, false, ResearchSigns.None); Reject<ArgumentException>(() => p.Step(1, true, false, ResearchSigns.None)); Reject<ArgumentException>(() => new GuidancePolicy(new GuidanceLimits { forceDecline = float.NaN })); });
+        Test("CSV formula escaping and numeric culture", () => { Check(ResearchExport.CsvCell(" =SUM(1,2)").StartsWith("\"'"), "Formula guarded"); Check(ResearchExport.CsvCell("a\"b") == "\"a\"\"b\"", "Quote escaping"); var old = CultureInfo.CurrentCulture; try { CultureInfo.CurrentCulture = new CultureInfo("fr-FR"); var csv = ResearchExport.SessionsCsv(new[] { new SessionRecord { id = "fabricated", durationSeconds = 1.5f, hasForce = false } }); Check(csv.Contains(",1.5,") && csv.Contains(",0,,0"), "Invariant numbers; absent force blank"); } finally { CultureInfo.CurrentCulture = old; } });
+        Test("PDF pagination and xref offsets", () => { var sessions = Enumerable.Range(0, 30).Select(i => new SessionRecord { id = "fabricated-" + i, startedUtc = "2026-09-30", module = 1, score = i, synthetic = true }).ToArray(); var bytes = ResearchExport.Pdf("fabricated-account", sessions); var pdf = Encoding.ASCII.GetString(bytes); Check(pdf.Contains("/Count 3") && pdf.Contains("SYNTHETIC"), "Pages and labels"); var marker = pdf.LastIndexOf("startxref\n", StringComparison.Ordinal) + 10; int end = pdf.IndexOf('\n', marker); var xref = int.Parse(pdf.Substring(marker, end - marker)); Check(pdf.Substring(xref, 4) == "xref", "xref position"); var entries = pdf.Substring(xref).Split('\n'); int number = int.Parse(entries[1].Split(' ')[1]); for (int i = 1; i < number; i++) { int offset = int.Parse(entries[i + 2].Substring(0, 10)); Check(pdf.Substring(offset).StartsWith(i + " 0 obj"), "Object offset " + i); } File.WriteAllBytes("Logs/offline/fabricated-report.pdf", bytes); });
+        Test("Windows DPAPI roundtrip and corruption rejection", () => { var clear = Encoding.UTF8.GetBytes("Fabricated test payload only"); var encrypted = WindowsProfileProtection.Protect(clear); Check(!clear.SequenceEqual(encrypted), "Encrypted bytes"); Check(clear.SequenceEqual(WindowsProfileProtection.Unprotect(encrypted)), "Round trip"); encrypted[encrypted.Length - 1] ^= 1; Reject<System.ComponentModel.Win32Exception>(() => WindowsProfileProtection.Unprotect(encrypted)); });
+        Test("Pointer fires exactly once after five qualified seconds", () => { var gate = new RehabDwellGate(); int clicks = 0; for (int i = 0; i < 120; i++) if (gate.Step(7, true, .1f, 5, .2f)) clicks++; Check(clicks == 1 && gate.Latched, "One click per dwell"); gate.Step(0, false, .1f, 5, .2f); Check(!gate.Latched && gate.Elapsed == 0, "Loss resets"); });
+        Test("Pointer gesture flicker pauses qualified dwell", () => { var gate = new RehabDwellGate(); for (int i = 0; i < 31; i++) gate.Step(7, true, .1f, 5, .2f); var prior = gate.Elapsed; Check(!gate.Step(7, false, .1f, 5, .2f) && gate.Elapsed == prior, "No unqualified click"); bool clicked = false; for (int i = 0; i < 21; i++) clicked |= gate.Step(7, true, .1f, 5, .2f); Check(clicked, "Resume preserved effort"); });
+        Test("Pointer target changes and frame hitches cannot click early", () => { var gate = new RehabDwellGate(); for (int i = 0; i < 49; i++) gate.Step(1, true, .1f, 5, .2f); Check(!gate.Step(2, true, 10, 5, .2f) && gate.Elapsed == 0, "New target reset"); Check(!gate.Step(2, true, 10, 5, .2f) && gate.Elapsed <= .1f, "Hitch bounded"); Check(!gate.Step(2, true, .1f, float.NaN, .2f), "Invalid duration rejected"); });
+        Test("Memory task repeatability, errors and completion", () => { var a = new SequenceMemoryTask(42); var b = new SequenceMemoryTask(42); Check(a.Sequence.SequenceEqual(b.Sequence), "Deterministic pattern"); a.Submit((a.Sequence[0] + 1) % 4); Check(a.Mistakes == 1 && a.Correct == 0, "Error resets sequence"); foreach (var token in a.Sequence) a.Submit(token); Check(a.Complete && !a.Submit(0), "Complete stays complete"); });
+        Test("Spatial assembly rejects wrong piece and completes ordered set", () => { var task = new SpatialAssemblyTask(); Check(!task.Place(0) && task.Errors == 1, "Wrong order recorded"); foreach (int token in new[] { 2, 0, 3, 1 }) task.Place(token); Check(task.Complete, "Assembly completed"); });
+        Test("Crash recovery is owner-scoped and terminal-state preserving", () => {
+            var f = new Fixture(); f.Login(); var first = f.repo.Begin(1, 0, true);
+            var finished = f.repo.Begin(2, 0, true); finished.state = RecordState.Completed; f.repo.SaveSession(finished);
+            f.Login("patient.two"); var other = f.repo.Begin(3, 0, true);
+            f.Login(); Check(f.repo.RecoverInterruptedSessions() == 1, "Only this patient's open record recovered");
+            Check(f.repo.Sessions("patient.one").Single(s => s.id == first.id).state == RecordState.Interrupted, "Open record interrupted");
+            Check(f.repo.Sessions("patient.one").Single(s => s.id == finished.id).state == RecordState.Completed, "Completed record retained");
+            Check(f.repo.RecoverInterruptedSessions() == 0, "Recovery idempotent"); f.Login("patient.two");
+            Check(f.repo.Sessions("patient.two").Single(s => s.id == other.id).state == RecordState.InProgress, "Other patient's record untouched");
+        });
+        Test("Crash recovery failure preserves the saved checkpoint", () => {
+            var f = new Fixture(); f.Login(); var s = f.repo.Begin(1, 0, true); f.store.fail = true;
+            Reject<IOException>(() => f.repo.RecoverInterruptedSessions());
+            Check(f.repo.Sessions("patient.one").Single().state == RecordState.InProgress, "No false recovery after save failure");
+            f.store.fail = false; Check(f.repo.RecoverInterruptedSessions() == 1, "Retry commits recovery");
+        });
+        Test("Patient session cannot start without a linked profile", () => {
+            var f = new Fixture(); f.store.data.accounts.Find(a => a.id == "patient.one").profileId = null;
+            var repo = new ProductRepository(f.store, f.clock); Check(repo.SignIn("patient.one", Secret), "Signed in");
+            Reject<InvalidOperationException>(() => repo.Begin(1, 0, true)); Check(repo.Sessions("patient.one").Length == 0, "No ownerless session created");
+        });
+        Console.WriteLine("RESULT " + passed + " passed, " + failed + " failed; fabricated fixtures only");
+        return failed == 0 ? 0 : 1;
+    }
+}

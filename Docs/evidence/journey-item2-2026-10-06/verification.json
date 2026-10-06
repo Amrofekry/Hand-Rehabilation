@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-06T20:32:26.343442+00:00",
+  "item": 2,
+  "wbs": [
+    "3.4",
+    "5.1",
+    "5.2"
+  ],
+  "status": "SOURCE_IMPLEMENTED_NATIVE_ACCEPTANCE_PENDING",
+  "offlinePassed": true,
+  "offlineUtc": "2026-10-06T20:30:42.590696+00:00",
+  "compilation": {
+    "EditorAssemblies": 5,
+    "PlayerAssemblies": 4,
+    "references": "Cached Unity 6000.4.4f1; not a fresh native import/build"
+  },
+  "productTests": 40,
+  "pythonTests": {
+    "rootTools": 61,
+    "vision": 4,
+    "phase2Bridge": 4,
+    "total": 69
+  },
+  "nativeJourney": {
+    "status": "NOT RUN",
+    "fixturePrepared": true,
+    "plannedCycles": 3,
+    "reason": "Editor reached Unity Editor Software Terms; user unavailable and requested file-only verification."
+  },
+  "newWindowsBuild": {
+    "status": "NOT RUN",
+    "existingBuildIsHistorical": true
+  },
+  "queuedEditorGate": false,
+  "clinicalHardwareLiveHumanValidation": "Not claimed",
+  "reviewNotes": [
+    "Initial new Editor SessionState compile collision fixed by explicit namespace; final compilation passed.",
+    "Initial design-only hash check flagged six authorized source edits. Original baseline retained; separate six-file review pins current code. All other protected source and scene logic still checked."
+  ],
+  "sourceSha256": {
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": "9b350bf2a728d5e24fe7d073188e3ed1ed990a81b282307915f884f7b8bb4bf3",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": "3a3467075e144a59e6e3a968237a2a7874967eadf1452948ccdd3589cd120a89",
+    "Assets/Product/ProductRepository.cs": "1dfe9649f3359877ffa1641a5a33a9a1e4a42d95fb9c3ef2137b143e532593bf",
+    "Assets/ProductIntegration/ResearchPortalHost.cs": "5654b51124d6685f883ed4a868b36c3298872a2cb47086057b3d953b166c352a",
+    "Assets/ProductIntegration/ResearchSessionRuntime.cs": "8bcc17b4aee028b64248af91ec35804bf28733aff3f3e5aab0eb46c841b6f413",
+    "Assets/UI/ResearchPortalView.cs": "de4c979635299d8b4dc2de2ff1cf848e9bcd2277a44fc25c3ba3468f0a39e978",
+    "Assets/ProductIntegration/ResearchJourneyAcceptance.cs": "b599decf3019f76d202fb9d6d820a8ab78b8343737285c02cf2ae01177c76f16",
+    "Assets/Editor/ResearchJourneyQA.cs": "da07900870c310ca750be708eabd7082e60aac6296cb67edbbc6367be48735ce",
+    "Assets/Editor/RehabGateRunner.cs": "5f341d9a350b16f1c3b6fbfbca58b7030de4c29e967f6974b9a00d497f1d2a45",
+    "Tools/Offline/ProductTests.cs": "6eff308680b90d08cdaea3ccdc2c73363ab4446c9778f654fc67cad599a93b94",
+    "Tools/test_handmate_design.py": "2f0c3044ac3be178b18634a9384cd83caa83e59d9eebdd9f0188f89fed45ab36",
+    "Assets/Scenes/GripRehab.unity": "7e7eb50ce3c1c019cafaca446a4c75d614a4dade8c8234bb042200d7ca100634",
+    "Packages/manifest.json": "f72ba05256867c8614790637bc4d0e55b3e98c31a2854ed807fc1158788e0410",
+    "ProjectSettings/InputManager.asset": "335f96f379d1ef6f6083834993141b19e6e7aef27ac4635747c5937db8884a20"
+  }
+}

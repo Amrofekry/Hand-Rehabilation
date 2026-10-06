@@ -1,10 +1,10 @@
 # Software graduation completion plan
 
-Reviewed: 2026-10-06. Project: `E:\GP\codex\GripRehab-Unity`.
+Reviewed: 2026-10-06. Item 2 implementation update: 2026-10-06. Project: `E:\GP\codex\GripRehab-Unity`.
 
 ## Scope and authority
 
-This is the user's requested source review and future-work list, not permission to implement all of it in this turn. The current repair release remains intact. No gameplay, scene, package, firmware, CAD, patient record or original schedule was changed by this review.
+The original source-review pass changed documentation only. The subsequent user request authorizes item 2: integrating the existing local accounts and patient journey. The implementation uses the current authored scene; packages, vendor code, firmware, CAD, real records and the original schedule remain unchanged. Other numbered work is not being implemented by this item.
 
 Target: a complete desktop semi-immersive Unity research application, with all three modules, patient/doctor journeys and the documented AI pipeline. This does not require a headset. Hardware fabrication/firmware changes and physical, human or clinical trials are outside this software checklist. Their exclusion does not make their evidence complete.
 
@@ -24,7 +24,7 @@ The Pipeline and Blockdiagram each have one page, read as extracted text and ren
 
 Week 1 is 12 September 2026; W22 starts 6 February 2027. W9-W10 are blocked, W13-W14 buffers, W15-W20 paused. Original dates, bars and WBS IDs are unchanged. This backlog is an implementation order, not a new dated schedule.
 
-## Current implementation findings
+## Source-review findings (before item 2 integration)
 
 - `Assets/Scenes/GripRehab.unity`, the apartment, English HandMate menus, whole-hand dwell pointer, keyboard controls, imported VirtualGrasp driven rig, bounded contact deformation and BLE bridge have current repair evidence in `CLOSEOUT_2026_10_06.md`. Reuse these foundations.
 - `RehabExerciseSuite.cs` exposes all four Module 2/3 demo tasks. Memory uses numeric tokens; assembly is a fixed numeric order puzzle; maze is a text grid with buttons/arrows; tracing follows five waypoints. These are playable game prototypes, not yet the full gesture/avatar/virtual-hand tasks described in the Pipeline.
@@ -38,12 +38,12 @@ This was a read-only source/code audit plus documentation update. No new Unity r
 
 ## Updated numbered work list
 
-These **new numbers 1-21** identify graduation completion work. They are distinct from the previous repair list 1-11. Only item 1 is closed by this review. PARTIAL means usable foundations exist, not that the full acceptance criterion is met. WBS IDs remain the canonical commit/task identifiers.
+These **new numbers 1-21** identify graduation completion work. They are distinct from the previous repair list 1-11. Item 1 is closed. Item 2 now has implemented source and passing file/domain checks, with native Editor/player acceptance blocked by the Software Terms dialog; it is not yet checked as DONE. PARTIAL means usable foundations exist, not that the full acceptance criterion is met. WBS IDs remain the canonical commit/task identifiers.
 
 | No. / status | Work and WBS | Existing foundation | Software acceptance criterion |
 | --- | --- | --- | --- |
 | **1 DONE** | Source requirements, gaps and completion scope - 1.1 | Original plan, requirements and current evidence | All 24 source WBS rows accounted for below; source hashes verified; named tasks/metrics and conflicts recorded; hardware/external work separated; future list and acceptance defined |
-| **2 PARTIAL** | Connect the complete patient journey and local accounts - 1.1, 3.4, 5.1, 5.2 | Active profile/Continue and dormant portal/account code | Real menu route reaches patient sign-in/profile, preparation, baseline, each module and results. Guest/account ownership, sign-out and doctor access tests pass. Preserve legacy Continue semantics; no duplicate hosts/listeners or scene regeneration |
+| **2 IMPLEMENTED; NATIVE VERIFICATION PENDING** | Connect the complete patient journey and local accounts - 1.1, 3.4, 5.1, 5.2 | Active runtime account portal around authored profile/module panels; consent, protected sessions, linked Continue and isolated native test fixture | Real menu route reaches patient sign-in/profile, preparation, baseline, each module and results. Guest/account ownership, sign-out and doctor access tests pass. Preserve legacy Continue semantics; no duplicate hosts/listeners or scene regeneration |
 | **3 PARTIAL** | Staged baseline and capability profile - 4.1 | `CapabilityTrial`, profile models | Explicit consent and cancellation; distinct peak measured force, endurance, documented joint ROM and gesture-stability stages. Each result carries unit, side, shape, calibration, source, version and validity. Camera-only mode leaves measured force missing; source/calibration change restarts the relevant stage. Deterministic fixtures verify reductions and saved starting level |
 | **4 PARTIAL / DEPENDENCY** | Complete vision metrics and gesture recognition - 3.2 | MediaPipe 21-landmark bridge, coordinate mapping and whole-hand pointer | Preserve both-hand tracking; add documented ROM/tremor/speed/trajectory definitions and gesture events for modules. Specify classes, model provenance and a versioned YOLO adapter. Supplied compatible model must pass labelled held-out evaluation before a YOLO claim; geometric fallback remains identified. Frame loss, reacquisition, occlusion and side/calibration changes have software regressions |
 | **5 PARTIAL / DEPENDENCY** | Resolve physics package requirements and object grasp profiles - 3.3 | Contact mesh deformation, fracture, VirtualGrasp rig | Document separate Softbody/Fluid roles, package compatibility/license and bounded force-response tests. Integrate supplied licensed packages if available; otherwise retain the labelled mesh substitute and explicitly document the architecture deviation. Complete object-specific grasp setup supported by imported SDK, or document its replacement; no missing baked DB claim. Recovery/reset, release, penetration and no-player-recoil tests pass |
@@ -115,4 +115,12 @@ This is a coverage map, not a claim of completion of every WBS row.
 - A numbered item is checked only after its stated software acceptance and current relevant tests/build evidence exist. Repository file presence or a menu placeholder is not sufficient.
 - A missing model/package/dataset remains a dependency or explicit architecture deviation; never label an alternative as the absent named implementation. Synthetic training/parity can verify plumbing, not participant predictive accuracy.
 - Supervised live-hand trials, physical Nano/HX711 tests and clinical validation are maintained separately, not inserted as work for the user in this software checklist. They remain unverified unless actually performed.
-- Update this plan and the requirement evidence when an item is completed. Keep the original repair task numbers and historical reports intact. Feature implementation has not started in this source-review turn.
+- Update this plan and the requirement evidence when an item is completed. Keep the original repair task numbers and historical reports intact. Item 2 implementation and its outstanding native gate are recorded in [JOURNEY_ITEM_2.md](JOURNEY_ITEM_2.md). Historical repair/source-review results do not validate the new journey.
+
+## Item 2 current evidence and next task
+
+The new default entry composes one `ResearchPortalHost`/themed view at runtime. Patient registration uses the existing hand-profile form; preparation exposes Camera, Keyboard Demo and Phase 2 explicitly. Optional quick-baseline consent, all three existing module demos, source-attributed results, sign-out and linked Continue use protected local records. A doctor can explicitly assign a preserved legacy profile; unauthenticated users cannot claim another patient's profile. Continue restores checkpoint choices and starts a new attempt; it does not fabricate unfinished exercise progress.
+
+File-only compilation of the five Editor and four player assemblies and 40 managed product tests passed. The native three-cycle account journey is prepared but NOT run. The existing Windows executable is the earlier repair release, not this feature. User unavailable to handle Unity Software Terms; no acceptance or queued automatic Play was attempted. [Detailed implementation, tests and limitations](JOURNEY_ITEM_2.md).
+
+Next requested implementation remains **3: staged baseline and capability profile**. Items 4-21 keep their statuses above. Item 2 native verification must be completed when the Editor is available; no item is silently checked off because source files exist.

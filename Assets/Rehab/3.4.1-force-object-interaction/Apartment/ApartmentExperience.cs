@@ -25,9 +25,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public bool ForceValid{get;private set;}
  public float DemoSetpoint{get;private set;}
  public float ProgressSeconds => _task.ProgressSeconds;
+ public float RequiredHoldSeconds => _task.HoldSeconds;
+ public void SetResearchDifficulty(int level, int maximumLevel, float maximumHoldSeconds) {
+  float hold = Mathf.Lerp(3, Mathf.Clamp(maximumHoldSeconds,3,5), maximumLevel > 1 ? Mathf.Clamp01((level-1f)/(maximumLevel-1f)) : 0);
+  if(Mathf.Abs(hold-_task.HoldSeconds)>.001f)_task=new ForceHoldTask(18,3,hold);
+ }
  public float TestForce=-1; // Used only when an explicit acceptance-test command-line flag is present.
  public string Status{get;private set;}="Ready";
- private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil;
+ private readonly Collider[] _clearanceOverlaps=new Collider[64];
+ private readonly RaycastHit[] _clearanceHits=new RaycastHit[64];
+ private Quaternion _heldRotationOffset;private Collider[] _playerColliders;
+ private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime;private bool _cameraReleaseBlocked;
  private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
  private ForceHoldTask _task=new ForceHoldTask(18,3,3);
  private long _contactTicks;
@@ -40,16 +48,19 @@ public sealed class ApartmentExperience:MonoBehaviour {
 #if UNITY_EDITOR
  _testing|=UnityEditor.SessionState.GetBool("ApartmentQA.Active",false);
 #endif
+ _testing|=RehabAppShell.JourneyAcceptance;
  if(!_testing&&FindAnyObjectByType<RehabAppShell>()!=null)SetHardware(false);
  else if(settings.startWithHardware)SetHardware(true);else if(settings.startWithCamera&&!_testing)SetCameraMode();else SetHardware(false);}
  public void SetCameraMode(){SetHardware(false);Application.runInBackground=true;vision?.BeginNewSession();CameraMode=true;_cameraGrip.Reset();if(!_testing)cameraLauncher?.EnsureStarted();Status="Starting local MediaPipe camera";}
  public void CycleInputMode(){if(CameraMode)SetHardware(false);else if(Hardware)SetCameraMode();else SetHardware(true);}
- public void SetHardware(bool hardware){Release();CameraMode=false;CameraGripScore=0;_cameraGrip.Reset();cameraLauncher?.StopWorker();Hardware=hardware;_manualRight=_manualLeft=Vector3.zero;if(!hardware){rightHand.UseDemoPose();leftHand.UseDemoPose();}ForceNewtons=ContactForceNewtons=0;_filter.Reset();_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
+ public void SetHardware(bool hardware){Release();player?.ResetGameplayInput();CameraMode=false;_cameraReleaseBlocked=false;CameraGripScore=0;_cameraGrip.Reset();cameraLauncher?.StopWorker();Hardware=hardware;_manualRight=_manualLeft=Vector3.zero;if(!hardware){rightHand.UseDemoPose();leftHand.UseDemoPose();}ForceNewtons=ContactForceNewtons=0;_filter.Reset();_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
  private void Update(){
   AutoSelectCameraHand();
-  if(Input.GetKeyDown(KeyCode.B))CycleInputMode();
-  if(!player.Paused){
-   if(!Hardware&&!CameraMode){DemoSetpoint=Mathf.Clamp(DemoSetpoint+Input.mouseScrollDelta.y*3+(Input.GetKey(KeyCode.Equals)?25*Time.deltaTime:Input.GetKey(KeyCode.Minus)?-25*Time.deltaTime:0),1,80);UpdateDemoHandMovement();}
+  bool gameplayInput=player.GameplayInputAllowed;
+  if(gameplayInput&&Input.GetKeyDown(KeyCode.B))CycleInputMode();
+  gameplayInput=player.GameplayInputAllowed;
+  if(gameplayInput){
+   if(!Hardware&&!CameraMode){DemoSetpoint=RehabKeyboardGate.AdjustSetpoint(DemoSetpoint,Input.mouseScrollDelta.y,Input.GetKey(KeyCode.Equals)||Input.GetKey(KeyCode.KeypadPlus),Input.GetKey(KeyCode.Minus)||Input.GetKey(KeyCode.KeypadMinus),Time.deltaTime);UpdateDemoHandMovement();}
    if(Input.GetKeyDown(KeyCode.Q))Release();
    if(Input.GetKeyDown(KeyCode.R))ResetObjects();
    if(Input.GetKeyDown(KeyCode.F)){
@@ -63,15 +74,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
    if(Input.GetKeyDown(KeyCode.G))TryCameraSummonSelectedObject();
    if(CameraMode&&Input.GetKeyDown(KeyCode.C)){Release();ActiveHand.RecenterTracking();Status="Camera hand orientation recentered";}
   }
+  gameplayInput=player.GameplayInputAllowed;
   var selectedFrame=LeftSelected?vision.LatestLeft:vision.LatestRight;
   bool cameraTracked=CameraMode&&(LeftSelected?vision.LeftValid:vision.RightValid)&&
    (cameraLauncher!=null&&cameraLauncher.CameraOpened||_testing)&&selectedFrame!=null&&
-   ((selectedFrame.source??"").StartsWith("mediapipe-",StringComparison.OrdinalIgnoreCase)||_testing);
+   ((selectedFrame.source??"").StartsWith("mediapipe-",StringComparison.OrdinalIgnoreCase)||_testing)&&HandKinematics.HasPoseGeometry(selectedFrame);
   bool cameraValid=cameraTracked&&!player.Paused;
   if(CameraMode){
    ForceValid=cameraValid;
    CameraGripScore=cameraTracked?HandKinematics.GripScore(selectedFrame):0;
    _cameraGrip.Step(CameraGripScore,cameraValid,Time.deltaTime,settings.cameraCloseAt,settings.cameraOpenAt,settings.cameraGestureDwellSeconds);
+   if(cameraValid&&!_cameraGrip.Closed&&CameraGripScore<=settings.cameraOpenAt)_cameraReleaseBlocked=false;
    if(!cameraValid&&Held!=null){Release();Status="Camera tracking lost - object released";}
    else if(_cameraGrip.Closed&&CameraGripScore>=settings.cameraCloseAt)_summonGraceUntil=0;
    else if(Held!=null&&Time.unscaledTime>=_summonGraceUntil){Release();Status="Hand opened - object released";}
@@ -81,27 +94,27 @@ public sealed class ApartmentExperience:MonoBehaviour {
    if(_generation!=forceReceiver.State.Generation){_generation=forceReceiver.State.Generation;Release();_filter.Reset();_filter.Push(0,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);_sessionValidSamples=1;_filteredSamples=forceReceiver.State.SampleCount;ContactForceNewtons=0;_task.Reset();Status="Connection/calibration changed";}
    if(!ForceValid&&Held!=null){Release();Status="Input stale: object released";}
   } else {
-   ForceValid=!player.Paused;float requested=ForceValid&&(Input.GetMouseButton(0)||Input.GetKey(KeyCode.Space))?(Input.GetKey(KeyCode.LeftShift)?80:DemoSetpoint):0;
-   if(_testing&&TestForce>=0)requested=TestForce;
+   ForceValid=gameplayInput;float requested=RehabKeyboardGate.DemoForce(true,gameplayInput,player.DemoSqueezing,Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift),DemoSetpoint);
+   if(_testing&&TestForce>=0&&ForceValid)requested=TestForce;
    ForceNewtons=Mathf.MoveTowards(ForceNewtons,requested,90*Time.deltaTime);
   }
 
   if(!ForceValid){_filter.Reset();ContactForceNewtons=0;}
   else if(!Hardware)ContactForceNewtons=_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);
   else if(_filteredSamples!=forceReceiver.State.SampleCount){_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples++;ContactForceNewtons=_sessionValidSamples<2?0:_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);}
-  if(Held!=null&&Held.IsBroken){IgnoreHeldPlayerCollision(false);Held=null;Status="Virtual brittle object fractured — R to reset";}
+  if(Held!=null&&Held.IsBroken){Held=null;Status="Virtual brittle object fractured — R to reset";}
   if(Held!=null&&ForceValid){
    if(!Hardware&&!CameraMode)_task.Step(new ForceReading(ForceNewtons,Time.realtimeSinceStartupAsDouble,true,true),Time.deltaTime);
    else if(Hardware&&_lastSamples!=forceReceiver.State.SampleCount){_task.Step(forceReceiver.Latest,Mathf.Min(.1f,(uint)((uint)forceReceiver.State.SampleMs-(uint)_lastMs)/1000f));_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;}
   }
-  var rightTracked=CameraMode?cameraTracked&&!LeftSelected:vision!=null&&vision.RightValid;
-  var leftTracked=CameraMode?cameraTracked&&LeftSelected:vision!=null&&vision.LeftValid;
+  var rightTracked=CameraMode?cameraTracked&&!LeftSelected:Hardware&&vision!=null&&vision.RightValid;
+  var leftTracked=CameraMode?cameraTracked&&LeftSelected:Hardware&&vision!=null&&vision.LeftValid;
   float closure=Held!=null?Mathf.Lerp(.45f,.95f,Mathf.Clamp01(ForceNewtons/45)):Mathf.Clamp01(ForceNewtons/55);
   float handLift=player.IsSeated?settings.seatedHandsLiftMeters:0;
   rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,LeftSelected?0:closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
   float leftDemo=LeftSelected?closure:0;
   leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
-  if(CameraMode&&cameraValid&&_cameraGrip.Closed&&Held==null)TryCameraGrab();
+  if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&Held==null)TryCameraGrab();
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
  }
  // Follow the only actively observed physical hand. When both are visible,
@@ -140,41 +153,110 @@ public sealed class ApartmentExperience:MonoBehaviour {
   double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
   _contactTicks++;ContactMeanMs+= (elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
   if(Held==null)return;
-  var origin=player.view.transform.position;
-  var requested=GripTarget(Held);var direction=requested-origin;
-  if(Physics.SphereCast(origin,Held.radius,direction.normalized,out var hit,direction.magnitude,~((1<<8)|(1<<9)),QueryTriggerInteraction.Ignore))requested=origin+direction.normalized*Mathf.Max(.15f,hit.distance-.015f);
-  _velocity=(requested-_lastHeld)/Mathf.Max(Time.fixedDeltaTime,.001f);_lastHeld=requested;
-  Held.MoveHeld(requested,holdAnchor.rotation);
+  if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;_velocity=Vector3.zero;_task.Reset();return;}
+
+  if(!TrySafeGripTarget(Held,out var requested)){_velocity=Vector3.zero;return;}
+  _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
+  _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
+  Held.MoveHeld(requested,GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
  }
  private Vector3 GripTarget(SqueezableObject item){
   var lift=player.IsSeated?settings.seatedHandsLiftMeters:0;
   var handOffset=ActiveHand.transform.localPosition-(LeftSelected?_leftRest:_rightRest)-Vector3.up*lift;
   var anchor=holdAnchor.localPosition;if(LeftSelected)anchor.x=-Mathf.Abs(anchor.x);
   var target=holdAnchor.parent.TransformPoint(anchor)+player.view.transform.TransformVector(handOffset)+Vector3.up*(player.IsSeated?settings.seatedHoldLiftMeters:0);
-  // The mirrored Gleechi hand has a different palm-to-fingertip reach. Place a
-  // left-hand held object at the actual finger pad cluster, not a mirrored HUD anchor.
-  if(LeftSelected&&contactRig!=null&&contactRig.contactBones!=null&&contactRig.contactBones.Length==15){
+  // The hand prefab's palm-to-fingertip reach differs from the HUD anchor on
+  // both sides. Keep the held object's centre at the animated finger pads so
+  // physical probe contacts drive deformation even after camera/seat motion.
+  if(contactRig!=null&&contactRig.contactBones!=null&&contactRig.contactBones.Length==15){
    var bones=contactRig.contactBones;
    if(bones[1]!=null&&bones[4]!=null&&bones[7]!=null&&bones[10]!=null){
-    Vector3 pads=(bones[1].position+bones[4].position+bones[7].position+bones[10].position)*.25f;
+    Vector3 indexMiddle=(bones[1].position+bones[4].position)*.5f;
+    Vector3 ringLittle=(bones[7].position+bones[10].position)*.5f;
+    Vector3 across=indexMiddle-ringLittle;
+    // A ball centred on every finger penetrates the whole hand. Bias its
+    // centre toward the index side of the grasp aperture so contact remains
+    // local and the other finger probes are free to report zero force.
+    Vector3 pads=indexMiddle+(across.sqrMagnitude>.000001f?across.normalized:ActiveHand.transform.right)*Mathf.Min(.11f,item!=null?item.radius*.75f:.09f);
     target+=Vector3.ClampMagnitude(pads-target,.23f);
    }
   }
   if(item!=null){var toward=ActiveHand.transform.position-target;float correction=Mathf.Clamp(.12f-item.radius,0,.05f);if(toward.sqrMagnitude>.0001f)target+=toward.normalized*correction;}
   return target;
  }
+ // Asset pivots need not lie on their usable surface; include child colliders.
+ private bool CanReach(SqueezableObject item){
+  if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.HasPickupCollider)return false;
+  var eye=player.view.transform.position;var point=item.ClosestSurface(eye);var direction=point-eye;
+  if(direction.magnitude>settings.reachMeters)return false;
+  return direction.sqrMagnitude<.000001f||!Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.01f,~(1<<8),QueryTriggerInteraction.Ignore)||hit.collider.GetComponentInParent<SqueezableObject>()==item;
+ }
+ // Check endpoint overlap as well as the camera-to-hand sweep.
+ private bool TrySafeGripTarget(SqueezableObject item,out Vector3 target){
+  var origin=player.view.transform.position;target=GripTarget(item);
+  if(!GraspMotionPolicy.Finite(target))return false;
+  float clearance=item.ClearanceRadius+.01f;int mask=~((1<<8)|(1<<9));var delta=target-origin;
+  if(delta.sqrMagnitude>.000001f){
+   int count=Physics.SphereCastNonAlloc(origin,clearance,delta.normalized,_clearanceHits,delta.magnitude,mask,QueryTriggerInteraction.Ignore);
+   if(count==_clearanceHits.Length)return false; // saturated query: no unsafe placement
+   float distance=delta.magnitude;
+   for(int i=0;i<count;i++)if(IsClearanceObstacle(_clearanceHits[i].collider))distance=Mathf.Min(distance,Mathf.Max(0,_clearanceHits[i].distance-.01f));
+   target=origin+delta.normalized*distance;
+  }
+  if(!GripTargetBlocked(target,clearance,mask))return true;
+  if(GripTargetBlocked(origin,clearance,mask))return false;
+  Vector3 blocked=target,safe=origin;
+  for(int i=0;i<10;i++){var middle=(safe+blocked)*.5f;if(GripTargetBlocked(middle,clearance,mask))blocked=middle;else safe=middle;}
+  target=safe;return true;
+ }
+ private bool IsClearanceObstacle(Collider collider)=>collider!=null&&!collider.transform.IsChildOf(player.transform)&&collider.GetComponentInParent<SqueezableObject>()==null;
+ private bool GripTargetBlocked(Vector3 point,float clearance,int mask){
+  int count=Physics.OverlapSphereNonAlloc(point,clearance,_clearanceOverlaps,mask,QueryTriggerInteraction.Ignore);
+  if(count==_clearanceOverlaps.Length)return true;
+  for(int i=0;i<count;i++)if(IsClearanceObstacle(_clearanceOverlaps[i]))return true;
+  return false;
+ }
+ private bool BeginGrab(SqueezableObject item,bool summon){
+  if(!TrySafeGripTarget(item,out var target)){Status="Not enough space for this object; move away from the wall";return false;}
+  if(!item.Grab())return false;
+  Held=item;
+  if(_playerColliders==null)_playerColliders=player.GetComponentsInChildren<Collider>(true);
+  item.ProtectFromPlayer(_playerColliders);
+  Quaternion initial=summon?holdAnchor.rotation:item.Body.rotation;
+  _heldRotationOffset=GraspMotionPolicy.RelativeRotation(ActiveHand.transform.rotation,initial);
+  // Pickup is explicit relocation, never a source of release momentum.
+  item.Body.position=target;item.Body.rotation=initial;Physics.SyncTransforms();
+  _lastHeld=target;_lastMotionTime=Time.unscaledTime;_velocity=Vector3.zero;_task.Reset();
+  _lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;
+  return true;
+ }
+ private SqueezableObject KeyboardTarget(out ApartmentDoor door){
+  door=null;var ray=player.view.ViewportPointToRay(new Vector3(.5f,.5f,0));
+  if(Physics.Raycast(ray,out var hit,settings.reachMeters,~(1<<8),QueryTriggerInteraction.Ignore)){
+   var direct=hit.collider.GetComponentInParent<SqueezableObject>();
+   if(CanReach(direct))return direct;
+   door=hit.collider.GetComponentInParent<ApartmentDoor>();if(door!=null)return null;
+  }
+  SqueezableObject nearest=null;float best=float.PositiveInfinity;
+  foreach(var item in objects){
+   if(!CanReach(item))continue;
+   float along=Vector3.Dot(item.transform.position-ray.origin,ray.direction);
+   var point=item.ClosestSurface(ray.GetPoint(Mathf.Clamp(along,0,settings.reachMeters)));
+   float score=GraspMotionPolicy.AimScore(ray.origin,ray.direction,point,settings.reachMeters,settings.pickupAssistDegrees);
+   if(score<best){nearest=item;best=score;}
+  }
+  return nearest;
+ }
  // Closing fingers near a visible object grabs it without E. A distant fist cannot pick it up.
  private void TryCameraGrab(){
   if(contactRig==null||contactRig.contactBones==null)return;
   SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;
   foreach(var item in objects){
-   if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken)continue;
-   var collider=item.GetComponent<Collider>();if(collider==null)continue;
-   if(Vector3.Distance(player.view.transform.position,item.transform.position)>settings.reachMeters)continue;
+   if(!CanReach(item))continue;
    foreach(var bone in contactRig.contactBones){
     if(bone==null)continue;
     var tip=bone.childCount>0?bone.GetChild(0).position:bone.position;
-    float distance=Vector3.Distance(tip,collider.ClosestPoint(tip));
+    float distance=Vector3.Distance(tip,item.ClosestSurface(tip));
     if(distance<best){best=distance;nearest=item;}
    }
   }
@@ -187,47 +269,45 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(!CameraMode||player.Paused||Held!=null||choices==null||vision==null)return false;
   var frame=LeftSelected?vision.LatestLeft:vision.LatestRight;
   if(!(LeftSelected?vision.LeftValid:vision.RightValid)||frame==null||
+     !HandKinematics.HasPoseGeometry(frame)||
      !(cameraLauncher!=null&&cameraLauncher.CameraOpened||_testing)||
      !((frame.source??"").StartsWith("mediapipe-",StringComparison.OrdinalIgnoreCase)||_testing)){
    Status="Show the selected hand to the camera before pressing G";return false;
   }
   var item=choices.SelectedObject;
-  if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.Grab())return false;
-  Held=item;IgnoreHeldPlayerCollision(true);_summonGraceUntil=Time.unscaledTime+1.25f;
-  var target=GripTarget(item);item.Body.position=target;item.Body.rotation=holdAnchor.rotation;
-  Physics.SyncTransforms();_lastHeld=target;_velocity=Vector3.zero;_task.Reset();
+  if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!BeginGrab(item,true))return false;
+  _cameraReleaseBlocked=false;_summonGraceUntil=Time.unscaledTime+1.25f;
   Status="Camera hand: close fingers to keep "+item.displayName;
   return true;
  }
  // E is an explicit request for keyboard pickup. It switches camera mode to
  // demo before grasping, so missing camera frames cannot imply measured force.
  public bool TryKeyboardAction(){
-  if(Held!=null){Release();return true;}
   if(player.Paused)return false;
-  if(!Physics.Raycast(player.view.ViewportPointToRay(new Vector3(.5f,.5f,0)),out var hit,
-     settings.reachMeters,~(1<<8),QueryTriggerInteraction.Ignore))return false;
-  var item=hit.collider.GetComponentInParent<SqueezableObject>();
+  if(Held!=null){Release();return true;}
+  var item=KeyboardTarget(out var door);
   if(item!=null){
    if(CameraMode)SetHardware(false);
    return TryGrab(item);
   }
-  var door=hit.collider.GetComponentInParent<ApartmentDoor>();
   if(door==null)return false;
   door.Toggle();return true;
  }
  public bool TryGrab(SqueezableObject item){
   if(item==null||Held!=null||item.IsBroken||player.Paused||Hardware&&!forceReceiver.Latest.Valid||CameraMode&&!ForceValid)return false;
-  var eye=player.view.transform.position;var direction=item.transform.position-eye;
-  if(direction.magnitude>settings.reachMeters)return false;
-  if(Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.03f,~(1<<8),QueryTriggerInteraction.Ignore)&&hit.collider.GetComponentInParent<SqueezableObject>()!=item)return false;
-  if(!item.Grab())return false;Held=item;IgnoreHeldPlayerCollision(true);_lastHeld=GripTarget(item);_velocity=Vector3.zero;_task.Reset();_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;Status="Holding "+item.displayName;return true;
+  if(!CanReach(item)||!BeginGrab(item,false))return false;
+  Status="Holding "+item.displayName;return true;
  }
- private void IgnoreHeldPlayerCollision(bool ignore){
-  if(Held==null||player==null||player.Controller==null)return;
-  foreach(var collider in Held.GetComponentsInChildren<Collider>())
-   if(collider!=null)Physics.IgnoreCollision(collider,player.Controller,ignore);
+ public void Release(){
+  if(Held!=null){
+   var velocity=!player.Paused&&Time.unscaledTime-_lastMotionTime<=.1f?_velocity:Vector3.zero;
+   Held.Release(velocity);Held=null;
+   if(CameraMode)_cameraReleaseBlocked=true;
+   Status=CameraMode?"Released - open hand before gripping again, or use G":"Object released";
+  }
+  _velocity=Vector3.zero;_summonGraceUntil=0;_task.Reset();
  }
- public void Release(){if(Held!=null){IgnoreHeldPlayerCollision(false);Held.Release(_velocity*.15f);Held=null;}_summonGraceUntil=0;_task.Reset();}
+ private void OnDisable(){Release();}
  public void ResetObjects(){Release();foreach(var item in objects)item.ResetObject();Status="Objects restored to their stations";}
  private static string VisionLabel(LandmarkFrame frame)=>frame!=null&&(frame.source??"").StartsWith("synthetic",StringComparison.OrdinalIgnoreCase)?"SYNTHETIC":"CAMERA";
  private void RefreshHUD(){
@@ -236,21 +316,25 @@ public sealed class ApartmentExperience:MonoBehaviour {
   statusText.text="GRIP / REHAB  /  MODULE 01\n"+source+"  |  "+(player.IsSeated?"SEATED":"WALKING")+"\nSELECTED HAND: "+(LeftSelected?"LEFT ":"RIGHT ")+handPose;
   if(CameraMode){
    string cameraState=cameraLauncher==null?"NOT CONFIGURED":cameraLauncher.State;
-   forceText.text=(CameraGripScore*100).ToString("F0")+"% VISUAL GRIP\nCAMERA: "+cameraState+"  "+(cameraLauncher==null?"":cameraLauncher.FramesPerSecond.ToString("F0")+" FPS")+"  R:"+(vision.RightValid?"YES":"NO")+" L:"+(vision.LeftValid?"YES":"NO")+"  OK:"+vision.AcceptedPackets+" REJ:"+vision.RejectedPackets+"\n"+
+   forceText.text=(ForceValid?(CameraGripScore*100).ToString("F0"):"--")+"% VISUAL GRIP\nCAMERA: "+cameraState+"  "+(cameraLauncher==null?"":cameraLauncher.FramesPerSecond.ToString("F0")+" FPS")+"  R:"+(vision.RightValid?"YES":"NO")+" L:"+(vision.LeftValid?"YES":"NO")+"  OK:"+vision.AcceptedPackets+" REJ:"+vision.RejectedPackets+"\n"+
     (Held!=null?Held.displayName+" | "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm indentation":"Close near object, or press G to bring selected object to hand")+"\nNo measured force; open hand to release";
-  } else forceText.text=(ForceValid?ForceNewtons.ToString("F1"):"--")+" N "+(Hardware?(ForceValid?(forceReceiver.State.IsSynthetic?"REPLAY":"MEASURED"):"NO FRESH SAMPLE"):"SIMULATED")+"\n"+(Hardware?forceReceiver.State.Status:"Demo setpoint "+DemoSetpoint.ToString("F0")+" N")+"\n"+(Held!=null?Held.displayName+"  |  "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm deformation | "+Held.Damage+(Held.BreakThresholdNewtons>0?" | break > "+Held.BreakThresholdNewtons+" N":""):"Aim at an object and press E")+"\nHOLD  "+_task.ProgressSeconds.ToString("F1")+" / 3 s  |  prototype target 18 +/- 3 N";
-  progressFill.rectTransform.localScale=new Vector3(CameraMode?CameraGripScore:Mathf.Clamp01(_task.ProgressSeconds/3),1,1);
+  } else forceText.text=(ForceValid?ForceNewtons.ToString("F1"):"--")+" N "+(Hardware?(ForceValid?(forceReceiver.State.IsSynthetic?"REPLAY":"MEASURED"):"NO FRESH SAMPLE"):"SIMULATED")+"\n"+(Hardware?forceReceiver.State.Status:"Demo setpoint "+DemoSetpoint.ToString("F0")+" N")+"\n"+(Held!=null?Held.displayName+"  |  "+(Held.MaxDisplacementMeters*1000).ToString("F1")+" mm deformation | "+Held.Damage+(Held.BreakThresholdNewtons>0?" | break > "+Held.BreakThresholdNewtons+" N":""):"Aim at an object and press E")+"\nHOLD  "+_task.ProgressSeconds.ToString("F1")+" / "+_task.HoldSeconds.ToString("F1")+" s  |  research target 18 +/- 3 N";
+  progressFill.rectTransform.localScale=new Vector3(CameraMode?CameraGripScore:Mathf.Clamp01(_task.ProgressSeconds/_task.HoldSeconds),1,1);
   string prompt=Status;
-  if(Held==null&&Physics.Raycast(player.view.ViewportPointToRay(new Vector3(.5f,.5f,0)),out var hit,settings.reachMeters,~(1<<8),QueryTriggerInteraction.Ignore)){
-   var item=hit.collider.GetComponentInParent<SqueezableObject>();if(item!=null)prompt=CameraMode?"Close tracked fingers, or G to summon selected object; E uses keyboard: "+item.displayName:"E  •  Pick up "+item.displayName;
-   else if(hit.collider.GetComponentInParent<ApartmentDoor>()!=null)prompt="E  •  Open / close door";
+  if(Held==null){
+   var item=KeyboardTarget(out var door);
+   if(item!=null)prompt=CameraMode?"Close tracked fingers, or G to summon selected object; E uses keyboard: "+item.displayName:"E  •  Pick up "+item.displayName;
+   else if(door!=null)prompt="E  •  Open / close door";
   }
   if(CameraMode&&!ActiveHand.TrackingUsed&&vision.TrackingValid)
    prompt="Camera sees "+(vision.LeftValid?"LEFT":"RIGHT")+"; choose matching HAND in menu";
   else if(CameraMode&&!ActiveHand.TrackingUsed&&vision.RejectedPackets>0)
    prompt="Camera frames rejected: "+vision.LastRejection;
   if(CameraMode&&cameraLauncher!=null&&!string.IsNullOrEmpty(cameraLauncher.LastError))prompt=cameraLauncher.LastError;
-  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"  |  "+(player.Paused?"PAUSED - ESC to resume":prompt)+"\nWASD move  |  Mouse look  |  G camera summon  |  E keyboard grab  |  Q release  |  F sit / stand\nSpace/click squeeze  |  1-5 finger  |  J joint  |  X/Z bend/open  |  C recenter  |  arrows/PgUp/PgDn move  |  TAB options";
+  string gripHelp=CameraMode?"CAMERA: close/open tracked hand  |  G summon  |  E switch to keyboard pickup":
+   Hardware?"PHASE 2: measured grip  |  E pick up  |  Q release":
+   "KEYBOARD DEMO: E pick up  |  hold Space/click to squeeze  |  Q release";
+  contextText.text="FINGER "+new[]{"INDEX","MIDDLE","RING","LITTLE","THUMB"}[ActiveHand.SelectedFinger]+" / "+(ActiveHand.SelectedJoint<0?"ALL JOINTS":new[]{"BASE","MIDDLE","TIP"}[ActiveHand.SelectedJoint])+"  |  "+(player.Paused?"PAUSED - ESC to resume":prompt)+"\n"+gripHelp+"  |  F sit / stand\nWASD / mouse move  |  1-5 finger  |  J joint  |  X/Z bend/open  |  C recenter  |  TAB options  |  B input";
  }
 }
 }
