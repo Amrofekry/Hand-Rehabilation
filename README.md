@@ -1,5 +1,10 @@
 ## Current delivery — 2026-10-06
 
+## Scene workspace
+
+Open **Grip Rehab > Scenes > Open Complete Workspace** to edit the six focused additive scenes. `Assets/Scenes/GripRehab.unity` is the small startup entry. See [the editing guide](Docs/SCENE_ORGANIZATION.md).
+
+
 The Windows player has been rebuilt and tested with the current English HandMate presentation and without active voice commands. Native gameplay checks pass 168/169/168; UI checks pass 60 at each of two resolutions; gallery checks pass 87 at each of three resolutions. A native font fallback initialization fault was repaired. See [current report](Docs/CLOSEOUT_2026_10_06.md) and [numbered tasks](Docs/TASKS.md).
 
 Input is mouse, keyboard or the whole-hand camera pointer. Voice remains future task 7. Live human testing and real Nano/HX711 testing remain tasks 9 and 10. Existing doctor/AI expansion sources are not presented as a completed clinical backend.

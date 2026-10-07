@@ -1,0 +1,30 @@
+{
+  "scope": "Authorized scene organization only; historical baselines remain immutable",
+  "changes": {
+    "Assets/Editor/ApartmentAuthoring.cs": {
+      "previousSha256": "f186fcb92957083bb04f89068eed82dea7b18bbf1330b15fe44242cda695a928",
+      "currentSha256": "091da6a66f2c80f1e270560d1330a66a596859bee8f611779717a18e9e232062",
+      "reason": "Verify the complete additive workspace instead of only the now-small startup scene."
+    },
+    "Assets/Editor/RehabEditorQA.cs": {
+      "previousSha256": "4d5c11dfcf807e0fd3dffae0ea8af79270875bc2664b04868a44e71029130b40",
+      "currentSha256": "81575c4df1d5980e006529896646be678065bff6a97bc4c765fcb7bc24048a8e",
+      "reason": "Restore complete workspace and run persistence checks on the owning content scene."
+    },
+    "Assets/Editor/RehabGateRunner.cs": {
+      "previousSha256": "5f341d9a350b16f1c3b6fbfbca58b7030de4c29e967f6974b9a00d497f1d2a45",
+      "currentSha256": "28e4723c486fb9ddbe4ac1c4bb4718f49e7e1b9f5f2922d79ccdd594211ca4cf",
+      "reason": "Fixed scene split/open/verify/configure/lifecycle gate commands."
+    },
+    "Assets/Editor/RehabVerification.cs": {
+      "previousSha256": "144a0843400c9c21bc90a38cbf5bdfe028662e6cc57db87e97a89dcf28c832fe",
+      "currentSha256": "66cee1c3dfff0b2d83e0fec84c9c7abffa4f5ab6827b02e41d4ad386a1a2e650",
+      "reason": "Build includes manifest content without regeneration."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "092fb7591a57987cbb3b5ab2720570c3f9422366a71be044351dcb4e39dad508",
+      "currentSha256": "82326e032cae226a0dfda1efd0b998a534e7916206ead46a75e3a6d11830c508",
+      "reason": "Add focus, EventSystem and button geometry to existing failed dwell assertion; no guard or assertion relaxed."
+    }
+  }
+}

@@ -1,11 +1,14 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using GripRehab;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using VirtualGrasp;
 
 namespace GripRehab.Editor
 {
@@ -17,9 +20,43 @@ namespace GripRehab.Editor
         [MenuItem("Grip Rehab/Verify Scene and Logic")]
         public static void PrepareAndVerify()
         {
+            if (UnityEngine.Object.FindAnyObjectByType<ApartmentAcceptance>() != null)
+                throw new Exception("Test-only Editor acceptance object was saved into the scene");
             VerifyLogic();
-            ApartmentAuthoring.VerifyScene(); RehabIntegrationChecks.Run();
+            ApartmentAuthoring.VerifyScene();
+            VerifyVirtualGraspProfile();
+            RehabPremiumSkin.VerifyLegibility();
+            RehabIntegrationChecks.Run();
+            VerifySpaceIsNotUiSubmit();
             Debug.Log("[REHAB_VERIFY] PASS: logic and serialized scene validation; no regeneration");
+        }
+
+        private static void VerifySpaceIsNotUiSubmit()
+        {
+            var input = File.ReadAllText("ProjectSettings/InputManager.asset");
+            var submitAxes = Regex.Matches(input,
+                @"(?ms)^\s*- serializedVersion: 3\s*\r?\n\s*m_Name: Submit\s*\r?\n.*?(?=^\s*- serializedVersion: 3|\z)");
+            if (submitAxes.Count == 0) throw new Exception("No keyboard Submit axis remains for menus");
+            foreach (Match axis in submitAxes)
+                if (Regex.IsMatch(axis.Value,
+                    @"(?m)^\s*(?:altPositiveButton|positiveButton):\s*space\s*$"))
+                    throw new Exception("Space is mapped to UI Submit and can activate Quit during grip");
+        }
+
+        private static void VerifyVirtualGraspProfile()
+        {
+            const string path = "Assets/Resources/VG_ControllerProfiles/VG_CP_Rehab.Input.asset";
+            var profile = AssetDatabase.LoadAssetAtPath<VG_ControllerProfile>(path);
+            if (profile == null || !profile.m_controllerClasses.StartsWith("RehabVGController", StringComparison.Ordinal))
+                throw new Exception("Project VirtualGrasp controller profile is missing or misnamed");
+            if (!Resources.LoadAll<VG_ControllerProfile>("VG_ControllerProfiles").Contains(profile))
+                throw new Exception("VirtualGrasp cannot discover the project controller profile through Resources");
+            var sdk = UnityEngine.Object.FindAnyObjectByType<RehabVirtualGrasp>();
+            if (sdk == null) throw new Exception("Scene VirtualGrasp component is missing");
+            var serialized = new SerializedObject(sdk);
+            var binding = serialized.FindProperty("m_avatars.Array.data[0].m_primarySensorSetup.m_profile");
+            if (binding == null || binding.objectReferenceValue != profile)
+                throw new Exception("The scene is not bound to the project VirtualGrasp controller profile");
         }
 
         private static void EnsureMaterials()
@@ -72,12 +109,14 @@ namespace GripRehab.Editor
         public static void BuildWindows()
         {
             PrepareAndVerify();
-            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                throw new OperationCanceledException("Windows build canceled before saving the scene");
             var destination = Path.Combine(Directory.GetCurrentDirectory(), "Builds", "Windows", "GripRehab.exe");
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
-                scenes = new[] { ScenePath },
+                scenes = GripRehab.Composition.SceneComposition.Current != null ? SceneOrganization.BuildScenePaths() : AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/UI/GripUiGallery.unity") != null ?
+                    new[] { ScenePath, "Assets/UI/GripUiGallery.unity" } : new[] { ScenePath },
                 locationPathName = destination,
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None
@@ -109,6 +148,42 @@ namespace GripRehab.Editor
             };
             Require(live.Accept(packet, 1) && live.Latest.Valid &&
                     Mathf.Abs(live.Latest.Newtons - 12.345f) < .001f, "Phase 2 force was not decoded");
+            Require(live.TryGetSample(1.01, out var contracted) &&
+                    contracted.Source == ForceSourceKind.BleBridge &&
+                    contracted.Shape == GripShape.Sphere &&
+                    contracted.CalibrationRevision == 1 &&
+                    Mathf.Abs(contracted.Newtons - 12.345f) < .001f,
+                    "Phase 2 source contract lost sample provenance");
+            Require(!live.TryGetSample(1.5, out _),
+                    "Phase 2 source contract accepted stale force");
+            var handContract = new HandSample(HandSide.Left, new Vector3[21],
+                1, 1.1, 7, .9f, true);
+            Require(handContract.IsFresh(1.2) && !handContract.IsFresh(1.5),
+                    "Hand source contract freshness is incorrect");
+            var policySettings = ScriptableObject.CreateInstance<ResearchPolicySettings>();
+            try
+            {
+                policySettings.signPersistenceSeconds = 1;
+                policySettings.stableWindowSeconds = 1;
+                policySettings.cooldownSeconds = 2;
+                var policy = new ResearchAdaptivePolicy(policySettings);
+                policy.Step(new ResearchObservation(1, .95, FatigueSign.None, true, true, true, true));
+                Require(policy.Step(new ResearchObservation(2, 1.95, FatigueSign.None,
+                    true, true, true, true)).Level == 2,
+                    "Research difficulty did not wait for valid stable input");
+                policy.Step(new ResearchObservation(3, 2.95, FatigueSign.Force,
+                    true, true, true, false));
+                Require(policy.Step(new ResearchObservation(4, 3.95, FatigueSign.Force,
+                    true, true, true, false)).Status == ResearchSessionStatus.WarningResumeOrQuit,
+                    "One independent sign must show Resume/Quit warning");
+                policy.Step(new ResearchObservation(5, 4.95,
+                    FatigueSign.Force | FatigueSign.Kinematic, true, true, true, false));
+                Require(policy.Step(new ResearchObservation(6, 5.95,
+                    FatigueSign.Force | FatigueSign.Kinematic, true, true, true, false))
+                    .Status == ResearchSessionStatus.SafetyStopped,
+                    "Two independent signs must latch safety stop");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(policySettings); }
             Require(!live.Accept(packet, 1.01), "duplicate force advanced");
             packet.sequence = 43;
             packet.sampleMs = 1100;
@@ -158,6 +233,22 @@ namespace GripRehab.Editor
 
             var frame = new LandmarkFrame { schemaVersion = 1, confidence = .9f, landmarks = new Vector3[21] };
             Require(HandKinematics.IsUsable(frame), "valid hand landmarks rejected");
+            frame.imageWidth = 640; frame.imageHeight = 480;
+            frame.landmarks[1] = new Vector3(.1f, .1f, .1f);
+            Require(Vector3.Distance(HandKinematics.PosePoint(frame, 1), new Vector3(.1f, -.075f, -.1f)) < .00001f,
+                "normalized image aspect ratio distorted hand geometry");
+            frame.worldLandmarks = new Vector3[21];
+            frame.worldLandmarks[1] = new Vector3(.01f, .02f, .03f);
+            Require(Vector3.Distance(HandKinematics.PosePoint(frame, 1, true), new Vector3(-.01f, -.02f, -.03f)) < .00001f,
+                "world hand points or horizontal reflection were mapped incorrectly");
+            Require(!HandKinematics.HasPoseGeometry(frame), "collapsed world palm was accepted as a pose");
+            frame.worldLandmarks[1].x = float.NaN;
+            Require(!HandKinematics.IsUsable(frame), "non-finite world landmarks accepted");
+            frame.worldLandmarks = new Vector3[20];
+            Require(!HandKinematics.IsUsable(frame), "incomplete world hand accepted");
+            frame.worldLandmarks = null; frame.imageWidth = 640; frame.imageHeight = 0;
+            Require(!HandKinematics.IsUsable(frame), "incomplete image dimensions accepted");
+            frame.imageWidth = frame.imageHeight = 0;
             frame.confidence = .54f; frame.landmarks[0].x = 1.05f;
             Require(HandKinematics.IsUsable(frame), "real camera edge landmark or handedness confidence rejected");
             frame.landmarks[0].x = 1.5f;

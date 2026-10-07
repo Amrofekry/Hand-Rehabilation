@@ -4,6 +4,7 @@ import json
 import re
 import unittest
 from pathlib import Path
+from Tools.scene_layout import composed_blocks, paths
 
 ROOT = Path(__file__).resolve().parents[1]
 SCENE = ROOT / 'Assets/Scenes/GripRehab.unity'
@@ -43,6 +44,10 @@ class HandMateDesignTests(unittest.TestCase):
         # Vendor assets, scene logic and every other protected file stay pinned.
         review = json.loads((ROOT/'Docs/evidence/journey-item2-2026-10-06/protected-source-review.json').read_text())
         changes = review['changes']
+        scene_review = json.loads((ROOT/'Docs/evidence/scene-organization-2026-10-07/protected-source-review.json').read_text())['changes']
+        self.assertEqual(set(scene_review), {'Assets/Editor/ApartmentAuthoring.cs', 'Assets/Editor/RehabEditorQA.cs',
+            'Assets/Editor/RehabGateRunner.cs', 'Assets/Editor/RehabVerification.cs',
+            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs'})
         self.assertEqual(set(changes), {
             'Assets/Editor/RehabGateRunner.cs', 'Assets/Product/ProductRepository.cs',
             'Assets/ProductIntegration/ResearchPortalHost.cs', 'Assets/ProductIntegration/ResearchSessionRuntime.cs',
@@ -54,9 +59,13 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(changes[path]['originalSha256'], expected)
                     self.assertTrue(changes[path]['reason'])
                     expected = changes[path]['currentSha256']
+                if path in scene_review:
+                    self.assertEqual(scene_review[path]['previousSha256'], expected)
+                    self.assertTrue(scene_review[path]['reason'])
+                    expected = scene_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
-        current = blocks(SCENE)
+        current = composed_blocks()
         for key, expected in logic.items():
             self.assertEqual(hashlib.sha256(current[key].encode()).hexdigest(), expected, key)
 
@@ -77,7 +86,7 @@ class HandMateDesignTests(unittest.TestCase):
                 self.assertRegex(field(text,key), r'fileID: 12800000, guid: [0-9a-f]{32}')
 
     def test_new_art_does_not_block_buttons_or_leave_parent_bounds(self):
-        current = blocks(SCENE)
+        current = composed_blocks()
         for num in range(1,4):
             base = 90000000000 + num * 10
             go, rect, _, image, tag = [current[str(base+i)] for i in range(5)]
@@ -97,7 +106,7 @@ class HandMateDesignTests(unittest.TestCase):
             for path in folder.rglob('*.meta'):
                 match=re.search(r'^guid: ([0-9a-f]{32})',path.read_text(encoding='utf-8-sig',errors='replace'),re.M)
                 if match:all_guids.add(match[1])
-        for path in [SCENE, ROOT/'Assets/UI/GripUiGallery.unity',*(ROOT/'Assets/UI/Components').glob('*.prefab')]:
+        for path in [SCENE, *paths(), ROOT/'Assets/UI/GripUiGallery.unity',*(ROOT/'Assets/UI/Components').glob('*.prefab')]:
             text=path.read_text();ids=re.findall(r'^--- !u!\d+ &(-?\d+)',text,re.M)
             self.assertEqual(len(ids),len(set(ids)),path.name)
             for guid in re.findall(r'guid: ([0-9a-f]{32})',text):
@@ -105,7 +114,7 @@ class HandMateDesignTests(unittest.TestCase):
                 self.assertIn(guid,all_guids,(path.name,guid))
 
     def test_dropdown_arrows_and_slider_handles_remain_visible(self):
-        current=blocks(SCENE)
+        current=composed_blocks()
         objects={key:field(b,'m_Name') for key,b in current.items() if b.startswith('--- !u!1 ')}
         found=0
         for block in current.values():

@@ -20,12 +20,13 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   }
  }
  private IEnumerator Start(){
+  Application.runInBackground=true;
   Finished=false;Passed=false;
   var routine=Run();
   while(true){object current=null;bool more=false;try{more=routine.MoveNext();if(more)current=routine.Current;}catch(Exception error){End(false,error.ToString());yield break;}if(!more)break;yield return current;}
   End(true,"");
  }
- private void Check(bool condition,string text){if(!condition)throw new Exception(text);checks.Add(text);Debug.Log("[APARTMENT_CHECK] PASS: "+text);}
+ private void Check(bool condition,string text){if(!condition)throw new Exception(text);checks.Add(text);}
  private IEnumerator Run(){
   yield return new WaitForSeconds(1.5f);
   app=FindAnyObjectByType<ApartmentExperience>();
@@ -34,13 +35,13 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(app.cameraLauncher.swapHandedness,"Saved laptop camera calibration reverses the observed right/left labels");
   Check(app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.rightOnlyMesh,"Only selected right hand is rendered");
   app.SelectHand(true);Check(app.virtualGrasp.outputMesh.sharedMesh==app.virtualGrasp.leftOnlyMesh&&app.contactRig.pose==app.leftHand,"Left selection swaps visible mesh and contact hand");app.SelectHand(false);
-  app.player.SetPaused(false);yield return null;
+  app.player.enabled=false;app.player.SetPaused(false);yield return null;
   var forceFilter=new GripForceFilter();forceFilter.Push(10,.05f,.06f,30,250);
   Check(Mathf.Abs(forceFilter.Push(100,.05f,.06f,30,250)-10)<.001f,"Single isolated force spike is rejected");
   Check(forceFilter.Push(100,.05f,.06f,30,250)>10,"Repeated high force is accepted with smoothing");
   Check(forceFilter.Push(float.NaN,.05f,.06f,30,250)==0,"Impossible force resets the contact filter");
   Check(!app.Hardware&&app.ForceValid,"Keyboard/mouse demo is the default");
-  Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionPreviewReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
+  Check(FindObjectsByType<Camera>().Length==1&&FindObjectsByType<LiveForceReceiver>().Length==1&&FindObjectsByType<VisionUdpReceiver>().Length==1&&FindObjectsByType<VisionPreviewReceiver>().Length==1,"Exactly one camera and each input receiver");
   var player=app.player;player.enabled=false;player.SetPaused(false);
   var sdk=app.virtualGrasp;
   VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.RIGHT,1,1,out Transform outputIndex);
@@ -78,8 +79,8 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(Quaternion.Angle(rightPalmRest,app.rightHand.transform.localRotation)<5&&
         Quaternion.Angle(leftPalmRest,app.leftHand.transform.localRotation)<5,
    "Camera C recenter aligns either tracked hand with its vendor rest pose");
-  // The vendor palm needs a half-turn, while the mirrored webcam needs only
-  // horizontal travel compensation. Vertical wrist travel must remain natural.
+  // Upright first-person facing turns the old camera palm over. The worker
+  // already mirrors X; a second reflection must not reverse wrist travel.
   app.rightHand.UseDemoPose();app.leftHand.UseDemoPose();
   var cameraRightRest=app.rightHand.transform.localPosition;
   var cameraLeftRest=app.leftHand.transform.localPosition;
@@ -87,9 +88,12 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    app.rightHand.Pose(neutral,true,0,.05f,.045f,cameraRightRest,.85f,true);
    app.leftHand.Pose(leftNeutral,true,0,.05f,.045f,cameraLeftRest,.85f,true);
   }
-  Check(Quaternion.Angle(rightPalmRest,app.rightHand.transform.localRotation)>175&&
-        Quaternion.Angle(leftPalmRest,app.leftHand.transform.localRotation)>175,
-   "Live camera palm faces the corrected direction for right and left hands");
+  var cameraFacingTurn=Quaternion.AngleAxis(180,Vector3.up)*Quaternion.AngleAxis(180,Vector3.forward);
+  Check(Vector3.Dot(app.rightHand.transform.localRotation*Vector3.forward,cameraFacingTurn*rightPalmRest*Vector3.forward)>.99f&&
+        Vector3.Dot(app.leftHand.transform.localRotation*Vector3.forward,cameraFacingTurn*leftPalmRest*Vector3.forward)>.99f&&
+        Vector3.Dot(app.rightHand.transform.localRotation*Vector3.up,cameraFacingTurn*rightPalmRest*Vector3.up)>.99f&&
+        Vector3.Dot(app.leftHand.transform.localRotation*Vector3.up,cameraFacingTurn*leftPalmRest*Vector3.up)>.99f,
+   "Camera rest turns both vendor palms to the patient-facing side");
   var cameraRightCenter=app.rightHand.transform.localPosition;
   var cameraLeftCenter=app.leftHand.transform.localPosition;
   var upperLeftRight=CameraFixture(.35f,.35f,false,2,2);
@@ -98,11 +102,12 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    app.rightHand.Pose(upperLeftRight,true,0,.05f,.045f,cameraRightRest,.85f,true);
    app.leftHand.Pose(upperLeftLeft,true,0,.05f,.045f,cameraLeftRest,.85f,true);
   }
-  Check(app.rightHand.transform.localPosition.x>cameraRightCenter.x+.08f&&
-        app.leftHand.transform.localPosition.x>cameraLeftCenter.x+.08f&&
+  Check(app.rightHand.transform.localPosition.x<cameraRightCenter.x-.08f&&
+        app.leftHand.transform.localPosition.x<cameraLeftCenter.x-.08f&&
         app.rightHand.transform.localPosition.y>cameraRightCenter.y+.08f&&
         app.leftHand.transform.localPosition.y>cameraLeftCenter.y+.08f,
-   "Mirrored camera horizontal travel is corrected while both wrists still rise with the real hand");
+   "Both wrists follow received image X while vertical travel retains its sign");
+  VerifyWorldHandPoses(neutral,leftNeutral);
   app.rightHand.UseDemoPose();app.leftHand.UseDemoPose();
   for(int i=0;i<16;i++){app.rightHand.Pose(null,false,0,.05f,.045f);app.leftHand.Pose(null,false,0,.05f,.045f);}
   app.SelectHand(false);yield return new WaitForSeconds(.3f);
@@ -116,6 +121,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   var ball=app.objects[0];var cracker=app.objects[2];var sponge=app.objects[1];
   var menu=FindAnyObjectByType<ApartmentChoices>();Check(menu!=null&&menu.objectButtons.Length==3&&menu.livingObjects.Length==3&&menu.kitchenObjects.Length==3,"Saved station and object UI references survive reload");
   player.SetPaused(true);yield return new WaitForSeconds(.3f);Check(menu.controls.interactable&&menu.controls.alpha>.9f,"Object menu appears when input is paused");yield return Screenshot("apartment-options");yield return new WaitForSeconds(.3f);player.SetPaused(false);
+  player.Teleport(app.seats[0].standFeet.position,app.seats[0].standFeet.rotation);
   Check(player.Sit(app.seats[0]),"Living room chair can be used from the approach position");
   player.view.transform.LookAt(ball.transform.position);
   yield return new WaitForSeconds(.2f);
@@ -127,9 +133,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return DriveForce(18,4.5f);
   yield return Screenshot("vg-ball-deformed");
   Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball is kinematic and deforms under grip force; held="+ball.IsHeld+" kinematic="+ball.Body.isKinematic+" compression="+ball.Compression+" contacts="+ball.ContactCount+" ball="+ball.transform.position+" anchor="+app.holdAnchor.position+" hand="+app.rightHand.transform.position+" eye="+player.view.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+(p.Contact==ball)+"@"+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
-  var touching=app.contactRig.probes.Where(p=>p.Contact==ball).ToArray();
-  Check(touching.Length==ball.ContactCount&&touching.Length>0&&touching.Length<app.contactRig.ProbeCount,"Independent finger capsules contribute only when touching the ball ("+touching.Length+"/15)");
-  Check(touching.All(p=>p.ResolvedForceNewtons>0&&p.ContactAreaSquareMeters>0)&&app.contactRig.probes.Where(p=>p.Contact!=ball).All(p=>p.ResolvedForceNewtons==0),"Noncontacting fingers resolve exactly zero force");
+  var touching=app.contactRig.probes.Where(p=>ball.HasProbeContact(p,out _,out _)).ToArray();
+  Check(touching.Length==ball.ContactCount&&touching.Length>0&&touching.Length<app.contactRig.ProbeCount,"Independent finger capsules contribute only when touching the ball ("+touching.Length+"/15); ball="+ball.transform.position+" colliderRadius="+ball.GetComponent<SphereCollider>().radius+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
+  Check(touching.All(p=>p.ResolvedForceNewtons>0&&p.ContactAreaSquareMeters>0)&&app.contactRig.probes.Where(p=>!ball.HasProbeContact(p,out _,out _)).All(p=>p.ResolvedForceNewtons==0),"Noncontacting fingers resolve exactly zero force");
   var moved=ballMesh.vertices;int changed=0,far=0,farMoved=0;
   for(int vertex=0;vertex<moved.Length;vertex++){
    float displacement=Vector3.Distance(moved[vertex],ballRest[vertex])*ball.visual.lossyScale.x;
@@ -153,7 +159,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(mug.gameObject.activeSelf&&!ball.gameObject.activeSelf,"Living room button selects the hollow porcelain mug");
   Check(app.TryGrab(mug),"Porcelain mug can be picked up from the chair");
   yield return DriveForce(70,1.5f);
-  Check(mug.IsBroken,"Porcelain mug fractures under sustained excessive demo force");yield return Screenshot("vg-mug-fractured");
+  Check(mug.IsBroken&&mug.FragmentsVisible&&mug.FragmentCount>1,"Porcelain mug fractures into visible surface pieces under sustained excessive demo force");yield return Screenshot("vg-mug-fractured");
   mug.ResetObject();mug.transform.position+=Vector3.up*.85f;mug.Body.position=mug.transform.position;
   yield return new WaitForSeconds(.85f);
   Check(mug.IsBroken,"A sufficiently energetic porcelain-mug drop causes impact fracture");
@@ -164,15 +170,26 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return DriveForce(65,1.4f);
   Check(cracker.IsBroken&&!cracker.visual.gameObject.activeSelf&&app.Held==null,"Sustained high force fractures the virtual cracker");
   app.TestForce=0;app.ResetObjects();yield return new WaitForSeconds(.2f);
-  Check(!cracker.IsBroken&&cracker.visual.gameObject.activeSelf,"Reset restores broken objects and removes fragments");
+  Check(!cracker.IsBroken&&cracker.visual.gameObject.activeSelf&&!cracker.FragmentsVisible&&cracker.DamageValue==0&&cracker.MaxDisplacementMeters==0,"Reset restores broken objects, damage, mesh and removes fragments");
   Check(player.Stand(),"Seated player can stand into a clear area");
+  Check(player.Sit(app.seats[0]),"Player can sit again before changing stations");
+  var blockedStand=GameObject.CreatePrimitive(PrimitiveType.Cube);
+  blockedStand.transform.SetPositionAndRotation(app.seats[0].standFeet.position+Vector3.up*.8f,Quaternion.identity);
+  blockedStand.transform.localScale=new Vector3(.6f,1.6f,.6f);Physics.SyncTransforms();
+  Check(!player.Stand(),"Obstructed chair prevents an unsafe local stand-up");
   var kitchen=GameObject.Find("Kitchen standing station").transform;
   menu.kitchenButton.onClick.Invoke();
-  Check(menu.Kitchen&&!player.IsSeated,"Kitchen station button takes player to the kitchen");
+  Check(menu.Kitchen&&!player.IsSeated&&Vector3.Distance(player.transform.position,kitchen.position)<.05f,
+   "Kitchen station teleports a seated player even when the old stand-up area is blocked");
+  Destroy(blockedStand);
   menu.objectButtons[1].onClick.Invoke();yield return null;
   var cup=menu.kitchenObjects[1];Check(cup.gameObject.activeSelf&&app.TryGrab(cup),"Kitchen silicone cup is selectable and can be gripped");
   var cupCollider=cup.GetComponent<Collider>();
   Check(Physics.GetIgnoreCollision(cupCollider,player.Controller),"A held object cannot push the standing player's CharacterController backwards");
+  var cupInitialRotation=cup.Body.rotation;var palmInitialRotation=app.ActiveHand.transform.rotation;
+  var cupOffset=GraspMotionPolicy.RelativeRotation(palmInitialRotation,cupInitialRotation);
+  Check(Quaternion.Angle(GraspMotionPolicy.HeldRotation(palmInitialRotation,cupOffset),cupInitialRotation)<.1f,"Pickup preserves cup orientation");
+
   yield return DriveForce(30,.6f);Check(cup.Compression>.2f&&cup.MaxDisplacementMeters>.003f,"Silicone cup visibly yields to demo grip force; compression="+cup.Compression+" contacts="+cup.ContactCount+" force="+app.ContactForceNewtons+" hand="+app.rightHand.transform.position+" cup="+cup.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,cup.transform.position).ToString("F3"))));
   var playerBeforeCupOverlap=player.transform.position;
   cup.Body.position=player.Controller.bounds.center;Physics.SyncTransforms();
@@ -180,7 +197,12 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   var drift=Vector2.Distance(new Vector2(playerBeforeCupOverlap.x,playerBeforeCupOverlap.z),
                              new Vector2(player.transform.position.x,player.transform.position.z));
   Check(drift<.015f,"Overlapping held cup cannot displace the standing player horizontally; drift="+drift.ToString("F4")+" m");
-  app.Release();Check(!Physics.GetIgnoreCollision(cupCollider,player.Controller),"Releasing an object restores normal player collision");
+  app.Release();Check(Physics.GetIgnoreCollision(cupCollider,player.Controller),"Overlapping release retains player exclusion until separation");
+  Check(!cup.Body.isKinematic&&cup.Body.useGravity,"Dropped object remains dynamic with gravity");
+  var releasePlayer=player.transform.position;player.Controller.Move(Vector3.down*.01f);
+  Check(Vector2.Distance(new Vector2(releasePlayer.x,releasePlayer.z),new Vector2(player.transform.position.x,player.transform.position.z))<.015f,"Dropped overlapping cup does not recoil the player");
+  cup.Body.position=player.Controller.bounds.center+Vector3.up*3;Physics.SyncTransforms();yield return new WaitForFixedUpdate();yield return null;
+  Check(!Physics.GetIgnoreCollision(cupCollider,player.Controller),"Separated drop restores its original player collision pair");
   app.TestForce=0;menu.objectButtons[2].onClick.Invoke();yield return null;
   var tomato=menu.kitchenObjects[2];Check(tomato.gameObject.activeSelf&&app.TryGrab(tomato),"Kitchen tomato is selectable and can be gripped");
   yield return DriveForce(30,.6f);Check(tomato.Compression>.18f&&tomato.MaxDisplacementMeters>.003f,"Tomato deforms under demo grip force");
@@ -201,6 +223,11 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.12f);
    bool replay=Array.IndexOf(Environment.GetCommandLineArgs(),"-rehab-force-replay")>=0;
    Check(app.forceReceiver.Latest.Valid==replay,replay?"Explicit synthetic replay is accepted":"Synthetic replay is rejected by default");
+   if(replay){
+    yield return new WaitForSeconds(.26f);
+    Check(FindAnyObjectByType<RehabAppShell>().hudSource.text=="SYNTHETIC REPLAY",
+     "Premium HUD labels accepted Phase 2 test input as synthetic replay");
+   }
    frame.source="hardware";frame.sessionId="envelope-simulation";frame.connectionId="b";
    for(int i=0;i<4;i++){frame.sequence++;frame.sampleMs+=50;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.05f);}
    Check(app.ForceValid&&Mathf.Abs(app.ForceNewtons-18)<.01f,"Phase 2 UDP envelope converts 18000 milliNewtons to 18 N");
@@ -212,11 +239,17 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
 
    yield return new WaitForSeconds(.65f);
    Check(!app.ForceValid&&app.Held==null&&app.ForceNewtons==0,"Stale hardware input releases object and stops force within 500 ms plus a frame");
+   var staleHud=FindAnyObjectByType<RehabAppShell>();
+   Check(staleHud.hudSource.text=="PHASE 2 · WAITING"&&staleHud.hudValue.text=="--",
+    "Premium HUD clears stale Phase 2 values and shows a waiting source");
    frame.sequence++;frame.sampleMs+=1000;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.08f);
    Check(app.ForceValid,"New data recovers after interruption");
    app.ResetObjects();yield return null;Check(app.TryGrab(sponge),"Object can be grabbed after recovery");
-   frame.sequence++;frame.sampleMs+=100;frame.calibrationRevision++;frame.calibrationCrc++;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.08f);
-   Check(app.Held==null,"Calibration change ends the previous grip");
+   frame.sequence++;frame.sampleMs+=100;frame.calibrationRevision++;frame.calibrationCrc++;Send(udp,27818,JsonUtility.ToJson(frame));
+   float calibrationDeadline=Time.realtimeSinceStartup+.45f;
+   while(app.Held!=null&&Time.realtimeSinceStartup<calibrationDeadline)yield return null;
+   Check(app.Held==null,"Calibration change ends the previous grip within 450 ms; generation="+
+    app.forceReceiver.State.Generation+" samples="+app.forceReceiver.State.SampleCount);
    Send(udp,27818,"not json");yield return null;
    var left=HandFixture("Left",.34f,1,1);
    var right=HandFixture("Right",.66f,1,1);
@@ -224,13 +257,24 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    yield return new WaitForSeconds(.15f);
    Check(app.vision.LeftValid&&app.vision.RightValid&&app.leftHand.TrackingUsed&&app.rightHand.TrackingUsed,"Both independent MediaPipe-style 21-point hands drive the SDK input rigs");
    Check(app.statusText.text.Contains("SYNTHETIC"),"HUD identifies synthetic vision frames instead of claiming a live camera");
-   Check(app.leftHand.JointAngles[4]>5&&app.rightHand.JointAngles[4]>5,"Measured middle finger PIP bending reaches both input rigs");
-   yield return Screenshot("apartment-two-hands-tracked");
-   var leftBefore=app.leftHand.transform.localPosition;
-   left.sequence=2;left.captureSeconds=2;
+    Check(app.leftHand.JointAngles[4]>5&&app.rightHand.JointAngles[4]>5,"Measured middle finger PIP bending reaches both input rigs");
+    yield return Screenshot("apartment-two-hands-tracked");
+    // PNG encoding can outlast the 500 ms vision validity window. Re-establish
+    // a fresh wrist reference before testing displacement from it.
+    for(int i=0;i<3;i++){
+     left.sequence++;left.captureSeconds+=.06;
+     Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.06f);
+    }
+    var leftBefore=app.leftHand.transform.localPosition;
+    left.sequence++;left.captureSeconds+=.06;
    for(int i=0;i<left.landmarks.Length;i++)left.landmarks[i].x+=.08f;
-   Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.26f);
-   Check(app.leftHand.transform.localPosition.x>leftBefore.x+.005f,"Tracked wrist displacement moves the left hand");
+    for(int i=0;i<4;i++){
+     if(i>0){left.sequence++;left.captureSeconds+=.06;}
+     Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.06f);
+    }
+    Check(app.leftHand.transform.localPosition.x>leftBefore.x+.005f,
+     "Tracked wrist displacement moves the left hand; before="+leftBefore.x.ToString("F3")+
+     " after="+app.leftHand.transform.localPosition.x.ToString("F3"));
    var acceptedLeft=app.vision.LatestLeft;
    Send(udp,27817,JsonUtility.ToJson(left));yield return new WaitForSeconds(.04f);
    Check(ReferenceEquals(app.vision.LatestLeft,acceptedLeft),"Duplicate vision frame is rejected");
@@ -242,8 +286,11 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    left.handedness="Unknown";Send(udp,27817,JsonUtility.ToJson(left));yield return null;
    Check(ReferenceEquals(app.vision.LatestLeft,acceptedLeft),"Invalid handedness cannot overwrite a valid pose");
    right.sequence=2;right.captureSeconds=3;
-   Send(udp,27817,JsonUtility.ToJson(right));
-   yield return new WaitForSeconds(.33f);
+   for(int i=0;i<8;i++){
+    right.sequence++;right.captureSeconds+=.08;
+    Send(udp,27817,JsonUtility.ToJson(right));
+    yield return new WaitForSeconds(.08f);
+   }
    Check(!app.vision.LeftValid&&app.vision.RightValid,"One lost hand expires independently while the other remains tracked");
    yield return new WaitForSeconds(.6f);
    Check(!app.vision.TrackingValid&&!app.leftHand.TrackingUsed&&!app.rightHand.TrackingUsed,"Both input hands leave tracking mode after the 500 ms timeout");
@@ -263,6 +310,22 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   menu.SelectStation(false);menu.SelectObject(0);app.SelectHand(false);player.SetPaused(false);
   using(var cameraUdp=new UdpClient()){
    long seq=100;double captured=100;
+   player.SetPaused(true);
+   foreach(bool left in new[]{false,true}){
+    app.SelectHand(left);
+    var worldOpen=WorldCameraFixture(CameraFixture(.5f,.5f,false,++seq,captured+=.06,left?"Left":"Right"),Quaternion.identity);
+    for(int i=0;i<6;i++){worldOpen.sequence=++seq;worldOpen.captureSeconds=captured+=.06;Send(cameraUdp,27817,JsonUtility.ToJson(worldOpen));yield return new WaitForSeconds(.06f);}
+    VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,left?VirtualGrasp.VG_HandSide.LEFT:VirtualGrasp.VG_HandSide.RIGHT,1,1,out Transform trackedIndex);
+    VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,left?VirtualGrasp.VG_HandSide.LEFT:VirtualGrasp.VG_HandSide.RIGHT,2,1,out Transform trackedMiddle);
+    var worldIndexBefore=trackedIndex.localRotation;var worldMiddleBefore=trackedMiddle.localRotation;
+    worldOpen.worldLandmarks[7]=worldOpen.worldLandmarks[6]+new Vector3(0,0,.04f);
+    worldOpen.worldLandmarks[8]=worldOpen.worldLandmarks[7]+new Vector3(0,0,.02f);
+    for(int i=0;i<6;i++){worldOpen.sequence=++seq;worldOpen.captureSeconds=captured+=.06;Send(cameraUdp,27817,JsonUtility.ToJson(worldOpen));yield return new WaitForSeconds(.06f);}
+    Check(app.ActiveHand.UsingWorldLandmarks&&app.ActiveHand.LastPoseSequence==worldOpen.sequence&&
+          Quaternion.Angle(worldIndexBefore,trackedIndex.localRotation)>40&&Quaternion.Angle(worldMiddleBefore,trackedMiddle.localRotation)<5,
+          (left?"Left":"Right")+" synthetic v1 world-pose extension traverses UDP and drives the imported SDK index independently");
+   }
+   app.SelectHand(false);player.SetPaused(false);
    for(int i=0;i<6;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
@@ -281,7 +344,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.32f,.5f,false,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
    }
-   Check(app.rightHand.transform.localPosition.x>wristBefore.x+.05f,"Corrected camera wrist motion reverses the observed horizontal movement");
+   Check(app.rightHand.transform.localPosition.x<wristBefore.x-.05f,"Camera wrist follows received horizontal movement without a second reflection");
    foreach(var imageY in new[]{.45f,.5f,.55f,.65f,.75f,.85f}){
     foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f}){
      for(int i=0;i<4;i++){
@@ -316,6 +379,15 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    }
    yield return new WaitForSeconds(.6f);
    Check(!app.ForceValid&&app.ForceNewtons==0&&app.Held==null,"Stale camera landmarks clear visual pressure and cannot keep holding");
+    var staleShell = FindAnyObjectByType<RehabAppShell>();
+    var staleHud = staleShell.hudValue.text;
+    var refreshField=typeof(RehabAppShell).GetField("nextRefresh",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+    Check(staleHud=="--",
+     "Premium HUD does not show zero as a live camera closure after tracking loss; actual="+staleHud+
+     " page="+staleShell.CurrentPage+" blocks="+staleShell.BlocksGameplay+
+     " enabled="+staleShell.enabled+" active="+staleShell.gameObject.activeInHierarchy+
+     " sameExperience="+(staleShell.experience==app)+" shellValid="+staleShell.experience.ForceValid+
+     " now="+Time.realtimeSinceStartup.ToString("F2")+" next="+refreshField.GetValue(staleShell));
    Check(!app.TryCameraSummonSelectedObject(),"G cannot summon an object without a fresh tracked hand");
    app.SelectHand(true);menu.SelectStation(true);menu.SelectObject(0);player.SetPaused(false);
    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++seq,captured+=.06)));
@@ -392,14 +464,36 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(shell.hudRoom!=null&&shell.hudValue!=null&&shell.hudUnit!=null&&
    shell.hudPrompt!=null&&shell.hudProgressFill!=null,
    "Saved in-game HUD has readable station, source, unit, guidance and progress bindings");
+  var blockedProfileDirectory=Path.Combine(Application.temporaryCachePath,"grip-profile-blocked-"+Guid.NewGuid().ToString("N"));
+  File.WriteAllText(blockedProfileDirectory,"not a directory");
+  var blockedStore=new RehabProfileStore(blockedProfileDirectory);
+  bool saveFailed=false;
+  try{blockedStore.Create("Unsaved Patient",29,"","Right","Right","","",-1);}
+  catch(IOException){saveFailed=true;}
+  Check(saveFailed&&blockedStore.Catalog.profiles.Count==0&&blockedStore.Active==null,
+   "Failed profile persistence leaves no unsaved patient selectable in memory");
+  File.Delete(blockedProfileDirectory);
   var testProfileDirectory=Path.Combine(Application.temporaryCachePath,"grip-profile-qa-"+Guid.NewGuid().ToString("N"));
   shell.SetStoreForAcceptance(new RehabProfileStore(testProfileDirectory));
   shell.ShowHome();
   Check(shell.BlocksGameplay&&shell.CurrentPage=="Home"&&player.Paused&&!shell.continueButton.interactable,
    "First launch opens a paused home menu and disables Continue without a saved session");
+  Check(shell.startButton.IsInteractable()&&shell.newProfileButton.IsInteractable(),
+   "First-launch Start and New Profile buttons are actually clickable");
+  yield return new WaitForSecondsRealtime(.2f);
+  Canvas.ForceUpdateCanvases();
   yield return Screenshot("ui-main-menu");
   shell.startButton.onClick.Invoke();
-  Check(shell.CurrentPage=="Profile","Start Game directs an unregistered patient to profile creation");
+  Check(shell.CurrentPage=="Modules"&&shell.Store.Active==null&&
+   shell.moduleGreeting.text.Contains("GUEST"),
+   "Start opens hands-free guest practice without inventing patient data");
+  shell.cognitiveLockedButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Activity"&&shell.Store.Active==null,
+   "Guest can launch playable cognitive exercises without creating a profile");
+  shell.ShowHome();shell.newProfileButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Profile","New Profile opens the assisted registration form");
+  Check(shell.saveProfileButton.IsInteractable(),"Profile form Save button is actually clickable");
+  yield return new WaitForSecondsRealtime(.2f);
   yield return Screenshot("ui-new-profile");
   shell.saveProfileButton.onClick.Invoke();
   Check(shell.Store.Active==null&&shell.formError.text.Contains("age"),
@@ -410,13 +504,27 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   shell.saveProfileButton.onClick.Invoke();
   Check(shell.CurrentPage=="Modules"&&shell.Store.Active!=null&&shell.Store.Active.affectedHand=="Left"&&
    shell.Store.Active.painToday==4&&shell.Store.Active.goal=="Hold a cup",
-   "New profile saves self-reported hand, goal and optional pain accurately");
-  Check(!shell.cognitiveLockedButton.interactable&&!shell.visuomotorLockedButton.interactable&&
-   shell.openModuleButton.interactable,"Only Module 01 is playable; GP2 modules remain visibly locked");
+   "New profile saves self-reported hand, goal and optional pain accurately; "+
+   $"page={shell.CurrentPage}, error={shell.formError.text}, active={shell.Store.Active?.name}, "+
+   $"hand={shell.Store.Active?.affectedHand}, pain={shell.Store.Active?.painToday}, goal={shell.Store.Active?.goal}");
+  Check(shell.cognitiveLockedButton.IsInteractable()&&shell.visuomotorLockedButton.IsInteractable()&&
+   shell.openModuleButton.IsInteractable(),"All three research modules are selectable");
+  shell.cognitiveLockedButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Activity"&&shell.Store.Active.lastModule==2,
+   "Module 02 opens its exercises and saves a resumable module checkpoint");
+  shell.ShowModules();shell.visuomotorLockedButton.onClick.Invoke();
+  Check(shell.CurrentPage=="Activity"&&shell.Store.Active.lastModule==3,
+   "Module 03 opens its exercises and saves a resumable module checkpoint");
+  shell.ShowModules();
+  yield return new WaitForSecondsRealtime(.2f);
   yield return Screenshot("ui-module-selection");
   shell.openModuleButton.onClick.Invoke();
   Check(!shell.BlocksGameplay&&!player.Paused&&app.CameraMode&&shell.Store.Active.hasSession,
    "Open Module 01 begins camera mode and creates a resumable checkpoint");
+  Check(UnityEngine.EventSystems.EventSystem.current!=null&&
+   !UnityEngine.EventSystems.EventSystem.current.sendNavigationEvents&&
+   UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject==null,
+   "Space grip cannot submit a selected uGUI menu or quit button during active play");
   menu.SelectStation(true);menu.SelectObject(1);app.SelectHand(true);app.SetHardware(false);
   shell.gameplayHomeButton.onClick.Invoke();
   Check(shell.CurrentPage=="Home"&&shell.BlocksGameplay&&shell.continueButton.interactable&&
@@ -425,6 +533,30 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   var reloaded=new RehabProfileStore(testProfileDirectory);
   Check(reloaded.Active!=null&&reloaded.Active.id==shell.Store.Active.id&&reloaded.Active.kitchenObject==1,
    "Saved profile and session checkpoint survive a fresh disk load");
+  var protectedPath=Path.Combine(testProfileDirectory,"profiles.dat");
+  Check(File.Exists(protectedPath)&&File.Exists(protectedPath+".bak")&&
+   !File.Exists(Path.Combine(testProfileDirectory,"profiles.json"))&&
+   !Encoding.UTF8.GetString(File.ReadAllBytes(protectedPath)).Contains("Acceptance Patient"),
+   "Profiles persist as encrypted primary/backup without plaintext names");
+  var legacyDirectory=Path.Combine(Application.temporaryCachePath,"grip-profile-legacy-"+Guid.NewGuid().ToString("N"));
+  Directory.CreateDirectory(legacyDirectory);
+  var legacy=new RehabProfileCatalog{activeId="fixture-legacy"};
+  legacy.profiles.Add(new RehabProfile{id="fixture-legacy",name="Synthetic Legacy Patient",age=42,
+   affectedHand="Right",dominantHand="Left",createdUtc="2026-09-01T00:00:00Z"});
+  File.WriteAllText(Path.Combine(legacyDirectory,"profiles.json"),JsonUtility.ToJson(legacy,true));
+  var migrated=new RehabProfileStore(legacyDirectory);
+  var migratedPath=Path.Combine(legacyDirectory,"profiles.dat");
+  Check(migrated.Active!=null&&migrated.Active.name=="Synthetic Legacy Patient"&&
+   File.Exists(migratedPath)&&File.Exists(migratedPath+".bak")&&
+   !File.Exists(Path.Combine(legacyDirectory,"profiles.json"))&&!migrated.MigrationCleanupRequired,
+   "Legacy profile migration verifies encrypted primary/backup before plaintext removal");
+  var damaged=File.ReadAllBytes(migratedPath);damaged[damaged.Length/2]^=0x55;
+  File.WriteAllBytes(migratedPath,damaged);
+  var recovered=new RehabProfileStore(legacyDirectory);
+  Check(recovered.Active!=null&&recovered.Active.name=="Synthetic Legacy Patient"&&
+   WindowsProfileProtection.Unprotect(File.ReadAllBytes(migratedPath)).Length>0,
+   "Tampered encrypted primary recovers from encrypted backup");
+  Directory.Delete(legacyDirectory,true);
   shell.continueButton.onClick.Invoke();
   Check(!shell.BlocksGameplay&&!player.Paused&&!app.CameraMode&&!app.Hardware&&menu.Kitchen&&
    menu.KitchenSelection==1&&app.LeftSelected,"Continue restores Module 01 location, object, hand and input mode");
@@ -434,8 +566,8 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    shell.patientSummary.text.Contains("No saved session")==false,
    "Patient preview shows the selected profile and a real saved-session state");
   shell.homeFromPatientButton.onClick.Invoke();shell.doctorButton.onClick.Invoke();
-  Check(shell.CurrentPage=="Doctor"&&shell.doctorSummary.text.Contains("Preview only"),
-   "Doctor dashboard is clearly labelled as an unimplemented preview");
+  Check(shell.CurrentPage=="Doctor"&&shell.doctorSummary.text.Contains("RESEARCH DASHBOARD"),
+   "Doctor dashboard labels local game scores as research data");
   shell.homeFromDoctorButton.onClick.Invoke();
   Check(shell.CurrentPage=="Home"&&player.Paused,"Dashboard navigation returns to the home menu");
   shell.newProfileButton.onClick.Invoke();
@@ -446,7 +578,81 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   shell.profilePicker.value=0;shell.chooseProfileButton.onClick.Invoke();
   Check(shell.Store.Active.name=="Acceptance Patient"&&shell.continueButton.interactable,
    "Profile picker signs back into the original patient's saved session");
+  // Exercise native uGUI palm dwell using local 21-landmark fixtures.
+  shell.ShowHome();
+  Canvas.ForceUpdateCanvases();
+  var startCorners=new Vector3[4];
+  shell.startButton.GetComponent<RectTransform>().GetWorldCorners(startCorners);
+  var startCentre=(startCorners[0]+startCorners[2])*.5f;
+  var pointer=shell.gameObject.AddComponent<RehabDwellPointer>();
+  pointer.shell=shell;pointer.vision=app.vision;pointer.cameraLauncher=app.cameraLauncher;
+  pointer.testNoCameraLaunch=true;pointer.dwellSeconds=.6f;pointer.smoothingSeconds=0;
+  // Reproduce the reported reload fault: cached Unity EventSystem survives,
+  // managed PointerEventData does not. The old code crashes every tracked frame.
+  var pointerType=typeof(RehabDwellPointer);
+  var cacheFlags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+  pointerType.GetField("eventSystem",cacheFlags).SetValue(pointer,UnityEngine.EventSystems.EventSystem.current);
+  pointerType.GetField("pointerEvent",cacheFlags).SetValue(pointer,null);
+  var pointing=PointingMenuFixture(startCentre.x/Screen.width,1f-startCentre.y/Screen.height);
+  using(var pointerUdp=new UdpClient()){
+   for(int i=0;i<20&&shell.CurrentPage=="Home";i++){
+    pointing.sequence=10000+i;pointing.captureSeconds=10000+i*.07;
+    Send(pointerUdp,27817,JsonUtility.ToJson(pointing));
+    yield return new WaitForSecondsRealtime(.07f);
+   }
+  }
+  Check(shell.CurrentPage=="Modules"&&!app.cameraLauncher.IsRunning,
+   "21-landmark palm dwell raycasts the Start button and opens Modules without a webcam; hover="+pointer.HoveredTargetName+
+   " vision="+app.vision.LastRejection+" screen="+Screen.width+"x"+Screen.height+
+   " focus="+Application.isFocused+" eventSystem="+(UnityEngine.EventSystems.EventSystem.current!=null)+
+   " centre="+startCentre+" scale="+shell.startButton.transform.lossyScale);
+  Check(pointerType.GetField("pointerEvent",cacheFlags).GetValue(pointer)!=null,
+   "Lost managed pointer event is rebuilt when the cached EventSystem survives reload");
+  // Production five-second timing, with changing finger poses and both
+  // visible hands. The older ideal .6s fixture could not expose this failure.
+  shell.ShowHome();pointer.enabled=false;pointer.enabled=true;
+  pointer.dwellSeconds=5;Canvas.ForceUpdateCanvases();
+  pointerType.GetField("pointerEvent",cacheFlags).SetValue(pointer,null);
+  var leftPoint=PointingMenuFixture(startCentre.x/Screen.width,1f-startCentre.y/Screen.height);
+  leftPoint.handedness="Left";
+  var relaxed=PointingMenuFixture(startCentre.x/Screen.width,1f-startCentre.y/Screen.height);
+  relaxed.confidence=.1f; // A low-quality second hand cannot mask the valid left hand.
+  relaxed.landmarks[8]=relaxed.landmarks[5];
+  int activations=pointer.ActivationCount;
+  using(var pointerUdp=new UdpClient()){
+   for(int i=0;i<135&&shell.CurrentPage=="Home";i++){
+    var outgoing=PointingMenuFixture(startCentre.x/Screen.width,1f-startCentre.y/Screen.height);
+    outgoing.handedness="Left";outgoing.sequence=20000+i;outgoing.captureSeconds=20000+i*.06;
+    if(i%5==4)outgoing.landmarks[8]=outgoing.landmarks[5];
+    relaxed.sequence=20000+i;relaxed.captureSeconds=20000+i*.06;
+    Send(pointerUdp,27817,JsonUtility.ToJson(relaxed));
+    Send(pointerUdp,27817,JsonUtility.ToJson(outgoing));
+    yield return new WaitForSecondsRealtime(.06f);
+   }
+  }
+  Check(shell.CurrentPage=="Modules"&&pointer.ActivationCount==activations+1,
+   "Production five-second left palm dwell survives finger bending beside a low-confidence right hand; hover="+pointer.HoveredTargetName);
+  Destroy(pointer);yield return null;
   Directory.Delete(testProfileDirectory,true);
+ }
+ private static LandmarkFrame PointingMenuFixture(float x,float y){
+  var frame=new LandmarkFrame{schemaVersion=1,handedness="Right",source="mediapipe-acceptance",
+   confidence=.95f,ageMs=1,landmarks=new Vector3[21]};
+  for(int i=0;i<21;i++)frame.landmarks[i]=new Vector3(x,y,0);
+  frame.landmarks[5]=new Vector3(x-.02f,y+.08f,0);
+  frame.landmarks[6]=new Vector3(x-.015f,y+.055f,0);
+  frame.landmarks[7]=new Vector3(x-.008f,y+.025f,0);
+  frame.landmarks[8]=new Vector3(x,y,0);
+  foreach(int joint in new[]{9,13,17}){
+   frame.landmarks[joint]=new Vector3(x+.02f,y+.06f,0);
+   frame.landmarks[joint+1]=new Vector3(x+.02f,y+.025f,0);
+   frame.landmarks[joint+2]=new Vector3(x+.02f,y+.04f,0);
+   frame.landmarks[joint+3]=new Vector3(x+.02f,y+.05f,0);
+  }
+  var palm=(frame.landmarks[0]+frame.landmarks[5]+frame.landmarks[9]+frame.landmarks[13]+frame.landmarks[17])*.2f;
+  var shift=new Vector3(x,y,0)-palm;
+  for(int i=0;i<21;i++)frame.landmarks[i]+=shift;
+  return frame;
  }
  private IEnumerator DriveForce(float force,float seconds){
   app.TestForce=force;
@@ -457,8 +663,27 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   yield return new WaitForSeconds(seconds);
  }
  private IEnumerator Screenshot(string name){
+  #if UNITY_EDITOR
+   // Repeated Play/Stop cycles exercise lifetime and input contracts; capture
+   // visual evidence once to avoid headless Game-view stalls on later cycles.
+   if(UnityEditor.SessionState.GetBool("ApartmentQA.Active",false)&&
+      UnityEditor.SessionState.GetInt("ApartmentQA.Cycle",0)>0)yield break;
+  #endif
   if(!Application.isBatchMode&&SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null){
-   yield return new WaitForEndOfFrame();Directory.CreateDirectory("Docs/images");ScreenCapture.CaptureScreenshot(Path.GetFullPath("Docs/images/"+name+".png"));yield return null;
+   yield return new WaitForEndOfFrame();
+   // The sandboxed standalone player can write Logs but cannot overwrite
+   // repository-owned Docs images. The Python runner validates and copies them.
+   string folder=Application.isEditor?"Docs/images":"Logs/player-screenshots";
+   Directory.CreateDirectory(folder);
+   // ScreenCapture queues an asynchronous write which may be cancelled when
+   // the smoke-test player quits. Capture synchronously for reliable evidence.
+   var screenshot=new Texture2D(Screen.width,Screen.height,TextureFormat.RGB24,false);
+   try{
+    screenshot.ReadPixels(new Rect(0,0,Screen.width,Screen.height),0,0);
+    screenshot.Apply(false,false);
+    File.WriteAllBytes(Path.GetFullPath(folder+"/"+name+".png"),screenshot.EncodeToPNG());
+   }finally{Destroy(screenshot);}
+   yield return null;
   }
  }
  private static LandmarkFrame CameraFixture(float center,float wristY,bool closed,long sequence,double captured,string side="Right",float palmScale=1){
@@ -494,6 +719,46 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    points[1+finger*4+joint]=new Vector3(x,y,z);
   }
   return new LandmarkFrame{schemaVersion=1,source="synthetic acceptance",handedness=side,captureSeconds=captured,sequence=sequence,confidence=.95f,landmarks=points};
+ }
+ private static LandmarkFrame WorldCameraFixture(LandmarkFrame source,Quaternion rotation){
+  var frame=CameraFixture(source.landmarks[0].x,source.landmarks[0].y,false,source.sequence,source.captureSeconds,source.handedness);
+  frame.imageWidth=640;frame.imageHeight=480;frame.worldLandmarks=new Vector3[21];
+  for(int i=0;i<21;i++){
+   // Fabricated isotropic hand shape, not a recorded camera hand.
+   var p=rotation*HandKinematics.PosePoint(source,i)*.4f;
+   frame.worldLandmarks[i]=new Vector3(p.x,-p.y,-p.z);
+  }
+  return frame;
+ }
+ private void VerifyWorldHandPoses(LandmarkFrame right,LandmarkFrame left){
+  foreach(bool isLeft in new[]{false,true}){
+   var driver=isLeft?app.leftHand:app.rightHand;var source=isLeft?left:right;
+   driver.UseDemoPose();var rest=driver.transform.localPosition;
+   var world=WorldCameraFixture(source,Quaternion.identity);
+   for(int i=0;i<16;i++)driver.Pose(world,true,0,.05f,.045f,rest,.85f,true);
+   var neutralRotation=driver.transform.localRotation;
+   foreach(var axis in new[]{Vector3.right,Vector3.up,Vector3.forward})foreach(var angle in new[]{-75f,75f}){
+    var rotation=Quaternion.AngleAxis(angle,axis);var rotated=WorldCameraFixture(source,rotation);
+    for(int i=0;i<16;i++)driver.Pose(rotated,true,0,.05f,.045f,rest,.85f,true);
+    Check(driver.UsingWorldLandmarks&&Quaternion.Angle(driver.transform.localRotation,rotation*neutralRotation)<1,
+      (isLeft?"Left":"Right")+" world palm follows signed "+angle+" degree turn on "+axis+" without a second horizontal reflection");
+   }
+   for(int i=0;i<16;i++)driver.Pose(world,true,0,.05f,.045f,rest,.85f,true);
+   var baseline=(float[])driver.JointAngles.Clone();
+   for(int finger=0;finger<5;finger++){
+    var bent=WorldCameraFixture(source,Quaternion.identity);int n=finger<4?5+finger*4:1;
+    bent.worldLandmarks[n+2]=bent.worldLandmarks[n+1]+new Vector3(0,0,.04f);
+    bent.worldLandmarks[n+3]=bent.worldLandmarks[n+2]+new Vector3(0,0,.02f);
+    for(int i=0;i<16;i++)driver.Pose(bent,true,0,.05f,.045f,rest,.85f,true);
+    float otherChange=0;for(int j=0;j<15;j++)if(j/3!=finger)otherChange=Mathf.Max(otherChange,Mathf.Abs(driver.JointAngles[j]-baseline[j]));
+    Check(driver.JointAngles[finger*3+1]>60&&otherChange<.1f,
+      (isLeft?"Left":"Right")+" world finger "+finger+" bends independently of all other fingers and the unchanged image points");
+   }
+   var collapsed=WorldCameraFixture(source,Quaternion.identity);System.Array.Clear(collapsed.worldLandmarks,0,21);
+   driver.Pose(collapsed,true,0,.05f,.045f,rest,.85f,true);
+   Check(!driver.TrackingUsed,"Collapsed "+(isLeft?"left":"right")+" palm cannot reset the rig to an identity basis");
+   driver.UseDemoPose();
+  }
  }
  private static void Send(UdpClient socket,int port,string json){var bytes=Encoding.UTF8.GetBytes(json);socket.Send(bytes,bytes.Length,"127.0.0.1",port);}
  private void End(bool passed,string error){

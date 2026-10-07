@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 071e480e98bb512288129e787c013a47, type: 3}
+  m_Name: SceneComposition
+  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.Composition.SceneComposition
+  parts:
+  - path: Assets/Scenes/Workspace/3.1-Apartment.unity
+    rootId: f5fb64b4e88744d19445831f73b7931a
+  - path: Assets/Scenes/Workspace/3.1-Lighting.unity
+    rootId: 34a5b6e442a145e9b01e84bf47d9609c
+  - path: Assets/Scenes/Workspace/3.2-PlayerAndSensors.unity
+    rootId: 0b52afa9a1c944efa98bd44d987f3b83
+  - path: Assets/Scenes/Workspace/3.3-VirtualHands.unity
+    rootId: 190a16622f6640228c5ab9064e33a2cf
+  - path: Assets/Scenes/Workspace/3.4.1-Interaction.unity
+    rootId: ba95205f09b749f0ba898d6593fa3658
+  - path: Assets/Scenes/Workspace/3.4-Interface.unity
+    rootId: 77f4c20ef9d94a6d8e49119cfcaae57d
+  links:
+  - ownerId: 5a3d2e82b9df4d5da9553442998ee9ab
+    property: seatedFeet
+    targetId: 1c6c3b94c0d447dc97f3aabe330f0ee0
+    ownerComponent: 4
+    targetComponent: 0
+  - ownerId: 5a3d2e82b9df4d5da9553442998ee9ab
+    property: standFeet
+    targetId: eb1d602ef7ad489f8c93bc39451cbaa7
+    ownerComponent: 4
+    targetComponent: 0
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: virtualGrasp
+    targetId: d041f45dbc4f4f07acc26ef4f6dc860a
+    ownerComponent: 5
+    targetComponent: 1
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: statusText
+    targetId: d5101d1efbfc4731898ab72afd623d38
+    ownerComponent: 5
+    targetComponent: 2
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: contextText
+    targetId: 086493a965ff415c9256dd7ad053b659
+    ownerComponent: 5
+    targetComponent: 2
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: forceText
+    targetId: 6839915f4b8941d2a2723b46f5a8880a
+    ownerComponent: 5
+    targetComponent: 2
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: progressFill
+    targetId: 1ca05f8badda454cb18a69b1096b243d
+    ownerComponent: 5
+    targetComponent: 2
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'objects.Array.data[0]'
+    targetId: 8eb605c111454512a7a097aa9ff7e4d0
+    ownerComponent: 5
+    targetComponent: 3
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'objects.Array.data[1]'
+    targetId: ab0a1ccc2782458bacf974280cbaf94e
+    ownerComponent: 5
+    targetComponent: 3
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'objects.Array.data[2]'
+    targetId: f3581d0721264417989335bc02f5462f
+    ownerComponent: 5
+    targetComponent: 3
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'objects.Array.data[3]'
+    targetId: fc4ff3403f1c481d99e4a139c240b673
+    ownerComponent: 5
+    targetComponent: 3
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'objects.Array.data[4]'
+    targetId: 8c024e2b03e549b4a60d0cd5fc003719
+    ownerComponent: 5
+    targetComponent: 3
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'objects.Array.data[5]'
+    targetId: c34142285d614a23ba17cea24c06ac20
+    ownerComponent: 5
+    targetComponent: 3
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: 'seats.Array.data[0]'
+    targetId: 5a3d2e82b9df4d5da9553442998ee9ab
+    ownerComponent: 5
+    targetComponent: 4
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: image
+    targetId: 910f3200bb1e45839d63b4a0daa1b6a0
+    ownerComponent: 7
+    targetComponent: 2
+  - ownerId: 60e7f783c0504381aa688d8ee9450c57
+    property: panel
+    targetId: ae8b2e47c4434797b5ca1632de13002a
+    ownerComponent: 7
+    targetComponent: 3
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: experience
+    targetId: 60e7f783c0504381aa688d8ee9450c57
+    ownerComponent: 4
+    targetComponent: 5
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: kitchenStation
+    targetId: 00831a9c2d46450d90ad88d84c99795a
+    ownerComponent: 4
+    targetComponent: 0
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: 'livingObjects.Array.data[0]'
+    targetId: 8eb605c111454512a7a097aa9ff7e4d0
+    ownerComponent: 4
+    targetComponent: 3
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: 'livingObjects.Array.data[1]'
+    targetId: fc4ff3403f1c481d99e4a139c240b673
+    ownerComponent: 4
+    targetComponent: 3
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: 'livingObjects.Array.data[2]'
+    targetId: f3581d0721264417989335bc02f5462f
+    ownerComponent: 4
+    targetComponent: 3
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: 'kitchenObjects.Array.data[0]'
+    targetId: ab0a1ccc2782458bacf974280cbaf94e
+    ownerComponent: 4
+    targetComponent: 3
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: 'kitchenObjects.Array.data[1]'
+    targetId: 8c024e2b03e549b4a60d0cd5fc003719
+    ownerComponent: 4
+    targetComponent: 3
+  - ownerId: 07f1d08b85464b9da4f3210b7a33b8e0
+    property: 'kitchenObjects.Array.data[2]'
+    targetId: c34142285d614a23ba17cea24c06ac20
+    ownerComponent: 4
+    targetComponent: 3
+  - ownerId: f9208c510e074e7f952d3aedc037a3cb
+    property: experience
+    targetId: 60e7f783c0504381aa688d8ee9450c57
+    ownerComponent: 3
+    targetComponent: 5
+  - ownerId: d041f45dbc4f4f07acc26ef4f6dc860a
+    property: inputSkeleton
+    targetId: 1a56d1c45c704bf09c2f88e4e5fd8a55
+    ownerComponent: 1
+    targetComponent: 0
+  sunLightId: d9905165382b461aba47ae4d193f2ab2

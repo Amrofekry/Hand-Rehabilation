@@ -64,6 +64,26 @@ namespace GripRehab.Editor
                         RehabVerification.PrepareAndVerify();
                         Write("PASS", command, "Scene, logic and references verified");
                         break;
+                    case "split-scenes":
+                        SceneOrganization.Split();
+                        Write("PASS", command, "Additive scene composition migrated and reference-checked");
+                        break;
+                    case "scene-workspace":
+                        SceneOrganization.OpenWorkspace();
+                        Write("PASS", command, "Complete additive scene workspace open");
+                        break;
+                    case "verify-scenes":
+                        SceneOrganization.Verify();
+                        Write("PASS", command, "Scene composition references verified");
+                        break;
+                    case "configure-scenes":
+                        SceneOrganization.ConfigureBuildScenes();
+                        Write("PASS", command, "Bootstrap and all content scenes saved in Build Settings");
+                        break;
+                    case "scene-qa":
+                        SceneCompositionQA.Begin();
+                        Write("RUNNING", command, "Three additive-load Play/Stop cycles started");
+                        break;
                     case "ui-fix":
                         RehabPremiumSkin.RepairLegibility();
                         Write("PASS", command, "Saved HUD and dropdown contrast repaired and verified");
@@ -201,6 +221,8 @@ namespace GripRehab.Editor
 
         internal static void CompleteQa(bool passed, string detail) =>
             Write(passed ? "PASS" : "FAIL", "qa", detail);
+        internal static void CompleteSceneQa(bool passed, string detail) =>
+            Write(passed ? "PASS" : "FAIL", "scene-qa", detail);
         internal static void CompleteJourneyQa(bool passed, string detail) =>
             Write(passed ? "PASS" : "FAIL", "journey-qa", detail);
 

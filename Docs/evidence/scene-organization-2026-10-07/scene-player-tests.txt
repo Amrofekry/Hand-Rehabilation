@@ -1,0 +1,17 @@
+[
+  {
+    "test": "apartment-player-headless",
+    "passed": true,
+    "checks": 168
+  },
+  {
+    "test": "apartment-player-replay",
+    "passed": true,
+    "checks": 169
+  },
+  {
+    "test": "apartment-player-rendered",
+    "passed": true,
+    "checks": 168
+  }
+]
