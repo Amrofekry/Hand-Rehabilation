@@ -64,6 +64,10 @@ namespace GripRehab.Editor
                         RehabVerification.PrepareAndVerify();
                         Write("PASS", command, "Scene, logic and references verified");
                         break;
+                    case "merge-scenes":
+                        SceneOrganization.Consolidate();
+                        Write("PASS", command, "Current authored content merged and native references saved in one scene");
+                        break;
                     case "split-scenes":
                         SceneOrganization.Split();
                         Write("PASS", command, "Additive scene composition migrated and reference-checked");

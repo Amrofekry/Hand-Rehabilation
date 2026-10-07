@@ -2,7 +2,7 @@
 
 ## Scene workspace
 
-Open **Grip Rehab > Scenes > Open Complete Workspace** to edit the six focused additive scenes. `Assets/Scenes/3.1-Bootstrap.unity` is the small startup entry. See [the editing guide](Docs/SCENE_ORGANIZATION.md).
+Open `Assets/Scenes/GripRehab.unity` to edit the complete game in one scene. **Grip Rehab > Scenes > Open Complete Workspace** opens that same scene. See [the editing guide](Docs/SCENE_ORGANIZATION.md).
 
 
 The Windows player has been rebuilt and tested with the current English HandMate presentation and without active voice commands. Native gameplay checks pass 168/169/168; UI checks pass 60 at each of two resolutions; gallery checks pass 87 at each of three resolutions. A native font fallback initialization fault was repaired. See [current report](Docs/CLOSEOUT_2026_10_06.md) and [numbered tasks](Docs/TASKS.md).
@@ -16,7 +16,7 @@ Input is mouse, keyboard or the whole-hand camera pointer. Voice remains future 
 
 This directory is now the **unified research-product workspace**. `Assets`, `Packages` and `ProjectSettings` remain the Unity Hub project; `firmware/`, `hardware/`, `ai-engine/` and `tests/` hold imported sources and continuing work. Start with [requirements](Docs/REQUIREMENTS.md), [progress](Docs/PROGRESS.md), and the [current blockers](Docs/BLOCKERS.md). Modules 2/3 contain playable research-prototype exercises; the doctor screen is a local preview, and adaptive AI remains under development. None is a clinical assessment. The original Gantt and architecture copies are in `Docs/Source/`.
 
-Open `E:\GP\codex\GripRehab-Unity` in Unity Hub with Editor **6000.4.4f1**. The saved main scene is `Assets/Scenes/3.1-Bootstrap.unity`. For first-time instructions, read [START_HERE_AR.html](START_HERE_AR.html) and the [Arabic camera/hand guide](Docs/HANDS_AND_MEDIAPIPE_AR.md).
+Open `E:\GP\codex\GripRehab-Unity` in Unity Hub with Editor **6000.4.4f1**. The saved main scene is `Assets/Scenes/GripRehab.unity`. For first-time instructions, read [START_HERE_AR.html](START_HERE_AR.html) and the [Arabic camera/hand guide](Docs/HANDS_AND_MEDIAPIPE_AR.md).
 
 Current display controls and the independent component gallery are explained in [APPEARANCE_AR.md](Docs/APPEARANCE_AR.md). The saved gallery is `Assets/UI/GripUiGallery.unity`; its preview data is unrelated to patient sessions. [UI completion checklist](Docs/UI_COMPLETION_CHECKLIST.md) records current English UI verification and remaining live/device trials.
 

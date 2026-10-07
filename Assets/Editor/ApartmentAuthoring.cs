@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 namespace GripRehab.Editor {
 public static class ApartmentAuthoring {
- public const string ScenePath="Assets/Scenes/3.1-Bootstrap.unity";
+ public const string ScenePath="Assets/Scenes/GripRehab.unity";
  public static void VerifyScene(){
   SceneOrganization.EnsureWorkspace();
   var scene=SceneManager.GetActiveScene();if(scene.path!=ScenePath)scene=EditorSceneManager.OpenScene(ScenePath);

@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-MAIN = ROOT / 'Assets/Scenes/3.1-Bootstrap.unity'
+MAIN = ROOT / 'Assets/Scenes/GripRehab.unity'
 MANIFEST = ROOT / 'Assets/Resources/SceneComposition.asset'
 
 def blocks(path):

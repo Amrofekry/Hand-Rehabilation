@@ -7,7 +7,7 @@ from pathlib import Path
 from Tools.scene_layout import composed_blocks, paths
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENE = ROOT / 'Assets/Scenes/3.1-Bootstrap.unity'
+SCENE = ROOT / 'Assets/Scenes/GripRehab.unity'
 
 def blocks(path):
     text = path.read_text(encoding='utf-8-sig')
@@ -46,6 +46,8 @@ class HandMateDesignTests(unittest.TestCase):
         changes = review['changes']
         scene_review = json.loads((ROOT/'Docs/evidence/scene-organization-2026-10-07/protected-source-review.json').read_text())['changes']
         flat_review = json.loads((ROOT/'Docs/evidence/flat-scene-folder-2026-10-07/protected-source-review.json').read_text())['changes']
+        merge_review = json.loads((ROOT/'Docs/evidence/single-scene-2026-10-07/protected-source-review.json').read_text())['changes']
+        self.assertEqual(set(merge_review), set(flat_review))
         self.assertEqual(set(flat_review), {'Assets/Editor/ApartmentAuthoring.cs',
             'Assets/Editor/GripUiGalleryAuthoring.cs',
             'Assets/Editor/RehabVerification.cs', 'Assets/Editor/RehabGateRunner.cs', 'Assets/Rehab/3.4-game-modules/RehabApp.cs'})
@@ -71,6 +73,10 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(flat_review[path]['previousSha256'], expected)
                     self.assertTrue(flat_review[path]['reason'])
                     expected = flat_review[path]['currentSha256']
+                if path in merge_review:
+                    self.assertEqual(merge_review[path]['previousSha256'], expected)
+                    self.assertTrue(merge_review[path]['reason'])
+                    expected = merge_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()

@@ -1,0 +1,4 @@
+Native scene assembly QA 2026-10-07T14:23:15.8084542Z
+PASS cycle 1: scene startup, bindings, single instances, SDK, both rooms/hands, UI and socket cleanup
+PASS cycle 2: scene startup, bindings, single instances, SDK, both rooms/hands, UI and socket cleanup
+PASS cycle 3: scene startup, bindings, single instances, SDK, both rooms/hands, UI and socket cleanup

@@ -19,7 +19,7 @@ namespace GripRehab.Composition
         public ScenePart[] parts;
         public SceneLink[] links;
         public string sunLightId;
-        public const string Main = "Assets/Scenes/3.1-Bootstrap.unity";
+        public const string Main = "Assets/Scenes/GripRehab.unity";
         public const string Asset = "Assets/Resources/SceneComposition.asset";
         public static SceneComposition Current => Resources.Load<SceneComposition>("SceneComposition");
         public bool Loaded

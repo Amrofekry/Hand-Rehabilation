@@ -180,6 +180,7 @@ namespace GripRehab.Editor
         }
         public static void EnsureWorkspace()
         {
+            if (converting) return;
             var layout = SceneComposition.Current;
             if (layout != null && !layout.Loaded) OpenWorkspace();
             else if (layout != null) BindWorkspace();
@@ -258,6 +259,106 @@ namespace GripRehab.Editor
                 converting = false; throw;
             }
         }
+
+        [MenuItem("Grip Rehab/Scenes/Restore Single Scene")]
+        public static void Consolidate()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new Exception("Stop Play before merging scenes.");
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) throw new OperationCanceledException();
+            var layout = SceneComposition.Current;
+            if (layout == null) { OpenWorkspace(); Verify(); return; }
+            var partPaths = layout.parts.Select(p => p.path).ToArray();
+            const string oldEntry = "Assets/Scenes/3.1-Bootstrap.unity";
+            if (File.Exists(SceneComposition.Main)) throw new Exception("Refusing to replace an existing working scene.");
+            if (!File.Exists("Docs/evidence/single-scene-2026-10-07/before-merge.zip")) throw new Exception("Recovery snapshot missing.");
+            var entryGuid = AssetDatabase.AssetPathToGUID(oldEntry);
+            converting = true;
+            try
+            {
+                var destination = EditorSceneManager.OpenScene(oldEntry);
+                foreach (var path in partPaths) EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
+                SceneManager.SetActiveScene(destination);
+                layout = AssetDatabase.LoadAssetAtPath<SceneComposition>(SceneComposition.Asset);
+                layout.Bind();
+                var linkedObjects = new Dictionary<string, GameObject>();
+                foreach (var scenePath in partPaths)
+                    foreach (var root in SceneManager.GetSceneByPath(scenePath).GetRootGameObjects())
+                        foreach (var marker in root.GetComponentsInChildren<SceneReferenceId>(true)) linkedObjects.Add(marker.id, marker.gameObject);
+                // Keep actual native object references, including inherited prefab fields.
+                var references = layout.links.Select(link => new SavedReference {
+                    owner = linkedObjects[link.ownerId].GetComponents<Component>()[link.ownerComponent],
+                    value = link.targetComponent < 0 ? (UnityEngine.Object)linkedObjects[link.targetId] : linkedObjects[link.targetId].GetComponents<Component>()[link.targetComponent],
+                    property = link.property }).ToArray();
+                int expectedObjects = partPaths.Sum(path => SceneManager.GetSceneByPath(path).GetRootGameObjects()
+                    .Sum(root => root.GetComponentsInChildren<Transform>(true).Length - 1));
+                foreach (var path in partPaths)
+                {
+                    var scene = SceneManager.GetSceneByPath(path);
+                    foreach (var container in scene.GetRootGameObjects())
+                    {
+                        while (container.transform.childCount > 0)
+                        {
+                            var child = container.transform.GetChild(0);
+                            child.SetParent(null, true);
+                            SceneManager.MoveGameObjectToScene(child.gameObject, destination);
+                        }
+                        UnityEngine.Object.DestroyImmediate(container);
+                    }
+                    EditorSceneManager.CloseScene(scene, true);
+                }
+                foreach (var reference in references)
+                {
+                    var serialized = new SerializedObject(reference.owner);
+                    var field = serialized.FindProperty(reference.property);
+                    if (field == null) throw new Exception("Missing native field: " + reference.property);
+                    field.objectReferenceValue = reference.value;
+                    serialized.ApplyModifiedPropertiesWithoutUndo();
+                    if (PrefabUtility.IsPartOfPrefabInstance(reference.owner)) PrefabUtility.RecordPrefabInstancePropertyModifications(reference.owner);
+                    EditorUtility.SetDirty(reference.owner);
+                }
+                foreach (var root in destination.GetRootGameObjects())
+                    if (root.GetComponent<SceneBootstrap>() != null) UnityEngine.Object.DestroyImmediate(root);
+                foreach (var marker in destination.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<SceneReferenceId>(true)).ToArray())
+                    UnityEngine.Object.DestroyImmediate(marker);
+                var error = AssetDatabase.MoveAsset(oldEntry, SceneComposition.Main);
+                if (!string.IsNullOrEmpty(error)) throw new Exception(error);
+                if (AssetDatabase.AssetPathToGUID(SceneComposition.Main) != entryGuid) throw new Exception("Main scene GUID changed.");
+                EditorSceneManager.MarkSceneDirty(destination);
+                if (!EditorSceneManager.SaveScene(destination, SceneComposition.Main)) throw new Exception("Merged scene save failed.");
+                var checks = references.Select(r => new PersistedReference {
+                    ownerId = GlobalObjectId.GetGlobalObjectIdSlow(r.owner).ToString(),
+                    targetId = GlobalObjectId.GetGlobalObjectIdSlow(r.value).ToString(), property = r.property }).ToArray();
+                // Re-open before deleting source scenes; verify persisted references,
+                // object counts, prefab modifications and actual scene scripts/materials.
+                destination = EditorSceneManager.OpenScene(SceneComposition.Main);
+                foreach (var check in checks)
+                {
+                    if (!GlobalObjectId.TryParse(check.ownerId, out var ownerId) || !GlobalObjectId.TryParse(check.targetId, out var targetId)) throw new Exception("Invalid persisted reference identity.");
+                    var owner = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(ownerId);
+                    var target = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(targetId);
+                    if (owner == null || target == null || new SerializedObject(owner).FindProperty(check.property)?.objectReferenceValue != target)
+                        throw new Exception("Reference lost on reload: " + check.property);
+                }
+                int actualObjects = destination.GetRootGameObjects().Sum(r => r.GetComponentsInChildren<Transform>(true).Length);
+                if (actualObjects != expectedObjects) throw new Exception("Authored objects changed during merge.");
+                ApartmentAuthoring.VerifyScene();
+                EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(SceneComposition.Main, true) }
+                    .Concat(EditorBuildSettings.scenes.Where(s => s.enabled && s.path != oldEntry && s.path != SceneComposition.Main &&
+                        !partPaths.Contains(s.path) && !s.path.StartsWith("Assets/SceneBackups/"))).ToArray();
+                EditorBuildSettings.globalScenes = EditorBuildSettings.scenes;
+                foreach (var path in partPaths) if (!AssetDatabase.DeleteAsset(path)) throw new Exception("Cannot remove merged partition: " + path);
+                if (!AssetDatabase.DeleteAsset(SceneComposition.Asset)) throw new Exception("Cannot remove retired composition manifest.");
+                AssetDatabase.SaveAssets();
+                File.WriteAllText("Logs/single-scene-checks.json", JsonUtility.ToJson(new MergeReport {
+                    passed = true, scene = SceneComposition.Main, guid = entryGuid, references = checks.Length,
+                    objects = actualObjects, retired = partPaths, bindings = checks, utc = DateTime.UtcNow.ToString("O") }, true));
+            }
+            finally { converting = false; }
+        }
+        sealed class SavedReference { public Component owner; public UnityEngine.Object value; public string property; }
+        [Serializable] sealed class PersistedReference { public string ownerId, targetId, property; }
+        [Serializable] sealed class MergeReport { public bool passed; public string scene, guid, utc; public int references, objects; public string[] retired; public PersistedReference[] bindings; }
+
         public static string[] BuildScenePaths()
         {
             var layout = SceneComposition.Current;
@@ -297,17 +398,18 @@ namespace GripRehab.Editor
                 EditorSceneManager.SaveScene(item.gameObject.scene);
             }
             OpenWorkspace(); Verify(); ConfigureBuildScenes();
-            var paths = new[] { SceneComposition.Main }.Concat(SceneComposition.Current.parts.Select(p => p.path)).ToArray();
+            var paths = new[] { SceneComposition.Main }.Concat(SceneComposition.Current == null ? Array.Empty<string>() : SceneComposition.Current.parts.Select(p => p.path)).ToArray();
             var bytes = paths.ToDictionary(p => p, File.ReadAllBytes);
             RehabVerification.BuildWindows();
             foreach (var path in paths) if (!bytes[path].SequenceEqual(File.ReadAllBytes(path))) throw new Exception("Build changed scene: " + path);
             File.WriteAllText("Logs/scene-persistence-checks.json", JsonUtility.ToJson(new Report { passed = true, scenes = paths,
-                references = SceneComposition.Current.links.Length, utc = DateTime.UtcNow.ToString("O") }, true));
+                references = SceneComposition.Current == null ? 0 : SceneComposition.Current.links.Length, utc = DateTime.UtcNow.ToString("O") }, true));
         }
         [MenuItem("Grip Rehab/Scenes/Verify Composition")]
         public static void Verify()
         {
-            var layout = SceneComposition.Current ?? throw new Exception("Scene composition has not been created.");
+            var layout = SceneComposition.Current;
+            if (layout == null) { ApartmentAuthoring.VerifyScene(); return; }
             EnsureWorkspace(); layout.Bind();
             if (layout.parts.Length != 6) throw new Exception("Expected six focused content scenes.");
             if (UnityEngine.Object.FindObjectsByType<SceneBootstrap>().Length != 1) throw new Exception("Expected one bootstrap.");

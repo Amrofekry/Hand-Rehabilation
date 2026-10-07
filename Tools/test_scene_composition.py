@@ -1,54 +1,39 @@
-"""Saved-workspace contracts. Native startup/save/build have separate evidence."""
+"""Single-scene saved-wiring contracts; native reload/build evidence is separate."""
 import re
 import unittest
-from pathlib import Path
-from Tools.scene_layout import ROOT, MAIN, MANIFEST, paths, blocks, links, composed_blocks
+from Tools.scene_layout import ROOT, MAIN, MANIFEST, paths, composed_blocks
 
 class SceneCompositionTests(unittest.TestCase):
-    def test_six_focused_content_scenes_and_small_bootstrap(self):
-        self.assertEqual([p.stem for p in paths()], ['3.1-Apartment', '3.1-Lighting', '3.2-PlayerAndSensors',
-            '3.3-VirtualHands', '3.4.1-Interaction', '3.4-Interface'])
-        self.assertLess(MAIN.stat().st_size, 10000)
-        self.assertEqual(MAIN.read_text().count('GripRehab.Composition.SceneBootstrap'), 1)
-        self.assertNotIn('GripRehab.ApartmentExperience', MAIN.read_text())
-        self.assertTrue((ROOT/'Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity').exists())
-
-    def test_staged_roots_are_inactive_on_disk(self):
-        manifest = MANIFEST.read_text()
-        for path in paths():
-            record = blocks(path)
-            containers = [b for b in record.values() if re.search(r'^  m_Name: .+ / content$', b,re.M)]
-            self.assertEqual(len(containers), 1, path.name)
-            self.assertIn('  m_IsActive: 0\n', containers[0])
-            self.assertIn(path.relative_to(ROOT).as_posix(), manifest)
-
-    def test_reference_manifest_and_original_wiring_resolve(self):
-        self.assertEqual(len(links()), 26)
-        self.assertEqual(len({(l['ownerId'],l['ownerComponent'],l['property']) for l in links()}),26)
-        record = composed_blocks()
-        experience = next(b for b in record.values() if 'GripRehab.ApartmentExperience' in b)
-        for field in ['virtualGrasp','statusText','contextText','forceText','progressFill']:
-            self.assertIsNotNone(
-                re.search(r'^  '+field+r': \{fileID: [1-9]\d*\}',experience,re.M),field)
-
-    def test_build_includes_all_parts_and_excludes_archive(self):
-        saved = (ROOT/'ProjectSettings/EditorBuildSettings.asset').read_text()
-        build = re.findall(r'^    path: (.+)$',saved,re.M)
-        self.assertEqual(build[0], MAIN.relative_to(ROOT).as_posix())
-        for path in paths(): self.assertIn(path.relative_to(ROOT).as_posix(),build)
-        self.assertFalse(any('Archive/' in p or 'SceneBackups/' in p for p in build))
-
-    def test_scenes_folder_is_flat_and_contains_only_scenes(self):
+    def test_one_working_scene_and_no_subfolders(self):
         folder=ROOT/'Assets/Scenes'
-        self.assertEqual(list(p for p in folder.iterdir() if p.is_dir()), [])
-        self.assertEqual({p.suffix for p in folder.iterdir()}, {'.unity','.meta'})
-        self.assertEqual(len(list(folder.glob('*.unity'))),7)
-        self.assertEqual(MAIN.name,'3.1-Bootstrap.unity')
-        self.assertTrue(all(p.parent==folder for p in paths()))
+        self.assertEqual(sorted(p.name for p in folder.iterdir()), ['GripRehab.unity','GripRehab.unity.meta'])
+        self.assertEqual(paths(),[MAIN])
+        self.assertFalse(MANIFEST.exists())
 
-    def test_reference_binding_precedes_activation(self):
-        source = (ROOT/'Assets/Rehab/3.1-environment/Composition/SceneBootstrap.cs').read_text()
-        self.assertLess(source.index('composition.Bind();'),source.index('composition.Activate(true);'))
-        self.assertIn('LoadSceneMode.Additive',source)
+    def test_gameplay_is_authored_and_has_no_additive_bootstrap(self):
+        source=MAIN.read_text()
+        self.assertIn('GripRehab.ApartmentExperience',source)
+        self.assertNotIn('GripRehab.Composition.SceneBootstrap',source)
+        self.assertNotIn('GripRehab.Composition.SceneReferenceId',source)
+        self.assertNotRegex(source,re.compile(r'^  m_Name: .+ / content$',re.M))
+
+    def test_gameplay_references_are_saved_directly(self):
+        record=composed_blocks()
+        experience=next(b for b in record.values() if 'GripRehab.ApartmentExperience' in b)
+        for field in ['virtualGrasp','statusText','contextText','forceText','progressFill']:
+            value=re.search(r'^  '+field+r': \{fileID: ([1-9]\d*)\}',experience,re.M)
+            self.assertIsNotNone(value,field)
+            self.assertIn(value[1],record,field)
+
+    def test_build_starts_in_single_scene_and_excludes_retired_parts(self):
+        build=re.findall(r'^    path: (.+)$',(ROOT/'ProjectSettings/EditorBuildSettings.asset').read_text(),re.M)
+        self.assertEqual(build[0], 'Assets/Scenes/GripRehab.unity')
+        self.assertEqual([p for p in build if p.startswith('Assets/Scenes/')],['Assets/Scenes/GripRehab.unity'])
+        self.assertFalse(any('SceneBackups/' in p or '3.1-Bootstrap' in p for p in build))
+
+    def test_scene_guid_and_recovery_copy_preserved(self):
+        self.assertIn('guid: 0d609e8f6ef162e45a37a4c467a3d5bf',MAIN.with_suffix('.unity.meta').read_text())
+        self.assertTrue((ROOT/'Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity').exists())
+        self.assertTrue((ROOT/'Docs/evidence/single-scene-2026-10-07/before-merge.zip').exists())
 
 if __name__=='__main__': unittest.main()

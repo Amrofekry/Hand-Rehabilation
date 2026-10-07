@@ -1,0 +1,148 @@
+{
+    "passed": true,
+    "scene": "Assets/Scenes/GripRehab.unity",
+    "guid": "0d609e8f6ef162e45a37a4c467a3d5bf",
+    "utc": "2026-10-07T14:18:25.3055475Z",
+    "references": 26,
+    "objects": 972,
+    "retired": [
+        "Assets/Scenes/3.1-Apartment.unity",
+        "Assets/Scenes/3.1-Lighting.unity",
+        "Assets/Scenes/3.2-PlayerAndSensors.unity",
+        "Assets/Scenes/3.3-VirtualHands.unity",
+        "Assets/Scenes/3.4.1-Interaction.unity",
+        "Assets/Scenes/3.4-Interface.unity"
+    ],
+    "bindings": [
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-2361602525438102691-3320937378943459082",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-530844133-0",
+            "property": "seatedFeet"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-2361602525438102691-3320937378943459082",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1666040684-0",
+            "property": "standFeet"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-574063377-0",
+            "property": "virtualGrasp"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-559855011-0",
+            "property": "statusText"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-874311700-0",
+            "property": "contextText"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-418978630-0",
+            "property": "forceText"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1594956860-0",
+            "property": "progressFill"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-908917049-0",
+            "property": "objects.Array.data[0]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-2062597755-0",
+            "property": "objects.Array.data[1]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1224716529-0",
+            "property": "objects.Array.data[2]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1130527521-0",
+            "property": "objects.Array.data[3]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-854146011-0",
+            "property": "objects.Array.data[4]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1135522303-0",
+            "property": "objects.Array.data[5]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-2361602525438102691-3320937378943459082",
+            "property": "seats.Array.data[0]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8737890429124235522-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-926554348-0",
+            "property": "image"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8737890429124235522-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-75506460-0",
+            "property": "panel"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "property": "experience"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-929733531-0",
+            "property": "kitchenStation"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-908917049-0",
+            "property": "livingObjects.Array.data[0]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1130527521-0",
+            "property": "livingObjects.Array.data[1]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1224716529-0",
+            "property": "livingObjects.Array.data[2]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-2062597755-0",
+            "property": "kitchenObjects.Array.data[0]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-854146011-0",
+            "property": "kitchenObjects.Array.data[1]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-560832046-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-1135522303-0",
+            "property": "kitchenObjects.Array.data[2]"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-332483263-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-8690337224916914490-0",
+            "property": "experience"
+        },
+        {
+            "ownerId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-574063377-0",
+            "targetId": "GlobalObjectId_V1-2-0d609e8f6ef162e45a37a4c467a3d5bf-389210139-0",
+            "property": "inputSkeleton"
+        }
+    ]
+}

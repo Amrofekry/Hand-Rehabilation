@@ -57,8 +57,8 @@ namespace GripRehab.Editor
                     throw new Exception("Native scene checks failed or runtime logged errors.");
                 foreach (int port in new[] { 27817, 27818, 27819 }) using (var socket = new UdpClient(new IPEndPoint(IPAddress.Loopback, port))) { }
                 int cycle = UnityEditor.SessionState.GetInt(Cycle, 0) + 1; UnityEditor.SessionState.SetInt(Cycle, cycle);
-                File.AppendAllText("Logs/scene-play-cycles.txt", "PASS cycle " + cycle + ": additive startup, bindings, single instances, SDK, both rooms/hands, UI and socket cleanup\n");
-                if (cycle == 3) Finish(true, "Three cold additive-load Play/Stop cycles and socket cleanup passed.");
+                File.AppendAllText("Logs/scene-play-cycles.txt", "PASS cycle " + cycle + ": scene startup, bindings, single instances, SDK, both rooms/hands, UI and socket cleanup\n");
+                if (cycle == 3) Finish(true, "Three cold scene-load Play/Stop cycles and socket cleanup passed.");
                 else EditorApplication.delayCall += Next;
             }
             catch (Exception error) { Finish(false, error.ToString()); }
@@ -67,7 +67,7 @@ namespace GripRehab.Editor
         static void Tick()
         {
             if (!UnityEditor.SessionState.GetBool(Active, false)) return;
-            if (EditorApplication.timeSinceStartup > deadline) { Finish(false, "Additive scene startup timed out."); return; }
+            if (EditorApplication.timeSinceStartup > deadline) { Finish(false, "Scene startup timed out."); return; }
             if (!EditorApplication.isPlaying || EditorApplication.isCompiling || EditorApplication.timeSinceStartup < settle) return;
             try
             {
@@ -75,7 +75,7 @@ namespace GripRehab.Editor
                 {
                     var layout = SceneComposition.Current;
                     var boot = UnityEngine.Object.FindAnyObjectByType<SceneBootstrap>();
-                    Require(boot != null && boot.Ready && layout.Loaded && SceneManager.sceneCount == 7, "Seven scenes did not assemble from bootstrap.");
+                    Require(layout == null ? boot == null && SceneManager.sceneCount == 1 : boot != null && boot.Ready && layout.Loaded && SceneManager.sceneCount == 7, "Working scene did not load with the expected architecture.");
                     var app = UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>();
                     Require(app != null && app.statusText != null && app.forceText != null && app.objects.All(o => o != null) && app.seats.All(s => s != null), "Gameplay cross-scene references missing.");
                     Require(app.virtualGrasp.Ready && app.contactRig != null, "Native VirtualGrasp/contact rig not ready.");
@@ -106,6 +106,7 @@ namespace GripRehab.Editor
             RehabGateRunner.CompleteSceneQa(passed, detail);
             if (EditorApplication.isPlaying) EditorApplication.ExitPlaymode();
             else EditorApplication.delayCall += SceneOrganization.OpenWorkspace;
+            if (Application.isBatchMode) EditorApplication.delayCall += () => EditorApplication.Exit(passed ? 0 : 1);
         }
         [Serializable] sealed class Result { public bool passed; public int cycles; public string detail, utc; }
     }
