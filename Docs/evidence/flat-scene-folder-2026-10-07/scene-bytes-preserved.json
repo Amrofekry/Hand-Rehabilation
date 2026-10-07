@@ -1,0 +1,30 @@
+{
+  "Assets/Scenes/3.1-Bootstrap.unity": {
+    "beforeSha256": "c14a371559943c7de0307533dec3a1fd231415d825afb4cef7cce4c2c054eb3b",
+    "afterSha256": "c14a371559943c7de0307533dec3a1fd231415d825afb4cef7cce4c2c054eb3b"
+  },
+  "Assets/Scenes/3.1-Apartment.unity": {
+    "beforeSha256": "a4b4f417ad202eff0f2fa56cba1336512e1e098adb70203613929807bc8e3b5b",
+    "afterSha256": "a4b4f417ad202eff0f2fa56cba1336512e1e098adb70203613929807bc8e3b5b"
+  },
+  "Assets/Scenes/3.1-Lighting.unity": {
+    "beforeSha256": "2a7c764b9b4993f5f28bfa481cefde9eaca374f30f9461e63f79ebbf25dcbb03",
+    "afterSha256": "2a7c764b9b4993f5f28bfa481cefde9eaca374f30f9461e63f79ebbf25dcbb03"
+  },
+  "Assets/Scenes/3.2-PlayerAndSensors.unity": {
+    "beforeSha256": "521001639dcf497c2b0b8ea11703d8de0d9c9571c4b58bd50242124b345726fd",
+    "afterSha256": "521001639dcf497c2b0b8ea11703d8de0d9c9571c4b58bd50242124b345726fd"
+  },
+  "Assets/Scenes/3.3-VirtualHands.unity": {
+    "beforeSha256": "7a61374cd26510324e7ffc257a4ebb5dfb2c9d13d2afdd130ca247449fcd7969",
+    "afterSha256": "7a61374cd26510324e7ffc257a4ebb5dfb2c9d13d2afdd130ca247449fcd7969"
+  },
+  "Assets/Scenes/3.4-Interface.unity": {
+    "beforeSha256": "d96e47c6fb6212e61274a16a61ef9bda40ba990e9d1e33994b85c0428217cbb4",
+    "afterSha256": "d96e47c6fb6212e61274a16a61ef9bda40ba990e9d1e33994b85c0428217cbb4"
+  },
+  "Assets/Scenes/3.4.1-Interaction.unity": {
+    "beforeSha256": "c03b6391795b0868fcb5e5e0a16b11649b78a76944c305b75fa214b6e671867a",
+    "afterSha256": "c03b6391795b0868fcb5e5e0a16b11649b78a76944c305b75fa214b6e671867a"
+  }
+}

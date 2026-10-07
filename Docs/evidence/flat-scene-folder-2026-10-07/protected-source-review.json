@@ -1,0 +1,30 @@
+{
+  "scope": "User requested flat Scenes folder and clearly named bootstrap",
+  "changes": {
+    "Assets/Editor/ApartmentAuthoring.cs": {
+      "previousSha256": "091da6a66f2c80f1e270560d1330a66a596859bee8f611779717a18e9e232062",
+      "currentSha256": "2ff8cb4c8f144df0443cec5d24a2437dd7c559e2f71e1f18fe48637aaad163eb",
+      "reason": "Use the renamed flat bootstrap scene path; fixed editor migration gate added where applicable. Gameplay equations and vendor source unchanged."
+    },
+    "Assets/Editor/GripUiGalleryAuthoring.cs": {
+      "previousSha256": "1a6b8fb8fe17e749c2d437b5a663724fcb41075b0662fc4373ba2701ee39b147",
+      "currentSha256": "fb0640a3c4a7174291e20d38bcf1b8c394ee7422f946abe43f25ab9a39880ac8",
+      "reason": "Use the renamed flat bootstrap scene path; fixed editor migration gate added where applicable. Gameplay equations and vendor source unchanged."
+    },
+    "Assets/Editor/RehabGateRunner.cs": {
+      "previousSha256": "28e4723c486fb9ddbe4ac1c4bb4718f49e7e1b9f5f2922d79ccdd594211ca4cf",
+      "currentSha256": "8406dd91166c6ffb1d4a08355ad73ab91631800bb45cafba795a42f226cb97d6",
+      "reason": "Use the renamed flat bootstrap scene path; fixed editor migration gate added where applicable. Gameplay equations and vendor source unchanged."
+    },
+    "Assets/Editor/RehabVerification.cs": {
+      "previousSha256": "66cee1c3dfff0b2d83e0fec84c9c7abffa4f5ab6827b02e41d4ad386a1a2e650",
+      "currentSha256": "fec4ba0ea616d3e29e11c4e9afca6319d2b5fec71fcc39685800f62459096982",
+      "reason": "Use the renamed flat bootstrap scene path; fixed editor migration gate added where applicable. Gameplay equations and vendor source unchanged."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabApp.cs": {
+      "previousSha256": "885bcec1eeb7d602e12ad72a7a187542c111d57a3403cc1ed1c1aeb5ba0efde3",
+      "currentSha256": "2f71dc313cbe6ff3bcd98d0d5cc7abc8a9400bf412403f5b4215fd06820f4647",
+      "reason": "Use the renamed flat bootstrap scene path; fixed editor migration gate added where applicable. Gameplay equations and vendor source unchanged."
+    }
+  }
+}

@@ -7,7 +7,7 @@ from pathlib import Path
 from Tools.scene_layout import composed_blocks, paths
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENE = ROOT / 'Assets/Scenes/GripRehab.unity'
+SCENE = ROOT / 'Assets/Scenes/3.1-Bootstrap.unity'
 
 def blocks(path):
     text = path.read_text(encoding='utf-8-sig')
@@ -45,6 +45,10 @@ class HandMateDesignTests(unittest.TestCase):
         review = json.loads((ROOT/'Docs/evidence/journey-item2-2026-10-06/protected-source-review.json').read_text())
         changes = review['changes']
         scene_review = json.loads((ROOT/'Docs/evidence/scene-organization-2026-10-07/protected-source-review.json').read_text())['changes']
+        flat_review = json.loads((ROOT/'Docs/evidence/flat-scene-folder-2026-10-07/protected-source-review.json').read_text())['changes']
+        self.assertEqual(set(flat_review), {'Assets/Editor/ApartmentAuthoring.cs',
+            'Assets/Editor/GripUiGalleryAuthoring.cs',
+            'Assets/Editor/RehabVerification.cs', 'Assets/Editor/RehabGateRunner.cs', 'Assets/Rehab/3.4-game-modules/RehabApp.cs'})
         self.assertEqual(set(scene_review), {'Assets/Editor/ApartmentAuthoring.cs', 'Assets/Editor/RehabEditorQA.cs',
             'Assets/Editor/RehabGateRunner.cs', 'Assets/Editor/RehabVerification.cs',
             'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs'})
@@ -63,6 +67,10 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(scene_review[path]['previousSha256'], expected)
                     self.assertTrue(scene_review[path]['reason'])
                     expected = scene_review[path]['currentSha256']
+                if path in flat_review:
+                    self.assertEqual(flat_review[path]['previousSha256'], expected)
+                    self.assertTrue(flat_review[path]['reason'])
+                    expected = flat_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()

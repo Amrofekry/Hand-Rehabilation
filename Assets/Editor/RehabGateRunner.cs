@@ -68,6 +68,10 @@ namespace GripRehab.Editor
                         SceneOrganization.Split();
                         Write("PASS", command, "Additive scene composition migrated and reference-checked");
                         break;
+                    case "flatten-scenes":
+                        SceneOrganization.Flatten();
+                        Write("PASS", command, "Scene assets moved into one flat folder with GUIDs preserved");
+                        break;
                     case "scene-workspace":
                         SceneOrganization.OpenWorkspace();
                         Write("PASS", command, "Complete additive scene workspace open");

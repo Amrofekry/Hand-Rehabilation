@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-MAIN = ROOT / 'Assets/Scenes/GripRehab.unity'
+MAIN = ROOT / 'Assets/Scenes/3.1-Bootstrap.unity'
 MANIFEST = ROOT / 'Assets/Resources/SceneComposition.asset'
 
 def blocks(path):
@@ -95,7 +95,7 @@ def composed_blocks():
                 prefab_blocks = blocks(prefab)
                 components = prefab_blocks[source_go[1]].split('  m_Component:')[1].split('  m_Layer:')[0]
                 source_component = re.findall(r'component: \{fileID: (-?\d+)\}',components)[link['targetComponent']]
-                archived = blocks(ROOT/'Assets/Scenes/Archive/GripRehab-BeforeSceneSplit.unity')
+                archived = blocks(ROOT/'Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity')
                 stubs = [(key,body) for key,body in archived.items() if 'm_CorrespondingSourceObject: {fileID: '+source_component+', guid: '+source_go[2] in body]
                 if len(stubs)!=1: raise ValueError('Inherited component stub is ambiguous')
                 target, body = stubs[0]; records[target] = body

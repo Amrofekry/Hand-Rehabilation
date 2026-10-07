@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-07T13:32:33.479496+00:00",
+  "scope": "Offline compiler/metadata/domain checks only",
+  "checks": [
+    {
+      "name": "metadata",
+      "passed": true,
+      "count": 836
+    },
+    {
+      "name": "assembly-graph",
+      "passed": true,
+      "count": 5
+    },
+    {
+      "name": "compile-editor",
+      "passed": true,
+      "assemblies": {
+        "GripRehab.Product.dll": "43813647b4da5ba220459a4145612a2b55162661dd9f94d2d4745bda4b2d6ff0",
+        "GripRehab.Core.dll": "69a1dfa68a84d231dd8d2b3dbea161bcd44efde84e69d35e966ff61767c9c219",
+        "GripRehab.UI.dll": "4a4dd106108059e5c1dd81ef16b66258f0cc3766e538fa92a68e60a4156aea87",
+        "Assembly-CSharp.dll": "9b2aed5976504dd0fcd59245c63c9bd318e5532c45e298a45188f7da8e1ab63f",
+        "Assembly-CSharp-Editor.dll": "91028d54638b50a6209abada6ddcf3dcb9c972e77be950c0d56f073dc73dedd5"
+      }
+    },
+    {
+      "name": "compile-player",
+      "passed": true,
+      "assemblies": {
+        "GripRehab.Product.dll": "312d70ff7ee246a250e7fdda90d412ad11ba0e545bb720a4338413c4c9d0565d",
+        "GripRehab.Core.dll": "11099d4747129b121575a4cbf67deb5ed5bca6a4a8233319f0af30b6f7daa0bc",
+        "GripRehab.UI.dll": "0f02315ed2b717c3dc5a82060ac8f5e86484f3a891c19113be68228d3701a305",
+        "Assembly-CSharp.dll": "17d8a6dd39a4c6940a63f91fddce6695c71a55bc0915591f93819a71aa63698d"
+      }
+    }
+  ],
+  "runtimeVerification": "Not run by this tool; see separate Editor and Windows player evidence",
+  "passed": true
+}

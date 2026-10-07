@@ -14,7 +14,7 @@ namespace GripRehab.Editor
 {
     public static class RehabVerification
     {
-        private const string ScenePath = "Assets/Scenes/GripRehab.unity";
+        private const string ScenePath = "Assets/Scenes/3.1-Bootstrap.unity";
         private const string MaterialPath = "Assets/Resources/RehabBase.mat";
 
         [MenuItem("Grip Rehab/Verify Scene and Logic")]

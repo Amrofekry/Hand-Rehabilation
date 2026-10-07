@@ -14,8 +14,8 @@ namespace GripRehab.Editor
     [InitializeOnLoad]
     public static class SceneOrganization
     {
-        const string Folder = "Assets/Scenes/Workspace";
-        const string Backup = "Assets/Scenes/Archive/GripRehab-BeforeSceneSplit.unity";
+        const string Folder = "Assets/Scenes";
+        const string Backup = "Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity";
         static bool saving, converting;
         static readonly string[] Names = { "3.1-Apartment", "3.1-Lighting", "3.2-PlayerAndSensors", "3.3-VirtualHands", "3.4.1-Interaction", "3.4-Interface" };
         static SceneOrganization()
@@ -128,7 +128,7 @@ namespace GripRehab.Editor
             foreach (var name in Names) if (File.Exists(Folder + "/" + name + ".unity")) throw new Exception("Refusing to replace an existing scene: " + name);
             if (File.Exists(Backup) && !File.ReadAllBytes(Backup).SequenceEqual(File.ReadAllBytes(SceneComposition.Main)))
                 throw new Exception("A different source backup already exists; it will not be replaced.");
-            Directory.CreateDirectory("Assets/Scenes/Archive"); Directory.CreateDirectory(Folder); AssetDatabase.Refresh();
+            Directory.CreateDirectory(Path.GetDirectoryName(Backup)); Directory.CreateDirectory(Folder); AssetDatabase.Refresh();
             if (!File.Exists(Backup) && !AssetDatabase.CopyAsset(SceneComposition.Main, Backup)) throw new Exception("Could not preserve source scene.");
             Directory.CreateDirectory("Logs"); File.WriteAllText("Logs/scenes-build-settings-before.json", JsonUtility.ToJson(new BuildBackup { scenes = EditorBuildSettings.scenes.Select(s => s.path).ToArray() }, true));
             var oldBuild = EditorBuildSettings.scenes;
@@ -184,12 +184,87 @@ namespace GripRehab.Editor
             if (layout != null && !layout.Loaded) OpenWorkspace();
             else if (layout != null) BindWorkspace();
         }
+        [MenuItem("Grip Rehab/Scenes/Flatten Scene Folder")]
+        public static void Flatten()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new Exception("Stop Play before moving scene assets.");
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) throw new OperationCanceledException("Scene move canceled.");
+            var layout = SceneComposition.Current ?? throw new Exception("Scene composition is missing.");
+            var originalParts = layout.parts.Select(p => p.path).ToArray();
+            var originalBuild = EditorBuildSettings.scenes;
+            var moves = new List<AssetMove>();
+            if (File.Exists("Assets/Scenes/GripRehab.unity")) moves.Add(new AssetMove { from = "Assets/Scenes/GripRehab.unity", to = SceneComposition.Main });
+            foreach (var part in layout.parts)
+            {
+                var destination = Folder + "/" + Path.GetFileName(part.path);
+                if (part.path != destination) moves.Add(new AssetMove { from = part.path, to = destination });
+            }
+            if (File.Exists("Assets/Scenes/Archive/GripRehab-BeforeSceneSplit.unity"))
+                moves.Add(new AssetMove { from = "Assets/Scenes/Archive/GripRehab-BeforeSceneSplit.unity", to = Backup });
+            if (File.Exists("Assets/Scenes/README.md")) moves.Add(new AssetMove { from = "Assets/Scenes/README.md", to = "Assets/SceneBackups/README.md" });
+            foreach (var move in moves)
+            {
+                if (!File.Exists(move.from) || File.Exists(move.to)) throw new Exception("Unsafe asset destination: " + move.to);
+                move.guid = AssetDatabase.AssetPathToGUID(move.from);
+                move.bytes = File.ReadAllBytes(move.from);
+            }
+            var completed = new List<AssetMove>();
+            converting = true;
+            try
+            {
+                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                Directory.CreateDirectory("Assets/SceneBackups"); AssetDatabase.Refresh();
+                foreach (var move in moves)
+                {
+                    var error = AssetDatabase.MoveAsset(move.from, move.to);
+                    if (!string.IsNullOrEmpty(error)) throw new Exception(error);
+                    completed.Add(move);
+                    if (AssetDatabase.AssetPathToGUID(move.to) != move.guid || !move.bytes.SequenceEqual(File.ReadAllBytes(move.to)))
+                        throw new Exception("Asset identity/content changed while moving: " + move.to);
+                }
+                // Closing all scenes/refreshing can unload the Resources instance.
+                layout = AssetDatabase.LoadAssetAtPath<SceneComposition>(SceneComposition.Asset);
+                if (layout == null) throw new Exception("Composition asset was unavailable after asset moves.");
+                foreach (var part in layout.parts) part.path = Folder + "/" + Path.GetFileName(part.path);
+                EditorUtility.SetDirty(layout); AssetDatabase.SaveAssets();
+                EditorBuildSettings.scenes = originalBuild.Select(s => new EditorBuildSettingsScene(
+                    moves.FirstOrDefault(m => m.from == s.path)?.to ?? s.path, s.enabled)).ToArray();
+                ConfigureBuildScenes();
+                // Remove only the two known directories after proving they are empty.
+                foreach (var oldFolder in new[] { "Assets/Scenes/Workspace", "Assets/Scenes/Archive" })
+                    if (Directory.Exists(oldFolder))
+                    {
+                        if (Directory.EnumerateFileSystemEntries(oldFolder).Any()) throw new Exception("Old scene folder contains unexpected files: " + oldFolder);
+                        if (!AssetDatabase.DeleteAsset(oldFolder)) throw new Exception("Could not remove empty scene folder: " + oldFolder);
+                    }
+                converting = false; OpenWorkspace(); Verify();
+                if (Directory.GetDirectories(Folder).Length != 0) throw new Exception("Scenes still contains a subfolder.");
+                File.WriteAllText("Logs/scene-flatten-checks.json", JsonUtility.ToJson(new FlatReport { passed = true,
+                    entry = SceneComposition.Main, scenes = layout.parts.Select(p => p.path).ToArray(),
+                    backup = Backup, moves = moves.ToArray(), utc = DateTime.UtcNow.ToString("O") }, true));
+            }
+            catch
+            {
+                converting = true; EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                foreach (var move in completed.AsEnumerable().Reverse())
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(move.from)); AssetDatabase.Refresh();
+                    if (!string.IsNullOrEmpty(AssetDatabase.MoveAsset(move.to, move.from))) Debug.LogError("Asset rollback failed: " + move.from);
+                }
+                layout = AssetDatabase.LoadAssetAtPath<SceneComposition>(SceneComposition.Asset);
+                for (int i = 0; i < layout.parts.Length; i++) layout.parts[i].path = originalParts[i];
+                EditorUtility.SetDirty(layout); AssetDatabase.SaveAssets(); EditorBuildSettings.scenes = originalBuild;
+                EditorBuildSettings.globalScenes = originalBuild;
+                converting = false; throw;
+            }
+        }
         public static string[] BuildScenePaths()
         {
             var layout = SceneComposition.Current;
             if (layout == null) return EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             return new[] { SceneComposition.Main }.Concat(layout.parts.Select(p => p.path))
-                .Concat(EditorBuildSettings.scenes.Where(s => s.enabled && s.path != SceneComposition.Main && !s.path.StartsWith("Assets/Scenes/Archive/"))
+                .Concat(EditorBuildSettings.scenes.Where(s => s.enabled && s.path != SceneComposition.Main &&
+                    !s.path.StartsWith("Assets/Scenes/Archive/") && !s.path.StartsWith("Assets/SceneBackups/"))
                     .Select(s => s.path)).Distinct().ToArray();
         }
         [MenuItem("Grip Rehab/Scenes/Configure Build Scenes")]
@@ -248,6 +323,8 @@ namespace GripRehab.Editor
                 scenes = layout.parts.Select(p => p.path).ToArray(), utc = DateTime.UtcNow.ToString("O") }, true));
         }
         [Serializable] sealed class BuildBackup { public string[] scenes; }
+        [Serializable] sealed class AssetMove { public string from, to, guid; [NonSerialized] public byte[] bytes; }
+        [Serializable] sealed class FlatReport { public bool passed; public string entry, backup, utc; public string[] scenes; public AssetMove[] moves; }
         [Serializable] sealed class Report { public bool passed; public int references; public string[] scenes; public string utc; }
     }
 }

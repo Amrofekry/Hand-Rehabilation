@@ -1,0 +1,61 @@
+{
+    "passed": true,
+    "entry": "Assets/Scenes/3.1-Bootstrap.unity",
+    "backup": "Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity",
+    "utc": "2026-10-07T13:38:33.1390940Z",
+    "scenes": [
+        "Assets/Scenes/3.1-Apartment.unity",
+        "Assets/Scenes/3.1-Lighting.unity",
+        "Assets/Scenes/3.2-PlayerAndSensors.unity",
+        "Assets/Scenes/3.3-VirtualHands.unity",
+        "Assets/Scenes/3.4.1-Interaction.unity",
+        "Assets/Scenes/3.4-Interface.unity"
+    ],
+    "moves": [
+        {
+            "from": "Assets/Scenes/GripRehab.unity",
+            "to": "Assets/Scenes/3.1-Bootstrap.unity",
+            "guid": "0d609e8f6ef162e45a37a4c467a3d5bf"
+        },
+        {
+            "from": "Assets/Scenes/Workspace/3.1-Apartment.unity",
+            "to": "Assets/Scenes/3.1-Apartment.unity",
+            "guid": "ca9a178fb01b92f4e88d1f015a886eb3"
+        },
+        {
+            "from": "Assets/Scenes/Workspace/3.1-Lighting.unity",
+            "to": "Assets/Scenes/3.1-Lighting.unity",
+            "guid": "ef1d223c0ea2ded409fbfb3cdc647f9e"
+        },
+        {
+            "from": "Assets/Scenes/Workspace/3.2-PlayerAndSensors.unity",
+            "to": "Assets/Scenes/3.2-PlayerAndSensors.unity",
+            "guid": "0bc6520eba1588a4ebb8231e51ba4f38"
+        },
+        {
+            "from": "Assets/Scenes/Workspace/3.3-VirtualHands.unity",
+            "to": "Assets/Scenes/3.3-VirtualHands.unity",
+            "guid": "163e1c1e5d7f5cb438fc93eb9f33905e"
+        },
+        {
+            "from": "Assets/Scenes/Workspace/3.4.1-Interaction.unity",
+            "to": "Assets/Scenes/3.4.1-Interaction.unity",
+            "guid": "a4341d11bc0ad4340b23eb9253760bc2"
+        },
+        {
+            "from": "Assets/Scenes/Workspace/3.4-Interface.unity",
+            "to": "Assets/Scenes/3.4-Interface.unity",
+            "guid": "bf958e5f9e7fcb84fa5646eb69192015"
+        },
+        {
+            "from": "Assets/Scenes/Archive/GripRehab-BeforeSceneSplit.unity",
+            "to": "Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity",
+            "guid": "741864245a7e7d849b16ab69393a78a1"
+        },
+        {
+            "from": "Assets/Scenes/README.md",
+            "to": "Assets/SceneBackups/README.md",
+            "guid": "c786327499875079a75677631b4b04af"
+        }
+    ]
+}

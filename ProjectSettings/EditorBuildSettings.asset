@@ -6,25 +6,25 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/GripRehab.unity
+    path: Assets/Scenes/3.1-Bootstrap.unity
     guid: 0d609e8f6ef162e45a37a4c467a3d5bf
   - enabled: 1
-    path: Assets/Scenes/Workspace/3.1-Apartment.unity
+    path: Assets/Scenes/3.1-Apartment.unity
     guid: ca9a178fb01b92f4e88d1f015a886eb3
   - enabled: 1
-    path: Assets/Scenes/Workspace/3.1-Lighting.unity
+    path: Assets/Scenes/3.1-Lighting.unity
     guid: ef1d223c0ea2ded409fbfb3cdc647f9e
   - enabled: 1
-    path: Assets/Scenes/Workspace/3.2-PlayerAndSensors.unity
+    path: Assets/Scenes/3.2-PlayerAndSensors.unity
     guid: 0bc6520eba1588a4ebb8231e51ba4f38
   - enabled: 1
-    path: Assets/Scenes/Workspace/3.3-VirtualHands.unity
+    path: Assets/Scenes/3.3-VirtualHands.unity
     guid: 163e1c1e5d7f5cb438fc93eb9f33905e
   - enabled: 1
-    path: Assets/Scenes/Workspace/3.4.1-Interaction.unity
+    path: Assets/Scenes/3.4.1-Interaction.unity
     guid: a4341d11bc0ad4340b23eb9253760bc2
   - enabled: 1
-    path: Assets/Scenes/Workspace/3.4-Interface.unity
+    path: Assets/Scenes/3.4-Interface.unity
     guid: bf958e5f9e7fcb84fa5646eb69192015
   - enabled: 1
     path: Assets/UI/GripUiGallery.unity

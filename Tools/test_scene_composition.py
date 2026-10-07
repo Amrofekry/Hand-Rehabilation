@@ -11,7 +11,7 @@ class SceneCompositionTests(unittest.TestCase):
         self.assertLess(MAIN.stat().st_size, 10000)
         self.assertEqual(MAIN.read_text().count('GripRehab.Composition.SceneBootstrap'), 1)
         self.assertNotIn('GripRehab.ApartmentExperience', MAIN.read_text())
-        self.assertTrue((ROOT/'Assets/Scenes/Archive/GripRehab-BeforeSceneSplit.unity').exists())
+        self.assertTrue((ROOT/'Assets/SceneBackups/GripRehab-BeforeSceneSplit.unity').exists())
 
     def test_staged_roots_are_inactive_on_disk(self):
         manifest = MANIFEST.read_text()
@@ -36,7 +36,15 @@ class SceneCompositionTests(unittest.TestCase):
         build = re.findall(r'^    path: (.+)$',saved,re.M)
         self.assertEqual(build[0], MAIN.relative_to(ROOT).as_posix())
         for path in paths(): self.assertIn(path.relative_to(ROOT).as_posix(),build)
-        self.assertFalse(any('Archive/' in p for p in build))
+        self.assertFalse(any('Archive/' in p or 'SceneBackups/' in p for p in build))
+
+    def test_scenes_folder_is_flat_and_contains_only_scenes(self):
+        folder=ROOT/'Assets/Scenes'
+        self.assertEqual(list(p for p in folder.iterdir() if p.is_dir()), [])
+        self.assertEqual({p.suffix for p in folder.iterdir()}, {'.unity','.meta'})
+        self.assertEqual(len(list(folder.glob('*.unity'))),7)
+        self.assertEqual(MAIN.name,'3.1-Bootstrap.unity')
+        self.assertTrue(all(p.parent==folder for p in paths()))
 
     def test_reference_binding_precedes_activation(self):
         source = (ROOT/'Assets/Rehab/3.1-environment/Composition/SceneBootstrap.cs').read_text()
