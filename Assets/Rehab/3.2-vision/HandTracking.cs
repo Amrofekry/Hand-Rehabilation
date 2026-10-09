@@ -16,6 +16,10 @@ namespace GripRehab
         public string gesture;
         public float gestureConfidence;
         public Vector3[] landmarks;
+        // Optional v1 extensions. World points describe estimated hand shape,
+        // centred on the hand; they do not locate the wrist in the apartment.
+        public Vector3[] worldLandmarks;
+        public int imageWidth, imageHeight;
     }
 
     public static class HandKinematics
@@ -45,11 +49,62 @@ namespace GripRehab
                 double.IsNaN(frame.captureSeconds) || double.IsInfinity(frame.captureSeconds) ||
                 frame.captureSeconds < 0 || float.IsNaN(frame.ageMs) ||
                 float.IsInfinity(frame.ageMs) || frame.ageMs < 0 || frame.ageMs >= 500) return false;
+            if ((frame.imageWidth != 0 || frame.imageHeight != 0) &&
+                (frame.imageWidth < 1 || frame.imageHeight < 1 ||
+                 frame.imageWidth > 8192 || frame.imageHeight > 8192)) return false;
+            if (frame.worldLandmarks != null && frame.worldLandmarks.Length != 0)
+            {
+                if (frame.worldLandmarks.Length != 21) return false;
+                foreach (var p in frame.worldLandmarks)
+                    if (!Finite(p) || Mathf.Abs(p.x) > 2 || Mathf.Abs(p.y) > 2 || Mathf.Abs(p.z) > 2) return false;
+            }
             foreach (var p in frame.landmarks)
                 if (float.IsNaN(p.x) || float.IsNaN(p.y) || float.IsNaN(p.z) ||
                     float.IsInfinity(p.x) || float.IsInfinity(p.y) || float.IsInfinity(p.z) ||
                     p.x < -.2f || p.x > 1.2f || p.y < -.2f || p.y > 1.2f || Mathf.Abs(p.z) > 4f) return false;
             return true;
+        }
+
+        static bool Finite(Vector3 p) =>
+            !float.IsNaN(p.x) && !float.IsNaN(p.y) && !float.IsNaN(p.z) &&
+            !float.IsInfinity(p.x) && !float.IsInfinity(p.y) && !float.IsInfinity(p.z);
+
+        public static bool HasWorldPose(LandmarkFrame frame) =>
+            frame?.worldLandmarks != null && frame.worldLandmarks.Length == 21;
+
+        // Angles require one coordinate scale. Normalized x/z use image width;
+        // normalized y uses image height. Keep old packets without dimensions
+        // compatible, and prefer the model's isotropic estimated world points.
+        public static Vector3 PosePoint(LandmarkFrame frame, int index, bool reflectHorizontal = false)
+        {
+            Vector3 delta;
+            if (HasWorldPose(frame)) delta = frame.worldLandmarks[index] - frame.worldLandmarks[0];
+            else
+            {
+                delta = frame.landmarks[index] - frame.landmarks[0];
+                if (frame.imageWidth > 0 && frame.imageHeight > 0)
+                    delta.y *= (float)frame.imageHeight / frame.imageWidth;
+            }
+            return new Vector3(reflectHorizontal ? -delta.x : delta.x, -delta.y, -delta.z);
+        }
+
+        public static bool TryPalmBasis(Vector3 lateral, Vector3 towardFingers, out Quaternion basis)
+        {
+            basis = Quaternion.identity;
+            if (!Finite(lateral) || !Finite(towardFingers) ||
+                lateral.sqrMagnitude < 1e-8f || towardFingers.sqrMagnitude < 1e-8f) return false;
+            var up = towardFingers.normalized;
+            var side = Vector3.ProjectOnPlane(lateral.normalized, up);
+            if (side.sqrMagnitude < .01f) return false; // Collapsed/collinear palm.
+            basis = Quaternion.LookRotation(Vector3.Cross(side.normalized, up).normalized, up);
+            return true;
+        }
+
+        public static bool HasPoseGeometry(LandmarkFrame frame)
+        {
+            if (!IsUsable(frame)) return false;
+            return TryPalmBasis(PosePoint(frame, 5) - PosePoint(frame, 17),
+                PosePoint(frame, 9), out _);
         }
 
         // Dimensionless visual closure; never interpret it as measured grip force.
@@ -61,8 +116,8 @@ namespace GripRehab
             for (int finger = 0; finger < 4; finger++)
             {
                 int mcp = 5 + finger * 4;
-                Vector3 a = frame.landmarks[mcp], b = frame.landmarks[mcp + 1];
-                Vector3 c = frame.landmarks[mcp + 2], d = frame.landmarks[mcp + 3];
+                Vector3 a = PosePoint(frame, mcp), b = PosePoint(frame, mcp + 1);
+                Vector3 c = PosePoint(frame, mcp + 2), d = PosePoint(frame, mcp + 3);
                 float segment = Vector3.Distance(a, b);
                 if (segment < .003f) return 0;
                 float tipRatio = Vector3.Distance(a, d) / segment;
@@ -71,6 +126,17 @@ namespace GripRehab
                 total += .65f * Mathf.Clamp01(bend) + .35f * proximity;
             }
             return total / 4f;
+        }
+
+        // Thumb/index opposition is independent of the other three fingers.
+        // Normalize by palm width: a pinch should not change with camera distance.
+        public static float PinchScore(LandmarkFrame frame)
+        {
+            if(!HasPoseGeometry(frame))return 0;
+            float span=Vector3.Distance(PosePoint(frame,5),PosePoint(frame,17));
+            if(span<.005f)return 0;
+            float aperture=Vector3.Distance(PosePoint(frame,4),PosePoint(frame,8))/span;
+            return 1-Mathf.Clamp01((aperture-.1f)/.35f);
         }
 
         static float FingerBend(Vector3 a, Vector3 b, Vector3 c)
