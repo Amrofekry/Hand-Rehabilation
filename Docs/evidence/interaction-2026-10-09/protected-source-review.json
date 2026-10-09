@@ -1,0 +1,35 @@
+{
+  "scope": "Authorized tracking, grasp and deformation repair only",
+  "changes": {
+    "Assets/Editor/RehabGateRunner.cs": {
+      "previousSha256": "52c8dcd5c14f3cc11bf5d2eaaed57939b0bd770a09b3988532f295e3e1fb2776",
+      "currentSha256": "77a2ade175e647f473d7052220a1955f403ea9ba82f1b3f63716bdfe00d251f4",
+      "reason": "User-authorized CV smoothing, pinch intent, coherent grasp/deformation and native test gate; vendor/UI baseline preserved."
+    },
+    "Assets/Rehab/3.2-vision/HandTracking.cs": {
+      "previousSha256": "79d93317ee7f5bc7ac0f1af6d12a3d8d3d51d4184980aa93123582cac886b17a",
+      "currentSha256": "3a4d2b0daaf63b4123c1eed01d3f2b649b1cc840d5555208e4c35c5532fbb054",
+      "reason": "User-authorized CV smoothing, pinch intent, coherent grasp/deformation and native test gate; vendor/UI baseline preserved."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "5079dd4c5fe5136547b3ce8297533f522cd9a73cab1ee0befb8a880d4502908b",
+      "currentSha256": "9a1859f3c4d827ca7b6d64f9fff2d63b0031185df792728f8e28ad6c95de9480",
+      "reason": "User-authorized CV smoothing, pinch intent, coherent grasp/deformation and native test gate; vendor/UI baseline preserved."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
+      "previousSha256": "c652e4c9e7dc85a649677ab067507ca10646dc3ea12bffdb39d961ebf6afa8a5",
+      "currentSha256": "245af1d446d398837aa93baa4a79f90c20af7dd86e8d8eec0c9fe5eeb15c4311",
+      "reason": "User-authorized CV smoothing, pinch intent, coherent grasp/deformation and native test gate; vendor/UI baseline preserved."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "9a5cad234325c4988f8999693ac2656b7f74df2d2e7a8eb94a7a02c10fe16d20",
+      "currentSha256": "ac53f1521f460d2a780b3f0e9babe59dce0e175ac1f18893b1f273b5772dffb5",
+      "reason": "User-authorized CV smoothing, pinch intent, coherent grasp/deformation and native test gate; vendor/UI baseline preserved."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "73149f381f0cc8700ade7dbe43d06b4182db9a80fcbc735be86bd700a038f6f8",
+      "currentSha256": "966b07c7df4d1f3d0d6c4b29cb31ad28d58f516f6058c654a8eda81c3a5ef891",
+      "reason": "Uniformly scale the fabricated hand; replace the invalid fixed-table grid with a declared controlled aperture fixture for acquisition through UDP, preserving production thumb-plus-finger criteria. Authored table depth alignment is not validated."
+    }
+  }
+}

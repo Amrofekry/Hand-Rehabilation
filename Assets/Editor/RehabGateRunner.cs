@@ -201,6 +201,11 @@ namespace GripRehab.Editor
                         ResearchJourneyQA.Begin();
                         Write("RUNNING", command, "Three isolated account journey Play/Stop cycles requested");
                         break;
+                    case "contact-verify":
+                        HandSurfaceVerification.Run();
+                        SoftBodyVerification.Run();
+                        Write("PASS", command, "Native surface and material checks completed");
+                        break;
                     case "build":
                         RehabVerification.BuildWindows();
                         Write("PASS", command, "Windows build completed");

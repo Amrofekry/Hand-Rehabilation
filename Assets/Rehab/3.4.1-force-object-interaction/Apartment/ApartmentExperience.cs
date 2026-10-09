@@ -23,6 +23,8 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public float ForceNewtons{get;private set;}
  public float ContactForceNewtons{get;private set;}
  public bool IsSensorLive=>Hardware&&ForceValid&&!forceReceiver.State.IsSynthetic;
+ public double LastResolveMs{get;private set;}public double LastPressureMs{get;private set;}public double LastRefineMs{get;private set;}
+ public double LastContactMs{get;private set;}
  public double ContactMeanMs{get;private set;}
  public double ContactMaxMs{get;private set;}
  public bool ForceValid{get;private set;}
@@ -37,6 +39,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public string Status{get;private set;}="Ready";
  private readonly Collider[] _clearanceOverlaps=new Collider[64];
  private readonly RaycastHit[] _clearanceHits=new RaycastHit[64];
+ private Vector3 _cameraGripAnchor;private bool _cameraAnchoredGrip;
  private Quaternion _heldRotationOffset;private Collider[] _playerColliders;
  private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime;private bool _cameraReleaseBlocked;
  private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
@@ -86,11 +89,11 @@ public sealed class ApartmentExperience:MonoBehaviour {
   bool cameraValid=cameraTracked&&!player.Paused;
   if(CameraMode){
    ForceValid=cameraValid;
-   CameraGripScore=cameraTracked?HandKinematics.GripScore(selectedFrame):0;
+   CameraGripScore=cameraTracked?Mathf.Max(HandKinematics.GripScore(selectedFrame),HandKinematics.PinchScore(selectedFrame)):0;
    _cameraGrip.Step(CameraGripScore,cameraValid,Time.deltaTime,settings.cameraCloseAt,settings.cameraOpenAt,settings.cameraGestureDwellSeconds);
    if(cameraValid&&!_cameraGrip.Closed&&CameraGripScore<=settings.cameraOpenAt)_cameraReleaseBlocked=false;
    if(!cameraValid&&Held!=null){Release();Status="Camera tracking lost - object released";}
-   else if(_cameraGrip.Closed&&CameraGripScore>=settings.cameraCloseAt)_summonGraceUntil=0;
+   else if(_cameraGrip.Closed)_summonGraceUntil=0;
    else if(Held!=null&&Time.unscaledTime>=_summonGraceUntil){Release();Status="Hand opened - object released";}
    ForceNewtons=cameraValid?Mathf.MoveTowards(ForceNewtons,CameraGripScore*settings.cameraVisualMaxNewtons,90*Time.deltaTime):0;
   } else if(Hardware){
@@ -157,32 +160,47 @@ public sealed class ApartmentExperience:MonoBehaviour {
     (Input.GetKey(KeyCode.PageUp)?1:0)-(Input.GetKey(KeyCode.PageDown)?1:0));
   if(motion.sqrMagnitude>0)SetDemoHandOffset(_leftDemoSelected,(_leftDemoSelected?_manualLeft:_manualRight)+Vector3.ClampMagnitude(motion,1)*.32f*Time.deltaTime);
  }
- int _surfaceFrame=-1;float _surfacePendingDt;
- private void FixedUpdate(){
-   // Avoid a surface-query/mesh-upload catch-up spiral after a slow frame.
-   // Preserve normal fixed-step elapsed time; cap hitches with the existing
-   // deformation integrator's safe dt. Rigidbody movement remains fixed-step.
-   _surfacePendingDt=ContactDeformation.SafeDt(_surfacePendingDt+Time.fixedDeltaTime);
-   if(_surfaceFrame!=Time.frameCount){
-    _surfaceFrame=Time.frameCount;float step=_surfacePendingDt;_surfacePendingDt=0;
-    long before=System.Diagnostics.Stopwatch.GetTimestamp();
-    if(surfaceGuard!=null)surfaceGuard.ResolveContacts();
-    if(contactRig!=null)contactRig.ClearForces();
-    bool current=ForceValid&&(Hardware?forceReceiver.TryGetSample(Time.realtimeSinceStartupAsDouble,out _):!CameraMode||(LeftSelected?vision.LeftValid:vision.RightValid));
-    using(ContactMarker.Auto())foreach(var item in objects)if(item!=null)item.ApplyContacts(contactRig,item==Held&&current?ContactForceNewtons:0,step);
-    double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
-    _contactTicks++;ContactMeanMs+=(elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
+ // One render-frame transaction, called after the native SDK pose update.
+ // Held bodies are kinematic; free bodies retain their normal physics step.
+ public void UpdateHeldSurface(){
+  float step=ContactDeformation.SafeDt(Time.deltaTime);
+  if(step<=0)return;
+  long before=System.Diagnostics.Stopwatch.GetTimestamp();
+  if(Held!=null){
+   if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;_velocity=Vector3.zero;_task.Reset();}
+   else if(TrySafeGripTarget(Held,out var requested)){
+    _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.deltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
+    _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
+    Held.MoveHeld(requested,GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
+   }else _velocity=Vector3.zero;
+  }
+  long stage=System.Diagnostics.Stopwatch.GetTimestamp();
+  if(surfaceGuard!=null)surfaceGuard.ResolveContacts();
+  LastResolveMs=(System.Diagnostics.Stopwatch.GetTimestamp()-stage)*1000.0/System.Diagnostics.Stopwatch.Frequency;stage=System.Diagnostics.Stopwatch.GetTimestamp();
+  if(contactRig!=null)contactRig.ClearForces();
+  bool current=ForceValid&&(Hardware?forceReceiver.TryGetSample(Time.realtimeSinceStartupAsDouble,out _):!CameraMode||(LeftSelected?vision.LeftValid:vision.RightValid));
+  if(current&&ContactForceNewtons>1&&Held!=null&&Held.ContactCount==0&&surfaceGuard!=null){
+   float gap=surfaceGuard.Skin.NearestGap(Held,surfaceGuard.maximumGripFit,out var normal);
+   if(float.IsFinite(gap)&&gap>Held.handContactTolerance&&gap<=surfaceGuard.maximumGripFit){
+    var worldOffset=Vector3.ClampMagnitude(ActiveHand.transform.TransformVector(_gripFitOffset)+normal*Mathf.Min(gap-Held.handContactTolerance*.5f,surfaceGuard.gripFitSpeed*step),surfaceGuard.maximumGripFit);
+    var proposed=ActiveHand.transform.InverseTransformVector(worldOffset);
+    var previous=_gripFitOffset;_gripFitOffset=proposed;
+    if(TrySafeGripTarget(Held,out var fitted)){Held.MoveHeld(fitted,GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));_lastHeld=fitted;surfaceGuard.ResolveContacts();}
+    else _gripFitOffset=previous;
    }
-  if(Held==null)return;
-  if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;_velocity=Vector3.zero;_task.Reset();return;}
-
-  if(!TrySafeGripTarget(Held,out var requested)){_velocity=Vector3.zero;return;}
-  _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
-  _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
-  Held.MoveHeld(requested,GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
+  }
+  using(ContactMarker.Auto())foreach(var item in objects)if(item!=null)item.ApplyContacts(contactRig,item==Held&&current?ContactForceNewtons:0,step);
+  LastPressureMs=(System.Diagnostics.Stopwatch.GetTimestamp()-stage)*1000.0/System.Diagnostics.Stopwatch.Frequency;stage=System.Diagnostics.Stopwatch.GetTimestamp();
+  surfaceGuard?.FinishSurfaceStep();
+  LastRefineMs=(System.Diagnostics.Stopwatch.GetTimestamp()-stage)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+  double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+  LastContactMs=elapsed;_contactTicks++;ContactMeanMs+=(elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
  }
  private Vector3 RawPad(Transform[] bones,int index)=>surfaceGuard!=null&&surfaceGuard.TryRawPad(index,out var p)?p:bones[index].position;
- private Vector3 GripTarget(SqueezableObject item){
+ Vector3 _gripFitOffset;
+ private Vector3 GripTarget(SqueezableObject item)=>UnfittedGripTarget(item)+ActiveHand.transform.TransformVector(_gripFitOffset);
+ private Vector3 UnfittedGripTarget(SqueezableObject item){
+  if(CameraMode&&_cameraAnchoredGrip&&item==Held)return ActiveHand.transform.TransformPoint(_cameraGripAnchor);
   if(item!=null&&surfaceGuard!=null&&surfaceGuard.TryGripFrame(item,out var grip))return grip;
   var lift=player.IsSeated?settings.seatedHandsLiftMeters:0;
   var handOffset=ActiveHand.transform.localPosition-(LeftSelected?_leftRest:_rightRest)-Vector3.up*lift;
@@ -246,15 +264,20 @@ public sealed class ApartmentExperience:MonoBehaviour {
   return false;
  }
  private bool BeginGrab(SqueezableObject item,bool summon){
+  _cameraAnchoredGrip=false;_gripFitOffset=Vector3.zero;
   if(!TrySafeGripTarget(item,out var target)){Status="Not enough space for this object; move away from the wall";return false;}
+  // A naturally acquired object keeps the observed grasp offset; do not
+  // snap a pinch into a fixed palm-centred power-grip position.
+  if(CameraMode&&!summon)target=item.Body.position;
   if(!item.Grab())return false;
   Held=item;
+  if(CameraMode){_cameraGripAnchor=ActiveHand.transform.InverseTransformPoint(target);_cameraAnchoredGrip=true;}
   if(_playerColliders==null)_playerColliders=player.GetComponentsInChildren<Collider>(true);
   item.ProtectFromPlayer(_playerColliders);
   Quaternion initial=summon?holdAnchor.rotation:item.Body.rotation;
   _heldRotationOffset=GraspMotionPolicy.RelativeRotation(ActiveHand.transform.rotation,initial);
   // Pickup is explicit relocation, never a source of release momentum.
-  item.Body.position=target;item.Body.rotation=initial;Physics.SyncTransforms();
+  item.Body.position=target;item.Body.rotation=initial;item.InvalidateSurfacePose();Physics.SyncTransforms();
   _lastHeld=target;_lastMotionTime=Time.unscaledTime;_velocity=Vector3.zero;_task.Reset();
   _lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;
   return true;
@@ -279,10 +302,15 @@ public sealed class ApartmentExperience:MonoBehaviour {
  // Closing fingers near a visible object grabs it without E. A distant fist cannot pick it up.
  private void TryCameraGrab(){
   if(contactRig==null||contactRig.contactBones==null)return;
-  SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;
+  SqueezableObject nearest=null;float best=Mathf.Min(settings.cameraGrabRadiusMeters,.035f);
   foreach(var item in objects){
    if(!CanReach(item))continue;
-   foreach(var bone in contactRig.contactBones){
+   var input=ActiveHand.joints;
+   var thumb=input[14].childCount>0?input[14].GetChild(0).position:input[14].position;
+   float thumbGap=Vector3.Distance(thumb,item.ClosestSurface(thumb));
+   if(thumbGap>Mathf.Min(settings.cameraGrabRadiusMeters,.035f))continue;
+   for(int finger=0;finger<4;finger++){
+    var bone=input[finger*3+2];
     if(bone==null)continue;
     var tip=bone.childCount>0?bone.GetChild(0).position:bone.position;
     float distance=Vector3.Distance(tip,item.ClosestSurface(tip));

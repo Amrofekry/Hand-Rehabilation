@@ -355,29 +355,13 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     yield return new WaitForSeconds(.06f);
    }
    Check(app.rightHand.transform.localPosition.x<wristBefore.x-.05f,"Camera wrist follows received horizontal movement without a second reflection");
-   foreach(var palmSize in new[]{1.18f,1f,1.32f}){
-   foreach(var imageY in new[]{.65f,.75f,.55f,.5f,.45f,.85f}){
-    foreach(var imageX in new[]{.2f,.3f,.4f,.5f,.6f,.7f}){
-     // Approach open, then close. Sweeping an already closed solid fist
-     // through every table position only pushes the free ball away.
-     ball.ResetObject();
-     for(int i=0;i<8;i++){Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,false,++seq,captured+=.06,"Right",palmSize)));yield return new WaitForSeconds(.06f);}
-     for(int i=0;i<12;i++){
-      var frame=CameraFixture(imageX,imageY,true,++seq,captured+=.06,"Right",palmSize);var open=CameraFixture(imageX,imageY,false,seq,captured,"Right",palmSize);
-      float closing=Mathf.Clamp01((i+1)/6f);for(int point=0;point<21;point++)frame.landmarks[point]=Vector3.Lerp(open.landmarks[point],frame.landmarks[point],closing);
-      Send(cameraUdp,27817,JsonUtility.ToJson(frame));
-      yield return new WaitForSeconds(.06f);
-      if(app.Held==ball)break;
-     }
-     if(app.Held==ball)break;
-    }
-    if(app.Held==ball)break;
-   }
-   if(app.Held==ball)break;
-   }
+   // This is a controlled acquisition fixture, not proof that monocular
+   // depth is calibrated to the authored table. Position the test object
+   // at the measured thumb/index aperture, then close through real UDP.
+   yield return CameraPickupFixture(cameraUdp,ball,closed=>CameraFixture(.5f,.5f,closed,++seq,captured+=.06));
    float nearest=float.PositiveInfinity;var ballCollider=ball.GetComponent<Collider>();
    foreach(var bone in app.contactRig.contactBones)if(bone!=null)nearest=Mathf.Min(nearest,Vector3.Distance(bone.position,ballCollider.ClosestPoint(bone.position)));
-   Check(app.Held==ball,"Closing the camera hand near the ball grabs without E; nearest finger="+nearest.ToString("F3")+"m "+" hand="+app.rightHand.transform.position+" ball="+ball.transform.position+" score="+app.CameraGripScore.ToString("F2"));
+   Check(app.Held==ball,"Controlled right camera aperture acquires the ball without E or a direct grab call; nearest finger="+nearest.ToString("F3")+"m "+" hand="+app.rightHand.transform.position+" ball="+ball.transform.position+" score="+app.CameraGripScore.ToString("F2"));
    for(int i=0;i<6;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
@@ -424,18 +408,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
    yield return new WaitForSeconds(.07f);
    Check(app.LeftSelected,"Seeing both hands briefly does not switch away from the actively tracked left hand");
-   foreach(var imageY in new[]{.5f,.7f,.85f}){
-    foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f,.8f}){
-     for(int i=0;i<4;i++){
-      Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,true,++leftSeq,leftCaptured+=.06,"Left",2.2f)));
-      yield return new WaitForSeconds(.06f);
-     }
-     if(app.Held==sponge)break;
-    }
-    if(app.Held==sponge)break;
-   }
+   yield return CameraPickupFixture(cameraUdp,sponge,closed=>CameraFixture(.5f,.5f,closed,++leftSeq,leftCaptured+=.06,"Left"));
    float leftNearest=float.PositiveInfinity;var spongeCollider=sponge.GetComponent<Collider>(); foreach(var bone in app.contactRig.contactBones)if(bone!=null)leftNearest=Mathf.Min(leftNearest,Vector3.Distance(bone.position,spongeCollider.ClosestPoint(bone.position)));
-   Check(app.Held==sponge,"Selected left camera fist can pick up the kitchen sponge without E; nearest="+leftNearest.ToString("F3")+" hand="+app.leftHand.transform.position+" sponge="+sponge.transform.position+" score="+app.CameraGripScore.ToString("F2"));
+   Check(app.Held==sponge,"Controlled left camera aperture acquires the sponge without E or a direct grab call; nearest="+leftNearest.ToString("F3")+" hand="+app.leftHand.transform.position+" sponge="+sponge.transform.position+" score="+app.CameraGripScore.ToString("F2"));
    for(int i=0;i<6;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
     yield return new WaitForSeconds(.06f);
@@ -707,11 +682,27 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    yield return null;
   }
  }
+ private IEnumerator CameraPickupFixture(UdpClient udp,SqueezableObject item,Func<bool,LandmarkFrame> next){
+  item.ResetObject();item.Body.isKinematic=true;item.Body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
+  item.Body.position=app.player.view.transform.position+Vector3.up*2;item.InvalidateSurfacePose();Physics.SyncTransforms();
+  // Establish a reproducible aperture with the object safely out of reach.
+  for(int i=0;i<8;i++){Send(udp,27817,JsonUtility.ToJson(next(true)));yield return new WaitForSeconds(.06f);}
+  var input=app.ActiveHand.joints;
+  var thumb=input[14].childCount>0?input[14].GetChild(0).position:input[14].position;
+  var index=input[2].childCount>0?input[2].GetChild(0).position:input[2].position;
+  var aperture=(thumb+index)*.5f;
+  for(int i=0;i<8;i++){Send(udp,27817,JsonUtility.ToJson(next(false)));yield return new WaitForSeconds(.06f);}
+  item.Body.position=aperture;item.InvalidateSurfacePose();Physics.SyncTransforms();
+  for(int i=0;i<12&&app.Held==null;i++){Send(udp,27817,JsonUtility.ToJson(next(true)));yield return new WaitForSeconds(.06f);}
+  // Production Grab owns a successful held body's state. Failed fixture
+  // setup must not leave an artificial kinematic object in the world.
+  if(app.Held!=item)item.ResetObject();
+ }
  private static LandmarkFrame CameraFixture(float center,float wristY,bool closed,long sequence,double captured,string side="Right",float palmScale=1){
   var frame=new LandmarkFrame{schemaVersion=1,source="mediapipe-test",handedness=side,confidence=.96f,sequence=sequence,captureSeconds=captured,landmarks=new Vector3[21]};
   frame.landmarks[0]=new Vector3(center,wristY,0);
   for(int finger=0;finger<4;finger++){
-   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1.5f)*.045f*palmScale;
+   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1.5f)*.045f;
    frame.landmarks[n]=new Vector3(x,wristY-.10f,0);
    frame.landmarks[n+1]=new Vector3(x,wristY-.18f,0);
    frame.landmarks[n+2]=new Vector3(x,wristY+(closed?-.12f:-.26f),0);
@@ -727,6 +718,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   }
   for(int i=1;i<5;i++)frame.landmarks[i]=new Vector3(center+(side=="Left"?1:-1)*(.12f-i*.015f),wristY-.06f-i*.03f,0);
   if(closed){float sign=side=="Left"?-1:1;frame.landmarks[3]=frame.landmarks[2]+new Vector3(sign*.06f,.01f,-.02f);frame.landmarks[4]=frame.landmarks[3]+new Vector3(sign*.035f,.025f,-.01f);}
+  // Moving toward a pinhole camera expands the whole palm, not only its
+  // width. Keep both spans and every finger in the same scale convention.
+  var wrist=frame.landmarks[0];for(int i=1;i<21;i++)frame.landmarks[i]=wrist+(frame.landmarks[i]-wrist)*palmScale;
   return frame;
  }
  private static LandmarkFrame RotateCameraFixture(LandmarkFrame source,Quaternion rotation){

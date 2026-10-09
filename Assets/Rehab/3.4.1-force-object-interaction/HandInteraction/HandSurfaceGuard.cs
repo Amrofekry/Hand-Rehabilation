@@ -8,15 +8,21 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
  public ApartmentExperience app;
  public HandSkinData skinData;
  [Header("Surface limits")][Range(.0001f,.005f)] public float surfacePadding=.0005f;
+ [Tooltip("Sub-millimetre correction hysteresis prevents repeated opening/closing from numerical surface noise.")][Range(0,.001f)] public float correctionSlop=.0003f;
  [Range(4,12)] public int jointSearchSteps=8;
  [Tooltip("Test the closing arc, so a finger cannot pass through an object and finish on its other side.")][Range(1,8)] public float maximumSweepAngle=4;
+ [Tooltip("Thin hollow walls need smaller articulated sweep steps; otherwise three joints can cross a wall between samples.")][Range(.1f,2)] public float hollowSweepAngle=.5f;
  [Range(1,6)] public int passes=3;
  [Tooltip("Allow a blocked finger to open slightly beyond its neutral pose before closing against a surface.")][Range(0,25)] public float maximumContactOpeningDegrees=15;
  [Range(.01f,.25f)] public float maximumWristCorrection=.15f;
  [Tooltip("Move a cup's grasp from knuckles toward the finger pads, keeping the body clear of the palm.")][Range(0,1)] public float cupPadBias=1;
  [Tooltip("Cached visible skin samples per bone; palm uses three times this count. Re-enter Play after changing.")][Range(8,24)] public int skinSamplesPerSegment=24;
  public HandSkinSurface Skin{get;private set;}
+ [Header("Held grip fit")]
+ [Tooltip("Maximum object adjustment inside a held grasp after a soft contact patch retreats; never moves the player.")][Range(0,.04f)] public float maximumGripFit=.025f;
+ [Tooltip("Bounded settling speed of the held object; no teleport to a fixed palm anchor.")][Range(.005f,.1f)] public float gripFitSpeed=.04f;
  [Header("Debug")] public bool showGizmos;
+ public Vector3 ResolvedWristOffset=>localWristCorrection;
  public float WristCorrectionMeters{get;private set;} public int LimitedJoints{get;private set;}public float ResidualPenetration{get;private set;}
  readonly Quaternion[][] rest={new Quaternion[15],new Quaternion[15]};
  readonly bool[] initialized=new bool[2];readonly Quaternion[] target=new Quaternion[15];
@@ -24,7 +30,7 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
  readonly Vector3[] padReach=new Vector3[2];readonly Vector3[] openPads=new Vector3[2],inward=new Vector3[2],across=new Vector3[2];
  readonly Vector3[] rawPads=new Vector3[15],resolvedPoints=new Vector3[15];readonly Quaternion[] resolvedRotations=new Quaternion[15];Vector3 resolvedWrist;Quaternion resolvedWristRotation;bool resolved;bool resolvedLeft;SqueezableObject resolvedHeld;
  readonly Vector3[] cachedInputPoints=new Vector3[15];readonly Quaternion[] cachedInputRotations=new Quaternion[15];readonly bool[] blockedFingers=new bool[5];
- Vector3 cachedInputWrist,cachedObjectPosition;Quaternion cachedInputWristRotation,cachedObjectRotation;Transform wrist;bool lastLeft;
+ Vector3 cachedInputWrist,cachedObjectPosition;Vector3 localWristCorrection;readonly Quaternion[] solvedLocal=new Quaternion[15];Quaternion cachedInputWristRotation,cachedObjectRotation;Transform wrist;bool lastLeft;
  public bool TryRawPad(int index,out Vector3 point){point=Vector3.zero;if(wrist==null||index<0||index>=15||lastLeft!=app.LeftSelected)return false;point=rawPads[index];return true;}
  void Awake(){
   if(app==null)return;
@@ -51,16 +57,11 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
   centre=hand.transform.TransformPoint(openPads[side]+(item.profile!=null&&item.profile.hollowCup?padReach[side]*cupPadBias:Vector3.zero))+hand.transform.TransformDirection(inward[side])*depth+hand.transform.TransformDirection(across[side])*radius*.2f;
   return true;
  }
- void LateUpdate(){
-  // SDK refreshes its output between fixed ticks. Reapply the solved pose,
-  // without repeating the expensive surface searches every render frame.
-  if(!resolved||app==null||resolvedLeft!=app.LeftSelected||resolvedHeld!=app.Held||(app.Held==null&&WristCorrectionMeters<.00001f))return;
-  var bones=app.contactRig.contactBones;if(bones==null||wrist==null)return;
-  wrist.SetPositionAndRotation(resolvedWrist,resolvedWristRotation);
-  for(int i=0;i<15;i++)bones[i].SetPositionAndRotation(resolvedPoints[i],resolvedRotations[i]);
-  app.contactRig.RefreshGeometry(false);
+ void LateUpdate(){if(app!=null)app.UpdateHeldSurface();}
+ public void FinishSurfaceStep(){
+  if(!resolved||app==null||resolvedHeld!=app.Held||wrist==null)return;
   RefineCurrentSurface(app.Held,app.contactRig);
-  SaveResolvedPose(bones);
+  SaveResolvedPose(app.contactRig.contactBones);
   app.contactRig.RefreshGeometry();
  }
  public void ResolveContacts(){
@@ -87,7 +88,8 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
    // Start the whole chain at its safe open pose. Testing one open joint with
    // the remaining joints still curled incorrectly rejects valid solutions.
    for(int i=0;i<15;i++)bones[i].localRotation=rest[side][i];
-   var start=wrist.position;
+   if(resolved&&held==resolvedHeld&&resolvedLeft==lastLeft)wrist.position=inputWrist.position+inputWrist.TransformVector(localWristCorrection);
+   var start=inputWrist.position;
    ClearWrist(held,inputWrist);
    WristCorrectionMeters=Vector3.Distance(start,wrist.position);
    // Sweep each articulated finger as one chain. A proximal-only sweep can
@@ -110,37 +112,47 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
   if(held!=null)RefineCurrentSurface(held,rig);
   if(held==null)WristCorrectionMeters=Vector3.Distance(inputWrist.position,wrist.position);
   resolvedWrist=wrist.position;resolvedWristRotation=wrist.rotation;resolvedLeft=app.LeftSelected;resolved=true;
-  for(int i=0;i<15;i++){resolvedPoints[i]=bones[i].position;resolvedRotations[i]=bones[i].rotation;cachedInputPoints[i]=app.ActiveHand.joints[i].position;cachedInputRotations[i]=app.ActiveHand.joints[i].rotation;}
+  for(int i=0;i<15;i++){resolvedPoints[i]=bones[i].position;resolvedRotations[i]=bones[i].rotation;cachedInputPoints[i]=inputWrist.InverseTransformPoint(app.ActiveHand.joints[i].position);cachedInputRotations[i]=app.ActiveHand.joints[i].localRotation;}
   resolvedHeld=held;cachedInputWrist=inputWrist.position;cachedInputWristRotation=inputWrist.rotation;
-  if(held!=null){cachedObjectPosition=held.transform.position;cachedObjectRotation=held.transform.rotation;}
+  if(held!=null){cachedObjectPosition=inputWrist.InverseTransformPoint(held.transform.position);cachedObjectRotation=Quaternion.Inverse(inputWrist.rotation)*held.transform.rotation;}
+  SaveResolvedPose(bones);
   rig.RefreshGeometry();
   Skin.Refresh(lastLeft);if(held!=null)ResidualPenetration=Skin.FullDepth(held,out _);
 
  }
  void SweepFingers(SqueezableObject held,FingerContactRig rig,Transform[] bones,int side){
-   Skin.RefreshPose(lastLeft);
+   Skin.RefreshPose(lastLeft);float sweep=held.profile!=null&&held.profile.hollowCup?Mathf.Min(maximumSweepAngle,hollowSweepAngle):maximumSweepAngle;
    for(int f=0;f<5;f++){
     float angle=0;for(int j=0;j<3;j++)angle=Mathf.Max(angle,Quaternion.Angle(rest[side][f*3+j],target[f*3+j]));
     if(angle<.01f)continue;
     float open=0;
     if(FingerBlocked(held,f)){
-     float limit=-Mathf.Min(.6f,maximumContactOpeningDegrees/angle);int opening=Mathf.Max(1,Mathf.CeilToInt(-limit*angle/maximumSweepAngle));
+     float limit=-Mathf.Min(.6f,maximumContactOpeningDegrees/angle);int opening=Mathf.Max(1,Mathf.CeilToInt(-limit*angle/sweep));
      for(int step=1;step<=opening;step++){open=limit*step/opening;SetFinger(bones,side,f,open);if(!FingerBlocked(held,f))break;}
     }
-    int samples=Mathf.Clamp(Mathf.CeilToInt((1-open)*angle/maximumSweepAngle),1,180);float safe=open,blocked=-1;
+    int samples=Mathf.Clamp(Mathf.CeilToInt((1-open)*angle/sweep),1,720);float safe=open,blocked=-1;
     for(int step=1;step<=samples;step++){
-     float t=Mathf.Lerp(open,1,step/(float)samples);SetFinger(bones,side,f,t);rig.RefreshGeometry(false,f*3,f*3+3);
+     float t=Mathf.Lerp(open,1,step/(float)samples);SetFinger(bones,side,f,t);
      if(FingerBlocked(held,f)){blocked=t;break;}safe=t;
     }
     if(blocked<0)continue;
-    for(int n=0;n<jointSearchSteps;n++){float t=(safe+blocked)*.5f;SetFinger(bones,side,f,t);rig.RefreshGeometry(false,f*3,f*3+3);if(FingerBlocked(held,f))blocked=t;else safe=t;}
-    SetFinger(bones,side,f,safe);LimitedJoints+=3;blockedFingers[f]=true;
+    for(int n=0;n<jointSearchSteps;n++){float t=(safe+blocked)*.5f;SetFinger(bones,side,f,t);if(FingerBlocked(held,f))blocked=t;else safe=t;}
+    SetFinger(bones,side,f,safe);if(!blockedFingers[f])LimitedJoints+=3;blockedFingers[f]=true;
    }
  }
  float CurrentDepth(SqueezableObject held,FingerContactRig rig){return Skin.FullDepth(held,out _);}
  void ClearWrist(SqueezableObject held,Transform input){
-  Skin.RefreshPose(lastLeft);if(!Skin.Blocked(held,-1,surfacePadding))return;
-  var original=wrist.position;Skin.CaptureWristSearch(wrist);var away=(original-held.VisibleSurfaceBounds.center).normalized;if(away.sqrMagnitude<.5f)away=-input.forward;
+  Skin.RefreshPose(lastLeft);var original=wrist.position;Skin.CaptureWristSearch(wrist);
+  var correction=original-input.position;
+  // Recover the smallest safe clearance along the previous direction as a
+  // soft object compresses. Retaining the old open-hand offset can otherwise
+  // leave every closed finger in empty space, with zero pressure forever.
+  if(!Skin.BlockedAtTranslation(held,-correction,surfacePadding)){wrist.position=input.position;return;}
+  if(correction.sqrMagnitude>1e-10f&&!Skin.BlockedAtTranslation(held,Vector3.zero,surfacePadding)){
+   float blocked=0,safe=1;for(int n=0;n<jointSearchSteps;n++){float mid=(safe+blocked)*.5f;if(Skin.BlockedAtTranslation(held,correction*(mid-1),surfacePadding))blocked=mid;else safe=mid;}
+   wrist.position=input.position+correction*safe;return;
+  }
+  var away=(original-held.VisibleSurfaceBounds.center).normalized;if(away.sqrMagnitude<.5f)away=-input.forward;
   // Find a safe OPEN hand before closing. Local normal projection can get
   // trapped between opposing contacts; it must not start the closing sweep
   // from an already intersecting palm or neutral thumb.
@@ -157,10 +169,15 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
    }
   }wrist.position=original;
  }
- void SaveResolvedPose(Transform[] bones){resolvedWrist=wrist.position;resolvedWristRotation=wrist.rotation;for(int i=0;i<15;i++){resolvedPoints[i]=bones[i].position;resolvedRotations[i]=bones[i].rotation;}}
+ void SaveResolvedPose(Transform[] bones){
+  resolvedWrist=wrist.position;resolvedWristRotation=wrist.rotation;
+  var input=inputWrists[app.LeftSelected?1:0];
+  localWristCorrection=input.InverseTransformVector(wrist.position-input.position);
+  for(int i=0;i<15;i++){resolvedPoints[i]=bones[i].position;resolvedRotations[i]=bones[i].rotation;solvedLocal[i]=bones[i].localRotation;}
+ }
  void RefineCurrentSurface(SqueezableObject held,FingerContactRig rig){
   if(held==null||held.IsBroken)return;
-  rig.RefreshGeometry(false);ResidualPenetration=CurrentDepth(held,rig);if(ResidualPenetration<=surfacePadding)return;
+  rig.RefreshGeometry(false);ResidualPenetration=CurrentDepth(held,rig);if(ResidualPenetration<=surfacePadding+correctionSlop)return;
   int side=app.LeftSelected?1:0;var input=inputWrists[side];if(input==null)return;
   // Rebuild a safe articulated contact pose when the object's shape changes.
   // Never stretch or translate individual bones and never deform the hand.
@@ -170,9 +187,13 @@ public sealed class HandSurfaceGuard:MonoBehaviour {
  }
  bool TryCachedContact(Transform input,Transform[] bones,FingerContactRig rig){
   var held=app.Held;if(!resolved||held==null||held!=resolvedHeld||resolvedLeft!=app.LeftSelected)return false;
-  if((input.position-cachedInputWrist).sqrMagnitude>4e-8f||Quaternion.Angle(input.rotation,cachedInputWristRotation)>.1f||(held.transform.position-cachedObjectPosition).sqrMagnitude>4e-8f||Quaternion.Angle(held.transform.rotation,cachedObjectRotation)>.1f)return false;
-  for(int i=0;i<15;i++)if((app.ActiveHand.joints[i].position-cachedInputPoints[i]).sqrMagnitude>4e-8f||Quaternion.Angle(app.ActiveHand.joints[i].rotation,cachedInputRotations[i])>.1f)return false;
-  wrist.SetPositionAndRotation(resolvedWrist,resolvedWristRotation);for(int i=0;i<15;i++)bones[i].SetPositionAndRotation(resolvedPoints[i],resolvedRotations[i]);rig.RefreshGeometry(false);
+  var relativePosition=input.InverseTransformPoint(held.transform.position);
+  var relativeRotation=Quaternion.Inverse(input.rotation)*held.transform.rotation;
+  if((relativePosition-cachedObjectPosition).sqrMagnitude>4e-8f||Quaternion.Angle(relativeRotation,cachedObjectRotation)>.1f)return false;
+  for(int i=0;i<15;i++)if((input.InverseTransformPoint(app.ActiveHand.joints[i].position)-cachedInputPoints[i]).sqrMagnitude>4e-8f||Quaternion.Angle(app.ActiveHand.joints[i].localRotation,cachedInputRotations[i])>.25f)return false;
+  wrist.SetPositionAndRotation(input.position+input.TransformVector(localWristCorrection),input.rotation);
+  var delta=input.rotation*Quaternion.Inverse(cachedInputWristRotation);for(int i=0;i<15;i++){bones[i].SetPositionAndRotation(input.position+delta*(resolvedPoints[i]-cachedInputWrist),delta*resolvedRotations[i]);rawPads[i]=app.ActiveHand.joints[i].position;}
+  rig.RefreshGeometry(false);
   Skin.Refresh(lastLeft);float worst=0;
   for(int f=0;f<5;f++){float nearest=float.PositiveInfinity;
    for(int j=0;j<3;j++){var probe=rig.probes[f*3+j];if(probe==null||!probe.gameObject.activeInHierarchy)continue;float gap=Skin.Gap(held,f*3+j,out _,out _);nearest=Mathf.Min(nearest,gap);worst=Mathf.Max(worst,-gap);}

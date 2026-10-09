@@ -21,7 +21,7 @@ public static class HandInteractionCorrection {
   var app=UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>();
   if(app==null||app.virtualGrasp==null||app.contactRig.probes.Length!=15)throw new Exception("Direct hand references missing");
   foreach(var t in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include))if(GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject)>0)throw new Exception("Missing scripts: "+t.name);
-  HandSurfaceVerification.Run();RehabIntegrationChecks.Run();SoftBodyVerification.Run();RehabVerification.BuildWindows();
+  HandSurfaceVerification.Run();BurstSurfaceVerification.Run();RehabIntegrationChecks.Run();SoftBodyVerification.Run();RehabVerification.BuildWindows();
  }
 }
 }

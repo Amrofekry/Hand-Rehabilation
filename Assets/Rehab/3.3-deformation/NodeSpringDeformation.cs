@@ -35,12 +35,14 @@ public sealed class NodeSpringDeformation {
   for(int i=0;i<NodeCount;i++){float d=(worldNodes[i]-point).sqrMagnitude;if(d<best){best=d;nearest=i;}}
   // Use the nearest surface normal rather than the center direction: a cup's
   // inner wall has the opposite normal to its outer wall.
-  Vector3 normal=visual.TransformDirection(topology.normals[nearest]).normalized;
-  if(normal.sqrMagnitude<.1f)normal=outward.normalized;
-  Vector3 surface=worldNodes[nearest];float total=0,radius=material.deformationRadiusMeters;
+  Vector3 fallback=visual.TransformDirection(topology.normals[nearest]).normalized;
+  Vector3 normal=outward.sqrMagnitude>.000001f?outward.normalized:fallback;
+  // Use the actual contact, not a quantized nearest-node centre. The latter
+  // jumped the dent between nodes as a fingertip slid over the surface.
+  Vector3 surface=point;float total=0,radius=material.deformationRadiusMeters;
   for(int i=0;i<NodeCount;i++){
    float d=Vector3.Distance(worldNodes[i],surface)/radius;
-   float face=Mathf.Clamp01(Vector3.Dot(topology.normals[nearest],topology.normals[i])*2+.15f);
+   float face=Mathf.Clamp01(Vector3.Dot(normal,visual.TransformDirection(topology.normals[i]).normalized)*2+.15f);
    weights[i]=d<1?(1-d*d)*(1-d*d)*face:0;total+=weights[i];
   }
   if(total<=0)return;

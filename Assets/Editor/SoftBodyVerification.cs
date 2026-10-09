@@ -12,6 +12,8 @@ public static class SoftBodyVerification {
   if(state!=PlayModeStateChange.EnteredEditMode||!UnityEditor.SessionState.GetBool("GripSoftBodyQA.Active",false))return;
   int count=0;foreach(var mesh in Resources.FindObjectsOfTypeAll<Mesh>())if(mesh.name.Contains("contact mesh")||mesh.name.Contains("clipped surface shard")||mesh.name.Contains("damage seams"))count++;
   File.AppendAllText("Logs/deformation-mesh-cleanup.txt","Owned runtime deformation meshes after Stop: "+count+"\n");
+  File.AppendAllText("Logs/deformation-mesh-cleanup.txt","Owned surface query batches after Stop: "+BurstSurfaceBatch.LiveBatches+"\n");
+  if(BurstSurfaceBatch.LiveBatches!=0)UnityEngine.Debug.LogError("[DEFORMATION_CLEANUP] Native surface buffers survived Stop");
   if(count!=0)UnityEngine.Debug.LogError("[DEFORMATION_CLEANUP] Owned meshes survived Stop: "+count);
  };}
 

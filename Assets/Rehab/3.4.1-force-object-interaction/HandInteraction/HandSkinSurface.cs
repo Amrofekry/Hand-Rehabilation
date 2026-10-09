@@ -7,11 +7,13 @@ namespace GripRehab {
 public sealed class HandSkinSurface {
  readonly Vector3[] rest;readonly BoneWeight[] weights;readonly Matrix4x4[] bind,matrices;
  readonly Transform[] bones;readonly int[][][] groups=new int[2][][],fullGroups=new int[2][][],fingerVertices=new int[2][][];
+ readonly Vector3[] queryPoints;readonly int[] queryIndices;
  readonly Vector3[] points;readonly int[] groupForVertex;readonly int[][] visibleVertices=new int[2][];bool left;
  readonly int[] boneGroups;readonly Vector3[] searchPoints;readonly float[] searchMobility;readonly bool[] searchBones;
  public Bounds Bounds{get;private set;}
  public HandSkinSurface(RehabVirtualGrasp hand,int samplesPerSegment,HandSkinData data){
   if(data==null||data.vertices==null||data.weights==null||data.vertices.Length!=data.weights.Length)throw new ArgumentException("Missing baked project-owned hand surface data");
+  queryPoints=new Vector3[data.vertices.Length];queryIndices=new int[data.vertices.Length];
   rest=data.vertices;weights=data.weights;bind=data.bindPoses;bones=hand.outputMesh.bones;
   matrices=new Matrix4x4[bones.Length];points=new Vector3[rest.Length];groupForVertex=new int[rest.Length];
   boneGroups=new int[bones.Length];for(int i=0;i<bones.Length;i++)boneGroups[i]=Group(bones[i].name);
@@ -46,8 +48,8 @@ public sealed class HandSkinSurface {
  }
  public void Refresh(bool selectedLeft){
   RefreshPose(selectedLeft);bool first=true;var bounds=new Bounds();
-  foreach(var indices in groups[left?1:0])foreach(int v in indices){var w=weights[v];var x=rest[v];
-   points[v]=matrices[w.boneIndex0].MultiplyPoint3x4(x)*w.weight0+matrices[w.boneIndex1].MultiplyPoint3x4(x)*w.weight1+matrices[w.boneIndex2].MultiplyPoint3x4(x)*w.weight2+matrices[w.boneIndex3].MultiplyPoint3x4(x)*w.weight3;
+  foreach(var indices in groups[left?1:0])foreach(int v in indices){
+   points[v]=World(v);
    if(first){bounds=new Bounds(points[v],Vector3.zero);first=false;}else bounds.Encapsulate(points[v]);
   }Bounds=bounds;
  }
@@ -58,41 +60,65 @@ public sealed class HandSkinSurface {
   foreach(int v in visibleVertices[left?1:0]){searchPoints[v]=World(v);var w=weights[v];searchMobility[v]=(searchBones[w.boneIndex0]?w.weight0:0)+(searchBones[w.boneIndex1]?w.weight1:0)+(searchBones[w.boneIndex2]?w.weight2:0)+(searchBones[w.boneIndex3]?w.weight3:0);}
  }
  public bool BlockedAtTranslation(SqueezableObject item,Vector3 delta,float padding){
-  var bounds=item.VisibleSurfaceBounds;foreach(int v in visibleVertices[left?1:0]){var q=searchPoints[v]+delta*searchMobility[v];if(bounds.Contains(q)&&item.SkinBlocked(q,padding))return true;}return false;
+  if(!item.PrepareSkinQueries())return false;var bounds=item.VisibleSurfaceBounds;int count=0;
+  foreach(int v in visibleVertices[left?1:0]){var q=searchPoints[v]+delta*searchMobility[v];if(bounds.Contains(q))queryPoints[count++]=q;}
+  return AnyBlocked(item,count,padding);
+ }
+ bool AnyBlocked(SqueezableObject item,int count,float padding){
+  if(count==0)return false;var samples=item.QueryPreparedSkin(queryPoints,count,false);for(int i=0;i<count;i++)if(samples[i].gap < -padding)return true;return false;
  }
  public bool Blocked(SqueezableObject item,int finger,float padding){
-  var bounds=item.VisibleSurfaceBounds;var vertices=finger<0?visibleVertices[left?1:0]:fingerVertices[left?1:0][finger];
-  // Sweeps need a yes/no predicate, not the deepest point. Stop at the first
-  // unsafe vertex; final acceptance still measures every skin vertex.
-  foreach(int v in vertices){var q=World(v);if(bounds.Contains(q)&&item.SkinBlocked(q,padding))return true;}return false;
+  if(!item.PrepareSkinQueries())return false;var bounds=item.VisibleSurfaceBounds;int count=0;var vertices=finger<0?visibleVertices[left?1:0]:fingerVertices[left?1:0][finger];
+  foreach(int v in vertices){var q=World(v);if(bounds.Contains(q))queryPoints[count++]=q;}
+  return AnyBlocked(item,count,padding);
  }
  public float Gap(SqueezableObject item,int group,out Vector3 point,out Vector3 normal){
-  point=normal=Vector3.zero;float gap=float.PositiveInfinity;
-  var bounds=item.VisibleSurfaceBounds;float tolerance=item.handContactTolerance;
-  foreach(int v in fullGroups[left?1:0][group]){var q=World(v);if(bounds.SqrDistance(q)>tolerance*tolerance)continue;float d=item.SkinSurfaceGap(q,out var p,out var n);if(d<gap){gap=d;point=p;normal=n;}}
-  return gap;
+  point=normal=Vector3.zero;float gap=float.PositiveInfinity;if(!item.PrepareSkinQueries())return gap;
+  var bounds=item.VisibleSurfaceBounds;float tolerance=item.handContactTolerance;int count=0;
+  foreach(int v in fullGroups[left?1:0][group]){var q=World(v);if(bounds.SqrDistance(q)<=tolerance*tolerance)queryPoints[count++]=q;}
+  if(count==0)return gap;var samples=item.QueryPreparedSkin(queryPoints,count,true);
+  for(int i=0;i<count;i++){var sample=samples[i];if(sample.gap<gap){gap=sample.gap;point=sample.point;normal=sample.normal;}}return gap;
+ }
+ public float NearestGap(SqueezableObject item,float reach,out Vector3 normal){
+  normal=Vector3.zero;if(!item.PrepareSkinQueries())return float.PositiveInfinity;var bounds=item.VisibleSurfaceBounds;int count=0;
+  RefreshPose(left);foreach(int v in visibleVertices[left?1:0]){var q=World(v);if(bounds.SqrDistance(q)<=reach*reach)queryPoints[count++]=q;}
+  if(count==0)return float.PositiveInfinity;var samples=item.QueryPreparedSkin(queryPoints,count,true);float gap=float.PositiveInfinity;
+  for(int i=0;i<count;i++){var sample=samples[i];if(sample.gap<gap){gap=sample.gap;normal=sample.normal;}}return gap;
  }
  public float Depth(SqueezableObject item,out Vector3 normal){
   return FullDepth(item,out normal);
  }
- Vector3 World(int v){var w=weights[v];var x=rest[v];return matrices[w.boneIndex0].MultiplyPoint3x4(x)*w.weight0+matrices[w.boneIndex1].MultiplyPoint3x4(x)*w.weight1+matrices[w.boneIndex2].MultiplyPoint3x4(x)*w.weight2+matrices[w.boneIndex3].MultiplyPoint3x4(x)*w.weight3;}
+ Vector3 World(int v)=>SkinVertex(rest[v],weights[v],matrices);
+ // Keep every nonzero original skin weight, including negative weights if
+ // supplied. Rigidly weighted vertices need only one matrix multiplication.
+ public static Vector3 SkinVertex(Vector3 p,BoneWeight w,Matrix4x4[] pose){
+  var result=pose[w.boneIndex0].MultiplyPoint3x4(p)*w.weight0;
+  if(w.weight1!=0)result+=pose[w.boneIndex1].MultiplyPoint3x4(p)*w.weight1;
+  if(w.weight2!=0)result+=pose[w.boneIndex2].MultiplyPoint3x4(p)*w.weight2;
+  if(w.weight3!=0)result+=pose[w.boneIndex3].MultiplyPoint3x4(p)*w.weight3;
+  return result;
+ }
  public float FingerDepth(SqueezableObject item,int finger){
-  float deepest=0;var bounds=item.VisibleSurfaceBounds;
-  foreach(int v in fingerVertices[left?1:0][finger]){var q=World(v);if(!bounds.Contains(q))continue;float gap=item.SkinSurfaceGap(q,out _,out _);deepest=Mathf.Max(deepest,-gap);}return deepest;
+  if(!item.PrepareSkinQueries())return 0;var bounds=item.VisibleSurfaceBounds;int count=0;
+  foreach(int v in fingerVertices[left?1:0][finger]){var q=World(v);if(bounds.Contains(q))queryPoints[count++]=q;}
+  if(count==0)return 0;var samples=item.QueryPreparedSkin(queryPoints,count,false);float deepest=0;for(int i=0;i<count;i++)deepest=Mathf.Max(deepest,-samples[i].gap);return deepest;
  }
  public float FullDepth(SqueezableObject item,out Vector3 normal){
   return Deepest(item,out _,out normal,out _);
  }
  public float StrictDepth(SqueezableObject item)=>Deepest(item,out _,out _,out _,true);
  public float Deepest(SqueezableObject item,out Vector3 skinPoint,out Vector3 normal,out int group,bool forceParity=false){
-  // A final all-vertex clearance closes gaps left by the angular search's
-  // sparse skin samples. Broad-phase bounds reject most vertices cheaply.
-  for(int i=0;i<bones.Length;i++)matrices[i]=bones[i].localToWorldMatrix*bind[i];
-  var bounds=item.VisibleSurfaceBounds;float deepest=0;normal=skinPoint=Vector3.zero;group=-1;
-  foreach(int v in visibleVertices[left?1:0]){var w=weights[v];var x=rest[v];
-   var q=matrices[w.boneIndex0].MultiplyPoint3x4(x)*w.weight0+matrices[w.boneIndex1].MultiplyPoint3x4(x)*w.weight1+matrices[w.boneIndex2].MultiplyPoint3x4(x)*w.weight2+matrices[w.boneIndex3].MultiplyPoint3x4(x)*w.weight3;
-   if(!bounds.Contains(q))continue;float gap=item.SkinSurfaceGap(q,out _,out var n,forceParity);if(-gap>deepest){deepest=-gap;normal=n;skinPoint=q;group=groupForVertex[v];}
-  }return deepest;
+  // Every visible skin vertex is still tested against the complete live
+  // triangle surface. Both production and strict measurements use parity.
+  RefreshPose(left);normal=skinPoint=Vector3.zero;group=-1;if(!item.PrepareSkinQueries())return 0;
+  var bounds=item.VisibleSurfaceBounds;int count=0;
+  if(forceParity){
+   // Independent managed reference for acceptance, not the production job.
+   float referenceDepth=0;foreach(int v in visibleVertices[left?1:0]){var q=World(v);if(!bounds.Contains(q))continue;float gap=item.PreparedSkinGap(q,out _,out var n,true);if(-gap>referenceDepth){referenceDepth=-gap;normal=n;skinPoint=q;group=groupForVertex[v];}}return referenceDepth;
+  }
+  foreach(int v in visibleVertices[left?1:0]){var q=World(v);if(bounds.Contains(q)){queryPoints[count]=q;queryIndices[count++]=v;}}
+  if(count==0)return 0;var samples=item.QueryPreparedSkin(queryPoints,count,false);float deepest=0;
+  for(int i=0;i<count;i++){var sample=samples[i];if(-sample.gap>deepest){deepest=-sample.gap;normal=sample.normal;skinPoint=queryPoints[i];group=groupForVertex[queryIndices[i]];}}return deepest;
  }
  public void Draw(){Gizmos.color=Color.cyan;foreach(var group in groups[left?1:0])foreach(int v in group)Gizmos.DrawSphere(points[v],.001f);}
 }

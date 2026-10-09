@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse, json, subprocess, time, shutil
 ROOT=Path(__file__).resolve().parents[1]
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--rendered',action='store_true');parser.add_argument('--quick',action='store_true');parser.add_argument('--mode',choices=['Keyboard','Phase2Replay','CameraReplay']);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--rendered',action='store_true');parser.add_argument('--quick',action='store_true');parser.add_argument('--mode',choices=['Keyboard','Phase2Replay','CameraReplay']);parser.add_argument('--evidence-directory',type=Path,default=ROOT/'Docs/evidence/deformation-2026-10-08');args=parser.parse_args()
     kind=('rendered' if args.rendered else 'headless')+('-quick' if args.quick else '')+('-'+args.mode if args.mode else '')
     log=ROOT/f'Logs/deformation-{kind}.log';result=ROOT/'Logs/deformation-player.json'
     command=[str(ROOT/'Builds/Windows/GripRehab.exe'),'-apartment-deformation','-rehab-force-replay','-logFile',str(log)]
@@ -16,7 +16,7 @@ def main():
         code=p.wait(timeout=420)
         if not result.exists() or result.stat().st_mtime<started:raise RuntimeError('No fresh player result; exit='+str(code))
         data=json.loads(result.read_text(encoding='utf-8-sig'))
-        out=ROOT/'Docs/evidence/deformation-2026-10-08';out.mkdir(exist_ok=True,parents=True)
+        out=args.evidence_directory.resolve();out.mkdir(exist_ok=True,parents=True)
         (out/f'player-{kind}.json').write_text(json.dumps(data,indent=2))
         if code or not data['passed']:raise RuntimeError(data.get('error','Player failed'))
         if args.rendered:

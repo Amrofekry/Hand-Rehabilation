@@ -65,7 +65,8 @@ public sealed class SqueezableObject : MonoBehaviour {
  public float LastDamageForce{get;private set;}public bool LastDamageEligible{get;private set;}
  public int PressureUpdates{get;private set;}public int HighPressureUpdates{get;private set;}public int HighContactUpdates{get;private set;}
  public float AppliedPressureNewtons=>springDeformation?.AppliedForceNewtons??0;
- public Bounds VisibleSurfaceBounds=>visual.GetComponent<Renderer>().bounds;
+ Renderer surfaceRenderer;
+ public Bounds VisibleSurfaceBounds=>surfaceRenderer!=null?surfaceRenderer.bounds:visual.GetComponent<Renderer>().bounds;
  public float SurfaceExtent(Vector3 direction){
   var e=surfaceRestBounds.extents;
   return Mathf.Abs(Vector3.Dot(visual.TransformVector(Vector3.right*e.x),direction))+Mathf.Abs(Vector3.Dot(visual.TransformVector(Vector3.up*e.y),direction))+Mathf.Abs(Vector3.Dot(visual.TransformVector(Vector3.forward*e.z),direction));
@@ -119,22 +120,27 @@ public sealed class SqueezableObject : MonoBehaviour {
   return best;
  }
  public float SurfacePenetration(CapsuleCollider probe,out Vector3 normal){float gap=ProbeSurfaceGap(probe,out _,out normal);return float.IsFinite(gap)?Mathf.Max(0,-gap):0;}
+ // A batch owns one immutable geometry revision during its skin query.
+ // Prepare once before the loop; no Unity native getters in per-vertex queries.
+ internal bool PrepareSkinQueries(){
+  if(IsBroken||!gameObject.activeInHierarchy||handSurface==null)return false;
+  handSurface.Prepare(springDeformation!=null?springDeformation.Vertices:deformation!=null?deformation.Vertices:rigidSurfaceVertices);return true;
+ }
  public float SkinSurfaceGap(Vector3 skinPoint,out Vector3 point,out Vector3 normal,bool forceParity=false){
-  if(IsBroken||!gameObject.activeInHierarchy||!TrySurface(skinPoint,out point,out normal)){point=normal=Vector3.zero;return float.PositiveInfinity;}
+  if(!PrepareSkinQueries()){point=normal=Vector3.zero;return float.PositiveInfinity;}
+  return PreparedSkinGap(skinPoint,out point,out normal,forceParity);
+ }
+ internal Unity.Collections.NativeArray<SurfaceQuerySample> QueryPreparedSkin(Vector3[] points,int count,bool outside)=>handSurface.QueryPrepared(points,count,outside);
+ internal float PreparedSkinGap(Vector3 skinPoint,out Vector3 point,out Vector3 normal,bool forceParity=false){
+  if(!handSurface.ClosestPrepared(skinPoint,out point,out normal))return float.PositiveInfinity;
   var offset=skinPoint-point;float distance=offset.magnitude;
-  // The closest point strictly inside a closed face has an unambiguous
-  // signed plane distance. Edges, vertices and open components retain the
-  // full parity test; no convex hull or approximate finger surface is used.
   bool inside=!forceParity&&springDeformation==null&&deformation==null&&handSurface.FaceSignReliable?Vector3.Dot(offset,normal)<0:handSurface.Inside(skinPoint);
   if(distance>1e-7f)normal=offset*(inside?-1:1)/distance;
   return inside?-distance:distance;
  }
- public bool SkinBlocked(Vector3 skinPoint,float padding){
-  // Sweeps only need to reject points INSIDE the material. Do the exact
-  // parity test first, avoiding closest-triangle searches for outside skin.
-  if(IsBroken||!gameObject.activeInHierarchy||handSurface==null)return false;
-  handSurface.Prepare(springDeformation!=null?springDeformation.Vertices:deformation!=null?deformation.Vertices:rigidSurfaceVertices);
-  return handSurface.Inside(skinPoint)&&TrySurface(skinPoint,out var point,out _)&&(skinPoint-point).sqrMagnitude>padding*padding;
+ public bool SkinBlocked(Vector3 skinPoint,float padding)=>PrepareSkinQueries()&&PreparedSkinBlocked(skinPoint,padding);
+ internal bool PreparedSkinBlocked(Vector3 skinPoint,float padding){
+  return handSurface.Inside(skinPoint)&&handSurface.ClosestPrepared(skinPoint,out var point,out _)&&(skinPoint-point).sqrMagnitude>padding*padding;
  }
  public bool TryProbeContact(CapsuleCollider probe,out Vector3 point,out Vector3 normal){
   float gap=ProbeSurfaceGap(probe,out point,out normal);
@@ -149,6 +155,7 @@ public sealed class SqueezableObject : MonoBehaviour {
  PhysicsMaterial physicsMaterial;GameObject fragments;Rigidbody[] shards;Vector3[] shardPositions;Quaternion[] shardRotations;
  float dwell;Vector3 lastPoint;float lastRadius;
  void Awake(){
+  surfaceRenderer=visual!=null?visual.GetComponent<Renderer>():GetComponent<Renderer>();
   Body=GetComponent<Rigidbody>();origin=transform.position;rotation=transform.rotation;
   objectColliders=System.Array.FindAll(GetComponentsInChildren<Collider>(true),c=>c.attachedRigidbody==Body);
   if(visual==null)visual=transform;restScale=visual.localScale;
@@ -190,7 +197,8 @@ public sealed class SqueezableObject : MonoBehaviour {
   // Restore the saved free-body interpolation when dropping the object.
   Body.interpolation=RigidbodyInterpolation.None;return true;
  }
- public void MoveHeld(Vector3 position,Quaternion heldRotation){if(IsHeld){Body.MovePosition(position);Body.MoveRotation(heldRotation);}}
+ public void MoveHeld(Vector3 position,Quaternion heldRotation){if(IsHeld){Body.position=position;Body.rotation=heldRotation;handSurface?.Invalidate();}}
+ public void InvalidateSurfacePose(){handSurface?.Invalidate();}
  public void Release(Vector3 velocity){
   if(!IsHeld)return;IsHeld=false;Body.isKinematic=false;Body.useGravity=true;
   RestoreFreeBodySettings();
@@ -199,7 +207,7 @@ public sealed class SqueezableObject : MonoBehaviour {
   collisionShield.Step(false);
  }
  void RestoreFreeBodySettings(){if(!hasFreeBodySettings)return;Body.collisionDetectionMode=freeCollisionMode;Body.interpolation=freeInterpolation;hasFreeBodySettings=false;}
- // Physics-step contact resolution. No contact means no applied pressure or damage.
+ // Current-pose contact resolution. No contact means no applied pressure or damage.
  public void ApplyContacts(FingerContactRig rig,float newtons,float dt){
   if(IsBroken||!gameObject.activeInHierarchy)return;
   dt=ContactDeformation.SafeDt(dt);
@@ -321,6 +329,7 @@ public sealed class SqueezableObject : MonoBehaviour {
   }
  }
  public void ResetObject(){
+  handSurface?.Invalidate();
   if(Body==null)return;
   if(fragments!=null)fragments.SetActive(false);
   if(IsHeld)Release(Vector3.zero);
@@ -339,6 +348,6 @@ public sealed class SqueezableObject : MonoBehaviour {
  }
  void OnDisable(){if(Body!=null&&IsHeld)Release(Vector3.zero);collisionShield.Clear();}
  void OnDrawGizmos(){if(!showContactGizmos||lastRadius<=0)return;Gizmos.color=Color.yellow;Gizmos.DrawWireSphere(lastPoint,lastRadius);}
- void OnDestroy(){collisionShield.Clear();fractureVisuals?.Dispose();if(mesh!=null)Destroy(mesh);if(fractureVisuals==null&&fragments!=null)Destroy(fragments);if(physicsMaterial!=null)Destroy(physicsMaterial);}
+ void OnDestroy(){handSurface?.Dispose();collisionShield.Clear();fractureVisuals?.Dispose();if(mesh!=null)Destroy(mesh);if(fractureVisuals==null&&fragments!=null)Destroy(fragments);if(physicsMaterial!=null)Destroy(physicsMaterial);}
 }
 }
