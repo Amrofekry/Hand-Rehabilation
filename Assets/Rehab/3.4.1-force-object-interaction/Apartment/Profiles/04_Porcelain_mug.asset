@@ -22,9 +22,15 @@ MonoBehaviour:
   deformationRadiusMeters: 0.02
   plasticity: 0
   recoveryPerSecond: 1
+  softBodyTopology: {fileID: 0}
+  hollowCup: 1
+  springCoupling: 0.025
+  pressureResponsePerSecond: 30
   breakable: 1
   impactEnergyJoules: 0.13
   sustainedForceNewtons: 60
   forceDwellSeconds: 0.35
   damageCapacity: 0.35
+  maximumGripDamagePerSecond: 3
+  maxVertices: 4096
   showContactGizmos: 0

@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-09T00:02:25.889420+00:00",
+  "scope": "Narrow corrected hand-contact/deformation scope, no vendor/UI/module/input-source changes",
+  "changes": {
+    "Assets/Editor/RehabIntegrationChecks.cs": {
+      "previousSha256": "75c8c0d9e3f0fdc25b860051e96ccefe0138e4a3353e7c5da19c6b0a893b5c09",
+      "currentSha256": "bb813c7dab3e918ea480b58afa87f2151709feb74f39853f2ccedd39b6c9d62e",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    },
+    "Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs": {
+      "previousSha256": "bc7f931a34f82c181fd2f3908e08dfa52b68fe7c8abbe89ad290ed0d76c33d26",
+      "currentSha256": "869e2655d578c1f983d63d143b3cdb3d21d5ea0f825f9fe50c3bb2843ad49429",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "856f8e6993b03ba0b601f9ad7511add54b7c6bc4e815e1fe2ba176925dec31e1",
+      "currentSha256": "73149f381f0cc8700ade7dbe43d06b4182db9a80fcbc735be86bd700a038f6f8",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "5ca401d5e76b8be4f003570779706739fc53d5bb50fffeb481cd50c9c8a2a80d",
+      "currentSha256": "5079dd4c5fe5136547b3ce8297533f522cd9a73cab1ee0befb8a880d4502908b",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs": {
+      "previousSha256": "353071419487edd413301e977b8d6f42adebcd6ca03752f1e8ff0f114bc3e7dd",
+      "currentSha256": "9e8a3fa188783ff826ba735c83a8f5c7aca28640c1900c46c5e732c7d5349df1",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "7fe671d558af8be810935ba416bce40157aa7c3b89c3e8bf4d474e81fdb578f7",
+      "currentSha256": "9a5cad234325c4988f8999693ac2656b7f74df2d2e7a8eb94a7a02c10fe16d20",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset": {
+      "previousSha256": "62c771723810cbf132da2044afa973c268c8dc435d22f5903e4b2dadde12dbd5",
+      "currentSha256": "038af7263a30670ebc24172637c29b4a606fc16bc5b56786471dd081e31bac93",
+      "reason": "User explicitly rejected dynamic force/joint hand. Restore direct SDK pose; authorize only surface constraints, grasp placement, six-object deformation and their tests. Ball is 70 mm across with matching pressure radius."
+    }
+  }
+}

@@ -1,0 +1,380 @@
+{
+  "utc": "2026-10-09T00:02:26.062658+00:00",
+  "project": "E:\\GP\\codex\\GripRehab-Unity",
+  "unity": "6000.4.4f1",
+  "wbs": [
+    "3.3",
+    "3.4.1"
+  ],
+  "scope": "Six materials, original direct VirtualGrasp restored, hard geometry contact and grasp placement only",
+  "softwareVerificationPassed": true,
+  "tests": {
+    "nativeGeometry": {
+      "passed": true,
+      "assertions": 76,
+      "utc": "2026-10-08T23:48:50.1807581Z",
+      "scope": "Native Unity surface geometry and saved-scene direct-hand architecture; no human camera trial"
+    },
+    "nativeSkin": {
+      "passed": true,
+      "utc": "2026-10-09T00:00:22.3959807Z",
+      "scope": "Every selected SDK skin vertex at 30 N synthetic grip, six materials and both hands; contact gap and penetration below 2 mm. No live camera or clinical acceptance.",
+      "error": "",
+      "rows": [
+        {
+          "material": "Silicone ball",
+          "hand": "Right",
+          "deepestBone": "RingC_R",
+          "nearestSkinGapMm": 0.006113762967288494,
+          "deepestSkinInsideMm": 0.4939171373844147,
+          "wristCorrectionMm": 45.07758331298828,
+          "guardDepthMm": 0.4939171373844147,
+          "insideVertices": 10
+        },
+        {
+          "material": "Porcelain mug",
+          "hand": "Right",
+          "deepestBone": "IndexC_R",
+          "nearestSkinGapMm": 0.0452917255461216,
+          "deepestSkinInsideMm": 0.4990287721157074,
+          "wristCorrectionMm": 27.013641357421875,
+          "guardDepthMm": 0.4990287721157074,
+          "insideVertices": 9
+        },
+        {
+          "material": "Brittle cracker",
+          "hand": "Right",
+          "deepestBone": "IndexC_R",
+          "nearestSkinGapMm": 0.046626076102256775,
+          "deepestSkinInsideMm": 0.499752938747406,
+          "wristCorrectionMm": 44.613521575927734,
+          "guardDepthMm": 0.499752938747406,
+          "insideVertices": 6
+        },
+        {
+          "material": "Kitchen sponge",
+          "hand": "Right",
+          "deepestBone": "RingC_R",
+          "nearestSkinGapMm": 0.0030016133096069098,
+          "deepestSkinInsideMm": 0.3623410165309906,
+          "wristCorrectionMm": 44.86450958251953,
+          "guardDepthMm": 0.3623410165309906,
+          "insideVertices": 6
+        },
+        {
+          "material": "Silicone cup",
+          "hand": "Right",
+          "deepestBone": "IndexC_R",
+          "nearestSkinGapMm": 0.09991376101970673,
+          "deepestSkinInsideMm": 0.49823737144470215,
+          "wristCorrectionMm": 41.38656234741211,
+          "guardDepthMm": 0.49823737144470215,
+          "insideVertices": 10
+        },
+        {
+          "material": "Ripe tomato",
+          "hand": "Right",
+          "deepestBone": "ThumbC_R",
+          "nearestSkinGapMm": 0.018270647153258324,
+          "deepestSkinInsideMm": 0.025157680734992027,
+          "wristCorrectionMm": 55.66318893432617,
+          "guardDepthMm": 0.025157680734992027,
+          "insideVertices": 3
+        },
+        {
+          "material": "Silicone ball",
+          "hand": "Left",
+          "deepestBone": "MiddleC_L",
+          "nearestSkinGapMm": 0.010882052592933178,
+          "deepestSkinInsideMm": 0.4992836117744446,
+          "wristCorrectionMm": 45.253658294677734,
+          "guardDepthMm": 0.4992836117744446,
+          "insideVertices": 9
+        },
+        {
+          "material": "Porcelain mug",
+          "hand": "Left",
+          "deepestBone": "ThumbC_L",
+          "nearestSkinGapMm": 0.012338018044829369,
+          "deepestSkinInsideMm": 0.49805641174316406,
+          "wristCorrectionMm": 44.11964797973633,
+          "guardDepthMm": 0.49805641174316406,
+          "insideVertices": 12
+        },
+        {
+          "material": "Brittle cracker",
+          "hand": "Left",
+          "deepestBone": "ThumbC_L",
+          "nearestSkinGapMm": 0.03197498992085457,
+          "deepestSkinInsideMm": 0.4948759973049164,
+          "wristCorrectionMm": 43.92495346069336,
+          "guardDepthMm": 0.4948759973049164,
+          "insideVertices": 16
+        },
+        {
+          "material": "Kitchen sponge",
+          "hand": "Left",
+          "deepestBone": "IndexC_L",
+          "nearestSkinGapMm": 0.03356552869081497,
+          "deepestSkinInsideMm": 0.49537980556488037,
+          "wristCorrectionMm": 41.94098663330078,
+          "guardDepthMm": 0.49537980556488037,
+          "insideVertices": 5
+        },
+        {
+          "material": "Silicone cup",
+          "hand": "Left",
+          "deepestBone": "RingC_L",
+          "nearestSkinGapMm": 0.03144256770610809,
+          "deepestSkinInsideMm": 0.4735247492790222,
+          "wristCorrectionMm": 0.004263711627572775,
+          "guardDepthMm": 0.4735247492790222,
+          "insideVertices": 11
+        },
+        {
+          "material": "Ripe tomato",
+          "hand": "Left",
+          "deepestBone": "",
+          "nearestSkinGapMm": 0.06501301378011703,
+          "deepestSkinInsideMm": 0.0,
+          "wristCorrectionMm": 53.51523208618164,
+          "guardDepthMm": 0.0,
+          "insideVertices": 0
+        }
+      ]
+    },
+    "nativeSolver": {
+      "passed": true,
+      "utc": "2026-10-09T00:00:41.9326106Z",
+      "scope": "Native Unity math and production solver; not a live hand/hardware test or game FPS measurement",
+      "materials": [
+        {
+          "name": "Silicone cup",
+          "nodes": 96,
+          "vertices": 2324,
+          "lowMm": 3.9193453788757324,
+          "mediumMm": 11.558595657348633,
+          "highMm": 28.0,
+          "recoveredMm": 0.0,
+          "retainedDamage": 0.0,
+          "solverMeanMs": 0.6513892000000001,
+          "legacyMeanMs": 1.1174704000000002,
+          "allocationBytes": 0
+        },
+        {
+          "name": "Silicone ball",
+          "nodes": 96,
+          "vertices": 515,
+          "lowMm": 2.5757339000701904,
+          "mediumMm": 7.387037754058838,
+          "highMm": 18.000001907348633,
+          "recoveredMm": 0.0,
+          "retainedDamage": 0.0,
+          "solverMeanMs": 0.2230762,
+          "legacyMeanMs": 0.2256834,
+          "allocationBytes": 0
+        },
+        {
+          "name": "Ripe tomato",
+          "nodes": 96,
+          "vertices": 1225,
+          "lowMm": 3.3121702671051025,
+          "mediumMm": 9.35197639465332,
+          "highMm": 25.0000057220459,
+          "recoveredMm": 5.4876298904418945,
+          "retainedDamage": 0.34285756945610046,
+          "solverMeanMs": 0.4419128,
+          "legacyMeanMs": 0.6873089,
+          "allocationBytes": 0
+        },
+        {
+          "name": "Porcelain mug",
+          "nodes": 0,
+          "vertices": 2324,
+          "lowMm": 0.0,
+          "mediumMm": 0.0,
+          "highMm": 0.0,
+          "recoveredMm": 0.0,
+          "retainedDamage": 0.0,
+          "solverMeanMs": 0.0,
+          "legacyMeanMs": 0.0,
+          "allocationBytes": 0
+        },
+        {
+          "name": "Kitchen sponge",
+          "nodes": 96,
+          "vertices": 486,
+          "lowMm": 6.809514045715332,
+          "mediumMm": 18.24250030517578,
+          "highMm": 30.000003814697266,
+          "recoveredMm": 1.500000238418579,
+          "retainedDamage": 0.0,
+          "solverMeanMs": 0.2487989,
+          "legacyMeanMs": 0.23559960000000002,
+          "allocationBytes": 0
+        },
+        {
+          "name": "Brittle cracker",
+          "nodes": 96,
+          "vertices": 486,
+          "lowMm": 0.4976250231266022,
+          "mediumMm": 1.4881632328033447,
+          "highMm": 2.9999988079071045,
+          "recoveredMm": 0.8359956741333008,
+          "retainedDamage": 0.0,
+          "solverMeanMs": 0.3034317,
+          "legacyMeanMs": 0.2559617,
+          "allocationBytes": 0
+        }
+      ],
+      "assertions": 78
+    },
+    "nativeInputContracts": "PASS; see hand-surface-build.log",
+    "headlessMatrix": {
+      "passed": true,
+      "cases": 36,
+      "checks": 639,
+      "utc": "2026-10-08T23:57:26.0360084Z"
+    },
+    "renderedMatrix": {
+      "passed": true,
+      "cases": 36,
+      "checks": 639,
+      "utc": "2026-10-08T23:54:17.5697182Z"
+    },
+    "python": {
+      "passed": true,
+      "tests": 66,
+      "evidence": "python-tests.txt"
+    },
+    "offline": {
+      "passed": true,
+      "utc": "2026-10-09T00:01:11.307140+00:00",
+      "evidence": "offline-checks.json"
+    },
+    "playerRegression": [
+      {
+        "name": "apartment-player-headless",
+        "passed": true,
+        "checks": 168
+      },
+      {
+        "name": "apartment-player-replay",
+        "passed": true,
+        "checks": 169
+      },
+      {
+        "name": "apartment-player-rendered",
+        "passed": true,
+        "checks": 168
+      }
+    ],
+    "playStop": {
+      "passed": true,
+      "cycles": 3,
+      "detail": "Three cold scene-load Play/Stop cycles and socket cleanup passed.",
+      "utc": "2026-10-09T00:01:09.4191526Z"
+    },
+    "runtimeMeshCleanup": [
+      "Owned runtime deformation meshes after Stop: 0",
+      "Owned runtime deformation meshes after Stop: 0",
+      "Owned runtime deformation meshes after Stop: 0"
+    ]
+  },
+  "performance": {
+    "device": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz / NVIDIA GeForce RTX 3060 Laptop GPU",
+    "resolution": "1280x720",
+    "syntheticUncappedAverageFps": 102.90364837646484,
+    "contactMeanMs": 12.402978753180664,
+    "contactWorstMs": 240.6916,
+    "nativePeakBytes": 263632739,
+    "managedUsedPeakBytes": 17170432,
+    "maxObservedSkinVertexPenetrationMm": 1.1436747312545776,
+    "headlessBeforeOptimizationMeanMs": 15.58492586715866,
+    "headlessBeforeOptimizationMaxMs": 704.4783,
+    "headlessFinalMeanMs": 12.557469691900167,
+    "headlessFinalMaxMs": 235.0727,
+    "historicalComparisonScope": "Before/after records also differ in pressure-duration scheduling; not a controlled optimization benchmark",
+    "solverWarmLoopAllocationBytes": 0,
+    "scope": "Measured synthetic player fixture; not live CV FPS or whole-game 0 B GC"
+  },
+  "build": {
+    "passed": true,
+    "path": "Builds/Windows/GripRehab.exe",
+    "sha256": "413a04009d5fc13e03fe4e5c6941a8606c63c103edd08853efc6c9bd57e6151b",
+    "managedAssemblySha256": "2465890e16770ef86041e74bdcad2853e037fc9dfde84b3e58ac0ebff5812288"
+  },
+  "sourceSha256": {
+    "Assets/Rehab/3.3-deformation/DeformationColliderProxy.cs": "e7ebef14abe33d2573f2615153a540239cc4ec1ddf7c2baafb0348939f7d599f",
+    "Assets/Rehab/3.3-deformation/DeformationColliderProxy.cs.meta": "9c27aebfa4c01e587112b83d0366d813d03429d9ad962aa959016a956cffba43",
+    "Assets/Rehab/3.3-deformation/DeformationNormals.cs": "7921121eb8259c7cc4ff1debebc59c4bcacb0c91e4896c3f6179a8dae35ea91b",
+    "Assets/Rehab/3.3-deformation/DeformationNormals.cs.meta": "c00e5a4af29c3aa5777b447cf855f3de7a55ed665a65831d59cc97048ee27733",
+    "Assets/Rehab/3.3-deformation/GripDeformation.cs": "6243d0ebb6a47286b4910755e9c63b6fa6d6db4593df4a9604df84d28c834a70",
+    "Assets/Rehab/3.3-deformation/GripDeformation.cs.meta": "1ed267bfa7892c96ae5736fe603e4cc2dd1c823ef1fe24624dcb9cc94d03aea5",
+    "Assets/Rehab/3.3-deformation/NodeSpringDeformation.cs": "6331d861dd64aaaade2690ac9fa97d2640c9c777ca753dc411732b4986df8594",
+    "Assets/Rehab/3.3-deformation/NodeSpringDeformation.cs.meta": "a40b88fd2fc4505955972f476f7deb7ecc3e1db3f975fc70f93592d923004c5e",
+    "Assets/Rehab/3.3-deformation/SoftBodyAcceptance.cs": "3e1fe1e39a97e46a72bb73c4a372d8425609a3846da0b0553055b7efae3b2ef5",
+    "Assets/Rehab/3.3-deformation/SoftBodyAcceptance.cs.meta": "f15cdce9a1a86242b4dcfbb89c596f2c58b22ec4b6522637899930b6d778f5aa",
+    "Assets/Rehab/3.3-deformation/SoftBodyTopology.cs": "ea1b578000a05a50a972a860da90022c6690038d0e01d08501e84863a8636279",
+    "Assets/Rehab/3.3-deformation/SoftBodyTopology.cs.meta": "45bf42d4d221dc7c9c46a96ad83bae3491bc792b2a7f56dcd6902c09e2b3e603",
+    "Assets/Rehab/3.3-deformation/Topologies.meta": "25cfb7c61691eee087e49745e0ec9bbbdda5a714bcd0d62608278bf34e1a4685",
+    "Assets/Rehab/3.3-deformation/Topologies/01_Silicone_ball.asset": "841c1fca59461ed351b72615accff3885066abb2e0dc63b0fdd55358dd03c2be",
+    "Assets/Rehab/3.3-deformation/Topologies/01_Silicone_ball.asset.meta": "cccac96fde23514a729662220935a556c29281729f852787feba11d5b61a4575",
+    "Assets/Rehab/3.3-deformation/Topologies/02_Kitchen_sponge.asset": "65d3c8148205664e8faec36caa6c218908d4df137aab3eaf655410287acb02ee",
+    "Assets/Rehab/3.3-deformation/Topologies/02_Kitchen_sponge.asset.meta": "3a8ed78b6b389f4f2d83ba5a6c0939e159400d7b8634ac7611f345ed6a294099",
+    "Assets/Rehab/3.3-deformation/Topologies/02_Kitchen_sponge_surface.asset": "8330c9870006beea476a753e2fd96a1ece576649c7332a2ac9b0fec908947d9a",
+    "Assets/Rehab/3.3-deformation/Topologies/02_Kitchen_sponge_surface.asset.meta": "ff6bbc51a8f8a86d72b294e6eb5a2858d47f8e33a10388d7aadbc4994c890850",
+    "Assets/Rehab/3.3-deformation/Topologies/03_Brittle_cracker.asset": "1efb7e0c538e8dfbbf92efdb9f70bff8be6edb2d84c35d500d9314f624091e4f",
+    "Assets/Rehab/3.3-deformation/Topologies/03_Brittle_cracker.asset.meta": "c992cf8d8e3cd894f5dc75f706b7912ef6dc186f7ba69132d7b65c10db6048ff",
+    "Assets/Rehab/3.3-deformation/Topologies/03_Brittle_cracker_surface.asset": "b81e829d180264c7c0a061a05321ffdc0f30d23916642d6449872d992c769e73",
+    "Assets/Rehab/3.3-deformation/Topologies/03_Brittle_cracker_surface.asset.meta": "8cc936cba0e30ad5f1c457a6f5be940f6c4fdc8ae2814c641e90f41881740685",
+    "Assets/Rehab/3.3-deformation/Topologies/04_Porcelain_mug_dense.asset": "ab5fa0f1e243d9901bd8968f3fd5151a9c04babfc2a25b0e36bb7214b12050c2",
+    "Assets/Rehab/3.3-deformation/Topologies/04_Porcelain_mug_dense.asset.meta": "89e97418fc0aacd1b9b61e2c836951627b586e135b2b9ed27971a4934d635d10",
+    "Assets/Rehab/3.3-deformation/Topologies/05_Silicone_cup.asset": "f5def152056a7dd47ec43ac8543147fca2764fde85a8e7cccf2d8f81644622ce",
+    "Assets/Rehab/3.3-deformation/Topologies/05_Silicone_cup.asset.meta": "d32035bf81208e28b83ef2402e38b2853af1d832588eb823b5db1073ac09f0b8",
+    "Assets/Rehab/3.3-deformation/Topologies/05_Silicone_cup_dense.asset": "a1e093cdefac54d23cc10517593c94ef5088b1ab181a8913945867b5bbb0e8c3",
+    "Assets/Rehab/3.3-deformation/Topologies/05_Silicone_cup_dense.asset.meta": "fcfe874bcb71a5cbb7b7fe88d0aa430dc17083a35f9e42332797ff3e081e7bcc",
+    "Assets/Rehab/3.3-deformation/Topologies/06_Ripe_tomato.asset": "27540101f9133c9a42a9d3423abb99114b44c8bdd762055760fc009d614bf511",
+    "Assets/Rehab/3.3-deformation/Topologies/06_Ripe_tomato.asset.meta": "f00bf79ef65db79b6763a31daf999f9a6887b52e7f206efc3b33e1a3ebbca989",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinData.asset": "842e2d42275f61b6f616d4da476d918265e571777b7b0e3bd19f5c7cf79cc20c",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinData.asset.meta": "a1aa3cea415e744db6dc999da42da7e8168ee8247ac43faaac9e07092ad8107e",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinData.cs": "897e77b19bee31f0ce5ddf78b976a9f4957d97b0ad4c66f90931709de46529c8",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinData.cs.meta": "ec9bc088a8f1ad43b15c3de1c4e1ae2152b3d8e53699267fc4f7efd43858bdd1",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinSurface.cs": "ef1315222f8b800f4accb7b5697fdd37b48002eb1ba2c13b73d2c3f09a630a17",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinSurface.cs.meta": "3d791e3d68b4d7f538d21a9a9b729fad144c86e1e48e07e4f2278c921e4c1ebc",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSurfaceGuard.cs": "54dc8753b504b1bb32d8cbdd7ab95d926531d56c62b5ce74cb4968d86146a6a9",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSurfaceGuard.cs.meta": "e2b35bef6bd7a18163f0ec18c5a2445e446da41d2ec56b1164bb2cbe5f8866dd",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/MeshContactSurface.cs": "15027e1947bf9d3ff9a4fe928e7002f4e06d0607bfb06d88c0333712402fe453",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/MeshContactSurface.cs.meta": "07088b07aaea4ea515dac059ae3f39dc4815e40572612311caa0065dc660768c",
+    "Assets/Scenes/GripRehab.unity": "0e26bc5b2059b8aa87e46c2e065dfe6487d42e633b305652696b750dd80aac1e",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": "5079dd4c5fe5136547b3ce8297533f522cd9a73cab1ee0befb8a880d4502908b",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": "9a5cad234325c4988f8999693ac2656b7f74df2d2e7a8eb94a7a02c10fe16d20",
+    "Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs": "869e2655d578c1f983d63d143b3cdb3d21d5ea0f825f9fe50c3bb2843ad49429",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset": "038af7263a30670ebc24172637c29b4a606fc16bc5b56786471dd081e31bac93",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/02_Kitchen_sponge.asset": "cf26ff2982ff583ee2191f3452cfdd68278228c42b053c525ee7d743e09ddab7",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/03_Brittle_cracker.asset": "604e4dff2b77f16223e382e530858ed1d375a9ed0eb5edd238d16c0ba085aa6b",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/04_Porcelain_mug.asset": "d73b3e51e5df007333ec043ca424f9823a40b78cb7e3a84bae2878b3566c9501",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/05_Silicone_cup.asset": "716de1c6bb50aa76b0e792c49d9e12056ba5bf7b6c678dc87ec32301f497bffc",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/06_Ripe_tomato.asset": "5a4f0a6da259812cb6cc26d9e06074d9b0f76f011c3ce4e456e9c7edd4f7977d",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs": "9e8a3fa188783ff826ba735c83a8f5c7aca28640c1900c46c5e732c7d5349df1",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs": "289bde302d0e1d0755a3db261489d4a89d34edcbad76cfd25987c4fe719b6dab",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": "73149f381f0cc8700ade7dbe43d06b4182db9a80fcbc735be86bd700a038f6f8",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs": "2c7ca78a9e7f0f8ebf518b0e7b6d96cecf8c761c1b9b0d9f17894bbcef448457",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FracturePartitioner.cs": "f88fee0d39f3c21296f29c672a04ada8215ba26fe8db18d815eea0dd9259e8d0",
+    "Assets/Editor/HandInteractionCorrection.cs": "d88300c0260163f48737c2d0ab4ddf99ee85efb66d5e2432e23a50500b3c2186",
+    "Assets/Editor/HandSurfaceVerification.cs": "054fef5ffad9af21275258b90cd5c13edae1d0cbead3135bf0cb2a855148e60a",
+    "Assets/Editor/HandSkinContactVerification.cs": "071f52fbdae6dcbbe853c9f0297c46009cbc1956586b277b444bb265211f448b",
+    "Assets/Editor/SoftBodyAuthoring.cs": "8887f739bce9125dc2c612ae543427d16e387150589e1c546e5687fe721db538",
+    "Assets/Editor/SoftBodyVerification.cs": "217dfd9c26040bc04ef637d730a9c8063b66766c66f926b46fcb4d7648083501",
+    "Assets/Editor/RehabIntegrationChecks.cs": "bb813c7dab3e918ea480b58afa87f2151709feb74f39853f2ccedd39b6c9d62e",
+    "ProjectSettings/DynamicsManager.asset": "53cf96c365b85eefe78b3cda76af21f68246744277ae6ca21ffd6a67bdb72a1c",
+    "ProjectSettings/TagManager.asset": "d5a4f2d99ada59a4598ff0578ff71490819aa68492261f9d47d333ef690c8c4a"
+  },
+  "notVerified": [
+    "Live human MediaPipe tracking/grasp after this correction",
+    "Physical Nano 33 IoT/HX711",
+    "Clinically calibrated material/fatigue outcomes",
+    "Zero skin clipping for all possible poses",
+    "Sustained 60 FPS under live camera"
+  ]
+}

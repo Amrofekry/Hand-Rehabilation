@@ -1,0 +1,128 @@
+{
+    "passed": true,
+    "utc": "2026-10-09T00:00:22.3959807Z",
+    "scope": "Every selected SDK skin vertex at 30 N synthetic grip, six materials and both hands; contact gap and penetration below 2 mm. No live camera or clinical acceptance.",
+    "error": "",
+    "rows": [
+        {
+            "material": "Silicone ball",
+            "hand": "Right",
+            "deepestBone": "RingC_R",
+            "nearestSkinGapMm": 0.006113762967288494,
+            "deepestSkinInsideMm": 0.4939171373844147,
+            "wristCorrectionMm": 45.07758331298828,
+            "guardDepthMm": 0.4939171373844147,
+            "insideVertices": 10
+        },
+        {
+            "material": "Porcelain mug",
+            "hand": "Right",
+            "deepestBone": "IndexC_R",
+            "nearestSkinGapMm": 0.0452917255461216,
+            "deepestSkinInsideMm": 0.4990287721157074,
+            "wristCorrectionMm": 27.013641357421876,
+            "guardDepthMm": 0.4990287721157074,
+            "insideVertices": 9
+        },
+        {
+            "material": "Brittle cracker",
+            "hand": "Right",
+            "deepestBone": "IndexC_R",
+            "nearestSkinGapMm": 0.046626076102256778,
+            "deepestSkinInsideMm": 0.499752938747406,
+            "wristCorrectionMm": 44.613521575927737,
+            "guardDepthMm": 0.499752938747406,
+            "insideVertices": 6
+        },
+        {
+            "material": "Kitchen sponge",
+            "hand": "Right",
+            "deepestBone": "RingC_R",
+            "nearestSkinGapMm": 0.0030016133096069099,
+            "deepestSkinInsideMm": 0.3623410165309906,
+            "wristCorrectionMm": 44.86450958251953,
+            "guardDepthMm": 0.3623410165309906,
+            "insideVertices": 6
+        },
+        {
+            "material": "Silicone cup",
+            "hand": "Right",
+            "deepestBone": "IndexC_R",
+            "nearestSkinGapMm": 0.09991376101970673,
+            "deepestSkinInsideMm": 0.49823737144470217,
+            "wristCorrectionMm": 41.38656234741211,
+            "guardDepthMm": 0.49823737144470217,
+            "insideVertices": 10
+        },
+        {
+            "material": "Ripe tomato",
+            "hand": "Right",
+            "deepestBone": "ThumbC_R",
+            "nearestSkinGapMm": 0.018270647153258325,
+            "deepestSkinInsideMm": 0.025157680734992029,
+            "wristCorrectionMm": 55.66318893432617,
+            "guardDepthMm": 0.025157680734992029,
+            "insideVertices": 3
+        },
+        {
+            "material": "Silicone ball",
+            "hand": "Left",
+            "deepestBone": "MiddleC_L",
+            "nearestSkinGapMm": 0.010882052592933178,
+            "deepestSkinInsideMm": 0.4992836117744446,
+            "wristCorrectionMm": 45.253658294677737,
+            "guardDepthMm": 0.4992836117744446,
+            "insideVertices": 9
+        },
+        {
+            "material": "Porcelain mug",
+            "hand": "Left",
+            "deepestBone": "ThumbC_L",
+            "nearestSkinGapMm": 0.012338018044829369,
+            "deepestSkinInsideMm": 0.49805641174316409,
+            "wristCorrectionMm": 44.11964797973633,
+            "guardDepthMm": 0.49805641174316409,
+            "insideVertices": 12
+        },
+        {
+            "material": "Brittle cracker",
+            "hand": "Left",
+            "deepestBone": "ThumbC_L",
+            "nearestSkinGapMm": 0.03197498992085457,
+            "deepestSkinInsideMm": 0.4948759973049164,
+            "wristCorrectionMm": 43.92495346069336,
+            "guardDepthMm": 0.4948759973049164,
+            "insideVertices": 16
+        },
+        {
+            "material": "Kitchen sponge",
+            "hand": "Left",
+            "deepestBone": "IndexC_L",
+            "nearestSkinGapMm": 0.03356552869081497,
+            "deepestSkinInsideMm": 0.49537980556488039,
+            "wristCorrectionMm": 41.94098663330078,
+            "guardDepthMm": 0.49537980556488039,
+            "insideVertices": 5
+        },
+        {
+            "material": "Silicone cup",
+            "hand": "Left",
+            "deepestBone": "RingC_L",
+            "nearestSkinGapMm": 0.03144256770610809,
+            "deepestSkinInsideMm": 0.4735247492790222,
+            "wristCorrectionMm": 0.004263711627572775,
+            "guardDepthMm": 0.4735247492790222,
+            "insideVertices": 11
+        },
+        {
+            "material": "Ripe tomato",
+            "hand": "Left",
+            "deepestBone": "",
+            "nearestSkinGapMm": 0.06501301378011704,
+            "deepestSkinInsideMm": 0.0,
+            "wristCorrectionMm": 53.51523208618164,
+            "guardDepthMm": 0.0,
+            "insideVertices": 0
+        }
+    ]
+}

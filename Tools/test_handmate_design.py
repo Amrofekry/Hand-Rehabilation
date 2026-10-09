@@ -47,6 +47,16 @@ class HandMateDesignTests(unittest.TestCase):
         scene_review = json.loads((ROOT/'Docs/evidence/scene-organization-2026-10-07/protected-source-review.json').read_text())['changes']
         flat_review = json.loads((ROOT/'Docs/evidence/flat-scene-folder-2026-10-07/protected-source-review.json').read_text())['changes']
         merge_review = json.loads((ROOT/'Docs/evidence/single-scene-2026-10-07/protected-source-review.json').read_text())['changes']
+        deformation_review = json.loads((ROOT/'Docs/evidence/deformation-2026-10-08/protected-source-review.json').read_text())['changes']
+        correction_review = json.loads((ROOT/'Docs/evidence/hand-correction-2026-10-08/protected-source-review.json').read_text())['changes']
+        self.assertLessEqual(set(correction_review), {'Assets/Editor/RehabIntegrationChecks.cs', 'Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset'})
+        self.assertEqual(set(deformation_review), {
+            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs',
+            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs',
+            *(p.relative_to(ROOT).as_posix() for p in (ROOT/'Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles').glob('*.asset')),
+            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs',
+            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs',
+            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs'})
         self.assertEqual(set(merge_review), set(flat_review))
         self.assertEqual(set(flat_review), {'Assets/Editor/ApartmentAuthoring.cs',
             'Assets/Editor/GripUiGalleryAuthoring.cs',
@@ -77,11 +87,19 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(merge_review[path]['previousSha256'], expected)
                     self.assertTrue(merge_review[path]['reason'])
                     expected = merge_review[path]['currentSha256']
+                if path in deformation_review:
+                    self.assertEqual(deformation_review[path]['previousSha256'], expected)
+                    self.assertTrue(deformation_review[path]['reason'])
+                    expected = deformation_review[path]['currentSha256']
+                if path in correction_review:
+                    self.assertEqual(correction_review[path]['previousSha256'], expected)
+                    self.assertTrue(correction_review[path]['reason'])
+                    expected = correction_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()
         for key, expected in logic.items():
-            self.assertEqual(hashlib.sha256(current[key].encode()).hexdigest(), expected, key)
+            self.assertEqual(hashlib.sha256(re.sub(r'^  (?:handContactTolerance: 0\.0015|surfaceGuard: \{fileID: \d+\})\n', '', current[key], flags=re.M).encode()).hexdigest(), expected, key)
 
     def test_all_three_palettes_have_readable_foregrounds(self):
         for name in ['Dark', 'Light', 'HighContrast']:

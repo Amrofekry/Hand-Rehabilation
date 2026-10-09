@@ -2,8 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 namespace GripRehab {
+// Consume this frame's validated receiver data before the SDK pose tick.
+[DefaultExecutionOrder(10)]
 public sealed class ApartmentExperience:MonoBehaviour {
  public ApartmentPlayer player;public ApartmentSettings settings;public LiveForceReceiver forceReceiver;public VisionUdpReceiver vision;
+ public HandSurfaceGuard surfaceGuard;
  public RehabVirtualGrasp virtualGrasp;public VisionCameraLauncher cameraLauncher;
  public bool LeftSelected{get;private set;}
  public bool CameraMode{get;private set;}
@@ -41,6 +44,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  private long _contactTicks;
  private static readonly Unity.Profiling.ProfilerMarker ContactMarker=new Unity.Profiling.ProfilerMarker("GripRehab.FingerContacts");
  private bool _testing;private float _nextUi;private readonly GripForceFilter _filter=new GripForceFilter();private int _filteredSamples,_sessionValidSamples;
+ private float _lastFilteredForceAt;
  #if UNITY_EDITOR
  public void EnableAcceptanceInput(){_testing=true;}
 #endif
@@ -101,7 +105,14 @@ public sealed class ApartmentExperience:MonoBehaviour {
 
   if(!ForceValid){_filter.Reset();ContactForceNewtons=0;}
   else if(!Hardware)ContactForceNewtons=_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);
-  else if(_filteredSamples!=forceReceiver.State.SampleCount){_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples++;ContactForceNewtons=_sessionValidSamples<2?0:_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);}
+  else if(_filteredSamples!=forceReceiver.State.SampleCount){
+   // Filter once per accepted sample using the elapsed sample interval, not
+   // the much shorter render-frame delta (which slowed force at high FPS).
+   float now=Time.realtimeSinceStartup;
+   float sampleDt=_sessionValidSamples==0?.02f:Mathf.Clamp(now-_lastFilteredForceAt,.001f,.1f);
+   _lastFilteredForceAt=now;_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples++;
+   ContactForceNewtons=_sessionValidSamples<2?0:_filter.Push(ForceNewtons,sampleDt,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);
+  }
   if(Held!=null&&Held.IsBroken){Held=null;Status="Virtual brittle object fractured — R to reset";}
   if(Held!=null&&ForceValid){
    if(!Hardware&&!CameraMode)_task.Step(new ForceReading(ForceNewtons,Time.realtimeSinceStartupAsDouble,true,true),Time.deltaTime);
@@ -146,12 +157,22 @@ public sealed class ApartmentExperience:MonoBehaviour {
     (Input.GetKey(KeyCode.PageUp)?1:0)-(Input.GetKey(KeyCode.PageDown)?1:0));
   if(motion.sqrMagnitude>0)SetDemoHandOffset(_leftDemoSelected,(_leftDemoSelected?_manualLeft:_manualRight)+Vector3.ClampMagnitude(motion,1)*.32f*Time.deltaTime);
  }
+ int _surfaceFrame=-1;float _surfacePendingDt;
  private void FixedUpdate(){
-  long before=System.Diagnostics.Stopwatch.GetTimestamp();
-  if(contactRig!=null)contactRig.ClearForces();
-  using(ContactMarker.Auto())foreach(var item in objects)if(item!=null)item.ApplyContacts(contactRig,item==Held&&ForceValid?ContactForceNewtons:0,Time.fixedDeltaTime);
-  double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
-  _contactTicks++;ContactMeanMs+= (elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
+   // Avoid a surface-query/mesh-upload catch-up spiral after a slow frame.
+   // Preserve normal fixed-step elapsed time; cap hitches with the existing
+   // deformation integrator's safe dt. Rigidbody movement remains fixed-step.
+   _surfacePendingDt=ContactDeformation.SafeDt(_surfacePendingDt+Time.fixedDeltaTime);
+   if(_surfaceFrame!=Time.frameCount){
+    _surfaceFrame=Time.frameCount;float step=_surfacePendingDt;_surfacePendingDt=0;
+    long before=System.Diagnostics.Stopwatch.GetTimestamp();
+    if(surfaceGuard!=null)surfaceGuard.ResolveContacts();
+    if(contactRig!=null)contactRig.ClearForces();
+    bool current=ForceValid&&(Hardware?forceReceiver.TryGetSample(Time.realtimeSinceStartupAsDouble,out _):!CameraMode||(LeftSelected?vision.LeftValid:vision.RightValid));
+    using(ContactMarker.Auto())foreach(var item in objects)if(item!=null)item.ApplyContacts(contactRig,item==Held&&current?ContactForceNewtons:0,step);
+    double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+    _contactTicks++;ContactMeanMs+=(elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
+   }
   if(Held==null)return;
   if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;_velocity=Vector3.zero;_task.Reset();return;}
 
@@ -160,7 +181,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
   Held.MoveHeld(requested,GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
  }
+ private Vector3 RawPad(Transform[] bones,int index)=>surfaceGuard!=null&&surfaceGuard.TryRawPad(index,out var p)?p:bones[index].position;
  private Vector3 GripTarget(SqueezableObject item){
+  if(item!=null&&surfaceGuard!=null&&surfaceGuard.TryGripFrame(item,out var grip))return grip;
   var lift=player.IsSeated?settings.seatedHandsLiftMeters:0;
   var handOffset=ActiveHand.transform.localPosition-(LeftSelected?_leftRest:_rightRest)-Vector3.up*lift;
   var anchor=holdAnchor.localPosition;if(LeftSelected)anchor.x=-Mathf.Abs(anchor.x);
@@ -171,14 +194,20 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(contactRig!=null&&contactRig.contactBones!=null&&contactRig.contactBones.Length==15){
    var bones=contactRig.contactBones;
    if(bones[1]!=null&&bones[4]!=null&&bones[7]!=null&&bones[10]!=null){
-    Vector3 indexMiddle=(bones[1].position+bones[4].position)*.5f;
-    Vector3 ringLittle=(bones[7].position+bones[10].position)*.5f;
+    Vector3 indexMiddle=(RawPad(bones,1)+RawPad(bones,4))*.5f;
+    Vector3 ringLittle=(RawPad(bones,7)+RawPad(bones,10))*.5f;
     Vector3 across=indexMiddle-ringLittle;
     // A ball centred on every finger penetrates the whole hand. Bias its
     // centre toward the index side of the grasp aperture so contact remains
     // local and the other finger probes are free to report zero force.
-    Vector3 pads=indexMiddle+(across.sqrMagnitude>.000001f?across.normalized:ActiveHand.transform.right)*Mathf.Min(.11f,item!=null?item.radius*.75f:.09f);
-    target+=Vector3.ClampMagnitude(pads-target,.23f);
+    // The left vendor aperture is narrower in its mirrored pose. The former
+    // 75 mm bias placed the ball outside every left finger capsule.
+    float apertureBias=item!=null?item.GraspSurfaceRadius*(LeftSelected?.35f:.75f):.09f;
+    Vector3 pads=indexMiddle+(across.sqrMagnitude>.000001f?across.normalized:ActiveHand.transform.right)*Mathf.Min(.11f,apertureBias);
+    // Use the observed aperture directly. The old 23 cm correction cap left
+    // tall objects below the camera-driven fingers, so no contact was possible.
+    // TrySafeGripTarget still checks furniture and player clearance afterward.
+    target=pads;
    }
   }
   if(item!=null){var toward=ActiveHand.transform.position-target;float correction=Mathf.Clamp(.12f-item.radius,0,.05f);if(toward.sqrMagnitude>.0001f)target+=toward.normalized*correction;}
@@ -299,6 +328,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   Status="Holding "+item.displayName;return true;
  }
  public void Release(){
+
   if(Held!=null){
    var velocity=!player.Paused&&Time.unscaledTime-_lastMotionTime<=.1f?_velocity:Vector3.zero;
    Held.Release(velocity);Held=null;

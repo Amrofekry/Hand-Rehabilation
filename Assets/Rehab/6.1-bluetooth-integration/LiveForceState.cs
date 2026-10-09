@@ -25,7 +25,7 @@ namespace GripRehab
 
     // A connection/calibration change ends the current force session. Unity never
     // substitutes keyboard force when this source becomes invalid.
-    public sealed class LiveForceState : IForceSource
+    public sealed class LiveForceState : IForceSource, IRehabForceSource
     {
         public ForceReading Latest { get; private set; }
         public string Status { get; private set; } = "Waiting for BLE bridge";
@@ -34,8 +34,17 @@ namespace GripRehab
         public int SampleCount { get; private set; }
         public long SampleMs { get; private set; }
         public bool IsSynthetic { get; private set; }
+        public ForceSourceKind Kind => IsSynthetic ? ForceSourceKind.SyntheticReplay : ForceSourceKind.BleBridge;
         public long CalibrationRevision => _revision;
         public int LastAgeMs { get; private set; }
+
+        public bool TryGetSample(double now, out ForceSample sample)
+        {
+            sample = new ForceSample(Kind, Latest.Timestamp, _lastPacketAt,
+                (uint)Math.Max(0, _lastSequence), Shape, _revision,
+                Latest.Newtons, Latest.Valid && now < _expiresAt, IsSynthetic);
+            return sample.IsFresh(now);
+        }
 
         private string _connectionId;
         private string _sessionId;
@@ -47,6 +56,7 @@ namespace GripRehab
         private long _lastSampleMs = -1;
         private double _expiresAt;
         private double _lastPacketAt = -1;
+        private double _lastProcessedAt = -1;
 
         public void Invalidate(string reason)
         {
@@ -107,15 +117,19 @@ namespace GripRehab
                 var advance = (uint)((uint)frame.sampleMs - (uint)_lastSampleMs);
                 if (advance == 0 || advance >= 0x80000000u) return false;
             }
-            if (_lastPacketAt >= 0 && now < _lastPacketAt) return false;
-            if (!changed && _lastPacketAt >= 0 && now - _lastPacketAt >= .5)
+            if (_lastProcessedAt >= 0 && now < _lastProcessedAt) return false;
+            // A rendering/physics hitch is not a BLE reconnect when samples
+            // kept arriving. Queue age still consumes the full 500 ms budget.
+            var arrivedAt = now - queueDelaySeconds;
+            if (!changed && _lastPacketAt >= 0 && arrivedAt - _lastPacketAt >= .5)
             {
                 Generation++;
                 Invalidate("BLE resumed after a stale gap; start a new session");
             }
             _lastSequence = frame.sequence;
             _lastSampleMs = frame.sampleMs;
-            _lastPacketAt = now;
+            _lastPacketAt = arrivedAt;
+            _lastProcessedAt = now;
             _expiresAt = now + (500 - frame.ageMs) / 1000.0 - queueDelaySeconds;
             SampleMs = frame.sampleMs;
             LastAgeMs = frame.ageMs + (int)(queueDelaySeconds * 1000);
@@ -139,7 +153,7 @@ namespace GripRehab
             _sessionId = sessionId;
             _lastSequence = -1;
             _lastSampleMs = -1;
-            _lastPacketAt = -1;
+            _lastPacketAt = _lastProcessedAt = -1;
         }
 
         public void Tick(double now)
