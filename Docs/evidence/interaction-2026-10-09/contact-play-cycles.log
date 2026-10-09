@@ -1,0 +1,11 @@
+Selected native diagnostics; full local trace remains in ignored Logs/contact-play-cycles.log
+
+Built from '6000.4/staging' branch; Version is '6000.4.4f1 (360f97ecca93) revision 3542935'; Using compiler version '194234433'; Build Type 'Release'
+Initialize engine version: 6000.4.4f1 (360f97ecca93)
+[SOFTBODY_TEST] PASS: 78 assertions
+No baked grasps found. Set your grasp db in MyVirtualGrasp
+[REHAB_VG] Native registration and both 15-joint contact bindings available
+No baked grasps found. Set your grasp db in MyVirtualGrasp
+[REHAB_VG] Native registration and both 15-joint contact bindings available
+No baked grasps found. Set your grasp db in MyVirtualGrasp
+[REHAB_VG] Native registration and both 15-joint contact bindings available

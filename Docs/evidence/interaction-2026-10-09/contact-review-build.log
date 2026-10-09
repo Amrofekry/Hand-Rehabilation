@@ -1,0 +1,11 @@
+Selected native diagnostics; full local trace remains in ignored Logs/contact-review-build.log
+
+Built from '6000.4/staging' branch; Version is '6000.4.4f1 (360f97ecca93) revision 3542935'; Using compiler version '194234433'; Build Type 'Release'
+Initialize engine version: 6000.4.4f1 (360f97ecca93)
+[BURST_SURFACE_TEST] PASS: 4609 reference comparisons and native buffer disposal
+[REHAB_INTEGRATION] PASS: units, flags, duplicates, ordering, queued age, stale timeout, calibration, shape, reconnect, synthetic opt-in, rollover
+[SOFTBODY_TEST] PASS: 78 assertions
+[REHAB_VERIFY] PASS: force, memory, assembly, maze, trace, and tracking contracts
+[REHAB_INTEGRATION] PASS: units, flags, duplicates, ordering, queued age, stale timeout, calibration, shape, reconnect, synthetic opt-in, rollover
+[REHAB_VERIFY] PASS: logic and serialized scene validation; no regeneration
+[REHAB_BUILD] PASS: E:\GP\codex\GripRehab-Unity\Builds\Windows\GripRehab.exe

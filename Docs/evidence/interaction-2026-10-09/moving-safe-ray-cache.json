@@ -1,0 +1,140 @@
+{
+    "passed": true,
+    "utc": "2026-10-09T10:35:12.3333192Z",
+    "scope": "Synthetic moving SDK hand, varying pressure, both hands/six objects; not live camera or finger-count grasp validation",
+    "error": "",
+    "rows": [
+        {
+            "material": "Silicone ball",
+            "hand": "Right",
+            "frames": 73,
+            "peakPenetrationMm": 0.4998290240764618,
+            "strictPeakPenetrationMm": 0.4992988407611847,
+            "peakWristCorrectionStepMm": 0.0000212115264730528,
+            "meanMs": 31.828299999999996,
+            "p95Ms": 45.7182,
+            "maxMs": 48.3841
+        },
+        {
+            "material": "Porcelain mug",
+            "hand": "Right",
+            "frames": 72,
+            "peakPenetrationMm": 0.49998921155929568,
+            "strictPeakPenetrationMm": 0.4999620020389557,
+            "peakWristCorrectionStepMm": 0.11131074279546738,
+            "meanMs": 32.38367083333331,
+            "p95Ms": 54.5424,
+            "maxMs": 62.3102
+        },
+        {
+            "material": "Brittle cracker",
+            "hand": "Right",
+            "frames": 194,
+            "peakPenetrationMm": 0.4999890923500061,
+            "strictPeakPenetrationMm": 0.4997113049030304,
+            "peakWristCorrectionStepMm": 0.0009554410353302956,
+            "meanMs": 11.836115463917523,
+            "p95Ms": 18.657,
+            "maxMs": 28.9251
+        },
+        {
+            "material": "Kitchen sponge",
+            "hand": "Right",
+            "frames": 123,
+            "peakPenetrationMm": 0.4999605715274811,
+            "strictPeakPenetrationMm": 0.4999605715274811,
+            "peakWristCorrectionStepMm": 0.000018654875020729378,
+            "meanMs": 18.839630894308948,
+            "p95Ms": 29.4056,
+            "maxMs": 34.3669
+        },
+        {
+            "material": "Silicone cup",
+            "hand": "Right",
+            "frames": 34,
+            "peakPenetrationMm": 0.4996871054172516,
+            "strictPeakPenetrationMm": 0.4989915192127228,
+            "peakWristCorrectionStepMm": 0.27343979477882388,
+            "meanMs": 69.96602058823531,
+            "p95Ms": 120.2782,
+            "maxMs": 122.193
+        },
+        {
+            "material": "Ripe tomato",
+            "hand": "Right",
+            "frames": 123,
+            "peakPenetrationMm": 0.49990811944007876,
+            "strictPeakPenetrationMm": 0.4990261495113373,
+            "peakWristCorrectionStepMm": 0.000019590905139921233,
+            "meanMs": 18.587590243902445,
+            "p95Ms": 30.9132,
+            "maxMs": 36.7281
+        },
+        {
+            "material": "Silicone ball",
+            "hand": "Left",
+            "frames": 104,
+            "peakPenetrationMm": 0.4997166097164154,
+            "strictPeakPenetrationMm": 0.4968516230583191,
+            "peakWristCorrectionStepMm": 0.0013708432670682669,
+            "meanMs": 22.36180865384615,
+            "p95Ms": 35.5011,
+            "maxMs": 38.3
+        },
+        {
+            "material": "Porcelain mug",
+            "hand": "Left",
+            "frames": 102,
+            "peakPenetrationMm": 0.4999461770057678,
+            "strictPeakPenetrationMm": 0.4999461770057678,
+            "peakWristCorrectionStepMm": 0.0013692073989659548,
+            "meanMs": 22.644362745098037,
+            "p95Ms": 33.7315,
+            "maxMs": 36.9823
+        },
+        {
+            "material": "Brittle cracker",
+            "hand": "Left",
+            "frames": 131,
+            "peakPenetrationMm": 0.4999937415122986,
+            "strictPeakPenetrationMm": 0.4978415071964264,
+            "peakWristCorrectionStepMm": 0.0031248105224221946,
+            "meanMs": 17.630949618320615,
+            "p95Ms": 27.8485,
+            "maxMs": 29.7443
+        },
+        {
+            "material": "Kitchen sponge",
+            "hand": "Left",
+            "frames": 62,
+            "peakPenetrationMm": 0.4999869763851166,
+            "strictPeakPenetrationMm": 0.49996712803840639,
+            "peakWristCorrectionStepMm": 0.000022069858459872194,
+            "meanMs": 37.174479032258059,
+            "p95Ms": 56.9655,
+            "maxMs": 60.1896
+        },
+        {
+            "material": "Silicone cup",
+            "hand": "Left",
+            "frames": 32,
+            "peakPenetrationMm": 0.4999085068702698,
+            "strictPeakPenetrationMm": 0.4997765123844147,
+            "peakWristCorrectionStepMm": 0.000021350124370655976,
+            "meanMs": 75.37445625000001,
+            "p95Ms": 150.6788,
+            "maxMs": 170.5165
+        },
+        {
+            "material": "Ripe tomato",
+            "hand": "Left",
+            "frames": 132,
+            "peakPenetrationMm": 0.4999054968357086,
+            "strictPeakPenetrationMm": 0.49822062253952029,
+            "peakWristCorrectionStepMm": 0.000020171411961200647,
+            "meanMs": 17.62824015151515,
+            "p95Ms": 28.824,
+            "maxMs": 30.8782
+        }
+    ]
+}

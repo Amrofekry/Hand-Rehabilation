@@ -1,0 +1,22 @@
+{
+  "cpu": {
+    "Name": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+    "NumberOfCores": 8,
+    "NumberOfLogicalProcessors": 16
+  },
+  "gpu": [
+    {
+      "Name": "NVIDIA GeForce RTX 3060 Laptop GPU",
+      "DriverVersion": "32.0.15.7680"
+    },
+    {
+      "Name": "Intel(R) UHD Graphics",
+      "DriverVersion": "31.0.101.1999"
+    }
+  ],
+  "memory": {
+    "TotalPhysicalMemory": 16935870464
+  },
+  "unity": "6000.4.4f1",
+  "scope": "Local software-only synthetic measurements"
+}

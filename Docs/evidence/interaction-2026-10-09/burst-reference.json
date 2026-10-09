@@ -1,0 +1,9 @@
+{
+    "passed": true,
+    "assertions": 4609,
+    "skinningAssertions": 15354,
+    "utc": "2026-10-09T12:40:19.3876611Z",
+    "scope": "Exact compiled job versus managed BVH/parity on six original and pressed meshes, plus zero-weight skinning optimization against the original four-weight sum; deterministic fabricated points",
+    "maxGapErrorMm": 0.00036600977182388306,
+    "maxSkinningErrorMm": 0.0
+}

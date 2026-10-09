@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-09T12:56:09.035969+00:00",
+  "scope": "Final canonical folder source and nested Windows build; unrelated pre-existing pending files preserved",
+  "codeCommits": [
+    "661fa5c",
+    "cf974ac"
+  ],
+  "sourceSha256": {
+    "Assets/Editor/BurstSurfaceVerification.cs": "a448ce46471bf73223cd8b015e3e6cbaaf97b5fb544f5ded263619d6464ea01b",
+    "Assets/Editor/BurstSurfaceVerification.cs.meta": "af47140f6924e6b1016595b2cc4a7fd49ad10d151c4e16fd5a2ab0135af818c9",
+    "Assets/Editor/HandInteractionCorrection.cs": "62cf193c0c7e0081154fb1de13bef2cfdf29877fa61dede38f976c187e9848f8",
+    "Assets/Editor/RehabGateRunner.cs": "77a2ade175e647f473d7052220a1955f403ea9ba82f1b3f63716bdfe00d251f4",
+    "Assets/Editor/SoftBodyVerification.cs": "04062ba08555d73852c457d08de0f16212f651946a1c2704a59b189ea9ed0391",
+    "Assets/Rehab/3.2-vision/HandTracking.cs": "3a4d2b0daaf63b4123c1eed01d3f2b649b1cc840d5555208e4c35c5532fbb054",
+    "Assets/Rehab/3.3-deformation/NodeSpringDeformation.cs": "afc7bce04457008f1af68c89b8cf37319918c916b8f44f6bb56f958fb2701b3e",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": "966b07c7df4d1f3d0d6c4b29cb31ad28d58f516f6058c654a8eda81c3a5ef891",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": "9a1859f3c4d827ca7b6d64f9fff2d63b0031185df792728f8e28ad6c95de9480",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": "245af1d446d398837aa93baa4a79f90c20af7dd86e8d8eec0c9fe5eeb15c4311",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": "ac53f1521f460d2a780b3f0e9babe59dce0e175ac1f18893b1f273b5772dffb5",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/BurstSurfaceBatch.cs": "e7a9d459d84cc725b4a42410b521934cb11f297213dfea0e64710b9f292e2899",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/BurstSurfaceBatch.cs.meta": "db131429d8b2e1f720809b2b3e978e859cb84d72a9ae6f5c62f64867f87458e0",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSkinSurface.cs": "caf854186c64028c7e743eee3de3ac470ab14c50f57325f28e8d17d169157d8e",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/HandSurfaceGuard.cs": "32b9458b8ccc820dcdb1c1aa648a9bbf666e4cbf270cb61d15619c435ca185c1",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/MeshContactSurface.cs": "356b057a43a893bfaabbc97ac605f99acd86d23503d596b3fc230f7bba21f1dd",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/MovingContactAcceptance.cs": "3a7755d25eb6082d8784b887a30c3ad8e661296ad3c3cd47ff6285394f5393bb",
+    "Assets/Rehab/3.4.1-force-object-interaction/HandInteraction/MovingContactAcceptance.cs.meta": "12135f592ea377f4061aae547b1ba2be578f362e7eff7b19e7be01d21bda5660",
+    "Assets/Scenes/GripRehab.unity": "0e26bc5b2059b8aa87e46c2e065dfe6487d42e633b305652696b750dd80aac1e",
+    "Packages/manifest.json": "f72ba05256867c8614790637bc4d0e55b3e98c31a2854ed807fc1158788e0410",
+    "Packages/packages-lock.json": "0c4323a39736d4839edea06d5fd3462663494867e15048d4e02285f849d10156",
+    "ProjectSettings/ProjectVersion.txt": "6e67e538f40f0325bc8f6c34635f3ce8254a812b7f82de2cab8e18fb92620c6e",
+    "Tools/Offline/TrackingTests.cs": "2bc38518bffd2160f92ffccdef8025b20849ea6fda5d0de4ba8fc049c6c7db8a",
+    "Tools/Vision/mediapipe_bridge.py": "49d34ac702e7c71ae48f7ec43d46d36754aa74f4f64d881070ecb66dda10438a",
+    "Tools/run_contact_checks.py": "3fab4d245f1b756f8e7fb6e4c2e30cb5042e0dc3da11bca148b7125aa5a24200",
+    "Tools/run_contact_editor_checks.py": "1a04c8a669b6c88294c2b442fdf731499596480c8ca29a36467f114942558439",
+    "Tools/run_deformation_checks.py": "2d46e9f3f953f5a9294cd240354a949d7a5a27749e8e8b2be5d355fa190bdad1",
+    "Tools/test_handmate_design.py": "6b67da30b576f2001b62321e153616cdfabaf2f49d32b77f41d52de759048bf9",
+    "Tools/test_latest_camera.py": "8f3cda6854b73474c680bc5119a6a9d1e987a691b542919f326424f511446c72"
+  },
+  "artifactSha256": {
+    "Builds/Windows/GripRehab.exe": "413a04009d5fc13e03fe4e5c6941a8606c63c103edd08853efc6c9bd57e6151b",
+    "Builds/Windows/UnityPlayer.dll": "c85753eb31138449090594157977bb5d8003099fa18671cc3399da4df6df49cf",
+    "Builds/Windows/GripRehab_Data/Managed/Assembly-CSharp.dll": "d9b8ffac962fed632ee5d90ef8a9f3226c72cc7930ffe733da0e175cfcffbe7a"
+  },
+  "checks": {
+    "pythonTests": 68,
+    "productionPoseAssertions": 148,
+    "surfaceReferenceAssertions": 4609,
+    "skinWeightAssertions": 15354,
+    "nativeSurfaceAssertions": 76,
+    "nativeSolverAssertions": 78,
+    "playStopCycles": 3,
+    "playerRegressionChecks": [
+      168,
+      169,
+      168
+    ],
+    "movingCases": 12,
+    "materialCases": 36,
+    "materialChecks": 639
+  },
+  "notVerified": [
+    "Live right/left camera behavior and capture-to-display latency",
+    "Physical two-finger/tripod grasp",
+    "Hardware input",
+    "Every-pose zero continuous mesh intersection",
+    "60 FPS in every moving hollow-object frame"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+    "passed": true,
+    "utc": "2026-10-09T12:40:24.9587167Z",
+    "scope": "Native Unity math and production solver; not a live hand/hardware test or game FPS measurement",
+    "materials": [
+        {
+            "name": "Porcelain mug",
+            "nodes": 0,
+            "vertices": 2324,
+            "lowMm": 0.0,
+            "mediumMm": 0.0,
+            "highMm": 0.0,
+            "recoveredMm": 0.0,
+            "retainedDamage": 0.0,
+            "solverMeanMs": 0.0,
+            "legacyMeanMs": 0.0,
+            "allocationBytes": 0
+        },
+        {
+            "name": "Brittle cracker",
+            "nodes": 96,
+            "vertices": 486,
+            "lowMm": 0.49867895245552065,
+            "mediumMm": 1.4935312271118165,
+            "highMm": 2.9999988079071047,
+            "recoveredMm": 0.8354226350784302,
+            "retainedDamage": 0.0,
+            "solverMeanMs": 0.2378315,
+            "legacyMeanMs": 0.187382,
+            "allocationBytes": 0
+        },
+        {
+            "name": "Ripe tomato",
+            "nodes": 96,
+            "vertices": 1225,
+            "lowMm": 3.500666618347168,
+            "mediumMm": 10.640259742736817,
+            "highMm": 25.0000057220459,
+            "recoveredMm": 6.1419878005981449,
+            "retainedDamage": 0.34285756945610049,
+            "solverMeanMs": 0.3699384,
+            "legacyMeanMs": 0.5870236,
+            "allocationBytes": 0
+        },
+        {
+            "name": "Kitchen sponge",
+            "nodes": 96,
+            "vertices": 486,
+            "lowMm": 6.867363929748535,
+            "mediumMm": 19.803709030151368,
+            "highMm": 30.0,
+            "recoveredMm": 1.5,
+            "retainedDamage": 0.0,
+            "solverMeanMs": 0.2380864,
+            "legacyMeanMs": 0.2326001,
+            "allocationBytes": 0
+        },
+        {
+            "name": "Silicone ball",
+            "nodes": 96,
+            "vertices": 515,
+            "lowMm": 2.7257256507873537,
+            "mediumMm": 8.318164825439454,
+            "highMm": 18.000001907348634,
+            "recoveredMm": 0.0,
+            "retainedDamage": 0.0,
+            "solverMeanMs": 0.2697362,
+            "legacyMeanMs": 0.2760019,
+            "allocationBytes": 0
+        },
+        {
+            "name": "Silicone cup",
+            "nodes": 96,
+            "vertices": 2324,
+            "lowMm": 4.014421463012695,
+            "mediumMm": 12.203004837036133,
+            "highMm": 28.0,
+            "recoveredMm": 0.0,
+            "retainedDamage": 0.0,
+            "solverMeanMs": 0.5956039000000001,
+            "legacyMeanMs": 1.0544009,
+            "allocationBytes": 0
+        }
+    ],
+    "assertions": 78
+}
