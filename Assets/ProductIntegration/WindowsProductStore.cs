@@ -13,14 +13,8 @@ namespace GripRehab
         public WindowsProductStore(string directory) { path = Path.Combine(directory, "research-accounts.dat"); }
         public LocalProductCatalog Load()
         {
-            if (!File.Exists(path) && !File.Exists(path + ".bak")) return new LocalProductCatalog();
-            try { return Read(path); }
-            catch (Exception primary)
-            {
-                if (!File.Exists(path + ".bak")) throw new IOException("Protected accounts could not be read. Original files retained.", primary);
-                try { var backup = Read(path + ".bak"); File.Copy(path + ".bak", path, true); return backup; }
-                catch (Exception secondary) { throw new IOException("Both account copies require recovery. Original files retained.", secondary); }
-            }
+            // A busy primary is retried, never rolled back to the older .bak (audit A-020).
+            return ProtectedFileRecovery.Load(path, Read) ?? new LocalProductCatalog();
         }
         LocalProductCatalog Read(string file)
         {

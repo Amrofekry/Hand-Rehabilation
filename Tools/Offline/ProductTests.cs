@@ -116,6 +116,41 @@ static class ProductTests
             var repo = new ProductRepository(f.store, f.clock); Check(repo.SignIn("patient.one", Secret), "Signed in");
             Reject<InvalidOperationException>(() => repo.Begin(1, 0, true)); Check(repo.Sessions("patient.one").Length == 0, "No ownerless session created");
         });
+        // AUDIT A-002/A-020: a transient read failure must never roll the newest catalog back to .bak.
+        Func<string, string> readText = file => { var text = File.ReadAllText(file); if (text.StartsWith("corrupt")) throw new InvalidDataException("Fabricated corruption"); return text; };
+        Func<string> recoveryFolder = () => { var dir = Path.Combine(Path.GetTempPath(), "GripRehab-Recovery-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(dir); return dir; };
+        Test("Transient primary lock never restores the older backup", () => {
+            var dir = recoveryFolder(); var path = Path.Combine(dir, "store.dat"); File.WriteAllText(path, "newest"); File.WriteAllText(path + ".bak", "older");
+            int attempts = 0;
+            Reject<IOException>(() => ProtectedFileRecovery.Load(path, f => { attempts++; if (f == path) throw new IOException("Fabricated sharing violation"); return File.ReadAllText(f); }, _ => { }));
+            Check(attempts >= 3 && File.ReadAllText(path) == "newest", "Primary retained after retries");
+            Check(Directory.GetFiles(dir).Length == 2, "No recovery copy written for a busy file"); Directory.Delete(dir, true);
+        });
+        Test("Primary lock released during retry loads the newest copy", () => {
+            var dir = recoveryFolder(); var path = Path.Combine(dir, "store.dat"); File.WriteAllText(path, "newest"); File.WriteAllText(path + ".bak", "older");
+            int attempts = 0;
+            var loaded = ProtectedFileRecovery.Load(path, f => { if (f == path && attempts++ < 2) throw new IOException("Fabricated sharing violation"); return File.ReadAllText(f); }, _ => { });
+            Check(loaded == "newest" && File.ReadAllText(path) == "newest", "Newest copy used"); Directory.Delete(dir, true);
+        });
+        Test("Corrupt primary is preserved before backup recovery", () => {
+            var dir = recoveryFolder(); var path = Path.Combine(dir, "store.dat"); File.WriteAllText(path, "corrupt-bytes"); File.WriteAllText(path + ".bak", "older");
+            var loaded = ProtectedFileRecovery.Load(path, readText, _ => { });
+            var preserved = Directory.GetFiles(dir, "store.dat.unreadable-*");
+            Check(loaded == "older" && File.ReadAllText(path) == "older", "Backup restored");
+            Check(preserved.Length == 1 && File.ReadAllText(preserved[0]) == "corrupt-bytes", "Unreadable primary kept for recovery"); Directory.Delete(dir, true);
+        });
+        Test("Missing primary is restored from its backup", () => {
+            var dir = recoveryFolder(); var path = Path.Combine(dir, "store.dat"); File.WriteAllText(path + ".bak", "older");
+            Check(ProtectedFileRecovery.Load(path, readText, _ => { }) == "older" && File.ReadAllText(path) == "older", "Primary recreated"); Directory.Delete(dir, true);
+        });
+        Test("Both copies unreadable fails closed without replacing the primary", () => {
+            var dir = recoveryFolder(); var path = Path.Combine(dir, "store.dat"); File.WriteAllText(path, "corrupt-a"); File.WriteAllText(path + ".bak", "corrupt-b");
+            Reject<IOException>(() => ProtectedFileRecovery.Load(path, readText, _ => { }));
+            Check(File.ReadAllText(path) == "corrupt-a" && File.ReadAllText(path + ".bak") == "corrupt-b", "Originals untouched"); Directory.Delete(dir, true);
+        });
+        Test("No files returns the empty default", () => {
+            var dir = recoveryFolder(); Check(ProtectedFileRecovery.Load(Path.Combine(dir, "store.dat"), readText, _ => { }) == null, "Nothing to load"); Directory.Delete(dir, true);
+        });
         Console.WriteLine("RESULT " + passed + " passed, " + failed + " failed; fabricated fixtures only");
         return failed == 0 ? 0 : 1;
     }

@@ -54,18 +54,8 @@ namespace GripRehab
             Catalog = new RehabProfileCatalog();
             if (File.Exists(path) || File.Exists(path + ".bak"))
             {
-                try { ReadProtected(path); }
-                catch (Exception primary)
-                {
-                    if (!File.Exists(path + ".bak")) throw new IOException("Could not read protected profiles", primary);
-                    try
-                    {
-                        ReadProtected(path + ".bak");
-                        File.Copy(path + ".bak", path, true);
-                        ReadProtected(path);
-                    }
-                    catch (Exception backup) { throw new IOException("Both protected profile copies are unreadable", backup); }
-                }
+                // A busy primary is retried, never rolled back to the older .bak (audit A-002).
+                Catalog = GripRehab.Product.ProtectedFileRecovery.Load(path, file => ParseCatalog(ReadProtectedText(file)));
                 return;
             }
             if (!File.Exists(legacyPath) && !File.Exists(legacyPath + ".bak")) return;
@@ -97,11 +87,6 @@ namespace GripRehab
         {
             if (new FileInfo(file).Length > 1024 * 1024) throw new InvalidDataException("Legacy catalog too large");
             Catalog = ParseCatalog(File.ReadAllText(file, Encoding.UTF8));
-        }
-
-        void ReadProtected(string file)
-        {
-            Catalog = ParseCatalog(ReadProtectedText(file));
         }
 
         static string ReadProtectedText(string file)
