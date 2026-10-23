@@ -7,7 +7,11 @@ from datetime import datetime, timezone
 import argparse, hashlib, json, re, subprocess, sys, uuid
 
 ROOT=Path(__file__).resolve().parents[1]
-EDITOR=Path('C:/Program Files/Unity/Hub/Editor/6000.4.4f1/Editor/Data')
+def editor_data():
+    # Follow the project's pinned Editor instead of a hard-coded release.
+    version=re.search(r'm_EditorVersion:\s*(\S+)',(ROOT/'ProjectSettings/ProjectVersion.txt').read_text(encoding='utf-8'))[1]
+    return Path('C:/Program Files/Unity/Hub/Editor')/version/'Editor/Data'
+EDITOR=editor_data()
 OUTPUT=ROOT/'Logs/offline'
 
 def run(command, log):
