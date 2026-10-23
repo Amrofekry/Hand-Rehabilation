@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-01T15:29:27.130114+00:00",
+  "checks": [
+    {
+      "name": "image-instead-of-world-gesture",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Pointer checks: 100 passed, 6 failed (fabricated fixtures only)"
+    },
+    {
+      "name": "stationary-navigation-rearmed",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Pointer checks: 90 passed, 16 failed (fabricated fixtures only)"
+    },
+    {
+      "name": "held-control-repeats",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Pointer checks: 105 passed, 1 failed (fabricated fixtures only)"
+    }
+  ],
+  "productionReplacedByMutations": false,
+  "sourceHashes": {
+    "RehabPointerPolicy.cs": "9f9e20f14ebe2c63a9992f37cd3af0e72cfceba6f1affd5431a0b3b6203060f8",
+    "RehabDwellGate.cs": "f788363d6ec1607c5d7e89bdf297a7ae3323b04e336ac8d9eb11507f708608f7"
+  }
+}

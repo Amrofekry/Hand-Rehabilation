@@ -1,0 +1,6 @@
+{
+  "utc": "2026-10-01T09:59:56.464902+00:00",
+  "heldInputMutationRejected": true,
+  "unsafeSpaceSubmitRejected": true,
+  "scope": "Negative tests in isolated Logs/memory; production source/settings never mutated"
+}

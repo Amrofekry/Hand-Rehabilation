@@ -1,0 +1,62 @@
+{
+  "utc": "2026-10-01T15:33:02.650964+00:00",
+  "item": 2,
+  "wbs": [
+    "3.2",
+    "3.4"
+  ],
+  "canonicalProject": "E:\\GP\\codex\\GripRehab-Unity",
+  "state": "SOFTWARE COMPLETE; NATIVE UGUI AND LIVE CAMERA VERIFICATION PENDING",
+  "sourceAssertions": 106,
+  "staticIntegrationTests": 17,
+  "previousRegressionChecks": 401,
+  "totalUniquePositiveChecks": 524,
+  "pythonSuiteCount": 51,
+  "repeatedRunsCountedAgain": false,
+  "baselineGestureDwellChecks": {
+    "passed": 57,
+    "failed": 7
+  },
+  "baselineFailures": [
+    "FAIL Right bent world index overrides straight image projection",
+    "FAIL Right world pointer survives curled-looking image projection",
+    "FAIL Right open world palm overrides curled image projection",
+    "FAIL Left bent world index overrides straight image projection",
+    "FAIL Left world pointer survives curled-looking image projection",
+    "FAIL Left open world palm overrides curled image projection",
+    "FAIL Bad confidence rejected even with mistaken valid flag"
+  ],
+  "negativeMutationsRejected": 3,
+  "nativeUnityRun": false,
+  "computerUse": false,
+  "liveCameraTest": false,
+  "newWindowsBuild": false,
+  "sourceHashes": {
+    "Assets/Rehab/3.4-game-modules/RehabDwellPointer.cs": "24470e8447efcba153711450b03561a497bf5141f6da79ed009262df5eb99fed",
+    "Assets/Rehab/3.4-game-modules/RehabPointerPolicy.cs": "9f9e20f14ebe2c63a9992f37cd3af0e72cfceba6f1affd5431a0b3b6203060f8",
+    "Assets/Rehab/3.4-game-modules/RehabPointerPolicy.cs.meta": "7d660d53afa3f1c49b4ba77f40b90f61ea8ac6706b95cbb1ef2d6242ac408f40",
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": "c69d881cdcbc30bede4b117c48364c97ab7d55649371c7e55b08a97e36f08b85",
+    "Assets/UIBridge/GripDwellSettingsAdapter.cs": "c34606aa4496a6f1d8fa6a216e57991323f51dba3b4ae7cd382c46a764bbf876",
+    "Tools/Offline/PointerTests.cs": "92fbbbe67fc9a4f30bbf7b7b2d2bd43fd1955a9b29c8e3bcabaeb500511ed432",
+    "Tools/Offline/verify_pointer_sensitivity.py": "25bda7598e7f74c69286d3c16219dc0ab4f36d79319dc6cb19355b4572356969",
+    "Tools/test_pointer_bindings.py": "3869678097cde35d2140d0c7ecea2a18bd18c4259926591778cb6376cbbded19",
+    "Tools/offline_verify.py": "1135c587d660bb73215710b69aa0bc68ef562e92ee1f518c1eed355e89711794"
+  },
+  "preservedItem5SourceChecks": [
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ContactDeformation.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FracturePartitioner.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentSettings.cs",
+    "Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset",
+    "Tools/Offline/DeformationTests.cs",
+    "Tools/Offline/verify_deformation_sensitivity.py",
+    "Tools/test_deformation_bindings.py",
+    "Assets/Rehab/3.4-game-modules/RehabDwellGate.cs"
+  ],
+  "backup": "E:\\GP\\codex\\GripRehab-Unity\\Logs\\item2-before-20261001-151614",
+  "pythonTests": "...................................................\n----------------------------------------------------------------------\nRan 51 tests in 0.442s\n\nOK",
+  "gitCommitCreated": false
+}

@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-01T10:04:13.791177+00:00",
+  "checklistItem": 3,
+  "wbs": [
+    "3.4",
+    "3.4.1"
+  ],
+  "state": "Software implementation and files-only verification complete; native keyboard/mouse verification pending",
+  "sourceHashes": {
+    "Assets/Rehab/3.4-game-modules/RehabKeyboardGate.cs": "896bfb327bd4668e037e7cedea055c2776954b14ea4197aa8de2aa3ed6d3b41a",
+    "Assets/Rehab/3.4-game-modules/RehabKeyboardGate.cs.meta": "bc4a866ec163677110e4446a1d23725d28be43aac39d93404e8e9d54bb70ee9d",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentPlayer.cs": "54e7faf1407d5c5bda0da4613361a53bc88c287f3f02fd2ee78dd040bc30c8b1",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": "2becff6161e8269dbac09cf20c40c47aeb61a7cdf0c5e9cbcf71e62ee128e9c2",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentChoices.cs": "2e2b8d97b5d5113bd57fb59935db81516f1afb277625bc72d583b8d124a33d82",
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": "2ae51dc01be62a1b8dd928cae4fa959af946a6a171d8193a63a596f1c1fa7356",
+    "Tools/Offline/KeyboardTests.cs": "602a284bd6e6f0928e3e4e8eed7933eb10fedc7231bf0ac670d5bde58947bc84",
+    "Tools/test_keyboard_bindings.py": "734f66cc5d141ebd321abea9a31f86388e70e9cd4e0d6b07989af212148ca080",
+    "Tools/offline_verify.py": "2bad6f962948b29e9985494cd241ad9842c15a6aab070a48b51cc61f41dd92ef",
+    "ProjectSettings/InputManager.asset": "335f96f379d1ef6f6083834993141b19e6e7aef27ac4635747c5937db8884a20"
+  },
+  "cachedReferenceCompilation": {
+    "editorAssemblies": 5,
+    "playerAssemblies": 4,
+    "passed": true
+  },
+  "keyboardPolicyChecks": 72,
+  "staticKeyboardBindingTests": 9,
+  "trackingRegressionChecks": 130,
+  "productDomainTests": 37,
+  "pythonVisionAndForceTests": 8,
+  "totalPositiveChecks": 256,
+  "negativeChecks": "Held-input rearming removal and unsafe Space Submit mapping were both rejected",
+  "editorPlayStop": "Not run for this revision; user requested files only",
+  "windowsBuild": "Not run; previous EXE is unchanged",
+  "physicalKeyboardMouse": "Not tested through Unity/OS for this revision",
+  "physicalCameraAndNano": "Not tested"
+}

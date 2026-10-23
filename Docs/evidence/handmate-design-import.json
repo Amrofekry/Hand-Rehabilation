@@ -1,0 +1,139 @@
+{
+  "source": "E:\\Downloads\\HandMate-Rehab-System-main.zip",
+  "zip_sha256": "c2173ccf62f736e479daab9d7fcd3081d23fadda40bac8a4bfacff1803076887",
+  "assets": [
+    {
+      "path": "Assets/UI/HandMate/Images/back-arrow.png",
+      "source": "HandMate-Rehab-System-main/Assets/Images/back-arrow.png",
+      "sha256": "2e761a976f239a3f4262851ddbd1c32b204858092264fa0b4bd116cee161c4c9"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/background.jpeg",
+      "source": "HandMate-Rehab-System-main/Assets/Images/background.jpeg",
+      "sha256": "a1209f7eae8ac24d29c1e2cc3b50f57e00dc48de43f61313a5048d134fbe955d"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/house.png",
+      "source": "HandMate-Rehab-System-main/Assets/Images/house.png",
+      "sha256": "0b8779094d19640ded211344674f2229f741cd03e79c05bbfb408d5850363d60"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/left-arrow.png",
+      "source": "HandMate-Rehab-System-main/Assets/Images/left-arrow.png",
+      "sha256": "75d5621a1fc805cb1ef8a7c338a2d324500d03c5c0ee503ec8aea1bac1b50832"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/module1.jpeg",
+      "source": "HandMate-Rehab-System-main/Assets/Images/module1.jpeg",
+      "sha256": "3daf9a4965c3e5b3cccacd175d1a5823c7c03c4b907e4aa06e536db14eb4c953"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/module2-locked.jpeg",
+      "source": "HandMate-Rehab-System-main/Assets/Images/module2-locked.jpeg",
+      "sha256": "0b5b4a0e82ed0561b42cd97e7a405623975d6cb2aac1feb408214440b43629c8"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/module2.jpeg",
+      "source": "HandMate-Rehab-System-main/Assets/Images/module2.jpeg",
+      "sha256": "2474d8c26303f1ec0dca74d46f128ff4e97dd395594e5e4301ea515431d5dcfb"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/module3-locked.jpeg",
+      "source": "HandMate-Rehab-System-main/Assets/Images/module3-locked.jpeg",
+      "sha256": "4d20c4aa551d102fbbe9631b0c840648cdb0af6d4bb36b03807e0fd58e7bf260"
+    },
+    {
+      "path": "Assets/UI/HandMate/Images/module3.jpeg",
+      "source": "HandMate-Rehab-System-main/Assets/Images/module3.jpeg",
+      "sha256": "5d9ba83729f2bd8c9c480787ea976f51fdec67a0735887bbf1bf06c37063c0b0"
+    },
+    {
+      "path": "Assets/UI/HandMate/Fonts/Montserrat-Italic-VariableFont_wght.ttf",
+      "source": "HandMate-Rehab-System-main/Assets/Fonts/Montserrat-Italic-VariableFont_wght.ttf",
+      "sha256": "225da7d3255aaac9ab6bef71bf27ccbfab0b65a58a6b0a3d5c14c26cdd988691"
+    },
+    {
+      "path": "Assets/UI/HandMate/Fonts/Montserrat-VariableFont_wght.ttf",
+      "source": "HandMate-Rehab-System-main/Assets/Fonts/Montserrat-VariableFont_wght.ttf",
+      "sha256": "498dc34d0fa45288e0ac5345bd385c98bf81c56ee70209aacfb4a22a6510697c"
+    },
+    {
+      "path": "Assets/UI/HandMate/Fonts/Orbitron-VariableFont_wght.ttf",
+      "source": "HandMate-Rehab-System-main/Assets/Fonts/Orbitron-VariableFont_wght.ttf",
+      "sha256": "46eefc7084fd9abffd87547c47f729b6071c7f7a8d5af281266bb09e5461c435"
+    }
+  ],
+  "palettes": {
+    "Dark": {
+      "backdrop": "1A2230",
+      "surface": "202F43",
+      "darkSurface": "1A2230",
+      "primary": "00F0FF",
+      "secondary": "2B415C",
+      "accent": "00F0FF",
+      "textOnDark": "FFFFFF",
+      "textOnLight": "FFFFFF",
+      "textOnPrimary": "112030",
+      "textOnSecondary": "FFFFFF",
+      "mutedOnDark": "C2D2E6",
+      "mutedOnLight": "C2D2E6",
+      "danger": "FF9AA7",
+      "warning": "F9D67E",
+      "success": "77E3BE"
+    },
+    "Light": {
+      "backdrop": "E8F3FA",
+      "surface": "FFFFFF",
+      "darkSurface": "F2F7FC",
+      "primary": "007783",
+      "secondary": "DDEAF5",
+      "accent": "006976",
+      "textOnDark": "1A2230",
+      "textOnLight": "1A2230",
+      "textOnPrimary": "FFFFFF",
+      "textOnSecondary": "1A2230",
+      "mutedOnDark": "42576B",
+      "mutedOnLight": "42576B",
+      "danger": "AD243B",
+      "warning": "7C4C00",
+      "success": "076850"
+    },
+    "HighContrast": {
+      "backdrop": "000000",
+      "surface": "000000",
+      "darkSurface": "000000",
+      "primary": "FFFF00",
+      "secondary": "FFFFFF",
+      "accent": "FFFF00",
+      "textOnDark": "FFFFFF",
+      "textOnLight": "FFFFFF",
+      "textOnPrimary": "000000",
+      "textOnSecondary": "000000",
+      "mutedOnDark": "FFFFFF",
+      "mutedOnLight": "FFFFFF",
+      "danger": "FFAAAA",
+      "warning": "FFFF00",
+      "success": "AAFFAA"
+    }
+  },
+  "styled_files": [
+    "Assets/Scenes/GripRehab.unity",
+    "Assets/UI/GripUiGallery.unity",
+    "Assets/UI/Components/ConnectionChip.prefab",
+    "Assets/UI/Components/DisabledButton.prefab",
+    "Assets/UI/Components/InputField.prefab",
+    "Assets/UI/Components/PrimaryButton.prefab",
+    "Assets/UI/Components/ProgressBar.prefab",
+    "Assets/UI/Components/SecondaryButton.prefab",
+    "Assets/UI/Components/Slider.prefab",
+    "Assets/UI/Components/Toggle.prefab"
+  ],
+  "scope": "UI presentation only; no source scripts, scenes, gameplay, environments or project settings imported",
+  "derived_body_font": {
+    "path": "Assets/UI/HandMate/Fonts/HandMate-Montserrat-Regular.ttf",
+    "weight": 400,
+    "subfamily": "Regular",
+    "source": "Montserrat-VariableFont_wght.ttf",
+    "sha256": "2e91f96bbba8b1318d2bf190482ff0b36e959e728cac7fc45e99c656290e39f1"
+  }
+}

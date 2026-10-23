@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f41aeb3e23e264842900e28afa8bcb80, type: 3}
+  m_Name: HandPhysics
+  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.PhysicsHandSettings
+  schemaVersion: 5
+  handLayer: 10
+  surfaceLayer: 11
+  contactOffset: 0.001
+  maxPenetration: 0.002
+  surfacePatchRadius: 0.025
+  surfaceThickness: 0.003
+  colliderScale: 1.02
+  fingerRadiusScale:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  minimumFingerRadius: 0.003
+  maximumFingerRadius: 0.018
+  palmMass: 0.2
+  segmentMass: 0.015
+  positionSpring: 100
+  positionDamping: 14
+  maxWristForce: 6
+  rotationSpring: 0.8
+  rotationDamping: 0.08
+  maxWristTorque: 0.15
+  fingerSpring: 0.1
+  fingerDamping: 0.015
+  maxFingerTorque: 0.008
+  flexionLimit: 120
+  swingLimit: 85
+  maxVelocity: 0.8
+  maxAngularVelocity: 5
+  maxDepenetrationVelocity: 0.2
+  nearSurfaceAngularVelocity: 1
+  penetrationSpring: 100
+  penetrationDamping: 1
+  maximumCorrectionForce: 0.5
+  worldOriginResetDistance: 0.5
+  solverIterations: 12
+  solverVelocityIterations: 4
+  opposingNormalDot: -0.3
+  allowPalmSupport: 1
+  gripDwellSeconds: 0.12
+  gripSpring: 55
+  gripDamping: 7
+  maxGripForce: 8
+  maxGripTorque: 0.05
+  maximumGripSeparation: 0.35
+  showGizmos: 0

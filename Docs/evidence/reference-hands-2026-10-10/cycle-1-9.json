@@ -1,0 +1,51 @@
+{
+    "hand": "Left",
+    "item": "Kitchen sponge",
+    "error": "",
+    "engineTracked": true,
+    "grabbed": true,
+    "dropped": true,
+    "finite": true,
+    "contacts": 4,
+    "visibleHands": 1,
+    "colliderPenetrationMm": 2.4582245349884035,
+    "maxObjectSpeed": 0.24583721160888673,
+    "ghosted": false,
+    "kinematic": false,
+    "heldAtEnd": true,
+    "nativeHeldAtEnd": true,
+    "brokenAtEnd": false,
+    "apertureClear": true,
+    "damage": 0.0,
+    "otherHeld": "Kitchen sponge",
+    "heldSeconds": 0.8202776908874512,
+    "mask": 512,
+    "objectLayer": 9,
+    "palm": {
+        "x": 0.42783495783805849,
+        "y": 1.4155786037445069,
+        "z": -1.8455123901367188
+    },
+    "fingerTip": {
+        "x": 0.46767958998680117,
+        "y": 1.4218926429748536,
+        "z": -1.8494391441345215
+    },
+    "physicsPalm": {
+        "x": 0.42830464243888857,
+        "y": 1.4151544570922852,
+        "z": -1.8456302881240845
+    },
+    "meshCenter": {
+        "x": 0.4243702292442322,
+        "y": 1.4053783416748047,
+        "z": -2.1288561820983888
+    },
+    "meshSize": {
+        "x": 0.2238539457321167,
+        "y": 0.17562925815582276,
+        "z": 0.700531005859375
+    },
+    "contactAdapterP95Ms": 0.1025,
+    "frameP95Ms": 7.803401444107294
+}

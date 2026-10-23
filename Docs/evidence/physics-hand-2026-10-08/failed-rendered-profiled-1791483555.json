@@ -1,0 +1,19 @@
+{
+  "passed": false,
+  "checks": 9502,
+  "utc": "2026-10-08T18:19:29.8239949Z",
+  "error": "System.Exception: Heavy-object resting penetration exceeds 3mm: 0.003212946\r\n  at GripRehab.PhysicsHandAcceptance.Check (System.Boolean ok, System.String text) [0x00023] in E:\\GP\\codex\\GripRehab-Unity\\Assets\\Rehab\\3.4.1-force-object-interaction\\PhysicsHand\\PhysicsHandAcceptance.cs:16 \r\n  at GripRehab.PhysicsHandAcceptance+<Run>d__16.MoveNext () [0x00789] in E:\\GP\\codex\\GripRehab-Unity\\Assets\\Rehab\\3.4.1-force-object-interaction\\PhysicsHand\\PhysicsHandAcceptance.cs:38 \r\n  at GripRehab.PhysicsHandAcceptance+<Start>d__15.MoveNext () [0x0009e] in E:\\GP\\codex\\GripRehab-Unity\\Assets\\Rehab\\3.4.1-force-object-interaction\\PhysicsHand\\PhysicsHandAcceptance.cs:18 ",
+  "scope": "Windows player, actual PhysX hand and imported VirtualGrasp mesh; controlled target poses, no live camera/hardware",
+  "device": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz / NVIDIA GeForce RTX 3060 Laptop GPU",
+  "peakPenetrationMm": 11.576055526733398,
+  "peakPreSolverSeparationMm": 13.967327117919922,
+  "peakSkinGapMm": 0.0,
+  "maxVelocity": 0.8000000715255737,
+  "maxAngularVelocity": 5.000000476837158,
+  "measuredFps": 172.52088928222656,
+  "contacts": 1702,
+  "physicsRecorderAvailable": true,
+  "meanPhysicsMs": 0.1427313103448277,
+  "maxPhysicsMs": 1.4396,
+  "nativePeakBytes": 292896356
+}

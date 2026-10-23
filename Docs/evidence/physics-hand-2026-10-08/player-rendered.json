@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checks": 31961,
+  "utc": "2026-10-08T19:38:24.0618754Z",
+  "error": "",
+  "scope": "Windows player, actual PhysX hand and imported VirtualGrasp mesh; controlled target poses, no live camera/hardware",
+  "device": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz / NVIDIA GeForce RTX 3060 Laptop GPU",
+  "peakPenetrationMm": 10.350481986999512,
+  "peakPreSolverSeparationMm": 13.131134033203125,
+  "peakSkinGapMm": 12.01909351348877,
+  "maxVelocity": 0.8000000715255737,
+  "maxAngularVelocity": 5.000000476837158,
+  "measuredFps": 420.5668640136719,
+  "contacts": 1892,
+  "physicsRecorderAvailable": false,
+  "meanPhysicsMs": 0.0,
+  "maxPhysicsMs": 0.0,
+  "nativePeakBytes": 262517302
+}

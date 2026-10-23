@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-01T13:44:33.687850+00:00",
+  "checks": [
+    {
+      "name": "dent-pushed-outward",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1
+    },
+    {
+      "name": "final-recovery-upload-lost",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1
+    },
+    {
+      "name": "missing-fracture-triangle",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1
+    }
+  ],
+  "productionReplacedByMutations": false,
+  "sourceHashes": {
+    "ContactDeformation.cs": "c1876771eb44e3f1214c26bb8a08e258917612470beb5d3db56baf1300820d05",
+    "FracturePartitioner.cs": "f88fee0d39f3c21296f29c672a04ada8215ba26fe8db18d815eea0dd9259e8d0"
+  }
+}

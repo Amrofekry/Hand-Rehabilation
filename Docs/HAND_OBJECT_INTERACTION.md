@@ -1,3 +1,5 @@
+> Historical custom implementation. The active scene now uses original Ultraleap Physical Hands; see [REFERENCE_HANDS_INTEGRATION.md](REFERENCE_HANDS_INTEGRATION.md). Do not run this older installer over the native reference setup.
+
 # Direct VirtualGrasp hand and object contact — WBS 3.4.1
 
 The user rejected the separate dynamic hand. The shipped scene now uses the

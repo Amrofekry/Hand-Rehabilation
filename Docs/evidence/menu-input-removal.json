@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-02",
+  "voiceCommands": "not implemented; future task 7",
+  "removed": "runtime speech classes, microphone overlay, F9 binding, shell voice routes, speech workers, Editor voice/microphone probes and voice-only tests",
+  "mouseKeyboardWholeHandPointerRetained": true,
+  "cachedReferenceEditorAndPlayerCompilationPassed": true,
+  "managedSourceTestsPassed": true,
+  "pythonTestsPassed": 63,
+  "nativeEditorOrFreshWindowsBuildRun": false,
+  "staleWindowsBuildDeleted": false,
+  "staleBuildDeletionBlock": "Execution policy required sandbox approval, but sandbox_approval is disabled. The obsolete player remains and is labelled as requiring rebuild."
+}

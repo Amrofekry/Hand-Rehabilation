@@ -1,0 +1,98 @@
+PAGE 1
+The user journey
+P ATIENT JOURNEY
+Visual feedback and on-screen guidance
+01 Patient
+Switch on device and computer
+Open application and patient profile
+02 Prepare and assess
+Connect grip and camera
+Complete the starting trial
+Grip strength·endurance
+Hand motion·stability
+Baseline sets your starting level
+Session
+start
+Ready
+03 Select and start an exercise
+REHABILITATION GAME
+Example shown: force–object interaction
+Grip force
+Endurance
+Stability
+Choose an available module (options below)
+Follow its on-screen task instructions
+Camera
+Tracks hand movement
+Hand motion
+Hand pose
+Interchangeable force-sensing grip
+Sphere·cylinder·pencil
+Grip
+Force
+Bluetooth
+04 Adaptive guidance
+Keep playing
+Difficulty adjusts to your performance
+Fatigue warning
+Choose Resume or Quit
+Automatic stop
+Multiple fatigue signs end the session
+Live performance
+Level changes
+and prompts
+05 Review your results
+P ATIENT DASHBOARD
+Grip force
+Force
+Endurance
+Time
+Stability
+Control
+Example: force module results
+Finish the task
+or choose Quit
+Automatic stop
+Session history
+Save results
+06 Save and switch off
+Confirm results are saved
+Close app and power off
+After saving
+Results and progress feedback
+03 EXERCISE OPTIONS
+MODULE 1 FORCE INTERACTION
+GP1·Current project scope
+Grip and deform virtual objects.
+Force, endurance and gesture stability.
+MODULE 2 COGNITIVE PERFORMANCE
+GP2·Planned extension
+1 2 3
+Gesture sequence memory and spatial assembly.
+Reaction time, accuracy and movement trajectory.
+MODULE 3 VISUOMOTOR COORDINATION
+GP2·Planned extension
+Maze navigation and visual tracing.
+Motion accuracy, reaction time and hand stability.
+DOCTOR JOURNEY
+D1 Sign in
+Open the doctor dashboard
+D2 Select a patient
+Open the patient’s profile and saved sessions
+P ATIENT HISTORY / DOCTOR VIEW
+Session history
+Progress statistics
+Fatigue and stops
+Illustrative records; no patient data
+D3 Review progress
+Compare module metrics: force, endurance,
+stability, reaction time and accuracy.
+Review recorded fatigue and stop events.
+D4 Record recommendations*
+Add review notes and personalized guidance
+for the patient’s follow-up
+D5 Save and sign out*
+Store the review with the patient record
+Saved patient
+sessions
+Save doctor notes*

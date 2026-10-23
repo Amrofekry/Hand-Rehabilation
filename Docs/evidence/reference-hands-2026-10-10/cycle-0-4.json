@@ -1,0 +1,51 @@
+{
+    "hand": "Right",
+    "item": "Silicone cup",
+    "error": "",
+    "engineTracked": true,
+    "grabbed": true,
+    "dropped": true,
+    "finite": true,
+    "contacts": 9,
+    "visibleHands": 1,
+    "colliderPenetrationMm": 18.025279998779298,
+    "maxObjectSpeed": 2.1810827255249025,
+    "ghosted": false,
+    "kinematic": false,
+    "heldAtEnd": false,
+    "nativeHeldAtEnd": false,
+    "brokenAtEnd": false,
+    "apertureClear": true,
+    "damage": 0.0,
+    "otherHeld": "",
+    "heldSeconds": 0.8042510747909546,
+    "mask": 512,
+    "objectLayer": 9,
+    "palm": {
+        "x": 0.7674288153648377,
+        "y": 1.4308558702468873,
+        "z": -1.8423165082931519
+    },
+    "fingerTip": {
+        "x": 0.7489151954650879,
+        "y": 1.3956800699234009,
+        "z": -1.850240707397461
+    },
+    "physicsPalm": {
+        "x": 0.7674288153648377,
+        "y": 1.4308558702468873,
+        "z": -1.8423165082931519
+    },
+    "meshCenter": {
+        "x": 0.7739326357841492,
+        "y": 1.4140090942382813,
+        "z": -2.1337766647338869
+    },
+    "meshSize": {
+        "x": 0.17405593395233155,
+        "y": 0.16728079319000245,
+        "z": 0.6867583990097046
+    },
+    "contactAdapterP95Ms": 0.0994,
+    "frameP95Ms": 5.417396314442158
+}

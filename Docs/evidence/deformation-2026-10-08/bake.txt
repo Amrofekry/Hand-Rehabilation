@@ -1,0 +1,6 @@
+Ripe tomato: 1225 visual vertices; 96 spring nodes; colliders=BoxCollider
+Brittle cracker: 486 visual vertices; 96 spring nodes; colliders=BoxCollider
+Silicone cup: 2324 visual vertices; 96 spring nodes; colliders=BoxCollider
+Kitchen sponge: 486 visual vertices; 96 spring nodes; colliders=BoxCollider
+Porcelain mug: 2324 visual vertices; 0 spring nodes; colliders=BoxCollider
+Silicone ball: 515 visual vertices; 96 spring nodes; colliders=SphereCollider

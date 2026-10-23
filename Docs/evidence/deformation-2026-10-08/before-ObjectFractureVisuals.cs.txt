@@ -1,0 +1,72 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+namespace GripRehab {
+// Allocated once in Awake; generated piece meshes belong to this object only.
+public sealed class ObjectFractureVisuals:IDisposable {
+ public GameObject Root{get;private set;}
+ public bool DamageVisible=>cracks!=null&&cracks.activeInHierarchy;
+ readonly List<Mesh> meshes=new List<Mesh>();
+ GameObject cracks;Material crackMaterial;
+ public static ObjectFractureVisuals Create(Transform owner,MeshFilter source,Renderer renderer,float mass){
+  if(source==null||renderer==null||source.sharedMesh==null||!source.sharedMesh.isReadable||source.sharedMesh.subMeshCount!=1)return null;
+  var original=source.sharedMesh;var vertices=original.vertices;var triangles=original.triangles;
+  if(vertices.Length==0||triangles.Length==0)return null;
+  var basis=Quaternion.Inverse(owner.rotation);
+  for(int i=0;i<vertices.Length;i++)vertices[i]=basis*(source.transform.TransformPoint(vertices[i])-owner.position);
+  FractureLayout layout;
+  try{layout=FracturePartitioner.Split(vertices,triangles,12);}catch(ArgumentException){return null;}
+
+  var output=new ObjectFractureVisuals();
+  output.Root=new GameObject(owner.name+" surface fragments");output.Root.SetActive(false);output.Root.transform.SetPositionAndRotation(owner.position,owner.rotation);
+  float pieceMass=Mathf.Max(.001f,mass/Mathf.Max(1,layout.chunks.Length));
+  var uv=original.uv;
+  foreach(var piece in layout.chunks){
+   var go=new GameObject("Surface shard",typeof(MeshFilter),typeof(MeshRenderer),typeof(BoxCollider),typeof(Rigidbody));
+   go.transform.SetParent(output.Root.transform,false);go.transform.localPosition=piece.center;
+   var mesh=new Mesh{name=owner.name+" fracture surface"};mesh.vertices=piece.vertices;mesh.triangles=piece.triangles;
+   if(uv.Length==original.vertexCount){var mapped=new Vector2[piece.sourceIndices.Length];for(int i=0;i<mapped.Length;i++)mapped[i]=uv[piece.sourceIndices[i]];mesh.uv=mapped;}
+   mesh.RecalculateNormals();mesh.RecalculateBounds();output.meshes.Add(mesh);
+   go.GetComponent<MeshFilter>().sharedMesh=mesh;go.GetComponent<MeshRenderer>().sharedMaterials=renderer.sharedMaterials;
+   var collider=go.GetComponent<BoxCollider>();collider.center=mesh.bounds.center;
+   var size=mesh.bounds.size;collider.size=new Vector3(Mathf.Max(.003f,size.x),Mathf.Max(.003f,size.y),Mathf.Max(.003f,size.z));
+   var body=go.GetComponent<Rigidbody>();body.isKinematic=true;body.useGravity=true;body.mass=pieceMass;
+   body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
+  }
+  // Touching debris must not explode because neighboring chip bounds overlap.
+  var colliders=output.Root.GetComponentsInChildren<Collider>(true);
+  for(int i=0;i<colliders.Length;i++)for(int j=i+1;j<colliders.Length;j++)Physics.IgnoreCollision(colliders[i],colliders[j],true);
+  output.BuildCracks(owner,vertices,triangles,layout.trianglePieces);
+  output.Root.SetActive(false);return output;
+ }
+ void BuildCracks(Transform owner,Vector3[] points,int[] triangles,int[] labels){
+  var edgeOwner=new Dictionary<long,int>();var crackPoints=new List<Vector3>();var crackTriangles=new List<int>();
+  for(int t=0;t<labels.Length;t++)for(int edge=0;edge<3;edge++){
+   int a=triangles[t*3+edge],b=triangles[t*3+(edge+1)%3];int lo=Math.Min(a,b),hi=Math.Max(a,b);
+   long key=((long)lo<<32)|(uint)hi;int prior;
+   if(!edgeOwner.TryGetValue(key,out prior)){edgeOwner[key]=t;continue;}
+   if(labels[t]==labels[prior])continue;
+   var normal=Vector3.Cross(points[triangles[t*3+1]]-points[triangles[t*3]],points[triangles[t*3+2]]-points[triangles[t*3]]).normalized;
+   var side=Vector3.Cross(normal,points[b]-points[a]).normalized*.00045f;var lift=normal*.0003f;
+   int n=crackPoints.Count;crackPoints.Add(points[a]-side+lift);crackPoints.Add(points[a]+side+lift);crackPoints.Add(points[b]-side+lift);crackPoints.Add(points[b]+side+lift);
+   crackTriangles.AddRange(new[]{n,n+2,n+1,n+1,n+2,n+3,n+1,n+2,n,n+3,n+2,n+1});
+  }
+  if(crackPoints.Count==0)return;
+  var shader=Shader.Find("Universal Render Pipeline/Unlit");if(shader==null)return;
+  crackMaterial=new Material(shader){name="Research damage seams"};crackMaterial.SetColor("_BaseColor",new Color(.025f,.035f,.045f,1));
+  cracks=new GameObject("Damage seams",typeof(MeshFilter),typeof(MeshRenderer));cracks.transform.SetParent(owner,false);
+  // Points are physical metres in owner's rotation basis, not scaled mesh coordinates.
+  var scale=owner.lossyScale;
+  for(int i=0;i<crackPoints.Count;i++){var p=crackPoints[i];crackPoints[i]=new Vector3(p.x/Mathf.Max(.0001f,Mathf.Abs(scale.x)),p.y/Mathf.Max(.0001f,Mathf.Abs(scale.y)),p.z/Mathf.Max(.0001f,Mathf.Abs(scale.z)));}
+  var mesh=new Mesh{name=owner.name+" damage seams"};mesh.SetVertices(crackPoints);mesh.SetTriangles(crackTriangles,0);mesh.RecalculateBounds();meshes.Add(mesh);
+  cracks.GetComponent<MeshFilter>().sharedMesh=mesh;cracks.GetComponent<MeshRenderer>().sharedMaterial=crackMaterial;cracks.SetActive(false);
+ }
+ public void SetDamage(float value,bool broken){if(cracks!=null)cracks.SetActive(!broken&&value>=.25f);}
+ public void Dispose(){
+  if(Root!=null)UnityEngine.Object.Destroy(Root);
+  if(cracks!=null)UnityEngine.Object.Destroy(cracks);
+  foreach(var mesh in meshes)if(mesh!=null)UnityEngine.Object.Destroy(mesh);
+  if(crackMaterial!=null)UnityEngine.Object.Destroy(crackMaterial);
+ }
+}
+}

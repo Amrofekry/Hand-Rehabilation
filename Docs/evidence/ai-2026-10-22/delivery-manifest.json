@@ -1,0 +1,62 @@
+{
+  "Builds/Windows/GripRehab.exe": {
+    "bytes": 666624,
+    "sha256": "6adbc0698bc3039a09e67a1cc21e3b1b16f4857d4086fcaf5bea0cf232b8cef3"
+  },
+  "Builds/Windows/UnityPlayer.dll": {
+    "bytes": 30976536,
+    "sha256": "4f03d3defdac3a36d59e489fa32dfbc7401e0968669ec6a9831f50835419bc07"
+  },
+  "Builds/Windows/NVUnityPlugin.dll": {
+    "bytes": 1380376,
+    "sha256": "f588dceaef3369b1ddc504b777cc1e0e60b036e86ae52a824302353d73c5f8b6"
+  },
+  "Builds/Windows/GripRehab_Data/Managed/Assembly-CSharp.dll": {
+    "bytes": 340992,
+    "sha256": "6646b47eb3e5e5640959dcf35664c3a367f6556a11950ec3b53580f8c1777143"
+  },
+  "Builds/Windows/GripRehab_Data/Managed/GripRehab.Product.dll": {
+    "bytes": 46080,
+    "sha256": "d3d63deb66b74e5f5b15d8cfc7f6a62e7c5de45878a074bb7dd080c0dd74deed"
+  },
+  "Builds/Windows/GripRehab_Data/Managed/Unity.Sentis.dll": {
+    "bytes": 882688,
+    "sha256": "b1b3aa10378041b32ba0601980f901fcc8376936d1992d134662e717a479439a"
+  },
+  "Builds/Windows/GripRehab_Data/resources.assets": {
+    "bytes": 21666452,
+    "sha256": "2d0a80a17527abc0098fcd5ddba1cb96e5f55408f47bb8bd419301773f10e5db"
+  },
+  "Assets/Scenes/GripRehab.unity": {
+    "bytes": 907523,
+    "sha256": "9545f4e28977e082765ef7f949fd47ad56857f1d1231a049e43baf58e63d4bd2"
+  },
+  "Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.dll": {
+    "bytes": 172032,
+    "sha256": "317127a0320b5f63aa544e92e05c09465a266a114dab27c0cbbbcb7bb8292bcd"
+  },
+  "Assets/Resources/ResearchAi/PROTOTYPE_PROXY_cnn.onnx": {
+    "bytes": 17533,
+    "sha256": "7ccc6831cc9ae9affb1e0b730447b299d68aff25bcdfb2baebf545db10e744bc"
+  },
+  "ai-engine/models/PROTOTYPE_PROXY_gru.onnx": {
+    "bytes": 19142,
+    "sha256": "7d69933c81a77056457a0cc59591c163cfbf49c4f6c5487d02946760e08d94bf"
+  },
+  "ai-engine/models/PROTOTYPE_PROXY_lstm.onnx": {
+    "bytes": 25547,
+    "sha256": "b3b45752322069062ccd5a6226d8183e57ff26fd00af4de05e6cd64691da25ac"
+  },
+  "ai-engine/models/PROTOTYPE_PROXY_cnn.onnx": {
+    "bytes": 17533,
+    "sha256": "7ccc6831cc9ae9affb1e0b730447b299d68aff25bcdfb2baebf545db10e744bc"
+  },
+  "models/face_detection_yunet_2023mar.onnx": {
+    "bytes": 232589,
+    "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+  },
+  "models/facial_expression_recognition_mobilefacenet_2022july.onnx": {
+    "bytes": 4791892,
+    "sha256": "4f61307602fc089ce20488a31d4e4614e3c9753a7d6c41578c854858b183e1a9"
+  }
+}

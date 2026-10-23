@@ -1,0 +1,80 @@
+{
+  "scope": "Narrow AI additions plus explicitly reviewed native Unity2022 migration. Original protected baseline and all earlier review links remain immutable. No broad hash refresh.",
+  "changes": {
+    "Assets/Product/CapabilityTrial.cs": {
+      "previousSha256": "a22253dc284e5ac16597b8ce36a6f596c09fb3b879e01456443d4979af42719d",
+      "currentSha256": "f8ed09114c4f85876e86829688dc744142872441f4e5dfdc41a340f133dedff5",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately. Freshness-gated identity comparison: missing/default receiver data pause safely without fabricating a calibration change; fresh identity changes remain latched."
+    },
+    "Assets/Product/CatalogValidation.cs": {
+      "previousSha256": "b0bfd21037b7c85986f2d12f745327e059f08bda5447323a35591b1b0a30f54a",
+      "currentSha256": "c785f16ac3a379370bc769fc0eae1cdf5410ca8405f7bed48bda989b959d6ef1",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/Product/ProductModels.cs": {
+      "previousSha256": "a5eec4898a7c1737e24a418bdbddcd92846aa316ea05741d12438e53febd2ec8",
+      "currentSha256": "e8d576f5f525fbe44f2ddd0fb0669af02b312003754a8ddff9bab2a9789e6394",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/Product/ResearchExport.cs": {
+      "previousSha256": "fb44445434fa61ad8688e725644a0de786383622e92d71ae4c5aa7e92568ddb5",
+      "currentSha256": "d8644c80822a2a8619a126e55921dd2e733dc7deb9cf2fa6fef6d13557d590de",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/ProductIntegration/ResearchGuidanceSettings.cs": {
+      "previousSha256": "3bd81b0f3aa93ad8375d5e54ba89c5827a5d065ec0ecbbf96dd5a43c3004a04a",
+      "currentSha256": "2e77dd22300456dc9ec78095e621d23f552d448df0e172e129252837d44075b8",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/ProductIntegration/ResearchPortalHost.cs": {
+      "previousSha256": "5654b51124d6685f883ed4a868b36c3298872a2cb47086057b3d953b166c352a",
+      "currentSha256": "49e07226f7d8fcfd9ee6fb3118b8d2514ca2d6cbb7a11bf2547d3aad0b7163e8",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/ProductIntegration/ResearchSessionRuntime.cs": {
+      "previousSha256": "8bcc17b4aee028b64248af91ec35804bf28733aff3f3e5aab0eb46c841b6f413",
+      "currentSha256": "e435c19dbfe74e33272d9c15371bf6866a2c93115397c5a0e1a187b9c5887305",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately. Freshness-gated identity comparison: missing/default receiver data pause safely without fabricating a calibration change; fresh identity changes remain latched."
+    },
+    "Assets/ProductIntegration/WindowsProductStore.cs": {
+      "previousSha256": "8982bf3892b37b5bf0ad0eda798cebd705fca105bb5681738859731e8a55a460",
+      "currentSha256": "8da6e9a04780ca13bbc3b08c540de8b1ebbca3cc6268f5baa6e78310a6767963",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/Resources/ResearchGuidance.asset": {
+      "previousSha256": "bdd016b9e287366f24690d7608809a2d9a9e42f327c59b7247dcef8160f77d09",
+      "currentSha256": "cf45aaddd5d9283fc70a402f8b42904eb448861bc3e6497224b04707dee20e32",
+      "reason": "User-authorized WBS 4 AI/baseline/consent/derived telemetry/safety integration; additive data fields and exact-content DPAPI save verification. Native runtime and regression evidence are recorded separately."
+    },
+    "Assets/Settings/PC_Renderer.asset": {
+      "previousSha256": "3d0b01d8ded3327263b6690be128a3de58d17c514943ae42fe743a3e084a9c79",
+      "currentSha256": "21158b06c5fe64b3caec79bd3903189d6eaf0d927ce64176ef31ed8cba85febc",
+      "reason": "Native URP 14 serialization following the user-requested Unity 2022 migration. Retains the same main scene and visual quality settings; newer Unity 6-only fields are removed by native importer."
+    },
+    "Assets/Settings/PC_RPAsset.asset": {
+      "previousSha256": "b498bc5faf4b4a9343a38d2638f23437cb60e828e2e09efdff6f8645f2270fcd",
+      "currentSha256": "74f1140d63839472098655706e6144c02350adc97fe762e222f6583905f5ab39",
+      "reason": "Native URP 14 serialization following the user-requested Unity 2022 migration. Retains the same main scene and visual quality settings; newer Unity 6-only fields are removed by native importer."
+    },
+    "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/1_ProjectSetup/0-ContentSummary.asset": {
+      "previousSha256": "86b2e02fba781c66bddd6a067d27bf7f8e4b1ba75c5997c2cf77ee737e564a94",
+      "currentSha256": "a2efc464cc62f5533430407cf867e7d990a8107e38bdea41b422d3c6f692220d",
+      "reason": "Native IET/Unity 2022 serialization migration of tutorial-only assets, reviewed by Git diff; no vendor hand runtime code or mesh changed."
+    },
+    "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/2_ObjectBaking/0-ContentSummary.asset": {
+      "previousSha256": "6e0baa6ea235c945d76c61637016e97a692f8496ca3e36992e2ea100928faebf",
+      "currentSha256": "58942bee9868c46d265736b53018d0e30708e74f16e180041f4c7f8bc8060df2",
+      "reason": "Native IET/Unity 2022 serialization migration of tutorial-only assets, reviewed by Git diff; no vendor hand runtime code or mesh changed."
+    },
+    "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/3_FingerTracking/0-ContentSummary.asset": {
+      "previousSha256": "556a8a8498b172903a371fd565fd7ebc1f3d3e34285889a966381668874d0712",
+      "currentSha256": "249fc3194d0ab217d28b81d802260ec137e9855c20022077ed41f3a635c6ef2b",
+      "reason": "Native IET/Unity 2022 serialization migration of tutorial-only assets, reviewed by Git diff; no vendor hand runtime code or mesh changed."
+    },
+    "Assets/Product/ResearchGuidance.cs": {
+      "previousSha256": "e43906ef3b0c50a0195b1e835ebfc3cd3aa18f842dbc8f8aee08c480e8fc90f7",
+      "currentSha256": "ba5b47a4b6dc87b7229888f9e9e5254d883ff72d9607ce33bf6a6fba229418c5",
+      "reason": "New staged baselines compare movement fatigue only after a separately measured quiet stability stage; legacy baseline behavior remains available. Native three-cycle journey and AI checks passed."
+    }
+  }
+}

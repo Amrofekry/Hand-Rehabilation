@@ -1,0 +1,51 @@
+{
+    "hand": "Right",
+    "item": "Porcelain mug",
+    "error": "",
+    "engineTracked": true,
+    "grabbed": true,
+    "dropped": true,
+    "finite": true,
+    "contacts": 8,
+    "visibleHands": 1,
+    "colliderPenetrationMm": 20.03207778930664,
+    "maxObjectSpeed": 2.0180866718292238,
+    "ghosted": false,
+    "kinematic": true,
+    "heldAtEnd": false,
+    "nativeHeldAtEnd": false,
+    "brokenAtEnd": true,
+    "apertureClear": true,
+    "damage": 1.0,
+    "otherHeld": "",
+    "heldSeconds": 0.10172721743583679,
+    "mask": 512,
+    "objectLayer": 9,
+    "palm": {
+        "x": 2.4717354774475099,
+        "y": 1.048852562904358,
+        "z": -4.575733184814453
+    },
+    "fingerTip": {
+        "x": 2.466526508331299,
+        "y": 1.0541585683822632,
+        "z": -4.535888671875
+    },
+    "physicsPalm": {
+        "x": 2.4717354774475099,
+        "y": 1.048852562904358,
+        "z": -4.575733184814453
+    },
+    "meshCenter": {
+        "x": 2.171248435974121,
+        "y": 0.92836594581604,
+        "z": -4.581969261169434
+    },
+    "meshSize": {
+        "x": 0.714611291885376,
+        "y": 0.3956071734428406,
+        "z": 0.22008705139160157
+    },
+    "contactAdapterP95Ms": 0.0263,
+    "frameP95Ms": 2.6936011854559185
+}

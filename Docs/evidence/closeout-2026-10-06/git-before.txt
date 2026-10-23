@@ -1,0 +1,170 @@
+ M .gitignore
+ M Assets/Editor/RehabEditorQA.cs
+ M Assets/Editor/RehabPremiumSkin.cs
+ M Assets/Editor/RehabShellAuthoring.cs
+ M Assets/Editor/RehabVerification.cs
+ M Assets/Editor/VisionCameraAuthoring.cs
+ M Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset
+ M Assets/Rehab/3.2-vision/HandTracking.cs
+ M Assets/Rehab/3.2-vision/VisionCameraLauncher.cs
+ M Assets/Rehab/3.2-vision/VisionLiveAcceptance.cs
+ M Assets/Rehab/3.2-vision/VisionPerformanceProbe.cs
+ M Assets/Rehab/3.2-vision/VisionUdpReceiver.cs
+ M Assets/Rehab/3.4-game-modules/RehabApp.cs
+ M Assets/Rehab/3.4-game-modules/RehabAppShell.cs
+ M Assets/Rehab/3.4-game-modules/RehabProfileStore.cs
+ D Assets/Rehab/3.4-game-modules/RehabSession.cs
+ D Assets/Rehab/3.4-game-modules/RehabSession.cs.meta
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentChoices.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentPlayer.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentSettings.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVGController.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs
+ M Assets/Rehab/3.4.1-force-object-interaction/DemoForceSource.cs
+ M Assets/Rehab/6.1-bluetooth-integration/LiveForceReceiver.cs
+ M Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs
+ M Assets/Scenes/GripRehab.unity
+ M Assets/Settings/Mobile_RPAsset.asset
+ M Docs/BLE_INTEGRATION.md
+ M Docs/HANDS_AND_MEDIAPIPE_AR.md
+ M Docs/QA.md
+ M Docs/UI_UX_AR.md
+ M Docs/apartment-player-headless.json
+ M Docs/apartment-player-rendered.json
+ M Docs/apartment-player-replay.json
+ M Docs/images/apartment-kitchen-grip.png
+ M Docs/images/apartment-options.png
+ M Docs/images/apartment-overview.png
+ M Docs/images/apartment-seated-grip.png
+ M Docs/images/apartment-two-hands-tracked.png
+ M Docs/images/ui-main-menu.png
+ M Docs/images/ui-module-selection.png
+ M Docs/images/ui-new-profile.png
+ M Docs/images/vg-ball-before.png
+ M Docs/images/vg-ball-deformed.png
+ M Docs/images/vg-left-kitchen-grip.png
+ M Docs/images/vg-mug-fractured.png
+ M Docs/player-checks.json
+ M Packages/manifest.json
+ M Packages/packages-lock.json
+ M ProjectSettings/EditorBuildSettings.asset
+ M ProjectSettings/InputManager.asset
+ M README.md
+ M START_HERE_AR.html
+ M Tools/Vision/mediapipe_bridge.py
+ M Tools/Vision/test_vision_bridge.py
+ M Tools/run_player_checks.py
+?? .gitattributes
+?? Assets/Editor/GripUiAccessibilityAuthoring.cs
+?? Assets/Editor/GripUiAccessibilityAuthoring.cs.meta
+?? Assets/Editor/GripUiGalleryAuthoring.cs
+?? Assets/Editor/GripUiGalleryAuthoring.cs.meta
+?? Assets/Editor/GripUiThemeAuthoring.cs
+?? Assets/Editor/GripUiThemeAuthoring.cs.meta
+?? Assets/Editor/RehabDwellVerification.cs
+?? Assets/Editor/RehabDwellVerification.cs.meta
+?? Assets/Editor/RehabGateRunner.cs
+?? Assets/Editor/RehabGateRunner.cs.meta
+?? Assets/Editor/RehabNativeReloadGuard.cs
+?? Assets/Editor/RehabNativeReloadGuard.cs.meta
+?? Assets/Editor/RehabReloadVerification.cs
+?? Assets/Editor/RehabReloadVerification.cs.meta
+?? Assets/Product.meta
+?? Assets/Product/
+?? Assets/ProductIntegration.meta
+?? Assets/ProductIntegration/
+?? Assets/Rehab/3.4-game-modules/LocalPasswordHash.cs
+?? Assets/Rehab/3.4-game-modules/LocalPasswordHash.cs.meta
+?? Assets/Rehab/3.4-game-modules/RehabDwellGate.cs
+?? Assets/Rehab/3.4-game-modules/RehabDwellGate.cs.meta
+?? Assets/Rehab/3.4-game-modules/RehabDwellPointer.cs
+?? Assets/Rehab/3.4-game-modules/RehabDwellPointer.cs.meta
+?? Assets/Rehab/3.4-game-modules/RehabExerciseSuite.cs
+?? Assets/Rehab/3.4-game-modules/RehabExerciseSuite.cs.meta
+?? Assets/Rehab/3.4-game-modules/RehabKeyboardGate.cs
+?? Assets/Rehab/3.4-game-modules/RehabKeyboardGate.cs.meta
+?? Assets/Rehab/3.4-game-modules/RehabPointerPolicy.cs
+?? Assets/Rehab/3.4-game-modules/RehabPointerPolicy.cs.meta
+?? Assets/Rehab/3.4-game-modules/WindowsProfileProtection.cs
+?? Assets/Rehab/3.4-game-modules/WindowsProfileProtection.cs.meta
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/ContactDeformation.cs
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/ContactDeformation.cs.meta
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/FracturePartitioner.cs
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/FracturePartitioner.cs.meta
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspCollisionShield.cs
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspCollisionShield.cs.meta
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspMotionPolicy.cs
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspMotionPolicy.cs.meta
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs.meta
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs
+?? Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs.meta
+?? Assets/Resources/
+?? "Assets/TextMesh Pro.meta"
+?? "Assets/TextMesh Pro/"
+?? Assets/UI.meta
+?? Assets/UI/
+?? Assets/UIBridge.meta
+?? Assets/UIBridge/
+?? Assets/_Project.meta
+?? Assets/_Project/
+?? Assets/_Recovery.meta
+?? Assets/_Recovery/
+?? Docs/APPEARANCE_AR.md
+?? Docs/AUDIT.md
+?? Docs/BLOCKERS.md
+?? Docs/CAMERA_DIRECTION_FIX.md
+?? Docs/CREDITS.md
+?? Docs/DECISIONS.md
+?? Docs/DEFORMATION_ITEM_5.md
+?? Docs/ENVIRONMENT.md
+?? Docs/FINAL_REPORT.md
+?? Docs/GRASP_ITEM_4.md
+?? Docs/HANDMATE_UI_DESIGN.md
+?? Docs/HAND_POINTER.md
+?? Docs/HAND_RIG_ITEM_6.md
+?? Docs/KEYBOARD_ITEM_3.md
+?? Docs/PERFORMANCE.md
+?? Docs/POINTER_ITEM_2.md
+?? Docs/PROGRESS.md
+?? Docs/PROJECT_AUDIT.md
+?? Docs/PROTECTED_PATHS.txt
+?? Docs/REPAIR_REPORT.md
+?? Docs/REQUIREMENTS.md
+?? Docs/Source/
+?? Docs/TASKS.md
+?? Docs/UI_COMPLETION_CHECKLIST.md
+?? Docs/UI_DESIGN_SYSTEM.md
+?? Docs/UI_RESEARCH.md
+?? Docs/evidence/
+?? Docs/gallery-checks.json
+?? Docs/item1-fixture-headless.json
+?? Docs/item1-fixture-rendered.json
+?? Docs/item1-fixture-replay.json
+?? Docs/screenshots/
+?? Docs/ui-player-1280x720.json
+?? Docs/ui-player-1600x900.json
+?? Docs/ui-player-checks.json
+?? Tools/LegacyPhase2/
+?? Tools/Offline/
+?? Tools/offline_verify.py
+?? Tools/run_gallery_checks.py
+?? Tools/run_ui_checks.py
+?? Tools/test_deformation_bindings.py
+?? Tools/test_grasp_bindings.py
+?? Tools/test_hand_rig_bindings.py
+?? Tools/test_handmate_design.py
+?? Tools/test_keyboard_bindings.py
+?? Tools/test_pointer_bindings.py
+?? Tools/verify_research_workspace.py
+?? Tools/verify_ui_boundary.py
+?? ai-engine/
+?? firmware/
+?? hardware/
+?? tests/

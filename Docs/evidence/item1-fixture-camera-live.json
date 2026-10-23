@@ -1,0 +1,15 @@
+{
+  "passed": false,
+  "cameraState": "FAILED",
+  "error": "Could not open camera/video. Check device access and index.",
+  "utc": "2026-10-01T09:15:30.5402269Z",
+  "fps": 0.0,
+  "previewPackets": 0,
+  "rightTracked": false,
+  "leftTracked": false,
+  "humanMotionVerified": false,
+  "readMs": 0.0,
+  "inferenceMs": 0.0,
+  "exit": 1,
+  "basis": "Isolated existing Unity player/assets with newly compiled managed sources; not a new BuildPipeline build"
+}

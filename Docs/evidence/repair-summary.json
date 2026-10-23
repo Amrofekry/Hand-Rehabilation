@@ -1,0 +1,106 @@
+{
+  "utc": "2026-09-30T16:28:06.360988+00:00",
+  "scope": "Repair existing English Unity game only; no feature expansion",
+  "editorQa": {
+    "status": "PASS",
+    "command": "qa",
+    "detail": "Three Play/Stop cycles, runtime suite, and UDP cleanup passed",
+    "utc": "2026-09-30T16:08:04.3841595Z"
+  },
+  "nativeBuild": {
+    "status": "PASS",
+    "command": "build",
+    "detail": "Windows build completed",
+    "utc": "2026-09-30T16:13:15.5803062Z"
+  },
+  "sceneVerify": {
+    "status": "PASS",
+    "command": "verify",
+    "detail": "Scene, logic and references verified",
+    "utc": "2026-09-30T16:14:35.1005177Z"
+  },
+  "dwellCheck": {
+    "status": "PASS",
+    "command": "dwell-check",
+    "detail": "Hands-free pointer fixture checks passed",
+    "utc": "2026-09-30T16:14:00.0047804Z"
+  },
+  "windowsPlayers": [
+    {
+      "name": "apartment-player-headless",
+      "utc": "2026-09-30T16:14:12.4884325Z",
+      "passed": true,
+      "checks": 137
+    },
+    {
+      "name": "apartment-player-replay",
+      "utc": "2026-09-30T16:14:56.3311506Z",
+      "passed": true,
+      "checks": 138
+    },
+    {
+      "name": "apartment-player-rendered",
+      "utc": "2026-09-30T16:15:45.5120524Z",
+      "passed": true,
+      "checks": 137
+    }
+  ],
+  "uiPlayers": [
+    {
+      "size": "1280x720",
+      "utc": "2026-09-30T16:16:20.4237462Z",
+      "passed": true,
+      "checks": 60
+    },
+    {
+      "size": "1600x900",
+      "utc": "2026-09-30T16:16:32.6011607Z",
+      "passed": true,
+      "checks": 60
+    }
+  ],
+  "galleryPlayers": [
+    {
+      "size": "1280x720",
+      "passed": true,
+      "checks": 79
+    },
+    {
+      "size": "1280x800",
+      "passed": true,
+      "checks": 79
+    },
+    {
+      "size": "1024x768",
+      "passed": true,
+      "checks": 79
+    }
+  ],
+  "hashes": {
+    "Builds/Windows/GripRehab_Data/Managed/Assembly-CSharp.dll": "7964f1e72e2bf7a686f6ad04cb851cfaaa0e8eff08efc160fc5ba26d283a9415",
+    "Assets/Scenes/GripRehab.unity": "4d001d3f0d61c8af8015814c1d5ea6dddaa2d69885a58b2246a27abf8ba87b65",
+    "Packages/manifest.json": "f72ba05256867c8614790637bc4d0e55b3e98c31a2854ed807fc1158788e0410"
+  },
+  "finalUdpPortsReleased": [
+    27817,
+    27818,
+    27819
+  ],
+  "ordinaryEditorObservation": {
+    "fixture": false,
+    "navigation": "Home -> Start -> Modules -> Back -> Home",
+    "spaceSubmittedMenu": false,
+    "consoleErrors": 0,
+    "vendorWarnings": 1,
+    "cameraStatus": "CAMERA READY",
+    "physicalHandTrial": false,
+    "leftOutsidePlay": true,
+    "screenshot": "repair-editor-ready.jpg"
+  },
+  "gitCommit": "Not created: index.lock Permission denied",
+  "remaining": [
+    "VirtualGrasp object-specific baked grasp database absent",
+    "Supervised human camera pose/dwell/grasp and latency trial not performed",
+    "Physical Nano/HX711 validation not performed"
+  ]
+}

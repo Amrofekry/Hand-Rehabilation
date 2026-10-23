@@ -1,0 +1,8 @@
+{
+  "subject_id": "SYNTHETIC_qa",
+  "trial_id": "SYNTHETIC_t1",
+  "accepted": 40,
+  "rejected": 0,
+  "elapsed_s": 25.108999999999924,
+  "labels": "unlabelled; obtain independent evidence before training"
+}

@@ -1,0 +1,51 @@
+{
+    "hand": "Right",
+    "item": "Brittle cracker",
+    "error": "",
+    "engineTracked": true,
+    "grabbed": false,
+    "dropped": true,
+    "finite": true,
+    "contacts": 0,
+    "visibleHands": 1,
+    "colliderPenetrationMm": 4.205777168273926,
+    "maxObjectSpeed": 0.23930056393146516,
+    "ghosted": false,
+    "kinematic": false,
+    "heldAtEnd": false,
+    "nativeHeldAtEnd": false,
+    "brokenAtEnd": false,
+    "apertureClear": true,
+    "damage": 0.0,
+    "otherHeld": "",
+    "heldSeconds": 0.0,
+    "mask": 512,
+    "objectLayer": 9,
+    "palm": {
+        "x": 2.4996914863586427,
+        "y": 1.130568027496338,
+        "z": -4.454227447509766
+    },
+    "fingerTip": {
+        "x": 2.49938702583313,
+        "y": 1.0948046445846558,
+        "z": -4.435154438018799
+    },
+    "physicsPalm": {
+        "x": 2.4996914863586427,
+        "y": 1.130568027496338,
+        "z": -4.454227447509766
+    },
+    "meshCenter": {
+        "x": 2.2345833778381349,
+        "y": 0.9600310325622559,
+        "z": -4.541825771331787
+    },
+    "meshSize": {
+        "x": 0.657257080078125,
+        "y": 0.4575081467628479,
+        "z": 0.3187274932861328
+    },
+    "contactAdapterP95Ms": 0.0371,
+    "frameP95Ms": 2.8881023172289135
+}

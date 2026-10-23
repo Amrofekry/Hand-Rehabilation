@@ -1,0 +1,2 @@
+[ WARN:0@0.296] global net_impl_backend.cpp:345 cv::dnn::dnn5_v20260605::Net::Impl::setPreferableTarget Targets are not supported by the new graph engine for now
+{"passed": true, "utc": "2026-10-22T07:01:56Z", "consent_off_prevents_processing": true, "blank_frame_has_no_face": true, "expression_output_shape": [1, 7], "expression_ms": 5.413800000042102, "opencv": "5.0.0", "numpy": "2.5.3", "SYNTHETIC_rppg_bpm": 72.00000000000026, "actual_camera_accuracy_validated": false, "scope": "Existing camera Python, model execution and synthetic signal; no webcam or human frames"}

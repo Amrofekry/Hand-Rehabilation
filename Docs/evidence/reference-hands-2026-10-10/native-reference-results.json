@@ -1,0 +1,622 @@
+{
+    "passed": false,
+    "utc": "2026-10-10T10:53:36.9139803Z",
+    "scope": "Original Ultraleap HardContact/GrabHelper; synthetic keyboard joint closures, artificial object placement, both hands/six objects, release and three Play/Stop/socket cycles. Collider measurements are NOT visible skin penetration or live camera/hardware validation. Adapter timing excludes original physics solver and whole frame.",
+    "error": "",
+    "cycles": 1,
+    "runtimeErrors": 0,
+    "rows": [
+        {
+            "hand": "Right",
+            "item": "Silicone ball",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 5,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 3.1463356018066408,
+            "maxObjectSpeed": 0.3245798945426941,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": true,
+            "nativeHeldAtEnd": true,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "Silicone ball",
+            "heldSeconds": 0.8103848099708557,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 2.470439910888672,
+                "y": 1.066444754600525,
+                "z": -4.589785575866699
+            },
+            "fingerTip": {
+                "x": 2.470478057861328,
+                "y": 1.0303875207901,
+                "z": -4.571272373199463
+            },
+            "physicsPalm": {
+                "x": 2.470766305923462,
+                "y": 1.0657609701156617,
+                "z": -4.590218544006348
+            },
+            "meshCenter": {
+                "x": 2.1781697273254396,
+                "y": 0.937355637550354,
+                "z": -4.594088554382324
+            },
+            "meshSize": {
+                "x": 0.7302684783935547,
+                "y": 0.3929533362388611,
+                "z": 0.18071746826171876
+            },
+            "contactAdapterP95Ms": 0.0585,
+            "frameP95Ms": 3.173100994899869
+        },
+        {
+            "hand": "Right",
+            "item": "Porcelain mug",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": false,
+            "dropped": true,
+            "finite": true,
+            "contacts": 0,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 12.385845184326172,
+            "maxObjectSpeed": 0.6525207757949829,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": false,
+            "nativeHeldAtEnd": false,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "",
+            "heldSeconds": 0.0,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 2.4697582721710207,
+                "y": 1.0583709478378297,
+                "z": -4.589785575866699
+            },
+            "fingerTip": {
+                "x": 2.46921968460083,
+                "y": 1.0223177671432496,
+                "z": -4.571272373199463
+            },
+            "physicsPalm": {
+                "x": 2.4697580337524416,
+                "y": 1.0583709478378297,
+                "z": -4.589786052703857
+            },
+            "meshCenter": {
+                "x": 2.1699094772338869,
+                "y": 0.9319985508918762,
+                "z": -4.596495628356934
+            },
+            "meshSize": {
+                "x": 0.7238986492156982,
+                "y": 0.37542569637298586,
+                "z": 0.17432546615600587
+            },
+            "contactAdapterP95Ms": 0.0391,
+            "frameP95Ms": 5.601296667009592
+        },
+        {
+            "hand": "Right",
+            "item": "Brittle cracker",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": false,
+            "dropped": true,
+            "finite": true,
+            "contacts": 0,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 4.205777168273926,
+            "maxObjectSpeed": 0.23930056393146516,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": false,
+            "nativeHeldAtEnd": false,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "",
+            "heldSeconds": 0.0,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 2.4996914863586427,
+                "y": 1.130568027496338,
+                "z": -4.454227447509766
+            },
+            "fingerTip": {
+                "x": 2.49938702583313,
+                "y": 1.0948046445846558,
+                "z": -4.435154438018799
+            },
+            "physicsPalm": {
+                "x": 2.4996914863586427,
+                "y": 1.130568027496338,
+                "z": -4.454227447509766
+            },
+            "meshCenter": {
+                "x": 2.2345833778381349,
+                "y": 0.9600310325622559,
+                "z": -4.541825771331787
+            },
+            "meshSize": {
+                "x": 0.657257080078125,
+                "y": 0.4575081467628479,
+                "z": 0.3187274932861328
+            },
+            "contactAdapterP95Ms": 0.0371,
+            "frameP95Ms": 2.8881023172289139
+        },
+        {
+            "hand": "Right",
+            "item": "Kitchen sponge",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": false,
+            "dropped": true,
+            "finite": true,
+            "contacts": 0,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 4.622365951538086,
+            "maxObjectSpeed": 0.20252837240695954,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": false,
+            "nativeHeldAtEnd": false,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "",
+            "heldSeconds": 0.0,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 0.7674288153648377,
+                "y": 1.4252991676330567,
+                "z": -1.8453667163848878
+            },
+            "fingerTip": {
+                "x": 0.7489151954650879,
+                "y": 1.390230655670166,
+                "z": -1.853752851486206
+            },
+            "physicsPalm": {
+                "x": 0.7674288153648377,
+                "y": 1.4252991676330567,
+                "z": -1.8453667163848878
+            },
+            "meshCenter": {
+                "x": 0.7739332318305969,
+                "y": 1.4107950925827027,
+                "z": -2.1372294425964357
+            },
+            "meshSize": {
+                "x": 0.17391753196716309,
+                "y": 0.16294527053833009,
+                "z": 0.686524510383606
+            },
+            "contactAdapterP95Ms": 0.0347,
+            "frameP95Ms": 2.9517998918890959
+        },
+        {
+            "hand": "Right",
+            "item": "Silicone cup",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 9,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 18.025279998779298,
+            "maxObjectSpeed": 2.1810827255249025,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": false,
+            "nativeHeldAtEnd": false,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "",
+            "heldSeconds": 0.8042510747909546,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 0.7674288153648377,
+                "y": 1.4308558702468873,
+                "z": -1.8423165082931519
+            },
+            "fingerTip": {
+                "x": 0.7489151954650879,
+                "y": 1.3956800699234009,
+                "z": -1.850240707397461
+            },
+            "physicsPalm": {
+                "x": 0.7674288153648377,
+                "y": 1.4308558702468873,
+                "z": -1.8423165082931519
+            },
+            "meshCenter": {
+                "x": 0.7739326357841492,
+                "y": 1.4140090942382813,
+                "z": -2.1337766647338869
+            },
+            "meshSize": {
+                "x": 0.17405593395233155,
+                "y": 0.16728079319000245,
+                "z": 0.6867583990097046
+            },
+            "contactAdapterP95Ms": 0.0994,
+            "frameP95Ms": 5.417396314442158
+        },
+        {
+            "hand": "Right",
+            "item": "Ripe tomato",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 5,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 3.781599998474121,
+            "maxObjectSpeed": 0.3052636384963989,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": true,
+            "nativeHeldAtEnd": true,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "Ripe tomato",
+            "heldSeconds": 0.8785247802734375,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 0.7674288153648377,
+                "y": 1.4269177913665772,
+                "z": -1.8444684743881226
+            },
+            "fingerTip": {
+                "x": 0.7489151954650879,
+                "y": 1.391817331314087,
+                "z": -1.8527199029922486
+            },
+            "physicsPalm": {
+                "x": 0.7676606178283691,
+                "y": 1.4264310598373414,
+                "z": -1.8444422483444214
+            },
+            "meshCenter": {
+                "x": 0.7662880420684815,
+                "y": 1.4153838157653809,
+                "z": -2.129429340362549
+            },
+            "meshSize": {
+                "x": 0.1889297366142273,
+                "y": 0.1706632375717163,
+                "z": 0.7004140615463257
+            },
+            "contactAdapterP95Ms": 0.0637,
+            "frameP95Ms": 3.388697514310479
+        },
+        {
+            "hand": "Left",
+            "item": "Silicone ball",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 5,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 3.1255669593811037,
+            "maxObjectSpeed": 0.32403114438056948,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": true,
+            "nativeHeldAtEnd": true,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "Silicone ball",
+            "heldSeconds": 0.8066417574882507,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 2.4704396724700929,
+                "y": 1.066444754600525,
+                "z": -4.23613977432251
+            },
+            "fingerTip": {
+                "x": 2.470478057861328,
+                "y": 1.0303875207901,
+                "z": -4.254652976989746
+            },
+            "physicsPalm": {
+                "x": 2.470698595046997,
+                "y": 1.0658600330352784,
+                "z": -4.235815525054932
+            },
+            "meshCenter": {
+                "x": 2.178178310394287,
+                "y": 0.9376716613769531,
+                "z": -4.232283592224121
+            },
+            "meshSize": {
+                "x": 0.7303993701934815,
+                "y": 0.39295250177383425,
+                "z": 0.18116521835327149
+            },
+            "contactAdapterP95Ms": 0.0753,
+            "frameP95Ms": 3.763499204069376
+        },
+        {
+            "hand": "Left",
+            "item": "Porcelain mug",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": false,
+            "finite": true,
+            "contacts": 12,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 18.79143714904785,
+            "maxObjectSpeed": 6.638925552368164,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": true,
+            "nativeHeldAtEnd": true,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "Porcelain mug",
+            "heldSeconds": 1.4230029582977296,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 2.4697580337524416,
+                "y": 1.0583709478378297,
+                "z": -4.236139297485352
+            },
+            "fingerTip": {
+                "x": 2.46921968460083,
+                "y": 1.0223177671432496,
+                "z": -4.254652500152588
+            },
+            "physicsPalm": {
+                "x": 2.47687029838562,
+                "y": 1.0429548025131226,
+                "z": -4.229579925537109
+            },
+            "meshCenter": {
+                "x": 2.1893906593322756,
+                "y": 0.9413251876831055,
+                "z": -4.2287445068359379
+            },
+            "meshSize": {
+                "x": 0.7481402158737183,
+                "y": 0.42138248682022097,
+                "z": 0.1854543685913086
+            },
+            "contactAdapterP95Ms": 0.108,
+            "frameP95Ms": 7.589803077280521
+        },
+        {
+            "hand": "Left",
+            "item": "Brittle cracker",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 4,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 3.421983242034912,
+            "maxObjectSpeed": 0.12376837432384491,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": true,
+            "nativeHeldAtEnd": true,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "Brittle cracker",
+            "heldSeconds": 1.0083229541778565,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 2.409036874771118,
+                "y": 1.130568027496338,
+                "z": -4.112398147583008
+            },
+            "fingerTip": {
+                "x": 2.4182240962982179,
+                "y": 1.0948046445846558,
+                "z": -4.129115104675293
+            },
+            "physicsPalm": {
+                "x": 2.410432815551758,
+                "y": 1.133510947227478,
+                "z": -4.112707614898682
+            },
+            "meshCenter": {
+                "x": 2.1530978679656984,
+                "y": 0.9663832187652588,
+                "z": -4.1488118171691898
+            },
+            "meshSize": {
+                "x": 0.71186363697052,
+                "y": 0.4654771685600281,
+                "z": 0.2062969207763672
+            },
+            "contactAdapterP95Ms": 0.0522,
+            "frameP95Ms": 2.827203832566738
+        },
+        {
+            "hand": "Left",
+            "item": "Kitchen sponge",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": false,
+            "dropped": true,
+            "finite": true,
+            "contacts": 0,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 2.8124451637268068,
+            "maxObjectSpeed": 0.24103865027427674,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": false,
+            "nativeHeldAtEnd": false,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "",
+            "heldSeconds": 0.0,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 0.4137822985649109,
+                "y": 1.4252991676330567,
+                "z": -1.8453665971755982
+            },
+            "fingerTip": {
+                "x": 0.43229591846466067,
+                "y": 1.390230655670166,
+                "z": -1.8537527322769166
+            },
+            "physicsPalm": {
+                "x": 0.4137822985649109,
+                "y": 1.4252991676330567,
+                "z": -1.8453665971755982
+            },
+            "meshCenter": {
+                "x": 0.4072731137275696,
+                "y": 1.4107730388641358,
+                "z": -2.1372218132019045
+            },
+            "meshSize": {
+                "x": 0.17391911149024964,
+                "y": 0.16296303272247315,
+                "z": 0.6865572929382324
+            },
+            "contactAdapterP95Ms": 0.0383,
+            "frameP95Ms": 3.11259925365448
+        },
+        {
+            "hand": "Left",
+            "item": "Silicone cup",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 4,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 1.500881314277649,
+            "maxObjectSpeed": 0.8799501657485962,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": false,
+            "nativeHeldAtEnd": false,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "",
+            "heldSeconds": 0.30095961689949038,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 0.4137822985649109,
+                "y": 1.4308558702468873,
+                "z": -1.8423165082931519
+            },
+            "fingerTip": {
+                "x": 0.43229591846466067,
+                "y": 1.3956801891326905,
+                "z": -1.850240707397461
+            },
+            "physicsPalm": {
+                "x": 0.41377970576286318,
+                "y": 1.4308557510375977,
+                "z": -1.8423110246658326
+            },
+            "meshCenter": {
+                "x": 0.40725475549697878,
+                "y": 1.4140009880065919,
+                "z": -2.1337907314300539
+            },
+            "meshSize": {
+                "x": 0.17391598224639893,
+                "y": 0.1671372652053833,
+                "z": 0.6866861581802368
+            },
+            "contactAdapterP95Ms": 0.1251,
+            "frameP95Ms": 7.611196022480726
+        },
+        {
+            "hand": "Left",
+            "item": "Ripe tomato",
+            "error": "",
+            "engineTracked": true,
+            "grabbed": true,
+            "dropped": true,
+            "finite": true,
+            "contacts": 5,
+            "visibleHands": 1,
+            "colliderPenetrationMm": 2.542236804962158,
+            "maxObjectSpeed": 0.20681019127368928,
+            "ghosted": false,
+            "kinematic": false,
+            "heldAtEnd": true,
+            "nativeHeldAtEnd": true,
+            "brokenAtEnd": false,
+            "apertureClear": true,
+            "damage": 0.0,
+            "otherHeld": "Ripe tomato",
+            "heldSeconds": 0.9036098122596741,
+            "mask": 512,
+            "objectLayer": 9,
+            "palm": {
+                "x": 0.4137822985649109,
+                "y": 1.4269177913665772,
+                "z": -1.844468355178833
+            },
+            "fingerTip": {
+                "x": 0.43229591846466067,
+                "y": 1.391817331314087,
+                "z": -1.852719783782959
+            },
+            "physicsPalm": {
+                "x": 0.4135635495185852,
+                "y": 1.4264692068099976,
+                "z": -1.8445435762405396
+            },
+            "meshCenter": {
+                "x": 0.41513532400131228,
+                "y": 1.4157252311706544,
+                "z": -2.1285080909729006
+            },
+            "meshSize": {
+                "x": 0.18988251686096192,
+                "y": 0.16975057125091554,
+                "z": 0.7024003267288208
+            },
+            "contactAdapterP95Ms": 0.0534,
+            "frameP95Ms": 2.8589002322405578
+        }
+    ]
+}

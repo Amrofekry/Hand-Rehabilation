@@ -1,0 +1,100 @@
+PAGE 1
+A smart adaptive multimodal CV-based game for hand rehabilitation
+REAL WORLD
+Interchangeable 3D-Printed Shapes
+• Same core
+• Reconfigurable
+Sphere Cylinder Pencil
+Universal Core Assembly
+3D-Printed / Protective Electronics Box
+Arduino Nano 33 IoT HX711 ADC Step-Up Module Battery
+Load Cell – 100 kg Springs inserted into slots
+Hardware Setup
+VIRTUAL WORLD
+Desktop Semi-Immersive VR Game • Unity Engine
+USER DASHBOARDS
+DOCTOR DASHBOARD
+Patients’ History
+Progression Statistics Recommendations
+Per-patient monitoring & personalized recommendations
+PATIENT DASHBOARD
+⊙FORCE–OBJECT INTERACTION
+Env: Living Room | Kitchen
+Game Controller: Virtual Hand
+Hardware Input
+FORCE
+MAPPING
+Force-Driven Deformation
+Target Objects:
+Sphere Cylinder Pencil
+The used Algorithms
+• MediaPipe Hand Tracking
+The used Libraries
+• OBI Softbody
+• OBI Fluid
+Measured Parameters
+• Force Production
+• Grip Endurance
+• Gesture Stability
+⋄COGNITIVE PERFORMANCE
+1. Gesture Sequence Memory
+Observe Sequence
+↓
+Memorize→Execute
+Game Controller : Avatar
+2. Spatial Assembly Task
+Match Pieces
+↓
+Move Hand→Align
+Game Controller: Virtual Hand
+The used Algorithms
+• MediaPipe Hand Tracking
+• YOLO for Gesture Recognition
+Measured Parameters
+• Reaction Time
+• Trajectory
+• Accuracy
+• Velocity
+♦VISUOMOTOR COORDINATION
+1. Maze Navigation
+Hand Gestures→Shortest Path
+Collision→Score Reduction
+Game Controller: Avatar
+2. Visual Tracing Task
+✓
+Trace Dashed Shape→Sync
+Correct = Green | Wrong = Red
+Game Controller: Virtual Hand
+The used Algorithms
+• MediaPipe Hand Tracking
+• YOLO for Gesture Recognition
+Measured Parameters
+• Reaction Time
+• Trajectory
+• Gesture Stability
+• Motion Accuracy
+AI-DRIVEN ADAPTIVE DIFFICULTY & FATIGUE MANAGEMENT
+1. Baseline Assessment
+Trial Test Setup:
+Max Grip Force | Endurance
+Gesture Stability | ROM
+Baseline Capability Profile
+2. Real-Time Sensing
+Biomechanical:Grip Force (Load Cell + HX711)
+Kinematic:ROM,Tremor,Speed,Traj. (MediaPipe)
+Facial:7 Emot (SSD MobileNet, ExpressionNet)
+Physiological:HR & HRV (rPPG)
+3. AI Temporal Model
+LSTM/GRU Temporal Window
+Compares state att1 vs t2
+Multimodal Model Fusion
+Tracks Potential Changes
+4. Adaptation & Decision Logic
+Stable Potential→Adapt Level (L↑/L↓)
+Single Fatigue Sign→Warning (Resume/Quit)
+>1 Fatigue Signs→FORCE QUIT (Safety Stop)
+Continuous Closed-Loop Game Adaptation Protocol
+Trial Test establishes Baseline→ Real-Time Multimodal Features stream to LSTM Model→ Live Potential Tracking con-
+tinuously adapts Game Difficulty or enforces Patient Safety Interventions (Warning Popup vs. Immediate Force Quit).
+WIRELESS
+BLUETOOTH

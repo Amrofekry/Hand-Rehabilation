@@ -1,0 +1,7 @@
+{
+    "status": "FAIL",
+    "command": "qa",
+    "detail": "System.Exception: Runtime suite failed; see apartment-runtime-checks.json\r\n  at GripRehab.Editor.RehabEditorQA.State (UnityEditor.PlayModeStateChange state) [0x0009a] in E:\\GP\\codex\\GripRehab-Unity\\Assets\\Editor\\RehabEditorQA.cs:60 ",
+    "utc": "2026-10-08T13:30:02.7451709Z"
+}
+Both old and new Editor QA gates had been enabled. Use the explicit apartment isolation flag without enabling the old gate. This was a harness conflict, not a deformation runtime failure.

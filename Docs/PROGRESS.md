@@ -87,3 +87,7 @@ Current Unity GUI evidence: `Logs/editor-gate-result.json` records a passed scen
 ## 2026-10-06 graduation item 2 update
 
 Graduation item 2 source now integrates account/profile/preparation/explicit quick-baseline consent/module/results/linked Continue around authored panels. Owner-scoped crash recovery and save guards added. Five Editor/four player assemblies compile offline; 40 product and 69 Python tests pass. Native three-cycle journey and new Windows build NOT RUN: Editor Software Terms requires the unavailable user. See JOURNEY_ITEM_2.md; original M0-M10 rows above are historical, not current item-2 completion claims.
+
+
+## WBS 4 AI work - 2026-10-22
+See [AI progress](../ai-engine/PROGRESS.md) and [measured report](../ai-engine/reports/FINAL_REPORT.md). Public EMG proxy models are not validated device-fatigue models. Existing hand, objects and scene are preserved.

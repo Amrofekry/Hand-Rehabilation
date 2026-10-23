@@ -1,0 +1,47 @@
+{
+  "changes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs": {
+      "previousSha256": "58336d8d88103f91a34abc7af530433d1de7c9d369d46418a3c2180d6ef3ead7",
+      "currentSha256": "ca6c9ab317a6f99cf4eaace54c89f54eb7d7c1b81626ff14934f5f5c5c2865cd",
+      "reason": "User approved target/physics hand separation, bounded contact and compliant grip integration."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs": {
+      "previousSha256": "353071419487edd413301e977b8d6f42adebcd6ca03752f1e8ff0f114bc3e7dd",
+      "currentSha256": "522af12a18b49d9528f8af461461076bf795e82612e6aa89dc4e340a2d73ff69",
+      "reason": "User approved target/physics hand separation, bounded contact and compliant grip integration."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactProbe.cs": {
+      "previousSha256": "ed783f2cae2935fbd399e9cf64b9d64870527b9b55b0f1e31826851a1e585ebf",
+      "currentSha256": "64eba6ecf3c4a11a55501fc1ede099421ec3b58d9b17725030ddb25d645a1b03",
+      "reason": "User approved target/physics hand separation, bounded contact and compliant grip integration."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "5ca401d5e76b8be4f003570779706739fc53d5bb50fffeb481cd50c9c8a2a80d",
+      "currentSha256": "35699f7cfd3c03b3f44679f646220f522cce635d61cf7b820725d36fc9f69c61",
+      "reason": "User approved target/physics hand separation, bounded contact and compliant grip integration."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "7fe671d558af8be810935ba416bce40157aa7c3b89c3e8bf4d474e81fdb578f7",
+      "currentSha256": "8ec23ab242dd385469468a0eb414bf73911b903a653ef3f3ca3fd47b8b869de8",
+      "reason": "User approved target/physics hand separation, bounded contact and compliant grip integration."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "856f8e6993b03ba0b601f9ad7511add54b7c6bc4e815e1fe2ba176925dec31e1",
+      "currentSha256": "d8a0cc1ec7b74fbe31d98ecd9aa1c0d1bb84751411ddb56a984a05fac5b02c64",
+      "reason": "Update existing regression from kinematic pickup/15 triggers to the approved dynamic grip and 16 palm/finger probes, retaining force/drop assertions."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset": {
+      "previousSha256": "62c771723810cbf132da2044afa973c268c8dc435d22f5903e4b2dadde12dbd5",
+      "currentSha256": "038af7263a30670ebc24172637c29b4a606fc16bc5b56786471dd081e31bac93",
+      "reason": "Native authoring scales the oversized ball to 70mm diameter; halve its local pressure radius to retain a localized footprint."
+    }
+  },
+  "sceneMonoChanges": {
+    "1948902784": {
+      "previousSha256": "fb7234329e18ac63a147053368b3fade21921f7c7d38f14ad0509b19ad464401",
+      "currentSha256": "aee86f548af63de1e565cc00bf41dbb540532da2d7d2ff338d660322d6910a02",
+      "reason": "Native Unity authoring added the physics-hand reference to the existing contact rig."
+    }
+  },
+  "authoring": "Unity PhysicsHandAuthoring.Install; no direct YAML edits; all other original MonoBehaviours unchanged"
+}

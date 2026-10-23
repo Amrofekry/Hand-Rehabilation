@@ -1,0 +1,11 @@
+{
+  "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs": "58336d8d88103f91a34abc7af530433d1de7c9d369d46418a3c2180d6ef3ead7",
+  "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs": "353071419487edd413301e977b8d6f42adebcd6ca03752f1e8ff0f114bc3e7dd",
+  "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactProbe.cs": "ed783f2cae2935fbd399e9cf64b9d64870527b9b55b0f1e31826851a1e585ebf",
+  "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": "5ca401d5e76b8be4f003570779706739fc53d5bb50fffeb481cd50c9c8a2a80d",
+  "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": "7fe671d558af8be810935ba416bce40157aa7c3b89c3e8bf4d474e81fdb578f7",
+  "Assets/Scenes/GripRehab.unity": "f14dfb13aa589c077065c5d4a182194f8b5642207d3ecfe7687d256db502c347",
+  "ProjectSettings/TagManager.asset": "23fc56b484aa3d7edf5914cd3591f7a823ccef5e3f3496f8a51f30388ead63dc",
+  "ProjectSettings/DynamicsManager.asset": "b7c9a9dc08b98990109d4346f68745e15e238de400f96c583e53e1c83c743a78",
+  "Tools/test_handmate_design.py": "1901279d0cd4e58f22e6328d41c4411cd548e776ea7d4a35560d7a56f8185b94"
+}

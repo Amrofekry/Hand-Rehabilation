@@ -1,0 +1,59 @@
+{
+  "changes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "a514722db88af16b444db67f6ed196963952fc7ac44be85d13fd76f717316a93",
+      "currentSha256": "7fe671d558af8be810935ba416bce40157aa7c3b89c3e8bf4d474e81fdb578f7",
+      "reason": "Authorized six-object node/spring deformation integration; original immutable design baseline retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs": {
+      "previousSha256": "5b564dd17871203937e6624298115b154b73615e3a1d1fc59c9db4d6b92ab928",
+      "currentSha256": "289bde302d0e1d0755a3db261489d4a89d34edcbad76cfd25987c4fe719b6dab",
+      "reason": "Authorized six-object node/spring deformation integration; original immutable design baseline retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "82326e032cae226a0dfda1efd0b998a534e7916206ead46a75e3a6d11830c508",
+      "currentSha256": "856f8e6993b03ba0b601f9ad7511add54b7c6bc4e815e1fe2ba176925dec31e1",
+      "reason": "Select the enabled compound cup wall collider in the existing player recoil regression instead of the replaced disabled box."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset": {
+      "previousSha256": "ec3cbc0623663f279b401d996739f531b844673f439a14c06a8cc81d9915cd53",
+      "currentSha256": "62c771723810cbf132da2044afa973c268c8dc435d22f5903e4b2dadde12dbd5",
+      "reason": "Native Unity bake binds experimental material to the approved solver topology and cup collision mode; all previous material values retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/02_Kitchen_sponge.asset": {
+      "previousSha256": "e4357c9d9331ec5e29d75312bf65d14c84ece009ab441487ca3644edc9022c96",
+      "currentSha256": "cf26ff2982ff583ee2191f3452cfdd68278228c42b053c525ee7d743e09ddab7",
+      "reason": "Native Unity bake binds experimental material to the approved solver topology and cup collision mode; all previous material values retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/03_Brittle_cracker.asset": {
+      "previousSha256": "a40d58e1888c375288f222a5f1e5502fe1e43efafa56cf97a1bc0247d5b73ac6",
+      "currentSha256": "604e4dff2b77f16223e382e530858ed1d375a9ed0eb5edd238d16c0ba085aa6b",
+      "reason": "Native Unity bake binds experimental material to the approved solver topology and cup collision mode; all previous material values retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/04_Porcelain_mug.asset": {
+      "previousSha256": "8e70a73cb1a43a8d438bfef32ffffd5f5e7504c802eff33150fc06dd5df784a9",
+      "currentSha256": "d73b3e51e5df007333ec043ca424f9823a40b78cb7e3a84bae2878b3566c9501",
+      "reason": "Native Unity bake binds experimental material to the approved solver topology and cup collision mode; all previous material values retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/05_Silicone_cup.asset": {
+      "previousSha256": "313a566143f57d241c816cab6d8ce51561ec939d35824d0dac068cf298dc3821",
+      "currentSha256": "716de1c6bb50aa76b0e792c49d9e12056ba5bf7b6c678dc87ec32301f497bffc",
+      "reason": "Native Unity bake binds experimental material to the approved solver topology and cup collision mode; all previous material values retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/06_Ripe_tomato.asset": {
+      "previousSha256": "fea98a67eb345db58a8d89ca418dc71fec28b73235ede251201da5ad30b7171d",
+      "currentSha256": "5a4f0a6da259812cb6cc26d9e06074d9b0f76f011c3ce4e456e9c7edd4f7977d",
+      "reason": "Native Unity bake binds experimental material to the approved solver topology and cup collision mode; all previous material values retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "3a3467075e144a59e6e3a968237a2a7874967eadf1452948ccdd3589cd120a89",
+      "currentSha256": "5ca401d5e76b8be4f003570779706739fc53d5bb50fffeb481cd50c9c8a2a80d",
+      "reason": "Required deformation contact fixes: fit left aperture, remove obsolete hand-target offset cap while retaining clearance, and filter hardware force with accepted-sample interval; protocols, tracking and UI unchanged."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs": {
+      "previousSha256": "9210281597750c78c7a0f8f1330798f9685228d18c136862fd5d4e67e48001b0",
+      "currentSha256": "2c7ca78a9e7f0f8ebf518b0e7b6d96cecf8c761c1b9b0d9f17894bbcef448457",
+      "reason": "Visual verification exposed open zero-thickness sheets; retain source surfaces and UVs, add backs and boundary walls to cached chips."
+    }
+  }
+}

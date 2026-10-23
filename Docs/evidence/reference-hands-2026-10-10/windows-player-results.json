@@ -1,0 +1,151 @@
+{
+    "passed": false,
+    "runtimeErrors": 0,
+    "scope": "Windows player, original Ultraleap HardContact/GrabHelper, six objects/both hands, synthetic keyboard closures and artificial aperture placement, gravity disabled during fixture. No live webcam or hardware and no proof of zero visual clipping.",
+    "cases": [
+        {
+            "hand": "Right",
+            "item": "Silicone ball",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.0023293495178223,
+            "frameP95Ms": 0.6359977126121521
+        },
+        {
+            "hand": "Right",
+            "item": "Porcelain mug",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": false,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 0.0,
+            "frameP95Ms": 0.5253968238830566
+        },
+        {
+            "hand": "Right",
+            "item": "Brittle cracker",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": false,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 0.0,
+            "frameP95Ms": 0.47389456629753115
+        },
+        {
+            "hand": "Right",
+            "item": "Kitchen sponge",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.0209197998046876,
+            "frameP95Ms": 0.6019982695579529
+        },
+        {
+            "hand": "Right",
+            "item": "Silicone cup",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.2077192068099976,
+            "frameP95Ms": 0.872498631477356
+        },
+        {
+            "hand": "Right",
+            "item": "Ripe tomato",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.0477386713027955,
+            "frameP95Ms": 0.6944019198417664
+        },
+        {
+            "hand": "Left",
+            "item": "Silicone ball",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 0.994225800037384,
+            "frameP95Ms": 0.6557043790817261
+        },
+        {
+            "hand": "Left",
+            "item": "Porcelain mug",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": false,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 0.0,
+            "frameP95Ms": 0.6622945070266724
+        },
+        {
+            "hand": "Left",
+            "item": "Brittle cracker",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": false,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 0.0,
+            "frameP95Ms": 0.5534013509750366
+        },
+        {
+            "hand": "Left",
+            "item": "Kitchen sponge",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.0215638875961304,
+            "frameP95Ms": 0.6246952414512634
+        },
+        {
+            "hand": "Left",
+            "item": "Silicone cup",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.3271912336349488,
+            "frameP95Ms": 0.6676020622253418
+        },
+        {
+            "hand": "Left",
+            "item": "Ripe tomato",
+            "error": "",
+            "tracked": true,
+            "oneVisual": true,
+            "heldAtEnd": true,
+            "released": true,
+            "finite": true,
+            "heldSeconds": 1.0479011535644532,
+            "frameP95Ms": 0.5839002728462219
+        }
+    ]
+}

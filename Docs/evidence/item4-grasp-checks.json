@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-01T10:33:24.347891+00:00",
+  "checklistItem": 4,
+  "wbs": "3.4.1",
+  "state": "Software implementation and files-only checks complete; native acceptance pending",
+  "sourceHashes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": "6e8b7c343e1100cdd2ea8efb9436e67518ce827b1d74286a7156089e220527ec",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": "3079e0f23364f846898c6649cc0a846318a74fb33711dbb39ed12af83184af38",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspMotionPolicy.cs": "7c9d01fed187888392c79570f77e9d56c04685bfd55b2a09130d718530285f61",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspMotionPolicy.cs.meta": "f6137a1e0ae40b5037635e7f3ad08b0f76c2424992c155498fc5e1ea11e5683e",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspCollisionShield.cs": "306e26d3b157f1fb1a459eb6b6f683e6e00002689dcf40e0e48482efad1414bf",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspCollisionShield.cs.meta": "f6c85821a8c8e06b7910e661d68b73edfd8b58d85db455961b56b891821178a3",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentSettings.cs": "700817602788b64bbe3ab88e90c8dabb29f93a259cb927b2756c71ad4547b7d0",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": "25703c4b38dbfb9dcbf6803243253cc40db7e729378f6b1ab40bc21dbb41ea2c",
+    "Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset": "8c345af4d78eb501a4784160014a4a255992cf391c4a0c5678ddc71503867df6",
+    "Tools/offline_verify.py": "fd467d10181dc91cce6577305c6a2dece022040811b968b2d43b66cc4cd4d01e",
+    "Tools/test_grasp_bindings.py": "f212db3613991d38f9c07398178777378f0f62af53ca467fd38ee9b11e21c9ad",
+    "Tools/Offline/GraspTests.cs": "710067532e54c30d6fc7473f0e633333bcfa49ffb6cbc24344617f8721724e74",
+    "Tools/Offline/GraspPhysicsShim.cs": "ffaef4e387a35e3e7331ea8a58f780174f35d50b9d0a9feeba971724eeb71df9",
+    "Tools/Offline/VerifyGraspSensitivity.py": "eb84109855423e67f09b7d1497a81fb64160ef0467b50138019353237d7e17b1"
+  },
+  "cachedReferenceCompilation": {
+    "editorAssemblies": 5,
+    "playerAssemblies": 4,
+    "passed": true
+  },
+  "graspSourceAssertions": 67,
+  "graspStaticBindings": 8,
+  "keyboardPolicyAssertions": 72,
+  "keyboardStaticBindings": 9,
+  "trackingSourceAssertions": 130,
+  "productDomainAssertions": 37,
+  "pythonVisionForceTests": 8,
+  "totalPositiveChecks": 331,
+  "negativeMutationChecks": 2,
+  "priorHandKeyboardSourcesPreserved": true,
+  "deformationDamageAlgorithmsPreserved": true,
+  "nativeEditorPlayStop": "Not run; files-only instruction",
+  "nativePhysXDropFloorRecoil": "Not run",
+  "freshWindowsBuild": "Not run; prior executable unchanged",
+  "humanHandTrial": "Not run",
+  "physicalNano": "Not run"
+}

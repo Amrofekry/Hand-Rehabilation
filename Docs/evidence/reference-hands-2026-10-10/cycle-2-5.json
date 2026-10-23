@@ -1,0 +1,51 @@
+{
+    "hand": "Right",
+    "item": "Ripe tomato",
+    "error": "",
+    "engineTracked": true,
+    "grabbed": true,
+    "dropped": true,
+    "finite": true,
+    "contacts": 6,
+    "visibleHands": 1,
+    "colliderPenetrationMm": 5.495937347412109,
+    "maxObjectSpeed": 0.2922302782535553,
+    "ghosted": false,
+    "kinematic": false,
+    "heldAtEnd": true,
+    "nativeHeldAtEnd": true,
+    "brokenAtEnd": false,
+    "apertureClear": true,
+    "damage": 0.0,
+    "otherHeld": "Ripe tomato",
+    "heldSeconds": 0.8462088704109192,
+    "mask": 512,
+    "objectLayer": 9,
+    "palm": {
+        "x": 0.7533761262893677,
+        "y": 1.4171968698501588,
+        "z": -1.8445768356323243
+    },
+    "fingerTip": {
+        "x": 0.713531494140625,
+        "y": 1.4234957695007325,
+        "z": -1.8485276699066163
+    },
+    "physicsPalm": {
+        "x": 0.7530967593193054,
+        "y": 1.417030930519104,
+        "z": -1.8446629047393799
+    },
+    "meshCenter": {
+        "x": 0.7571625709533691,
+        "y": 1.4063622951507569,
+        "z": -2.126528024673462
+    },
+    "meshSize": {
+        "x": 0.22403490543365479,
+        "y": 0.1778022050857544,
+        "z": 0.7028244733810425
+    },
+    "contactAdapterP95Ms": 0.0691,
+    "frameP95Ms": 3.162400797009468
+}

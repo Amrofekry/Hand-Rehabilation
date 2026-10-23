@@ -1,0 +1,82 @@
+{
+  "utc": "2026-10-03T14:54:52.423982+00:00",
+  "scope": "HandMate design only; no imported gameplay",
+  "compile": {
+    "utc": "2026-10-03T14:50:12.041755+00:00",
+    "scope": "Offline compiler/metadata/domain checks only",
+    "checks": [
+      {
+        "name": "metadata",
+        "passed": true,
+        "count": 816
+      },
+      {
+        "name": "assembly-graph",
+        "passed": true,
+        "count": 5
+      },
+      {
+        "name": "compile-editor",
+        "passed": true,
+        "assemblies": {
+          "GripRehab.Product.dll": "69950f80e3194fff98628ac144dd6af1f18b710678467bbb96e7273f329eeddb",
+          "GripRehab.Core.dll": "69a1dfa68a84d231dd8d2b3dbea161bcd44efde84e69d35e966ff61767c9c219",
+          "GripRehab.UI.dll": "3bbde014826294b9b41eadd53bd532559dc4693e39b0f39777d5dcb86468c3dd",
+          "Assembly-CSharp.dll": "6bd28f693377b7974682076a7834f6889813ca6d229e0e2c999fe33dabbcaef8",
+          "Assembly-CSharp-Editor.dll": "0a0649f8f3bd8bc4b9024d2df489430e367e3e45a67556908cd21debc9ba8527"
+        }
+      },
+      {
+        "name": "compile-player",
+        "passed": true,
+        "assemblies": {
+          "GripRehab.Product.dll": "8c605a7721318c88692e7f70c973a1fb965f25b2158acae51efabd5bc1429118",
+          "GripRehab.Core.dll": "11099d4747129b121575a4cbf67deb5ed5bca6a4a8233319f0af30b6f7daa0bc",
+          "GripRehab.UI.dll": "8217075a8c6700abac66f595776e8bcc947d9a812af82c477079f348f1b62e58",
+          "Assembly-CSharp.dll": "ba582583e31a7bb03d689cd121bf10afdb2ba846b99d51728f32ab8d93f31ff0"
+        }
+      }
+    ],
+    "runtimeVerification": "Not run by this tool; see separate Editor and Windows player evidence",
+    "passed": true
+  },
+  "previous_full_source_test_run_passed": true,
+  "python_root_tests": 61,
+  "vision_bridge_tests": 4,
+  "design_tests": 6,
+  "protected_unchanged_files": 298,
+  "unchanged_scene_logic_components": 91,
+  "modified_preexisting_assets": [
+    "Assets/Editor/GripUiAccessibilityAuthoring.cs",
+    "Assets/Editor/GripUiThemeAuthoring.cs",
+    "Assets/Scenes/GripRehab.unity",
+    "Assets/UI/GripUiGallery.unity",
+    "Assets/UI/GripUiTheme.cs",
+    "Assets/UI/GripUiThemeController.cs",
+    "Assets/UI/ResearchPortalView.cs",
+    "Assets/Rehab/3.4-game-modules/RehabDwellPointer.cs",
+    "Assets/Rehab/3.4-game-modules/RehabExerciseSuite.cs",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentChoices.cs",
+    "Assets/UI/Components/ConnectionChip.prefab",
+    "Assets/UI/Components/DisabledButton.prefab",
+    "Assets/UI/Components/InputField.prefab",
+    "Assets/UI/Components/PrimaryButton.prefab",
+    "Assets/UI/Components/ProgressBar.prefab",
+    "Assets/UI/Components/SecondaryButton.prefab",
+    "Assets/UI/Components/Slider.prefab",
+    "Assets/UI/Components/Toggle.prefab",
+    "Assets/UI/Themes/Dark.asset",
+    "Assets/UI/Themes/HighContrast.asset",
+    "Assets/UI/Themes/Light.asset"
+  ],
+  "native_import": {
+    "passed": false,
+    "status": "blocked before import",
+    "exit": 198,
+    "log": "Logs/handmate-import-preflight.log",
+    "note": "License unavailable to the automated session; interactive licensing not established by this check"
+  },
+  "native_play_stop": "NOT RUN",
+  "windows_rebuild": "NOT RUN",
+  "screenshots": "Static saved-layout approximations only; Docs/screenshots/handmate-static"
+}

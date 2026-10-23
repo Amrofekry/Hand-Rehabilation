@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-01T10:27:54.228488+00:00",
+  "productionModifiedByMutations": false,
+  "checks": [
+    {
+      "name": "overlap-restored-too-soon",
+      "rejected": true,
+      "compileExit": 0,
+      "testExit": 1,
+      "scope": "Managed test recorder/math, not native Unity"
+    },
+    {
+      "name": "teleport-generates-throw",
+      "rejected": true,
+      "compileExit": 0,
+      "testExit": 1,
+      "scope": "Managed test recorder/math, not native Unity"
+    }
+  ]
+}

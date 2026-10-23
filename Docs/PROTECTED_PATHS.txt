@@ -1,0 +1,24 @@
+# UI-only redesign boundary, captured 2026-09-29 after the previous feature work.
+# No changes below these paths during visual redesign.
+Assets/Rehab/3.1-environment/
+Assets/Rehab/3.2-vision/
+Assets/Rehab/3.3-deformation/
+Assets/Rehab/3.4.1-force-object-interaction/
+Assets/Rehab/3.4.2-cognitive-performance/
+Assets/Rehab/3.4.3-visuomotor-coordination/
+Assets/Rehab/6.1-bluetooth-integration/
+Assets/Rehab/3.4-game-modules/RehabApp.cs
+Assets/Rehab/3.4-game-modules/RehabAppShell.cs
+Assets/Rehab/3.4-game-modules/RehabDwellPointer.cs
+Assets/Rehab/3.4-game-modules/RehabExerciseSuite.cs
+Assets/Rehab/3.4-game-modules/RehabProfileStore.cs
+Assets/Rehab/3.4-game-modules/LocalPasswordHash.cs
+Assets/Rehab/3.4-game-modules/WindowsProfileProtection.cs
+Assets/com.gleechi.unity.virtualgrasp/
+Assets/_Project/Core/
+Tools/Vision/
+Tools/Phase2Bridge/
+firmware/
+hardware/
+ai-engine/
+tests/

@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-01T09:32:26.356679+00:00",
+  "wbs": [
+    "3.2",
+    "3.4.1"
+  ],
+  "scope": "File-only camera perspective direction repair; no Unity/Hub/player launch or computer use",
+  "sourceHashes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": "bab34f6c63747d0aeace3289c3d0e478cac0f944c0ae3d1da6aa737f2cb1b49f",
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": "427ad495cd658c78ff3e7d21a2f21dea43ba15b3da85d15febafe678dbb50368",
+    "Tools/Offline/TrackingTests.cs": "e0e874e2c85d5d08f8f096b271eb1d4b200dc323a4b297b01ba344b5ce101e95",
+    "Tools/Offline/TrackingMathShim.cs": "4950be1343d4663d26bedcaf8eb131ce5f6c7806730ad93d5debe8d989a47640",
+    "Tools/offline_verify.py": "6156d05f2cdd621f26726900dc70f315b3e039685754134704a277ec837b40cb"
+  },
+  "offlineCompilerPassed": true,
+  "trackingSourceAssertions": 130,
+  "productDomainAssertions": 37,
+  "pythonBridgeTests": 8,
+  "oldCodeRegressionFailures": 48,
+  "oldCodeRejected": true,
+  "nativeEditorVerification": "Not run for this revision",
+  "freshWindowsBuild": "Not run; prior release is unchanged",
+  "humanHandTrial": "Not run; both sides still require live observation",
+  "rendererFacingVerification": "Expected opposite neutral facing is tested mathematically; actual mesh/camera appearance not observed for this revision"
+}

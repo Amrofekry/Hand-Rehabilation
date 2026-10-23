@@ -1,0 +1,518 @@
+{
+  "source_repo": "E:/GP/codex",
+  "source_commit": "2680401d10b23e920df180d25abbbcec1d793bda",
+  "cad_assembly": "committed source selected; parent uncommitted version preserved in Docs/evidence/assembly-parent-uncommitted.scad",
+  "physical_tested": false,
+  "files": [
+    {
+      "path": "firmware/arduino-cli.yaml",
+      "bytes": 193,
+      "sha256": "94688ed8643ecd9c18a2fc0bd2ebccab476defb0fd5b1d632dd8de66310ad9ec"
+    },
+    {
+      "path": "firmware/build.ps1",
+      "bytes": 738,
+      "sha256": "468d4a7e5cd2e59cd88e22ec93a2a9489a2bba6bcbf742332f3a2578c33195b0"
+    },
+    {
+      "path": "firmware/DEPENDENCIES.md",
+      "bytes": 1452,
+      "sha256": "1712621453d4ef150d61bff5fdc88a52204ad4f05a7f4bc9f6b5c51ca62b7061"
+    },
+    {
+      "path": "firmware/README.md",
+      "bytes": 1971,
+      "sha256": "c9dcaf7f631ec8fcc54de37dbe7b0a6934fb027166ec07d51c6dbacbb8a18373"
+    },
+    {
+      "path": "firmware/run_tests.py",
+      "bytes": 1530,
+      "sha256": "1961bc18aed52b36280f245c3753c26789f802c59162672f954c98446402e7e9"
+    },
+    {
+      "path": "firmware/setup.ps1",
+      "bytes": 842,
+      "sha256": "a67ee736b79dcc3d64d0d957f42b213d6ee76bd32ec92da55bc50e64c9221c15"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/README.md",
+      "bytes": 3810,
+      "sha256": "296f61f0148f1390c687e1c4e612f467fda19b781784a545c9989ece5eba9e45"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/synthetic_verification.csv",
+      "bytes": 150,
+      "sha256": "ebb0c76375dce7aad1a6cdb4c4e0a1a619f4fec1241e2c4e44fdca7df67d54f5"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/verify_calibration.py",
+      "bytes": 1841,
+      "sha256": "1e943f16205a1b8388bbbdb61b181b23577a4b0e9a0a79db5d346a396366a788"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/calibration/calibration.ino",
+      "bytes": 235,
+      "sha256": "c05093d3854dcd701415167ec950bcd8dc39679a74c1202e8b572febb8fe5296"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/library.properties",
+      "bytes": 261,
+      "sha256": "88961db77decb1a0244731d620b873f0ec4105db499bad093f0eddc46987fefc"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/src/BenchConsole.h",
+      "bytes": 4459,
+      "sha256": "97e977a7b8c4c6868409647ddfdd456b005bbe328c47690f18ae55e6f37e950e"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/src/HX711Ready.h",
+      "bytes": 769,
+      "sha256": "a959bcaf63d8e2bf7ecd35b67cec57305bba7a80404d335cb1a48f140dbb92df"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/src/RehabCore.h",
+      "bytes": 6603,
+      "sha256": "9d06ffd9605e4c7d6cd018eb2c77e75504a54503fb588df3bba90be1cebd2159"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/README.md",
+      "bytes": 4256,
+      "sha256": "81b4599241a8776b950a5629712dd075134979024101a1281355e93f42673dc6"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/grip_stream/grip_stream.ino",
+      "bytes": 1559,
+      "sha256": "865e4bc984090ef2f90bd563de91ebcf1b4362689d0ab4c4ca9b4ed91ca63a36"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/grip_stream/Telemetry.h",
+      "bytes": 531,
+      "sha256": "62b0574f2360da5092007b35a7f3f887fd6f9ca24cdd1c28e563e3d67cac9baa"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/monitor.py",
+      "bytes": 5271,
+      "sha256": "123279afcebcc5e0c96804dea3f6f4ef20ef58b859a2b1d5cc0d8d6244c793e4"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/protocol.py",
+      "bytes": 3491,
+      "sha256": "0fa8e19f685f5e52c0f0de5ecc42ba6ddb81d32d37b8809e01954955dbb8babc"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/unity_bridge.py",
+      "bytes": 6970,
+      "sha256": "87c396dc8a6eeaa39411fe14e62de17faf05a6dfe7a216e130934f78129080cc"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/assembly-preview.png",
+      "bytes": 58858,
+      "sha256": "c636ca662362b72e2e733c14a5a9326f41db0bb0b8df884ba842a4e791579e37"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/export_parts.py",
+      "bytes": 3007,
+      "sha256": "a60468246641139e422bfcbb63e46ed91ce640a40fff93594cd2f47c322e67d0"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/fit_report.csv",
+      "bytes": 370,
+      "sha256": "65f38f69f581f6226c2c185c1b8c4ff2651b66e6575f33785346105ebe4a0c76"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/grip_core.scad",
+      "bytes": 3686,
+      "sha256": "7387695cc29a11d73c111c3c25481f01e978b235ce02c3d7ce3dec7f4b50dc75"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/README.md",
+      "bytes": 4133,
+      "sha256": "8bb37bd63b49fd78d1f2a058c150d4db46180e405f3be9e2ada7dfc6e7d4ee55"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/render_preview.py",
+      "bytes": 2781,
+      "sha256": "feb27eb5755879055e62998b5a3a4088b84e5d83f01d6901ab24dfe602ee089f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/cylinder_bottom.stl",
+      "bytes": 856617,
+      "sha256": "64f4a71128c374a38f52a92ae6c7e015febe6be12fcc60428e567961bfe0e40e"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/cylinder_top.stl",
+      "bytes": 843045,
+      "sha256": "545b640653464f83de016e37858160042c79ef4fa225c71856fff40ab9df228d"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/lid.stl",
+      "bytes": 1090884,
+      "sha256": "1ef631d0b155dddae454274c69131471a583350109f96ae0be71a0b4344b9804"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/manifest.json",
+      "bytes": 1283,
+      "sha256": "67b70da906f6b30a2fb8ec5e176633e1d03d168ecd4324fd456c146812151cd1"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/mesh_check.json",
+      "bytes": 1045,
+      "sha256": "245528d8a0d454b72287a8d6e98c5cfde96a790d4a4c8f08f8e0e729737b80b9"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/pencil_bottom.stl",
+      "bytes": 829998,
+      "sha256": "6f7f8ce83a5ca96e72d2850bca80c74d7c1908bf576b7355c19a257497692dc8"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/pencil_top.stl",
+      "bytes": 816920,
+      "sha256": "b19015f08abcc4752a11973079aa1da33e0a32b2148f4f20962038cde35b9f58"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/platen.stl",
+      "bytes": 968523,
+      "sha256": "18ca9cd942c87c6beb545a3d22d68cf97849c1305b659d76567055203ef119c4"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/sphere_bottom.stl",
+      "bytes": 1276638,
+      "sha256": "9e04315dfe3e693a87f3edb1386f9ef0e0dc1b8b335c7d1e3a488a67e3f84696"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/sphere_top.stl",
+      "bytes": 1255029,
+      "sha256": "769a1937d3791995748964d2ff04602a05b57daf204f7aa83aa63b8450a6e572"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/tray.stl",
+      "bytes": 1567022,
+      "sha256": "0af00fe6c73762b67b898da7f5874c6bce06d2fdd875a812d511b057c999d222"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/assembly.scad",
+      "bytes": 4665,
+      "sha256": "26227982d6895412a2d95801e9fba9570452a4b5b9a6a0e998ddf2467439bdfd"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/build.py",
+      "bytes": 8774,
+      "sha256": "c2757f7eba2a9473fa26f2368ce3fbdc38ae2d0a8d980b23b1942f97c2b17416"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/check_geometry.py",
+      "bytes": 1661,
+      "sha256": "cbc4563b9e6f00dcb7cc4e6bfc7dbfd096ca255dba226f5a47ef9756f3b1a76f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/layout.json",
+      "bytes": 3214,
+      "sha256": "cf5635877eb95587634fa75dd1aef50915dbd1ca8232aaae48c542c3336133c1"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/packaging.png",
+      "bytes": 77086,
+      "sha256": "52f51181a561e89d67a3b10d9e2bea0746a1813af73c5f21035036670c9d2a4f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/parameters.scad",
+      "bytes": 698,
+      "sha256": "2ac99a970c622550ef05fcae6e2deb0194ef0416e7feaccad6c3e427d0ed4f63"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/README.md",
+      "bytes": 7211,
+      "sha256": "10ae83d2acc977dc3bcb288afa8b79c912a066563ff08c729d9518c64a2ce374"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/render_layout.py",
+      "bytes": 3455,
+      "sha256": "47e8b3285e8c482a4be34f95122e42a30d999c81035f24f8ad2e9e8a84744ca2"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/active_spacer.dxf",
+      "bytes": 6530,
+      "sha256": "eea97892a5df27e7b5b2704a631572a9a169ff24cb0d1e04997d5f1ea43954f1"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/active_spacer.stl",
+      "bytes": 59282,
+      "sha256": "61d685e5c08917b2baa258ea0b67d1a5fca409be7a5bc0cd997580e1711529ed"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/base_plate.dxf",
+      "bytes": 33526,
+      "sha256": "aa41c4d5c3a59c8c263b8469f824ea6cd73289e81b9401c65ba61b420a04d184"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/base_plate.stl",
+      "bytes": 306157,
+      "sha256": "41594b0a0215fcca9724d3e537c4134b95aeae44665d90c7f8091fc81f830d7f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/cylinder_bottom.stl",
+      "bytes": 334683,
+      "sha256": "242c73a5f7bc7701d494a416fd517f8393bfe687af94f59c7a6ccd05dc8e1665"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/cylinder_top.stl",
+      "bytes": 216378,
+      "sha256": "8839a114af6355db10ab21d4963e7449d91388a7fd2e566e884f3cd9b9ca4f28"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/deck.stl",
+      "bytes": 67212,
+      "sha256": "9a755a7a1d665291230b8571d869148517930ce0b37cf6585d08d111f7c62d52"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/fixed_spacer.dxf",
+      "bytes": 6378,
+      "sha256": "2366819375788d6dc568ac8f53b7c788202ad31337c92a5ed154a6f8da2cdc11"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/fixed_spacer.stl",
+      "bytes": 56383,
+      "sha256": "9320460be78a9a2fd55fbba741f060208d7be8cc4099bb1ef42a785345526dd0"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/pencil_bottom.stl",
+      "bytes": 320024,
+      "sha256": "fa4e6301b34f47630caded1861fedcca60812ae9979d641517b97cce206c41ec"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/pencil_top.stl",
+      "bytes": 205894,
+      "sha256": "f1c05480367d0bd45400a43ffa2e910246660ece7879c4a39483ecd6cd84aa94"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/sphere_bottom.stl",
+      "bytes": 535562,
+      "sha256": "eacd0867bca46a3b7670e1fc63cd3b4dd2b10c5ead145185ac43fbd6a1c10da3"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/sphere_top.stl",
+      "bytes": 382071,
+      "sha256": "577b2e7ba2bf2f1f16b0113060d14da30c59447a7ff819c507dcda02924152e8"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/stop_sleeve.stl",
+      "bytes": 55529,
+      "sha256": "a52786c707e1dfd2876aa756e9dbf1acb4136c68d6b877006e6e984e3856e6fe"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/top_plate.dxf",
+      "bytes": 33454,
+      "sha256": "6ecb73aa2490014d07feaf3228511a67b768addc4fe1a94cde2ab4013d2fa5fe"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/top_plate.stl",
+      "bytes": 315952,
+      "sha256": "a3ff79371d848c2d5565671f624d182e0ecba45cb5a86caf31f63126f9aed998"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/tray.stl",
+      "bytes": 166252,
+      "sha256": "22fced1f2c7b4c668c9b6790352e1afe05f8ab944c133948072e9008aa784dec"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/verification.json",
+      "bytes": 5222,
+      "sha256": "12be1183392b86ca777fc0e02b928ee944961a21cd0a717dd1feb56522f5e4e0"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/references/TAL220.pdf",
+      "bytes": 336497,
+      "sha256": "e378569048d0b48befa28791813d05e53690bc81159f536ba29df11a538263b6"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/references/TAL220.png",
+      "bytes": 345428,
+      "sha256": "b036c087bf531a1dbd54bdaa73909d5e3cc1127c6d53b5051f134929f2c73994"
+    },
+    {
+      "path": "hardware/2.2-electronics/bench_report.csv",
+      "bytes": 791,
+      "sha256": "fcc1215f611912a14ee1d7266421d37fbc10e164d1b89d6809aa8f93c37eb790"
+    },
+    {
+      "path": "hardware/2.2-electronics/procurement.csv",
+      "bytes": 1378,
+      "sha256": "698109a74ea252f654c3b2c7baec329ea128568aafd435ef68cdf58ae641a585"
+    },
+    {
+      "path": "hardware/2.2-electronics/README.md",
+      "bytes": 6020,
+      "sha256": "de3aa3d55694c6527f95b6eb30dcfe8dc60efbc1ce1d8a6a86422ce760a4b948"
+    },
+    {
+      "path": "hardware/2.2-electronics/REV2_CIRCUIT.md",
+      "bytes": 3935,
+      "sha256": "3b606b0884674c3492c8c3fc106f629358656614ce13fedbc2cf89fd52551e6f"
+    },
+    {
+      "path": "hardware/2.2-electronics/STARTER_PARTS.md",
+      "bytes": 3930,
+      "sha256": "f9552ac277135ba4a4c2706b00f32f1ef3da1ce6e4e651a44ecb6b21c55a406b"
+    },
+    {
+      "path": "ai-engine/4.1-baseline-protocol/README.md",
+      "bytes": 125,
+      "sha256": "667c288697a6c44a9a679b5387d470188d274ea17b1a8e482cba189ffe16728c"
+    },
+    {
+      "path": "ai-engine/4.2-data-collection/README.md",
+      "bytes": 123,
+      "sha256": "6cae20599b12137366f77cfa4cc515a154b4de37bc481378add00095c8aad463"
+    },
+    {
+      "path": "ai-engine/4.3-fatigue-model/README.md",
+      "bytes": 121,
+      "sha256": "0126c5bf09b1afd254047b1127f494b761f55c45c9f0868510ec6b4e27c572c3"
+    },
+    {
+      "path": "ai-engine/4.4-onnx-export/README.md",
+      "bytes": 119,
+      "sha256": "7d47189ed01d5cb48466c6c05fc3d8725707fb0d15915ccc2caeff9bc0500bf0"
+    },
+    {
+      "path": "ai-engine/4.5-decision-policy/policy.py",
+      "bytes": 5678,
+      "sha256": "1e1820ce7fcadbcb9fe79157f37da5ceb9c5a14e8918458538d6652869e5d0a8"
+    },
+    {
+      "path": "ai-engine/4.5-decision-policy/README.md",
+      "bytes": 123,
+      "sha256": "92a41eac7deea6154dc8447c0f8b924c03ce93e7ca7fefc219233c72331a1949"
+    },
+    {
+      "path": "tests/2.1-mechanical/test_layout.py",
+      "bytes": 1932,
+      "sha256": "0f814f211bb138ce532c2dfa843e20c4a7d7994c72cfd1e7214dc85144a0f001"
+    },
+    {
+      "path": "tests/2.3-calibration/README.md",
+      "bytes": 295,
+      "sha256": "8d04daf304f89c1c83ba332b6f2c5eb05d46dc374e7e9964727ac1f6659cebcf"
+    },
+    {
+      "path": "tests/2.3-calibration/test_core.cpp",
+      "bytes": 3080,
+      "sha256": "1ca42f288c26f5dd1ce6594ad8ce3646fce6d3f8e715109551469ce23bc846f2"
+    },
+    {
+      "path": "tests/2.3-calibration/test_hx711_ready.cpp",
+      "bytes": 1338,
+      "sha256": "fc4f582114479df15bbace7b2543d4e639c2338cb8e3e6475de112fb55e988a2"
+    },
+    {
+      "path": "tests/2.3-calibration/test_verification.py",
+      "bytes": 1113,
+      "sha256": "baa47d2c73e71534563c42e73eeb864a710e90074bd98052519f27b70b12f4e4"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/README.md",
+      "bytes": 266,
+      "sha256": "6a8f30ff352f0c2ea32a527f40b5e28daabc4e1b75836c719ebc37c7bddb1004"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/test_capture_delivery.py",
+      "bytes": 3736,
+      "sha256": "419be701499cd082f0ba306dc953e0a92515486a7105ccb710541650d86c9cc0"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/test_protocol.py",
+      "bytes": 2198,
+      "sha256": "9672130644ea7fa5aca79bcf554f55dd2078af0a0584f76f4b8b98f315078818"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/test_telemetry.cpp",
+      "bytes": 526,
+      "sha256": "9eed130edd0368304515db574dfd9ed4359004c376a2445fecb227d626d74cc7"
+    },
+    {
+      "path": "tests/3.2-vision/README.md",
+      "bytes": 114,
+      "sha256": "667b20fdd3ad0bb669cdcc125b99d6ad4c65acd026d5ca6105c11a39b87d39e0"
+    },
+    {
+      "path": "tests/3.3-deformation/README.md",
+      "bytes": 119,
+      "sha256": "31ae2fc9b4db3a1988e1a3013067d50bfb31412a4a85ccc9bcc653b31e0cf490"
+    },
+    {
+      "path": "tests/3.4-game-modules/README.md",
+      "bytes": 120,
+      "sha256": "9d2f54d9a11267e35bd323a8cd1ac9ea9665d08d1841ff7cfdd89c3c7a821c5d"
+    },
+    {
+      "path": "tests/3.4.1-force-object-interaction/README.md",
+      "bytes": 134,
+      "sha256": "fd783583f1c340ead5fcf93a858bd946f9d256057d4e2f10faf701b84a08a93b"
+    },
+    {
+      "path": "tests/3.4.2-cognitive-performance/README.md",
+      "bytes": 131,
+      "sha256": "6dfcf99b543f2455a7b5846c042515562ef1d0eb3b48d8430dba2b3dd8f5099f"
+    },
+    {
+      "path": "tests/3.4.3-visuomotor-coordination/README.md",
+      "bytes": 133,
+      "sha256": "3c941547b4da2953009d27f23aa6bdb2d38b1e4d1f45c278a5fd5aa0821beeb4"
+    },
+    {
+      "path": "tests/4.1-baseline/README.md",
+      "bytes": 116,
+      "sha256": "979646aff39d5c2eb719755347d7b6c11f0448b9242d99e062417012abe49bf7"
+    },
+    {
+      "path": "tests/4.2-data-schema/README.md",
+      "bytes": 119,
+      "sha256": "c6933e1ee8a0061a1697525b7cb054f469e0d5470df9a6672f58e85fb40daec2"
+    },
+    {
+      "path": "tests/4.3-fatigue-model/README.md",
+      "bytes": 121,
+      "sha256": "0126c5bf09b1afd254047b1127f494b761f55c45c9f0868510ec6b4e27c572c3"
+    },
+    {
+      "path": "tests/4.4-model-parity/README.md",
+      "bytes": 120,
+      "sha256": "0c83ac4172a4a4aa4111f52e1d0ae63166d1f528e8650252f443314986dbda61"
+    },
+    {
+      "path": "tests/4.5-decision-policy/README.md",
+      "bytes": 123,
+      "sha256": "92a41eac7deea6154dc8447c0f8b924c03ce93e7ca7fefc219233c72331a1949"
+    },
+    {
+      "path": "tests/4.5-decision-policy/test_policy.py",
+      "bytes": 3127,
+      "sha256": "55516fb6779241b5fd9bf5db4111905aa10eba87ac1774b7292bee9fae11b684"
+    },
+    {
+      "path": "tests/5.1-patient-dashboard/README.md",
+      "bytes": 125,
+      "sha256": "82a2f78f3e22a753022d6764eff7a8bd74af67e3ca06bdbbdc2475e9b2386222"
+    },
+    {
+      "path": "tests/5.2-doctor-dashboard/README.md",
+      "bytes": 124,
+      "sha256": "3d713b6d9d3444eacbaa3f1efc903bad1a2c6729496349004d3e988645ceff00"
+    },
+    {
+      "path": "tests/6.1-bluetooth-integration/README.md",
+      "bytes": 129,
+      "sha256": "cde9233d590d4c0870e103520d31ae7836c8bc09c9f1b71c7e605824bc99d300"
+    },
+    {
+      "path": "tests/6.1-bluetooth-integration/test_unity_bridge.py",
+      "bytes": 2862,
+      "sha256": "cc3b721615b8b7b12075160aa2938e6450ab6c86a2789d2dac0663dc45d49038"
+    },
+    {
+      "path": "tests/6.2-closed-loop/README.md",
+      "bytes": 119,
+      "sha256": "8aae75978423e0a235dbd17ef4b60dcd7d88be29cd5403b44eab55b475e03f94"
+    }
+  ]
+}

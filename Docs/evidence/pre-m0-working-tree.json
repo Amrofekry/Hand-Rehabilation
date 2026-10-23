@@ -1,0 +1,147 @@
+[
+  {
+    "path": "Assets/Rehab/3.4-game-modules/RehabAppShell.cs",
+    "bytes": 15363,
+    "sha256": "85BDB0F7EED6D314ED80F33E2051E2B5AB088070067ED5A6C265714861DF63A2"
+  },
+  {
+    "path": "Assets/Rehab/3.4-game-modules/RehabProfileStore.cs",
+    "bytes": 5929,
+    "sha256": "44E9A37327DDD629E5A255325BD5F62506EABAB23A26EE0F382D7026B9645FAA"
+  },
+  {
+    "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs",
+    "bytes": 43540,
+    "sha256": "90AC1778ECB9188BB0B03396847EC2BD88F0754775EB94D0A525C998E320D403"
+  },
+  {
+    "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentChoices.cs",
+    "bytes": 4413,
+    "sha256": "E79C7FEB5D0FED533EC39825EDFDD8EF5E862D82F0C72F8B7902ED042881F4C4"
+  },
+  {
+    "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs",
+    "bytes": 21619,
+    "sha256": "A7D928F02C7779C82EFF8D20D8AAAE02AC4620F4283A0C0E19B306B735F0267A"
+  },
+  {
+    "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentPlayer.cs",
+    "bytes": 3719,
+    "sha256": "D532038DE63B4EA2BFA736782262D963214679E695C15F3B7C72079360DA42D3"
+  },
+  {
+    "path": "Docs/BLE_INTEGRATION.md",
+    "bytes": 4139,
+    "sha256": "7B09CD5657F30743CD6EF52F589368E4E035EF5877F7088FBFC607556E94158A"
+  },
+  {
+    "path": "Docs/HANDS_AND_MEDIAPIPE_AR.md",
+    "bytes": 10628,
+    "sha256": "57142511BE1C1AB1A701798F82C46FDDC3F7B6FADAFD3C1444239546EAF7BA44"
+  },
+  {
+    "path": "Docs/QA.md",
+    "bytes": 29576,
+    "sha256": "6BD087394A3F2E79FD6C92B82AA157D2926006A9DFD7D0281681654838322809"
+  },
+  {
+    "path": "Docs/apartment-player-headless.json",
+    "bytes": 10058,
+    "sha256": "13759A36344F249335E2A35EAE413D57AFF21F3755605EE7823439F55102AAEF"
+  },
+  {
+    "path": "Docs/apartment-player-rendered.json",
+    "bytes": 10057,
+    "sha256": "C9B87DA2FA3BFF1BD3FC21C3F0983068B85425987CE5F8BCE908DD629D5752C6"
+  },
+  {
+    "path": "Docs/apartment-player-replay.json",
+    "bytes": 10129,
+    "sha256": "331397ED3C70D30EBAE7E7FB9A50FD3CB706A391A819EBB02D1BE6FDB800F9E1"
+  },
+  {
+    "path": "Docs/images/apartment-kitchen-grip.png",
+    "bytes": 898601,
+    "sha256": "65728FCC8DBCB231E529EA9A4FF6463C81FB0B9D52E663B6EA87BF8421195E2D"
+  },
+  {
+    "path": "Docs/images/apartment-options.png",
+    "bytes": 679535,
+    "sha256": "C6160BE3186978FC3819D892E66F7CD1AF8A5882650420F702413671C9D604E5"
+  },
+  {
+    "path": "Docs/images/apartment-overview.png",
+    "bytes": 799014,
+    "sha256": "7AC891C7B0B02239D7FD2C94E5BDA33A3F97BA60AFAEFA43F2BC6A4D603F319F"
+  },
+  {
+    "path": "Docs/images/apartment-seated-grip.png",
+    "bytes": 1254075,
+    "sha256": "5B70FFC5E720A37DB576AC1C46CB64B39D07FADA5989C40ED2D340EECC443865"
+  },
+  {
+    "path": "Docs/images/apartment-two-hands-tracked.png",
+    "bytes": 893257,
+    "sha256": "529B5F5DFE62DE6A5504D59D12C8CACA6C2C5CEF4D051E75CDC62AE683E93658"
+  },
+  {
+    "path": "Docs/images/ui-main-menu.png",
+    "bytes": 118305,
+    "sha256": "DE9A92EF3E7A1C1A5B380CD56CEF25A18290E585F8B61DBCF4D547066EA04816"
+  },
+  {
+    "path": "Docs/images/ui-module-selection.png",
+    "bytes": 114914,
+    "sha256": "4A81B255A4F75989C6A8B67C4BE8928594E4FD737FD811E6D1476EA496899181"
+  },
+  {
+    "path": "Docs/images/ui-new-profile.png",
+    "bytes": 67620,
+    "sha256": "36044A841656C16EEB7424E7FED645AC823C9D88D3A448B5ADAAC53A27D183F8"
+  },
+  {
+    "path": "Docs/images/vg-ball-before.png",
+    "bytes": 1264414,
+    "sha256": "E593473A5F4A40E2D487AB816168C8DA93385C6C10C55DEC39B582DA3B5ACE84"
+  },
+  {
+    "path": "Docs/images/vg-ball-deformed.png",
+    "bytes": 1254339,
+    "sha256": "704A0056242A73001C2C085DDAF2A1418BADD5409A22EB6761BCF35196F6304B"
+  },
+  {
+    "path": "Docs/images/vg-left-kitchen-grip.png",
+    "bytes": 889610,
+    "sha256": "87F6A94062177AD949E5C59783835C500732439250D4AE60329F3571E61B2E25"
+  },
+  {
+    "path": "Docs/images/vg-mug-fractured.png",
+    "bytes": 1285326,
+    "sha256": "D84B8CB1BCBD4E586E449F2E347846728BF3CBF11D1029415E87371C870C91E5"
+  },
+  {
+    "path": "Docs/player-checks.json",
+    "bytes": 31092,
+    "sha256": "B5AA814A35143BF6D1058B29B5D3680B97FC7B6BF248BE241434702562E4622F"
+  },
+  {
+    "path": "README.md",
+    "bytes": 4544,
+    "sha256": "0B9B3E613EAE5C0A4A4888A0CCE1336C24F7DA67151597876AA7C02B9C9F1492"
+  },
+  {
+    "path": "START_HERE_AR.html",
+    "bytes": 17505,
+    "sha256": "5FA4569C6987724301449CF92D88136C8F43FCF139420AAB79B4E45B8BE6867E"
+  },
+  {
+    "path": "Tools/Vision/test_vision_bridge.py",
+    "bytes": 1650,
+    "sha256": "04791CAAF0D261419D1F3A97AD419936F6285C25482A0F9FDEFAF0CA2ACB2D0E"
+  },
+  {
+    "path": "Tools/run_player_checks.py",
+    "bytes": 2359,
+    "sha256": "DF6BD2DECC4F21CAD6C39A9AE883DD627797C6360F1E068A87B88D21B81D692E"
+  }
+]

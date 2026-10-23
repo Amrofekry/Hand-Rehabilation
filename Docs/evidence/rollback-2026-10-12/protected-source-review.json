@@ -1,0 +1,95 @@
+{
+  "scope": "Explicit old-hand rollback plus Unity 2022 migration; artwork/scene logic baseline retained. GUID-preserving native metadata normalization and one exact-original cached SDK DLL documented. No proof of runtime quality from this file.",
+  "changes": {
+    "Assets/Editor/ApartmentAuthoring.cs": {
+      "previousSha256": "091da6a66f2c80f1e270560d1330a66a596859bee8f611779717a18e9e232062",
+      "currentSha256": "b260ceddcff9e8f86861e5259d2f3c9a6f5651bec6af3790020d0dd5616d84a7",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Editor/ApartmentCandleBalance.cs": {
+      "previousSha256": "0bedb79e2b809b6c4ab65e49cc59b7a6e52daaead1921424947e342cb2a56a15",
+      "currentSha256": "7627456fcf7a09da1e79e9035c4e30a3038463f082d66e78ccd283d57b2b74de",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Editor/ApartmentMaintenance.cs": {
+      "previousSha256": "f62f1818186493bb10c5201c4a0c9c126bfcff73ac6e2418276cf43da0ea2747",
+      "currentSha256": "d28e02503c78fe0bdfed3484ec6d661cf63ae1d4be8e38afa6e38aa52f6e2901",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Editor/ApartmentOptionsAuthoring.cs": {
+      "previousSha256": "23ee5c74e1556db51bc344a039b1f1f80fe25c8695b18d3307adca16b3b861da",
+      "currentSha256": "adcbb049b8695a225ed547170030a30e38b754d4fb2ee1730d290ec882a78a46",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Editor/ApartmentVisualDiagnostics.cs": {
+      "previousSha256": "ab79fa44f1456da3c14cfb4f64894afee8f6b916835a44e82e829ff99c2b7395",
+      "currentSha256": "b7ab6b621f7ccdfec6aee25c28d9700b31ba3cd1e3770d77ae1564ddaa98f8df",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Editor/ApartmentVisualPolish.cs": {
+      "previousSha256": "4cc9446b7139bf9a7f96f2c40273846e26267c49c8b169d40eaaa8908ea9b8de",
+      "currentSha256": "aac905173de6ec343ab7e47362a6966ab173cc9bde37c87d130376652504d3ff",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Editor/VirtualGraspAuthoring.cs.meta": {
+      "previousSha256": "a38d55bf1bbc25d56a8346148390817ef0163fb3c45af65ddacabe554f82a473",
+      "currentSha256": "6e1b01f8f3c5b6a939f922ffd947a64b0c758ee9445a026c3bfaf4d3d50a8ec1",
+      "reason": "Native Unity 2022 MonoImporter metadata normalization; original GUID retained."
+    },
+    "Assets/Editor/VirtualGraspProjectSettings.cs.meta": {
+      "previousSha256": "a7843da28d3f4bf3d3e602eb05ad6cca5e1e6540ffee9d1b4a5d75b76f4994db",
+      "currentSha256": "7b66f7e927dce866a8a7718f4fbe0e86cc09d5f950d8c36c73ec08f78caba6aa",
+      "reason": "Native Unity 2022 MonoImporter metadata normalization; original GUID retained."
+    },
+    "Assets/Editor/VisionCameraAuthoring.cs": {
+      "previousSha256": "2c8245c74806e3d31f71c2cfc689909e0eb7ff2d4d15f377477f72660aa3725a",
+      "currentSha256": "396b27eda9dd11a7bd37dbd25ab6931d9df06a8969b69103392bdf42f7ea22da",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.dll": {
+      "previousSha256": "783c33fdea4c5dc0e9c617d4d315db071083e06bd23d05c9d20d71df3ac55876",
+      "currentSha256": "317127a0320b5f63aa544e92e05c09465a266a114dab27c0cbbbcb7bb8292bcd",
+      "reason": "Exact original licensed Asset Store DLL restored; Unity 6 auto-updated DLL used incompatible Rigidbody API names in Unity 2022."
+    },
+    "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialCallbacks.cs": {
+      "previousSha256": "0f3ccd848c6c07024d60e5d46400990b33e1502e72708ae0084ced21da31d157",
+      "currentSha256": "476a0becb7ee9e4cfd20073a864ba7acbcf0f8e9d96a668855970e03238c7011",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SimpleImpact.cs": {
+      "previousSha256": "a97d681ed5b1c05cfa7889fecabf3b0967fee5e94913fd4131fc42954d78364d",
+      "currentSha256": "c443f2f5268f6dbbc90527890e59ecda145cd45c570504e8e99ce2c86e0d1c13",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Rehab/3.2-vision/HandTracking.cs": {
+      "previousSha256": "79d93317ee7f5bc7ac0f1af6d12a3d8d3d51d4184980aa93123582cac886b17a",
+      "currentSha256": "3ad83715ff62ecc173b60b4bcb0c75e3a832aa655d0d8a1107e6270121cb6fae",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "82326e032cae226a0dfda1efd0b998a534e7916206ead46a75e3a6d11830c508",
+      "currentSha256": "2352b3fa63b01588a4af70ccb64703eae7b74e6c63c6984e8186ede8db9ab788",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "3a3467075e144a59e6e3a968237a2a7874967eadf1452948ccdd3589cd120a89",
+      "currentSha256": "202aefe7e9d14dd518eb1c19e95bd375d6e56dc12f73a9a6a68fc689667e7953",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs.meta": {
+      "previousSha256": "a39bf6972196843d3f07f87b612fb552e82ab9ad57d6596763d1e406974081b8",
+      "currentSha256": "cb50ea928d83af5f8cdb4e25651b086c33ad767ceea7bbce4774cf0fde6711fa",
+      "reason": "Native Unity 2022 MonoImporter metadata normalization; original GUID retained."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "a514722db88af16b444db67f6ed196963952fc7ac44be85d13fd76f717316a93",
+      "currentSha256": "b90307d44034bd73505d1fe2efd782894b43d4ddcd8cdf7fee68aa977140639c",
+      "reason": "User-requested historical rollback and Unity 2022 equivalent API compatibility."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
+      "previousSha256": "9b350bf2a728d5e24fe7d073188e3ed1ed990a81b282307915f884f7b8bb4bf3",
+      "currentSha256": "f4f23bb33f8a7b5defff3af478e684d56d9713ea6a15644c54e5210b5572adfc",
+      "reason": "Normalize only the Phase 2 middle-dot text as an explicit Unicode escape, eliminating historical encoding corruption without changing HUD values or behavior."
+    }
+  }
+}

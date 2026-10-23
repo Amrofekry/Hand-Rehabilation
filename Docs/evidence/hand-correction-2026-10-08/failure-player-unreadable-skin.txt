@@ -1,0 +1,65 @@
+Mono path[0] = 'E:/GP/codex/GripRehab-Unity/Builds/Windows/GripRehab_Data/Managed'
+Mono config path = 'E:/GP/codex/GripRehab-Unity/Builds/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Failed to load 'AMDUnityPlugin', expected x64 architecture, but was Unknown architecture. You must recompile your plugin for x64 architecture.
+Input System module state changed to: Initialized.
+Failed to load 'NVUnityPlugin', expected x64 architecture, but was Unknown architecture. You must recompile your plugin for x64 architecture.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.4.4f1 (360f97ecca93)
+[Subsystems] Discovering subsystems at path E:/GP/codex/GripRehab-Unity/Builds/Windows/GripRehab_Data/UnitySubsystems
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.004 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
+UnloadTime: 4.286500 ms
+Initialized VirtualGrasp SDK (version 1.7.0-free).
+[VirtualGrasp] Registered avatar (#1) with id: 19460.
+No baked grasps found. Set your grasp db in MyVirtualGrasp
+Not allowed to access vertices on mesh 'GleechiHandMesh' (isReadable is false; Read/Write must be enabled in import settings)
+Not allowed to access triangles/indices on mesh 'RightHandMesh' (isReadable is false; Read/Write must be enabled in import settings)
+Not allowed to access triangles/indices on mesh 'LeftHandMesh' (isReadable is false; Read/Write must be enabled in import settings)
+[REHAB_VG] Native registration and both 15-joint contact bindings available
+[DEFORMATION_CASE] Silicone ball Right Keyboard medium held=True valid=True contacts=0 force=29.99996 gap=-0.01264855 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Silicone ball Right Keyboard held=True position=(2.45, 0.95, -4.51) hand=(2.45, 1.04, -4.54) anchors=(2.40, 0.67, -4.53) probes=(2.48, 0.94, -4.53);(2.47, 0.94, -4.51);(2.47, 0.97, -4.52);(2.47, 0.94, -4.55);(2.46, 0.94, -4.52);(2.46, 0.96, -4.52);(2.44, 0.94, -4.55);(2.44, 0.94, -4.53);(2.44, 0.96, -4.53);(2.42, 0.95, -4.55);(2.42, 0.95, -4.53);(2.43, 0.96, -4.53);(2.47, 0.99, -4.51);(2.46, 0.98, -4.52);(2.45, 1.00, -4.53)
+[DEFORMATION_ASSERT] No visible mesh response: Silicone ball Right Keyboard
+[DEFORMATION_CASE] Silicone ball Right Keyboard maximum held=True valid=True input=80 applied=79.99987 contacts=0 displacement=0 damage=0 dwell=0 threshold=55 lastApplied=0 eligible=False limited=0 residual=0 gaps=-0.01707;-0.02822;-0.02822;-0.01459;-0.03013;-0.03013;-0.01029;-0.02205;-0.02205;-0.00619;-0.00986;-0.00986;-0.01648;-0.01648;-0.00370 steps=352 high=124 highContacts=0
+[DEFORMATION_ASSERT] No high-pressure deformation: Silicone ball Right Keyboard
+[DEFORMATION_CASE] Porcelain mug Right Keyboard medium held=True valid=True contacts=0 force=29.99996 gap=0.008597082 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Porcelain mug Right Keyboard held=True position=(2.42, 0.91, -4.48) hand=(2.45, 1.03, -4.54) anchors=(2.39, 0.66, -4.53) probes=(2.48, 0.94, -4.53);(2.47, 0.94, -4.51);(2.46, 0.96, -4.52);(2.46, 0.93, -4.55);(2.45, 0.93, -4.52);(2.45, 0.96, -4.52);(2.44, 0.93, -4.55);(2.44, 0.93, -4.53);(2.44, 0.96, -4.53);(2.42, 0.94, -4.55);(2.42, 0.94, -4.53);(2.43, 0.95, -4.53);(2.47, 0.99, -4.51);(2.46, 0.97, -4.52);(2.44, 0.99, -4.53)
+[DEFORMATION_CASE] Porcelain mug Right Keyboard maximum held=True valid=True input=80 applied=79.99986 contacts=0 displacement=0 damage=0 dwell=0 threshold=60 lastApplied=0 eligible=True limited=0 residual=0 gaps=0.00467;-0.00106;-0.00106;0.00093;-0.00380;-0.00380;-0.00137;-0.00545;-0.00545;-0.00445;-0.01012;-0.01012;-0.00075;-0.00075;0.00879 steps=253 high=124 highContacts=0
+[DEFORMATION_ASSERT] Brittle object did not fracture: Porcelain mug Right Keyboard input=80 contactForce=79.99986 contacts=0 damage=0 dwell=0 threshold=60 lastApplied=0 eligible=True limited=0 residual=0 gaps=0.00467;-0.00106;-0.00106;0.00093;-0.00380;-0.00380;-0.00137;-0.00545;-0.00545;-0.00445;-0.01012;-0.01012;-0.00075;-0.00075;0.00879 steps=253 high=124 highContacts=0
+[DEFORMATION_CASE] Brittle cracker Right Keyboard medium held=True valid=True contacts=0 force=29.99995 gap=-0.01662701 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Brittle cracker Right Keyboard held=True position=(2.46, 1.02, -4.36) hand=(2.47, 1.10, -4.41) anchors=(2.46, 0.73, -4.41) probes=(2.51, 1.01, -4.39);(2.49, 1.01, -4.38);(2.49, 1.03, -4.38);(2.50, 1.00, -4.41);(2.48, 1.00, -4.39);(2.48, 1.03, -4.39);(2.48, 1.00, -4.42);(2.47, 1.00, -4.40);(2.47, 1.03, -4.40);(2.46, 1.01, -4.42);(2.46, 1.01, -4.41);(2.46, 1.02, -4.40);(2.49, 1.06, -4.37);(2.48, 1.04, -4.38);(2.47, 1.06, -4.40)
+[DEFORMATION_ASSERT] No visible mesh response: Brittle cracker Right Keyboard
+[DEFORMATION_CASE] Brittle cracker Right Keyboard maximum held=True valid=True input=80 applied=79.99987 contacts=0 displacement=0 damage=0 dwell=0 threshold=55 lastApplied=0 eligible=True limited=0 residual=0 gaps=-0.01701;-0.02151;-0.01638;-0.00589;-0.02069;-0.01611;-0.00102;-0.01361;-0.01361;-0.00469;-0.01025;-0.01025;0.00226;0.00226;0.01241 steps=252 high=124 highContacts=0
+[DEFORMATION_ASSERT] No high-pressure deformation: Brittle cracker Right Keyboard
+[DEFORMATION_ASSERT] Brittle object did not fracture: Brittle cracker Right Keyboard input=80 contactForce=79.99987 contacts=0 damage=0 dwell=0 threshold=55 lastApplied=0 eligible=True limited=0 residual=0 gaps=-0.01701;-0.02151;-0.01638;-0.00589;-0.02069;-0.01611;-0.00102;-0.01361;-0.01361;-0.00469;-0.01025;-0.01025;0.00226;0.00226;0.01241 steps=252 high=124 highContacts=0
+[DEFORMATION_CASE] Kitchen sponge Right Keyboard medium held=True valid=True contacts=0 force=29.99996 gap=-0.01976996 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Kitchen sponge Right Keyboard held=True position=(0.65, 1.23, -1.98) hand=(0.72, 1.31, -1.94) anchors=(0.71, 1.14, -1.95) probes=(0.71, 1.21, -1.93);(0.69, 1.21, -1.95);(0.70, 1.23, -1.94);(0.72, 1.21, -1.95);(0.70, 1.21, -1.96);(0.70, 1.24, -1.96);(0.73, 1.22, -1.97);(0.71, 1.22, -1.98);(0.71, 1.24, -1.97);(0.73, 1.23, -1.99);(0.71, 1.22, -1.99);(0.71, 1.24, -1.98);(0.69, 1.26, -1.93);(0.69, 1.25, -1.95);(0.71, 1.27, -1.96)
+[DEFORMATION_ASSERT] No visible mesh response: Kitchen sponge Right Keyboard
+[DEFORMATION_CASE] Kitchen sponge Right Keyboard maximum held=True valid=True input=80 applied=79.99987 contacts=0 displacement=0 damage=0 dwell=0 threshold=55 lastApplied=0 eligible=False limited=0 residual=0 gaps=-0.02091;-0.02714;-0.02714;-0.01658;-0.02830;-0.02830;-0.01697;-0.02113;-0.02113;-0.01776;-0.02170;-0.02170;-0.02098;-0.02422;-0.01335 steps=1268 high=124 highContacts=0
+[DEFORMATION_ASSERT] No high-pressure deformation: Kitchen sponge Right Keyboard
+[DEFORMATION_CASE] Silicone cup Right Keyboard medium held=True valid=True contacts=0 force=29.99997 gap=0.003970827 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Silicone cup Right Keyboard held=True position=(0.65, 1.19, -1.98) hand=(0.72, 1.31, -1.94) anchors=(0.71, 1.14, -1.94) probes=(0.71, 1.21, -1.93);(0.69, 1.22, -1.94);(0.70, 1.24, -1.94);(0.72, 1.21, -1.95);(0.70, 1.21, -1.96);(0.70, 1.24, -1.95);(0.73, 1.22, -1.97);(0.71, 1.22, -1.97);(0.71, 1.24, -1.96);(0.73, 1.23, -1.99);(0.71, 1.23, -1.98);(0.71, 1.24, -1.98);(0.69, 1.26, -1.93);(0.69, 1.25, -1.94);(0.71, 1.27, -1.95)
+[DEFORMATION_ASSERT] No visible mesh response: Silicone cup Right Keyboard
+[DEFORMATION_CASE] Silicone cup Right Keyboard maximum held=True valid=True input=80 applied=79.99989 contacts=0 displacement=0 damage=0 dwell=0 threshold=55 lastApplied=0 eligible=False limited=0 residual=0 gaps=0.00342;0.00141;0.00141;0.00285;0.00146;0.00146;-0.00017;-0.00017;0.00218;-0.01096;-0.01202;-0.00149;0.00391;0.00391;0.01495 steps=250 high=124 highContacts=0
+[DEFORMATION_ASSERT] No high-pressure deformation: Silicone cup Right Keyboard
+[DEFORMATION_CASE] Ripe tomato Right Keyboard medium held=True valid=True contacts=0 force=29.99996 gap=-0.009703421 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Ripe tomato Right Keyboard held=True position=(0.67, 1.23, -1.96) hand=(0.72, 1.31, -1.94) anchors=(0.71, 1.14, -1.95) probes=(0.71, 1.21, -1.93);(0.69, 1.21, -1.95);(0.70, 1.23, -1.94);(0.72, 1.21, -1.95);(0.70, 1.21, -1.96);(0.70, 1.24, -1.95);(0.73, 1.22, -1.97);(0.71, 1.22, -1.97);(0.71, 1.24, -1.97);(0.73, 1.23, -1.99);(0.71, 1.22, -1.99);(0.71, 1.24, -1.98);(0.69, 1.26, -1.93);(0.69, 1.25, -1.95);(0.71, 1.27, -1.96)
+[DEFORMATION_ASSERT] No visible mesh response: Ripe tomato Right Keyboard
+[DEFORMATION_CASE] Ripe tomato Right Keyboard maximum held=True valid=True input=80 applied=79.99985 contacts=0 displacement=0 damage=0 dwell=0 threshold=55 lastApplied=0 eligible=False limited=0 residual=0 gaps=-0.01209;-0.02069;-0.02069;-0.00869;-0.01877;-0.01847;-0.00475;-0.01411;-0.01411;-0.00276;-0.00929;-0.00929;-0.01423;-0.01423;0.00061 steps=253 high=124 highContacts=0
+[DEFORMATION_ASSERT] No high-pressure deformation: Ripe tomato Right Keyboard
+[DEFORMATION_CASE] Silicone ball Left Keyboard medium held=True valid=True contacts=0 force=29.99996 gap=-0.0122523 overlap=0
+[DEFORMATION_ASSERT] No finger contact: Silicone ball Left Keyboard held=True position=(2.29, 1.03, -4.32) hand=(2.29, 1.11, -4.28) anchors=(2.40, 0.67, -4.53) probes=(2.32, 1.02, -4.29);(2.30, 1.02, -4.31);(2.30, 1.04, -4.31);(2.30, 1.01, -4.28);(2.29, 1.01, -4.30);(2.29, 1.04, -4.30);(2.28, 1.02, -4.27);(2.28, 1.02, -4.29);(2.28, 1.04, -4.29);(2.26, 1.02, -4.27);(2.26, 1.02, -4.29);(2.26, 1.04, -4.29);(2.31, 1.07, -4.32);(2.30, 1.05, -4.31);(2.28, 1.07, -4.29)

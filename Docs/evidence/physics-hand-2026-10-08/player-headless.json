@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checks": 31413,
+  "utc": "2026-10-08T19:37:59.9515566Z",
+  "error": "",
+  "scope": "Windows player, actual PhysX hand and imported VirtualGrasp mesh; controlled target poses, no live camera/hardware",
+  "device": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz / Null Device",
+  "peakPenetrationMm": 7.535774230957031,
+  "peakPreSolverSeparationMm": 12.380292892456055,
+  "peakSkinGapMm": 0.0,
+  "maxVelocity": 0.8000000715255737,
+  "maxAngularVelocity": 5.000000476837158,
+  "measuredFps": 4680.32080078125,
+  "contacts": 2225,
+  "physicsRecorderAvailable": false,
+  "meanPhysicsMs": 0.0,
+  "maxPhysicsMs": 0.0,
+  "nativePeakBytes": 182605908
+}

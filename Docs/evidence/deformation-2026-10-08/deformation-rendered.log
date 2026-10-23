@@ -1,0 +1,119 @@
+Mono path[0] = 'E:/GP/codex/GripRehab-Unity/Builds/Windows/GripRehab_Data/Managed'
+Mono config path = 'E:/GP/codex/GripRehab-Unity/Builds/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Failed to load 'AMDUnityPlugin', expected x64 architecture, but was Unknown architecture. You must recompile your plugin for x64 architecture.
+Input System module state changed to: Initialized.
+Failed to load 'NVUnityPlugin', expected x64 architecture, but was Unknown architecture. You must recompile your plugin for x64 architecture.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.4.4f1 (360f97ecca93)
+[Subsystems] Discovering subsystems at path E:/GP/codex/GripRehab-Unity/Builds/Windows/GripRehab_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 3060 Laptop GPU (ID=0x2560)
+    Vendor:   NVIDIA
+    VRAM:     5996 MB
+    Driver:   32.0.15.7680
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 3060 Laptop GPU
+[D3D12 Device Filter] Driver Version: 32.0.15.7680
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 5996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.004 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 1.260200 ms
+Initialized VirtualGrasp SDK (version 1.7.0-free).
+[VirtualGrasp] Registered avatar (#1) with id: 19464.
+No baked grasps found. Set your grasp db in MyVirtualGrasp
+[REHAB_VG] Native registration and both 15-joint contact bindings available
+[DEFORMATION_CASE] Silicone ball Right Keyboard medium held=True valid=True contacts=4 force=29.99857 gap=-0.01058611 overlap=0.0004786057
+[DEFORMATION_CASE] Silicone ball Right Keyboard maximum held=True valid=True input=80 applied=79.99999 contacts=4 displacement=0.009131229 damage=0 dwell=0 threshold=55 lastApplied=79.99999 eligible=False limited=36 residual=5.670783E-05 gaps=-0.01117;-0.02442;-0.02442;-0.00579;-0.02474;-0.02474;-0.00012;-0.01467;-0.01467;0.00167;-0.00734;-0.00734;-0.01168;-0.01229;-0.00279 steps=264 high=96 highContacts=96
+[DEFORMATION_CASE] Porcelain mug Right Keyboard medium held=True valid=True contacts=5 force=29.99974 gap=0.008736281 overlap=0.000496369
+[DEFORMATION_CASE] Porcelain mug Right Keyboard maximum held=False valid=True input=80 applied=79.99963 contacts=5 displacement=0 damage=1 dwell=0.6599996 threshold=60 lastApplied=79.99907 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=73 high=21 highContacts=21
+[DEFORMATION_CASE] Brittle cracker Right Keyboard medium held=True valid=True contacts=3 force=29.99817 gap=0.01221219 overlap=0.0004860317
+[DEFORMATION_CASE] Brittle cracker Right Keyboard maximum held=False valid=True input=80 applied=79.99184 contacts=3 displacement=0.002999999 damage=1 dwell=0.5866662 threshold=55 lastApplied=79.98385 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=151 high=38 highContacts=38
+[DEFORMATION_CASE] Kitchen sponge Right Keyboard medium held=True valid=True contacts=4 force=29.99836 gap=0.01991166 overlap=0.0004802944
+[DEFORMATION_CASE] Kitchen sponge Right Keyboard maximum held=True valid=True input=80 applied=80 contacts=5 displacement=0.01965417 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=27 residual=0.0004989548 gaps=-0.01396;-0.02013;-0.02013;-0.00913;-0.01148;-0.01148;-0.00771;-0.00771;-0.00571;-0.00232;-0.00808;-0.00808;-0.01676;-0.02009;-0.00771 steps=813 high=83 highContacts=83
+[DEFORMATION_CASE] Silicone cup Right Keyboard medium held=True valid=True contacts=6 force=30 gap=0.004336663 overlap=0.0004990611
+[DEFORMATION_CASE] Silicone cup Right Keyboard maximum held=True valid=True input=80 applied=80 contacts=5 displacement=0.01351615 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=15 residual=0.0004996858 gaps=0.00105;-0.00056;-0.00056;0.00446;0.00066;0.00066;-0.00073;-0.00073;0.00274;-0.00849;-0.00849;0.00142;0.00208;0.00208;0.01474 steps=89 high=46 highContacts=46
+[DEFORMATION_CASE] Ripe tomato Right Keyboard medium held=True valid=True contacts=3 force=29.99835 gap=0.03752083 overlap=0.0001856886
+[DEFORMATION_CASE] Ripe tomato Right Keyboard maximum held=True valid=True input=80 applied=79.99999 contacts=3 displacement=0.02063316 damage=0.4304056 dwell=0 threshold=55 lastApplied=79.99999 eligible=False limited=9 residual=0 gaps=0.03974;0.01910;-0.00975;0.04545;0.01876;-0.00746;0.02489;0.02489;0.02941;0.02752;0.02752;0.02945;0.03276;0.01321;-0.00130 steps=239 high=151 highContacts=151
+[DEFORMATION_CASE] Silicone ball Left Keyboard medium held=True valid=True contacts=4 force=29.9994 gap=-0.01058796 overlap=0.000495577
+[DEFORMATION_CASE] Silicone ball Left Keyboard maximum held=True valid=True input=80 applied=79.99999 contacts=4 displacement=0.01213012 damage=0 dwell=0 threshold=55 lastApplied=79.99999 eligible=False limited=12 residual=3.233913E-05 gaps=-0.00948;-0.02467;-0.02454;-0.00288;-0.02499;-0.02499;0.00012;-0.01468;-0.01468;0.00098;-0.00737;-0.00737;-0.01192;-0.01263;-0.00280 steps=474 high=196 highContacts=196
+[DEFORMATION_CASE] Porcelain mug Left Keyboard medium held=True valid=True contacts=4 force=29.99884 gap=-0.009808159 overlap=0.0004950762
+[DEFORMATION_CASE] Porcelain mug Left Keyboard maximum held=False valid=True input=80 applied=79.99953 contacts=4 displacement=0 damage=1 dwell=0.6933328 threshold=60 lastApplied=79.99904 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=226 high=70 highContacts=70
+[DEFORMATION_CASE] Brittle cracker Left Keyboard medium held=True valid=True contacts=5 force=29.99807 gap=0.02050333 overlap=0.0004846093
+[DEFORMATION_CASE] Brittle cracker Left Keyboard maximum held=False valid=True input=80 applied=79.98903 contacts=5 displacement=0.002790117 damage=1 dwell=0.5866662 threshold=55 lastApplied=79.98741 eligible=True limited=15 residual=0.0002690395 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=962 high=78 highContacts=78
+[DEFORMATION_CASE] Kitchen sponge Left Keyboard medium held=True valid=True contacts=4 force=29.99935 gap=-0.01442846 overlap=0.0004959242
+[DEFORMATION_CASE] Kitchen sponge Left Keyboard maximum held=True valid=True input=80 applied=80 contacts=8 displacement=0.01975605 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=27 residual=0.0004979034 gaps=-0.01640;-0.02014;-0.02004;-0.01077;-0.01155;-0.01155;-0.00754;-0.00754;-0.00603;-0.00496;-0.00868;-0.00868;-0.01301;-0.01301;0.00150 steps=1013 high=140 highContacts=140
+[DEFORMATION_CASE] Silicone cup Left Keyboard medium held=True valid=True contacts=5 force=29.99999 gap=0.007113568 overlap=0.0003585306
+[DEFORMATION_CASE] Silicone cup Left Keyboard maximum held=True valid=True input=80 applied=80 contacts=5 displacement=0.01495571 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=15 residual=0.000496398 gaps=0.00109;0.00067;0.00195;0.00110;-0.00083;0.00109;0.00771;0.00382;0.00382;0.01128;0.00182;0.00182;0.00579;0.00579;0.01527 steps=229 high=88 highContacts=88
+[DEFORMATION_CASE] Ripe tomato Left Keyboard medium held=True valid=True contacts=3 force=29.99864 gap=0.03454972 overlap=0.000231404
+[DEFORMATION_CASE] Ripe tomato Left Keyboard maximum held=True valid=True input=80 applied=79.99998 contacts=3 displacement=0.0181638 damage=0.4281044 dwell=0 threshold=55 lastApplied=79.99998 eligible=False limited=45 residual=0 gaps=0.03645;0.01682;-0.01028;0.04532;0.01765;-0.00790;0.02609;0.02609;0.03088;0.02773;0.02773;0.02958;0.03156;0.01267;-0.00214 steps=1142 high=279 highContacts=279
+[DEFORMATION_CASE] Silicone ball Right Phase2Replay medium held=True valid=True contacts=4 force=29.99985 gap=0.01890627 overlap=0.0004664226
+[DEFORMATION_CASE] Silicone ball Right Phase2Replay maximum held=True valid=True input=80 applied=79.99999 contacts=4 displacement=0.00913151 damage=0 dwell=0 threshold=55 lastApplied=79.99999 eligible=False limited=24 residual=0.000267553 gaps=-0.01117;-0.02442;-0.02442;-0.00579;-0.02475;-0.02475;-0.00012;-0.01467;-0.01467;0.00167;-0.00734;-0.00734;-0.01167;-0.01229;-0.00279 steps=712 high=295 highContacts=295
+[DEFORMATION_CASE] Porcelain mug Right Phase2Replay medium held=True valid=True contacts=5 force=29.99995 gap=0.00873654 overlap=0.0004992438
+[DEFORMATION_CASE] Porcelain mug Right Phase2Replay maximum held=False valid=True input=80 applied=79.9999 contacts=5 displacement=0 damage=1 dwell=0.6999997 threshold=60 lastApplied=79.99978 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=318 high=89 highContacts=89
+[DEFORMATION_CASE] Brittle cracker Right Phase2Replay medium held=True valid=True contacts=3 force=29.9998 gap=0.01215364 overlap=0.0004988577
+[DEFORMATION_CASE] Brittle cracker Right Phase2Replay maximum held=False valid=True input=80 applied=79.99812 contacts=3 displacement=0.002999999 damage=1 dwell=0.5866662 threshold=55 lastApplied=79.99777 eligible=True limited=126 residual=0.0004975066 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=1734 high=120 highContacts=120
+[DEFORMATION_CASE] Kitchen sponge Right Phase2Replay medium held=True valid=True contacts=4 force=29.9999 gap=0.01994952 overlap=0.0004642011
+[DEFORMATION_CASE] Kitchen sponge Right Phase2Replay maximum held=True valid=True input=80 applied=80 contacts=6 displacement=0.01683571 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=330 residual=0.0004998507 gaps=-0.01551;-0.01760;-0.01760;-0.01150;-0.01644;-0.01644;-0.00741;-0.00937;-0.00937;-0.00530;-0.01071;-0.01071;-0.01430;-0.01716;-0.00442 steps=1259 high=219 highContacts=219
+[DEFORMATION_CASE] Silicone cup Right Phase2Replay medium held=True valid=True contacts=6 force=30 gap=0.004336747 overlap=0.0004989337
+[DEFORMATION_CASE] Silicone cup Right Phase2Replay maximum held=True valid=True input=80 applied=80 contacts=1 displacement=0.028 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=15 residual=0.0004306064 gaps=0.04786;0.04786;0.06355;0.04405;0.04406;0.06638;0.03903;0.01375;-0.00759;0.04709;0.04709;0.06349;0.07886;0.07886;0.09339 steps=409 high=156 highContacts=156
+[DEFORMATION_CASE] Ripe tomato Right Phase2Replay medium held=True valid=True contacts=3 force=29.9999 gap=0.03769714 overlap=0.0001214719
+[DEFORMATION_CASE] Ripe tomato Right Phase2Replay maximum held=True valid=True input=80 applied=79.99999 contacts=3 displacement=0.02062426 damage=0.4197523 dwell=0 threshold=55 lastApplied=79.99999 eligible=False limited=9 residual=0 gaps=0.03950;0.01879;-0.01003;0.04525;0.01847;-0.00773;0.02469;0.02469;0.02911;0.02730;0.02728;0.02916;0.03244;0.01295;-0.00139 steps=2049 high=423 highContacts=423
+[DEFORMATION_CASE] Silicone ball Left Phase2Replay medium held=True valid=True contacts=4 force=29.99995 gap=-0.0108499 overlap=0.0004986427
+[DEFORMATION_CASE] Silicone ball Left Phase2Replay maximum held=True valid=True input=80 applied=79.99999 contacts=4 displacement=0.01166268 damage=0 dwell=0 threshold=55 lastApplied=79.99999 eligible=False limited=36 residual=0.0003334999 gaps=-0.00947;-0.02617;-0.02617;-0.00350;-0.02588;-0.02588;-0.00075;-0.01636;-0.01636;0.00211;-0.00725;-0.00725;-0.01423;-0.01423;-0.00282 steps=940 high=393 highContacts=393
+[DEFORMATION_CASE] Porcelain mug Left Phase2Replay medium held=True valid=True contacts=4 force=29.99993 gap=0.02911939 overlap=0.0004957914
+[DEFORMATION_CASE] Porcelain mug Left Phase2Replay maximum held=False valid=True input=80 applied=79.99974 contacts=4 displacement=0 damage=1 dwell=0.6933327 threshold=60 lastApplied=79.99974 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=475 high=135 highContacts=135
+[DEFORMATION_CASE] Brittle cracker Left Phase2Replay medium held=True valid=True contacts=5 force=29.99986 gap=0.0205456 overlap=0.0004863082
+[DEFORMATION_CASE] Brittle cracker Left Phase2Replay maximum held=False valid=True input=80 applied=79.9988 contacts=5 displacement=0.002792332 damage=1 dwell=0.5866662 threshold=55 lastApplied=79.99765 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=2632 high=162 highContacts=162
+[DEFORMATION_CASE] Kitchen sponge Left Phase2Replay medium held=True valid=True contacts=4 force=29.99997 gap=-0.01435386 overlap=0.0004944858
+[DEFORMATION_CASE] Kitchen sponge Left Phase2Replay maximum held=True valid=True input=80 applied=80 contacts=8 displacement=0.02197972 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=15 residual=0.0004999493 gaps=-0.01496;-0.01962;-0.01962;-0.00908;-0.01164;-0.01164;-0.00890;-0.00890;-0.00613;-0.00438;-0.00871;-0.00871;-0.01333;-0.01333;-0.00180 steps=1456 high=268 highContacts=268
+[DEFORMATION_CASE] Silicone cup Left Phase2Replay medium held=True valid=True contacts=5 force=29.99998 gap=0.00608569 overlap=0.0004871235
+[DEFORMATION_CASE] Silicone cup Left Phase2Replay maximum held=True valid=True input=80 applied=80 contacts=4 displacement=0.02192904 damage=0 dwell=0 threshold=55 lastApplied=80 eligible=False limited=12 residual=0.0004996842 gaps=0.00757;0.00549;0.00549;0.00710;0.00336;0.00336;0.00987;0.00388;0.00388;0.00923;0.00126;0.00126;0.00773;0.00773;0.01621 steps=556 high=198 highContacts=198
+[DEFORMATION_CASE] Ripe tomato Left Phase2Replay medium held=True valid=True contacts=3 force=29.99992 gap=0.03465742 overlap=0.0001605017
+[DEFORMATION_CASE] Ripe tomato Left Phase2Replay maximum held=True valid=True input=80 applied=80 contacts=3 displacement=0.01813904 damage=0.4168443 dwell=0 threshold=55 lastApplied=80 eligible=False limited=27 residual=0.0002916885 gaps=-0.00264;-0.00860;-0.00860;0.00567;-0.00319;-0.00319;0.00745;0.00133;0.00133;0.00503;-0.00038;-0.00038;-0.00683;-0.00683;0.00746 steps=2970 high=524 highContacts=524
+[DEFORMATION_CASE] Silicone ball Right CameraReplay medium held=True valid=True contacts=3 force=54.40087 gap=0.01959374 overlap=0.0004995809
+[DEFORMATION_CASE] Silicone ball Right CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=2 displacement=0.01466668 damage=0 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=3 residual=0.0004934515 gaps=0.01879;0.01143;0.00395;0.02241;0.01309;0.00581;0.02117;0.01142;0.00725;0.02264;0.01587;0.01014;-0.00062;-0.00402;-0.00160 steps=1111 high=445 highContacts=445
+[DEFORMATION_CASE] Porcelain mug Right CameraReplay medium held=True valid=True contacts=3 force=54.40087 gap=0.0312658 overlap=0.0004968003
+[DEFORMATION_CASE] Porcelain mug Right CameraReplay maximum held=False valid=True input=79.99995 applied=79.99994 contacts=3 displacement=0 damage=1 dwell=0.6899998 threshold=60 lastApplied=79.99994 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=553 high=150 highContacts=150
+[DEFORMATION_CASE] Brittle cracker Right CameraReplay medium held=True valid=True contacts=3 force=54.4008 gap=-0.005935637 overlap=0.000495042
+[DEFORMATION_CASE] Brittle cracker Right CameraReplay maximum held=False valid=True input=79.99995 applied=79.98415 contacts=3 displacement=0.002999999 damage=1 dwell=0.563333 threshold=55 lastApplied=79.97304 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=3324 high=179 highContacts=179
+[DEFORMATION_CASE] Kitchen sponge Right CameraReplay medium held=True valid=True contacts=1 force=54.40086 gap=0.003314779 overlap=0.0004989803
+[DEFORMATION_CASE] Kitchen sponge Right CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=5 displacement=0.02695833 damage=0 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=15 residual=0.0004989028 gaps=0.00348;-0.00131;-0.00462;0.01598;0.00522;-0.00308;0.02010;0.00801;0.00123;0.01429;0.00534;-0.00095;0.00010;-0.01450;-0.01124 steps=1633 high=317 highContacts=317
+[DEFORMATION_CASE] Silicone cup Right CameraReplay medium held=True valid=True contacts=3 force=54.40087 gap=0.03442583 overlap=0.0004958592
+[DEFORMATION_CASE] Silicone cup Right CameraReplay maximum held=True valid=True input=79.99995 applied=79.99994 contacts=1 displacement=0.028 damage=0 dwell=0 threshold=55 lastApplied=79.99994 eligible=False limited=3 residual=0.0003983443 gaps=0.03273;0.01802;0.01783;0.01743;0.01292;0.00172;-0.00526;-0.00015;-0.01222;-0.00130;-0.00130;0.00552;0.01511;0.01409;0.01918 steps=746 high=274 highContacts=274
+[DEFORMATION_CASE] Ripe tomato Right CameraReplay medium held=True valid=True contacts=1 force=54.40081 gap=0.02761414 overlap=0
+[DEFORMATION_CASE] Ripe tomato Right CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=1 displacement=0.02230982 damage=0.4675951 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=3 residual=0.0004934854 gaps=0.02467;0.01511;0.01002;0.02628;0.01540;0.00903;0.02391;0.01357;0.00969;0.02573;0.01832;0.01316;0.00060;-0.00070;0.00236 steps=3590 high=567 highContacts=567
+[DEFORMATION_CASE] Silicone ball Left CameraReplay medium held=True valid=True contacts=2 force=54.40087 gap=0.01868109 overlap=0
+[DEFORMATION_CASE] Silicone ball Left CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=2 displacement=0.01619276 damage=0 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=3 residual=0.0004915762 gaps=0.01860;0.01476;0.00589;0.02239;0.01247;0.00540;0.02115;0.00962;0.00600;0.02264;0.01577;0.01002;-0.00341;-0.00611;-0.00328 steps=1281 high=497 highContacts=494
+[DEFORMATION_CASE] Porcelain mug Left CameraReplay medium held=True valid=True contacts=1 force=54.40084 gap=0.04642522 overlap=0.0004804656
+[DEFORMATION_CASE] Porcelain mug Left CameraReplay maximum held=False valid=True input=79.99995 applied=79.99978 contacts=1 displacement=0 damage=1 dwell=0.6899996 threshold=60 lastApplied=79.99958 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=683 high=185 highContacts=185
+[DEFORMATION_CASE] Brittle cracker Left CameraReplay medium held=True valid=True contacts=4 force=54.40083 gap=-0.005849964 overlap=0.0004813201
+[DEFORMATION_CASE] Brittle cracker Left CameraReplay maximum held=False valid=True input=79.99995 applied=79.99841 contacts=4 displacement=0.002999999 damage=1 dwell=0.5699997 threshold=55 lastApplied=79.99648 eligible=True limited=0 residual=0 gaps=Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity;Infinity steps=3934 high=198 highContacts=198
+[DEFORMATION_CASE] Kitchen sponge Left CameraReplay medium held=True valid=True contacts=3 force=54.40087 gap=0.007098647 overlap=0.0004945658
+[DEFORMATION_CASE] Kitchen sponge Left CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=4 displacement=0.0294073 damage=0 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=21 residual=0.0004987583 gaps=0.00708;0.00884;-0.00146;0.02449;0.00446;0.00446;0.02412;0.00216;0.00216;0.01659;0.00166;0.00166;0.00049;-0.01378;-0.01052 steps=1788 high=362 highContacts=362
+[DEFORMATION_CASE] Silicone cup Left CameraReplay medium held=True valid=True contacts=3 force=54.40087 gap=0.024797 overlap=0.0004993571
+[DEFORMATION_CASE] Silicone cup Left CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=2 displacement=0.02799999 damage=0 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=6 residual=0.0004997613 gaps=0.00991;-0.00449;-0.00637;0.02234;0.00227;-0.00005;0.03386;0.01162;0.01162;0.03789;0.02181;0.02181;0.01636;0.01377;0.01709 steps=878 high=316 highContacts=316
+[DEFORMATION_CASE] Ripe tomato Left CameraReplay medium held=True valid=True contacts=1 force=54.40085 gap=0.02442968 overlap=0
+[DEFORMATION_CASE] Ripe tomato Left CameraReplay maximum held=True valid=True input=79.99995 applied=79.99995 contacts=1 displacement=0.02168388 damage=0.4764915 dwell=0 threshold=55 lastApplied=79.99995 eligible=False limited=9 residual=0.0004953381 gaps=0.02265;0.02047;0.01031;0.02709;0.01465;0.00850;0.02723;0.01342;0.01103;0.02577;0.01865;0.01292;0.00016;-0.00231;-0.00101 steps=4267 high=612 highContacts=612
+[DEFORMATION_PLAYER] PASS 639
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

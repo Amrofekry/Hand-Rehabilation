@@ -1,0 +1,226 @@
+{
+  "scope": "WBS 3.4.1 authorized replacement by original reference. Immutable art/vendor baselines retained. Source scope review is not runtime correctness evidence.",
+  "changes": {
+    "Assets/Editor/RehabGateRunner.cs": {
+      "previousSha256": "77a2ade175e647f473d7052220a1955f403ea9ba82f1b3f63716bdfe00d251f4",
+      "currentSha256": "11a1ce986dea6fc9a81c7fc4ccc8255cc260c3b5e10456b63ea0b7f231afe66a",
+      "reason": "Original-hand native install/build commands and preserved first-person gate.",
+      "preImportSnapshotAvailable": true,
+      "preImportSha256": "09ff9b7c5196bf9e674d02c779d510b56f39f85ccf54e9c372fa39f13bc546cb",
+      "changedDuringImport": true
+    },
+    "Assets/Editor/RehabVerification.cs": {
+      "previousSha256": "66cee1c3dfff0b2d83e0fec84c9c7abffa4f5ab6827b02e41d4ad386a1a2e650",
+      "currentSha256": "87dcbe7e60e4cb20a74be9b78041297957c32f86e1c20ad765ec4f111e1efca3",
+      "reason": "Use native reference verification when original hand engine is selected; legacy verification remains available.",
+      "preImportSnapshotAvailable": true,
+      "preImportSha256": "66cee1c3dfff0b2d83e0fec84c9c7abffa4f5ab6827b02e41d4ad386a1a2e650",
+      "changedDuringImport": true
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "9a1859f3c4d827ca7b6d64f9fff2d63b0031185df792728f8e28ad6c95de9480",
+      "currentSha256": "d22cecdb98ad4d335a109cc302a6f6e3b69e999cd6966c113d1000337e220f4e",
+      "reason": "Route existing controls/HUD through original GrabHelper; disable legacy carry/contact path. Assisted placement now checks other interactable objects, excluding only its own body and non-blocking triggers.",
+      "preImportSnapshotAvailable": true,
+      "preImportSha256": "c1fad8191bb6d6460d56271c6744e0159fd1f834c3ba95e1b3e5af24604040f5",
+      "changedDuringImport": true,
+      "preAssistanceObstacleFixSha256": "4be33898286a377db537694d7223beafbe268c810c9dbb971f52c29359e7ae2d"
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs": {
+      "previousSha256": "9e8a3fa188783ff826ba735c83a8f5c7aca28640c1900c46c5e732c7d5349df1",
+      "currentSha256": "fa431d58fd1f20b6adcb47e84bce8de5328bb9349f32b9cb0fbba546177f5ebd",
+      "reason": "Disable legacy contact refresh and provide original ContactBone adapter.",
+      "preImportSnapshotAvailable": true,
+      "preImportSha256": "f024ab7a80219ffbcafd5d324d53779e2610c5a4b020bf14cfb45fcd5887d413",
+      "changedDuringImport": true
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "ac53f1521f460d2a780b3f0e9babe59dce0e175ac1f18893b1f273b5772dffb5",
+      "currentSha256": "ce8a9fa20a61e4fa28964d17cdbcfd62fab859552b3394b5067170523de45289",
+      "reason": "Adapt contact/Held state without changing deformation equations. Native drive contacts are classified separately from floor/table impacts to prevent incidental fracture before grasp; original damage/deformation equations and thresholds remain unchanged. Assisted placement now checks other interactable objects, excluding only its own body and non-blocking triggers.",
+      "preImportSnapshotAvailable": true,
+      "preImportSha256": "256427ea2211e1d5dbc2236f51e7f5b39736c50d7b57eeaadf897419f3b3b9b3",
+      "changedDuringImport": true,
+      "preImpactRoutingSha256": "650e1a663ff636281eb153fb48166e73b80a888371fedbf373da673a210d7d02",
+      "preNativeBoneRoutingSha256": "43e9e1c51c29d7c4d4123d10d8369a0c71f28e97fb677b4be9953fe37dc52385",
+      "preAssistanceObstacleFixSha256": "06b162c15c2cf7ac1a73061304b811fbc45a967b904bb8987c734564c8dff3c3"
+    }
+  },
+  "sceneChanges": {
+    "347046307": {
+      "previousSha256": "773be6c6133d193b5fb0e693205e8f5f350038f379a95742b72c3cf64da5c48d",
+      "currentSha256": "193142c985504523425e9758cbfaaca1bd23250cba7c787c0f911d8bd440cbcb",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 347046306}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "365274369": {
+      "previousSha256": "cf022d922d1c4d6e1e7a7d9579b04fc121c6a74d8cb09359a3e662bd61ad6019",
+      "currentSha256": "6a595aeee0c7654c3074e0abc2f9cbf50752d5f8ff759ed648285076141e50a1",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 365274368}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "614604963": {
+      "previousSha256": "ea0e33625b02b7e6924600fa965335a09ec81fe8da56abafca40d5f056b1018b",
+      "currentSha256": "2259a64f3f571bdd7f6648599dd5bc862c8205c053e5667bd8397fb2eb6af15e",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 614604962}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "746249353": {
+      "previousSha256": "dd747906fad09deb9c29a6dfa91910dbaa0f7dd002839a2f2460f61e10989e65",
+      "currentSha256": "5e2a4e1e34296e2c29bcfdf27ec5652b851a86daad7a8213a06f3cf7f9965f18",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 746249352}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "779097258": {
+      "previousSha256": "528c1fe4eedec644a233a6668c719ff494bbf896982be073612a0eeec6d17930",
+      "currentSha256": "3f30db080afa6274534438e855adaf8a955966efb5e610ae3614e1a6cf9c5b66",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 779097257}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "854146011": {
+      "previousSha256": "b632e5cb270bdc4b06ddf67bdf908487ff1b373d96632bff4c7f3204df732811",
+      "currentSha256": "e4a0e73b84b1a37dbc7f793a68e4a6b81de393c26ed1447b7ee5f43f7e9dcfca",
+      "scriptGuid": "e3e323abdc7b62b4bb9ac3ef4b682796",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "906763994": {
+      "previousSha256": "1a2ad6eaa22372a1a351b35081767e894cc91aa795cb0c63c7c3145a950519f7",
+      "currentSha256": "43249493bcbcbc369777a1d9d0c39389dabe6ae5a7926d431cba602a84c0185d",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 906763993}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "908917049": {
+      "previousSha256": "b8da6b8a4e7565fcda5b18c29949cf112984ad7cdcc1c5f2893532775e8d323e",
+      "currentSha256": "6d836ad40296d6d9c8e21a9432a2379dc612c1d8d03b95182d6ad1721598368c",
+      "scriptGuid": "e3e323abdc7b62b4bb9ac3ef4b682796",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "923352286": {
+      "previousSha256": "7a141f16e6c50b4d325de44f707370279136a9039fa79531ba46c2b766733cd8",
+      "currentSha256": "3d8adde127d67cc59bead733adc4d3699faf8ced441e8a2e961d6e6f5715259e",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 923352285}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "975083932": {
+      "previousSha256": "65774395ddc087cf041ac2e87408db635734aaa601b639691cf39f2f122d77e6",
+      "currentSha256": "6c7af6edbbc6e6a23d564727d7a8d21e297f4e3ef2e00e12c0956b3fcba28745",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 975083931}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "1097391489": {
+      "previousSha256": "faed7eef99f4f31c78e1e2f4fb30dea857b64c17527ebb4c7758a5ca4269828f",
+      "currentSha256": "6b1854ec468825d6f6d596949f1ecd128012c9bfb904b9555ce65128bf8d2ae8",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1097391488}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "1130527521": {
+      "previousSha256": "4fef89949a0a37d31cdd0139a4fedf57eeda9b891bd454f9a98b9c4eee52de3b",
+      "currentSha256": "86a6cc14b1c8fd6ece3fd73f7f46533b0d13b21c3855872fbc4623c75966f378",
+      "scriptGuid": "e3e323abdc7b62b4bb9ac3ef4b682796",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "1135522303": {
+      "previousSha256": "8224f09142ab6b3a797ddf9d5149a4abc98243ac37c54e218de906b983108996",
+      "currentSha256": "997aafce07d7aa2deb7f184a5645bfe1bc17b870e219f7787e3bfaebb97a2623",
+      "scriptGuid": "e3e323abdc7b62b4bb9ac3ef4b682796",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "1224716529": {
+      "previousSha256": "909d501bc3f44327ada46eb9cc7b8dc4179f1ba62d955016c935df0a2307e0eb",
+      "currentSha256": "ff3d86d77ff99aaf5ff1552a6ee3cd13e52d766ff1e37dcb0340e59ecabf49b9",
+      "scriptGuid": "e3e323abdc7b62b4bb9ac3ef4b682796",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "1469792303": {
+      "previousSha256": "0cdda4230d2763bcf75a3969404df45e8181aab500a16d3851605feed135a1db",
+      "currentSha256": "983d6fa9998360218cd6ff3fa9bf86a0a40e8f0104c3fa3f576bc1a51d5533a7",
+      "scriptGuid": "2da519a31b791e7418306d00eb360e34",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "1513292014": {
+      "previousSha256": "c864476484e831af5ce7786feee17e0e0c436da62e368247673022c3a4e873d3",
+      "currentSha256": "ac1403df93c17db57aa851205da0eb681e83578d85176bfa639bc04d9e18d914",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1513292013}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "1579466819": {
+      "previousSha256": "9ff69e69e2beab56c5212aafba365417f5886f9a3a03df3016e56dfdab52b59b",
+      "currentSha256": "52b3321fa5d41c16a7548e21c5251d9d4d10b833b36461dda06a8871d5f01622",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1579466818}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "1581659683": {
+      "previousSha256": "e31685395a44579f23dc3bc2d02ee4cfc4de8c3c22a3fae44109aedfe67a5fb3",
+      "currentSha256": "fe68379eeaa096846720d800c909afbbbb90f18892d5588c65c948a644ac59c6",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1581659682}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "1948902784": {
+      "previousSha256": "fb7234329e18ac63a147053368b3fade21921f7c7d38f14ad0509b19ad464401",
+      "currentSha256": "03246dfa56ff43cb57fbaec2911e2214f1e881589449265f9be87efba555d2e2",
+      "scriptGuid": "8b03545b08c0e784eaaf5a06ccff0bdf",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,13 +5,13 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1948902782}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: 8b03545b08c0e784eaaf5a06ccff0bdf, type: 3}\n   m_Name: \n   m_EditorClassIdentifier: Assembly-CSharp::GripRehab.FingerContactRig\n   pose: {fileID: 1948902785}\n-  snapshot: {fileID: 8737890429124235524}\n+  snapshot: {fileID: 0}\n   rightSegmentFit:\n   - {x: 0.018, y: 0.041574895, z: 0}\n   - {x: 0.011845293, y: 0.02215275, z: 0}\n@@ -44,6 +44,11 @@\n   - {x: 0.018, y: 0.03351013, z: 0}\n   - {x: 0.018, y: 0.026374804, z: 0}\n   - {x: 0.013933567, y: 0.03336049, z: 0}\n+  palmProbe: {fileID: 0}\n+  rightPalmCentre: {x: 0, y: 0, z: 0}\n+  leftPalmCentre: {x: 0, y: 0, z: 0}\n+  rightPalmSize: {x: 0, y: 0, z: 0}\n+  leftPalmSize: {x: 0, y: 0, z: 0}\n   radiusMeters: 0.009\n   objectLayers:\n     serializedVersion: 2\n"
+    },
+    "1948902785": {
+      "previousSha256": "738f37c79adf6163bb3e110fce18d696a5392983ff5551a798056f2200f7b436",
+      "currentSha256": "b2919e10f792212fc02e46beab10472ab06942b89097f9e5835433591142a130",
+      "scriptGuid": "2da519a31b791e7418306d00eb360e34",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "1954170014": {
+      "previousSha256": "5f9c446cc386a7286ff0b9c2a23fb72bea2f7987dd47e4de9749ea8032df42e8",
+      "currentSha256": "6450eef67110f18097c93a85fbca8d68ebad64c9a688924a386517d1c71b08ec",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1954170013}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "1964891836": {
+      "previousSha256": "ad6c1d869e69dae75a8b38ab83b18cf15d1d4da699c44e8d1464309acaf76c6b",
+      "currentSha256": "8043f1a822ec76d4e88f5c13c456c1e81fceebb627e0b69553f54bbba15220df",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 1964891834}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "2027699561": {
+      "previousSha256": "e41bf20137fa0eebe4c5ea6d331c3c07ab61b897c03de929d2cf1bf3aa88560c",
+      "currentSha256": "708bd65162b408c476bc1d82d3e2de20aebbc5a7f585939279770d790bd7a273",
+      "scriptGuid": "d891f0cb7ba0bbf47909b880ed8a091c",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -5,7 +5,7 @@\n   m_PrefabInstance: {fileID: 0}\n   m_PrefabAsset: {fileID: 0}\n   m_GameObject: {fileID: 2027699560}\n-  m_Enabled: 1\n+  m_Enabled: 0\n   m_EditorHideFlags: 0\n   m_Script: {fileID: 11500000, guid: d891f0cb7ba0bbf47909b880ed8a091c, type: 3}\n   m_Name: \n"
+    },
+    "2062597755": {
+      "previousSha256": "647294e84a43035cd866a82c20567cb52b4a576cb4338d77a8fd12cd821ac1fc",
+      "currentSha256": "0f68d0e396a360a8b45563304c3a114225dfca9394e899387a873c9fd4553d27",
+      "scriptGuid": "e3e323abdc7b62b4bb9ac3ef4b682796",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": ""
+    },
+    "8690337224916914490": {
+      "previousSha256": "71966a863a49a3e97de48300668b2085251699e7a94bc4d8f2d080d6851ea463",
+      "currentSha256": "2b7d95b8f564e63b681c9b68223aa6c2c34712ffef486e6c517f9df68a33977a",
+      "scriptGuid": "271a11cbe8152574386083aa60f13b75",
+      "reason": "Previously authorized hand settings preserved; original engine bound and legacy hand probes disabled through native Editor. No UI or module component allowed.",
+      "nativeImportDiff": "--- pre-import\n+++ native-import\n@@ -14,9 +14,10 @@\n   settings: {fileID: 11400000, guid: 6a90580ec3f9bf64fa38bd55fa13ad67, type: 2}\n   forceReceiver: {fileID: 8737890429124235520}\n   vision: {fileID: 8002241294058599735}\n-  surfaceGuard: {fileID: 8737890429124235523}\n-  firstPersonHand: {fileID: 8737890429124235525}\n-  surfaceContacts: {fileID: 8737890429124235524}\n+  surfaceGuard: {fileID: 0}\n+  referenceHands: {fileID: 1245226126}\n+  firstPersonHand: {fileID: 0}\n+  surfaceContacts: {fileID: 0}\n   virtualGrasp: {fileID: 574063377}\n   cameraLauncher: {fileID: 8737890429124235521}\n   holdAnchor: {fileID: 4420606296072567756}\n"
+    }
+  }
+}

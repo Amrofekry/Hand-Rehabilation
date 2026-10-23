@@ -1,0 +1,3974 @@
+{
+  "capturedUtc": "2026-09-29T18:43:25.817046+00:00",
+  "count": 992,
+  "entries": [
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment.meta",
+      "sha256": "2619d34f0b024717c80ccb693af0feab73059016379c0dc225a8e6447e5fe03d"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/ApartmentGrade.asset",
+      "sha256": "70831db8a7236f282dde65aec7f250b4a99e14ed689b327f9c1fe5b690070473"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/ApartmentGrade.asset.meta",
+      "sha256": "59520b46a94944ecbf545e63bca055741742398381b1e534a59d5e1611c3e5a3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset",
+      "sha256": "6912f553f2912621e6c84dfb1582713dcc69ee5b836eedf4597fb30d6c05f1e4"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset.meta",
+      "sha256": "701748d86f2fa02e9c49945dbf8c638f44373331c8c13adb01ef7d1398019615"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/CupMesh.asset",
+      "sha256": "f224e92c4e19aaaf0bc5bbcbc55ce7beca1b8385da63e6e5ffae3228766d16d6"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/CupMesh.asset.meta",
+      "sha256": "c300f07bbaa1775a6a44cb4b989b5cb8966b5b842875c89535b527ad31736dad"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials.meta",
+      "sha256": "6fc4fa55c6b69642bf6ba424545e6767e00af59111f3e917752dfabebb1d0f84"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/000_Int_Apt_01.mat",
+      "sha256": "a18beb4e7761c412d7ea401c00a851ad72984ccbab294a265b5aa4ad543ead0c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/000_Int_Apt_01.mat.meta",
+      "sha256": "0de205a5edf497d213801713edae598b943ac6e9b46a7735ec5a8f04b5dedd6c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/001_BR_Tile_02.mat",
+      "sha256": "e7d23c228482314e73b2f0d796234df2c0a6b6f223f313a871993e6d69e19402"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/001_BR_Tile_02.mat.meta",
+      "sha256": "6c75225dc6f0b8e78f1e6f7732c90704b607cd35a0251eb69b69539556dbdfec"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/002_White_Wood.mat",
+      "sha256": "da4d5c2d239f13faff245f8c07f5f7791d058b99684b1542fd78699d9913154c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/002_White_Wood.mat.meta",
+      "sha256": "a8bce2f44b326470e87ea529ad552bd4b550f1ab76d9ccfb4316a9efa55f48f9"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/003_Brushed_Metal_Antique.mat",
+      "sha256": "4683b9016a3246f9f9ccdbfb8fb857062f9aed11392def5576cb22c3c7c97bb6"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/003_Brushed_Metal_Antique.mat.meta",
+      "sha256": "abb3da315b88624fa5bbd8c3b1fb0114d756beaf50a2f7a31127b1366d018738"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/004_Brushed_Metal_Gold.mat",
+      "sha256": "776d658db96097f56eb2a217b74a2609b859b4232be452d89d30352257d21969"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/004_Brushed_Metal_Gold.mat.meta",
+      "sha256": "a43faecdbf7c41098efdbde82aee11285a1f5731372b7206f113af46e335e6ff"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/005_BA_Color_Black_01.mat",
+      "sha256": "7b5b90683374829da1089b648966663ce11d88dff4925930af4f1956586ce156"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/005_BA_Color_Black_01.mat.meta",
+      "sha256": "33c699bbdcba5a82b87962a428d6ffd0bb08325ca61833b694674cd627b9b219"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/006_Antique.mat",
+      "sha256": "28ee64a6ea86799a65cbcd8839651cecdcf486e59a3f60b746d816c2283134c2"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/006_Antique.mat.meta",
+      "sha256": "f3ed0055079e17aadc445da9765955bd961c60271fec82ae792f288da890494e"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/007_LampShade_On.mat",
+      "sha256": "17301390e60c81e764025a9d166d39000c56ce0017dc519756ee5e731900cc69"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/007_LampShade_On.mat.meta",
+      "sha256": "a477db815a30c34fa5e3f92747bb80fdae74a9ed6a2f10c4eb18cad148f2a887"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/008_Shiny_Metal_04.mat",
+      "sha256": "e9cc87dc2107500b5c8fae9992c5f6b779d0af01eba5af8c80c12c6f524bf5fa"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/008_Shiny_Metal_04.mat.meta",
+      "sha256": "15e76fdebc6e1ab32f59c859766d24ab8561de3901c35383e8ccefbae2963f50"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/009_BA_Glow_White_01.mat",
+      "sha256": "2104b579a5a68e9ac127d7124503298482856689600cb92296fc02be273e7bd1"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/009_BA_Glow_White_01.mat.meta",
+      "sha256": "ef95b7ff5d1a4d37c1863efd21a33421984f7350bcbf9ee4e4560bf58920a57b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/010_CastIron_01.mat",
+      "sha256": "f16a09e3b544543b8983feb03370193fae061302111ef56fc5d49edb9d9d6c3f"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/010_CastIron_01.mat.meta",
+      "sha256": "058a3825239b7e5064203a5a9e6176408e8332b726eec8284fc4bb6b130460f8"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/011_GameConsole_01.mat",
+      "sha256": "cf0385644950af41f0e82c1e60bc3b095624c16da23ae83c4f8b91450c6433d3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/011_GameConsole_01.mat.meta",
+      "sha256": "1ae2841342659dd15d20f70539a3b89f4ab80385ffb0182324d913dab6e6fc49"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/012_Controller_01_A.mat",
+      "sha256": "0971f800ca54c4980ea336108c34e192cf0d24b52290ec1ac38bbfbdcb84a5fc"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/012_Controller_01_A.mat.meta",
+      "sha256": "2854be7543b1ad435e130202dce66f76fdaefc8b1ba55a7c1920f2fcc7db04fe"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/013_Controller_Screen_01.mat",
+      "sha256": "a90db44a653e1e98e9a739db80f0cfe04048373514b5fe0d9c281fa6092b656b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/013_Controller_Screen_01.mat.meta",
+      "sha256": "9ce61e35566aa4dcddecfede95a0c195a6321c2bedea168498f40ab9781a4a93"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/014_RedLight_01.mat",
+      "sha256": "c92e17f6c25dd6f3784f3f18f7ff87cb985fbca94cfc514c60c4c04cf50bec96"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/014_RedLight_01.mat.meta",
+      "sha256": "6567901ea47ea22431bbfebd51c4cf5e13d94bb61ee04153257a4dfff98f4296"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/015_Plastic_01.mat",
+      "sha256": "702597a6646db710f9522a2c5dabd403652984d7385e9949c2388f48e09f9ac7"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/015_Plastic_01.mat.meta",
+      "sha256": "9d096ab929cb43469f34c10e1e3af4b3f38e0528e27862e3bb7cf30011335aa3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/016_Mesh_Black.mat",
+      "sha256": "1916257eb036d9a5e46a593e29c2a093242214c3297c122f377a884118a53d4e"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/016_Mesh_Black.mat.meta",
+      "sha256": "84b8d3104d2612ba72fd4852c7ae45fbcd1e0d38cc12c18260afc53e63214f8c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/017_Brushed_Chrome.mat",
+      "sha256": "f9b4588bb758c8947610cf4b554a18549c028feefa0a2ca78aa68a35f7387c46"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/017_Brushed_Chrome.mat.meta",
+      "sha256": "5d1e43840e74dd8bfcf4b9f10b8cb136f4e803b5641f21b4a5757a4e382b0f77"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/018_DarkGlass.mat",
+      "sha256": "54867922868036c979f30085944d5cc997138f7f16c115eacb542f071d42daab"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/018_DarkGlass.mat.meta",
+      "sha256": "bb4816aab8ff73b450839421d84d6033a90942e22790bd7889dfd210ff88fb61"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/019_BA_Glass_02.mat",
+      "sha256": "a3c2c5e969e618fbacfaf439abd7d294f1e6cab20788baafd0f74c2dd60b7a54"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/019_BA_Glass_02.mat.meta",
+      "sha256": "ea3b8316efe89a33ba88f88834ac08387fad853ae0e38a34d134b842cd7d6e6a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/020_porc_01.mat",
+      "sha256": "c6d808f1ab1767c1e33d2784f6540c2c553aa45a36bb3bd8a61d486c2d94cb4b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/020_porc_01.mat.meta",
+      "sha256": "9fa12362da508fc1a68796dfc583cb9d760c5603c8b69bba5cda165a6153f632"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/021_Fire_Alpha_02.mat",
+      "sha256": "fe33122396cf83a741838cbb075060cccea59cd6ebcf1280cbca2196789c142b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/021_Fire_Alpha_02.mat.meta",
+      "sha256": "4353ab4d97f07ddfb8590e761c454d072c01ec933015be91d797295894a1c881"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/022_Fire_Add_02.mat",
+      "sha256": "10aa88b1b62e0cdeab34ae9ec90e980449f214c27c0b2904792dfdf961fec1fc"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/022_Fire_Add_02.mat.meta",
+      "sha256": "4c6bb239d26f265921cea043bcd8a90405260d861ac145ea7695b36a6748c1e1"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/023_Fire_Glow_01.mat",
+      "sha256": "d899266e1ddd5e7c2a0dc75edde414c197f159e140f9960635a07134b71326bc"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/023_Fire_Glow_01.mat.meta",
+      "sha256": "98e91e331f8fa838f9bb239d2b539be138fb940694d6c87940f1d88e908b549c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/024_DisfusedVase.mat",
+      "sha256": "cf01ef62e68a0cc31b0d6be6662347852fbf74b4679b7f091cf1ae5bcd2d3987"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/024_DisfusedVase.mat.meta",
+      "sha256": "b02f8a5f22f5d44c24d0bbad7abe7fd013691b7f400d16647b94ed2d809a6da1"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/025_Painting.mat",
+      "sha256": "bb8a5129f10c4bb7d1e6dc249103d1d652a1812a11d1ced0d05ca1725d257e40"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/025_Painting.mat.meta",
+      "sha256": "c6393d7b5aeb083fc5e62fe699e1aaee96e908d2867d889ba2f3a5591bc3f52c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/026_BA_Concrete_01.mat",
+      "sha256": "9ebd7f93bad7d93cc42c8f1785f49a14cee0cde413c3664706d0d041489a2aa5"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/026_BA_Concrete_01.mat.meta",
+      "sha256": "abc5c1dc0381e29b78453b772716b4590f4f1882f0293cc2de2c8fea257b88af"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/027_Canvas_Painting_02.mat",
+      "sha256": "9d0daf099a72e18a1211c306e39cd22184f1da14adfd2799cebaff507c3c290d"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/027_Canvas_Painting_02.mat.meta",
+      "sha256": "0da0904fb7e650e209755b9a99db81d7986b20d8f01eac21b9bf3cdd748b17da"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/028_Leather_01.mat",
+      "sha256": "17d2b00efa784692bb809537cf0d84fab89c5170ce59e9e1ea9e71d3b449b7b2"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/028_Leather_01.mat.meta",
+      "sha256": "ca9d11bd682fe87e0f8e6b2f2157f1bc14c7e0e2479e360a1a9964052a5164f4"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/029_Adler_Dark_Wood.mat",
+      "sha256": "c63016b1b253b8f3801101c05d7c2c6b9ebf57d8e65d389eb46dfc68d6d96f60"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/029_Adler_Dark_Wood.mat.meta",
+      "sha256": "cd1226b6b3cc1f8124d8b8fbaeac88e99142c85c98b0f57c94561c5e36d7ff09"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/030_Marble_Dark.mat",
+      "sha256": "7fd3ee51de57bbce8510566f0be986dc4fc1a54cd219580319e64a4cd1a03257"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/030_Marble_Dark.mat.meta",
+      "sha256": "1f6fee9749088baaf56f93194a2717f06d9ce16810c09178020a35c17c42a5f3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/031_BA_Glass_03.mat",
+      "sha256": "e75209cc10c7e0ffc43669b2fc3fe49080806955791bc29c6b9f0790dbbdeaad"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/031_BA_Glass_03.mat.meta",
+      "sha256": "364021ca28ed1cd85a8db65bf7222fbb51a280715fa36fd5fe664ef99b448b35"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/032_Brushed_Metal_Brass.mat",
+      "sha256": "8da02892ca77927ee3aa099038b0788135cde77bc892d7c6a58901228864342b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/032_Brushed_Metal_Brass.mat.meta",
+      "sha256": "8061d4457e8e61aba43c8557d959de68cf4385e81bbb84b14036029e382e6075"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/033_Plastic_03.mat",
+      "sha256": "c9f83b85705bc0c87e25cf12d2f3ad81dc708bc9dbcc4a21cd8057831bd4cb8d"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/033_Plastic_03.mat.meta",
+      "sha256": "eb9120564058a94df3e029a57e11e325622f752ca178f47c3f3afcd700809477"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/034_Mirror.mat",
+      "sha256": "bcc1fe5aefac8aea5cd16da5af78e4049229f64ccad0a6b0f5df313a5e6c966b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/034_Mirror.mat.meta",
+      "sha256": "bdddf369c7eaa910439e0768f2ac1bcf8848e0c9445e1da6e6b4aed61d44a81a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/035_Brushed_Metal_Chrome.mat",
+      "sha256": "381451d15b1f3d9959aa0998cd82164addc783f116b1ebb19545394c4bbefb29"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/035_Brushed_Metal_Chrome.mat.meta",
+      "sha256": "c5b48bc0a69f020eb18a1e2c127c92a16b30395a0feb0bd32b55c72db4990f06"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/036_Adler_Light_Wood.mat",
+      "sha256": "0c5b5773dc0ccb6ed2267ddb2797677f12c0ff9cbdd3587645e523284f092d99"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/036_Adler_Light_Wood.mat.meta",
+      "sha256": "fbc9e5cd54c70a6a2be7dedb7a9ad91a5cea994bd5dda26a376f2e9409c783fe"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/037_Ebony_Wood.mat",
+      "sha256": "70cd4a022819c72ca7873a4418f712eba93401f147f6767cb8ffff74abe86af6"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/037_Ebony_Wood.mat.meta",
+      "sha256": "b0d09025169b2f2ac63be32c462c83f9ac2a0eb9150a2ef97bdbef93c57138ca"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/038_Cabinets_01.mat",
+      "sha256": "904f7b8b30e1034166e4b735aa107205e63c80be46cbf86670f7a0fc9e558b0d"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/038_Cabinets_01.mat.meta",
+      "sha256": "ca0e259d4b3c44ae6d009d0a51b8a18fc881f30dbe5a242785c8d58baa77c179"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/039_CounterTop_01.mat",
+      "sha256": "d833ce0d7c2b1e233f948f9696d3d87bf92190a25dae05770dd55d09b69c3e00"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/039_CounterTop_01.mat.meta",
+      "sha256": "3fe633364528f32ee0abfc53457058bf3b7044197bcd6ea9aec0cfa141e57bc3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/040_Shiny_Metal_01.mat",
+      "sha256": "bab4018f2a1230844b1a2cfbc1b3d59fa43c0f2e68daaa9b775d08a6a78a2d04"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/040_Shiny_Metal_01.mat.meta",
+      "sha256": "1a05614a077f81c17f20f729fe012b605384cc0e0de7b0dab5431faeada952b1"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/041_ControlPanel.mat",
+      "sha256": "b6e37218a972d7028729374f555112a060896d801f1c87b9247435df3fed0f5a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/041_ControlPanel.mat.meta",
+      "sha256": "120c07eb2d568ee57155afc74ac5929dfa4838f4b28c33ebdfd0c290617cbb21"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/042_Plastic_02.mat",
+      "sha256": "633092c84e45439e0f89a7d602c818a69e21549a35e6984f81a3060d0bad2d83"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/042_Plastic_02.mat.meta",
+      "sha256": "2bbd20d6ffb4533820b597b379cef833cd7cf2c9e46a6b91146c0524796449b9"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/043_WhiteDull.mat",
+      "sha256": "ef4449df2481a41851bf60026594486d0f6dfa153ddd2b2f457583229897895a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/043_WhiteDull.mat.meta",
+      "sha256": "cbdaa242d88c152d4e45c003093b08d8e7751f9645cdd701470594b6ed525523"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/044_Default-Material.mat",
+      "sha256": "55cd325177c039b7b5b3fc5db4745e9382eb7af5e1d8a689f62295fd19aa01ff"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/044_Default-Material.mat.meta",
+      "sha256": "993dbe0043fcf7001db77c4f953070946791be1aa3f88a944b8c71e1e414c6a6"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/045_Colors_apt_01.mat",
+      "sha256": "5f3d8037ea673daab947ceaba74b525b07931d983c171c0da5b562ac3740df24"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/045_Colors_apt_01.mat.meta",
+      "sha256": "b71b6e5532b15610ddbdb4808a70e391f1f64a9c41d2cc36bae04d901186edff"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/046_Glass_Wine_Bottle_05.mat",
+      "sha256": "0d94c99322c1dd1fdfd78571957b4ad30048576b8e128f2d81d1007beb6866c1"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/046_Glass_Wine_Bottle_05.mat.meta",
+      "sha256": "47580e650d57c3d329ad91e886e52ba5f28d85e4d2721c72318186867104f162"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/047_Label.mat",
+      "sha256": "b02e2d2ffd17ed7b2d046e63c8540035acb86f696175fca4466f5a2f6a1c3c9e"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/047_Label.mat.meta",
+      "sha256": "cfdd8d063e15b08a5a1012797fd46711f8278e6d0dadd6e75a3a19231ea0450f"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/048_Glass_Wine_Bottle_Wrapper_02.mat",
+      "sha256": "27552cf0dd234149b7705f1ff0b052a46fffb34f44098d7e0084a38616c7e649"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/048_Glass_Wine_Bottle_Wrapper_02.mat.meta",
+      "sha256": "dd6bccc0362559d3ccfb0ec75f0bb5137f6fab0912721fb131d5dd3adbaf05f8"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/049_Fabric_01_White.mat",
+      "sha256": "cf65862314b22dd914601df50b8f955e8d72f28d4afdaa040749568405cff458"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/049_Fabric_01_White.mat.meta",
+      "sha256": "a0ad7f9ba3dde30e8c042483c3a6ae12851b0510d9bb24ab6154fcd047162427"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/050_Burlap_01.mat",
+      "sha256": "46b993c363c4c34b4f63e4094821d4fc01fbcac40b1ae5705b36284d7a5086eb"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/050_Burlap_01.mat.meta",
+      "sha256": "c4c8ef32bc194e7748a526879bcbc6a5b62da6b3e942920605e48985b270fc52"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/051_Lamp_02_Ceiling.mat",
+      "sha256": "85801c946b35274d05c0972ce1fa48e695eb6f2339554c0915dc18967fd00582"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/051_Lamp_02_Ceiling.mat.meta",
+      "sha256": "009f36ba637764498e0cb60cc29e1fa78db4836940ac25e8fc72c2a1a2b96678"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/052_Antique.mat",
+      "sha256": "bc937dfc16f62a85bf466f21a6dda9a6feeadaa074e6a7fdb67858e82d8626e8"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/052_Antique.mat.meta",
+      "sha256": "d05b3aa5950a1f096a27d0593be4012314f6f1dbed75f3d09fb093e459115e54"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/053_No_Name.mat",
+      "sha256": "4660c4ab6c180dce0ed1057a12d16d2a5afdcb5647fa5e4b326e1199a1db02b7"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/053_No_Name.mat.meta",
+      "sha256": "82b6be4196bbc2d4f97911234e8fe1a17053c1bb3a1a84d105245b21760818d1"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/054_Lamp_02_Ceiling_Shade_-_On.mat",
+      "sha256": "a2c682b4a334267decb8574d5816bdfd2773dcf4804c1f52482717244e9160cc"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/054_Lamp_02_Ceiling_Shade_-_On.mat.meta",
+      "sha256": "5e85a2ee74e97e9820118b2a8a331f312865cec1452b945203923f61d9089481"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/055_Lamp_02_Table.mat",
+      "sha256": "9288cf1e218218df4e9fcd5e595ab1aa5edb16d1efa36615d784dcd0efa0f699"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/055_Lamp_02_Table.mat.meta",
+      "sha256": "75bdede3112d128f16387b6f925ab0032e0e07a5b79549b9a733d3d0fa18de42"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/056_Canvas_Painting_01.mat",
+      "sha256": "55fa50d8b86f91dc7da02bc1073a43c8ef2a0bab62d39a6260068a16bf9dd225"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/056_Canvas_Painting_01.mat.meta",
+      "sha256": "d079fb575a30fffcca0aa097e4646a5352dfdb090f743f5ae30133b72594b1bd"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/057_Leather_02.mat",
+      "sha256": "8d7704ea130f0e003f58703428b6ced4941982558096c39ab25621fb270d2dfc"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/057_Leather_02.mat.meta",
+      "sha256": "62e20eacced3d8a36dfa62ff833cdd25c17eca0bb583c6b4fc3d6c23e9218c50"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/058_Rug.mat",
+      "sha256": "a385d9a6fd25035cff74eb2eb9572ad1e887620c015485b2341c733bc7dbda25"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/058_Rug.mat.meta",
+      "sha256": "d3d3551e2fe1b632417a6f0062f42469e21f9ed80e37704a4d73edaf626b610d"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/059_Porcelain_01.mat",
+      "sha256": "5d7796d18f10a4be39b734bc051fb367467318740307a67b9b8e346ae05de89b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/059_Porcelain_01.mat.meta",
+      "sha256": "4c9489be23c403aec7d48a5f45143aa62729e102ef0fa22e1c26d69b74052232"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/060_Cabinets_02.mat",
+      "sha256": "5e5dc2b2418a13131971c0557c819709ff1cc87305b24b708b483d51b6148d4a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/060_Cabinets_02.mat.meta",
+      "sha256": "f654a1542176a2d48f8b8eb2bdf348b6ed6c8c7a6b04a95341b69e5f749c58d6"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/061_BA_Glass_01.mat",
+      "sha256": "ca0fe2904f99a86de26f78905ab8589fa8f6a48598600c2b72895f6763433676"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/061_BA_Glass_01.mat.meta",
+      "sha256": "1ef2f00d15b379a8e0e897bdf0150a705ed0ed8fda81adecfb03ee879687197e"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/062_Toothbrush_01.mat",
+      "sha256": "34bf3886eac2a4655316e87578b7dc2f6591e763c4b84cef6437fec7f65f6a30"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/062_Toothbrush_01.mat.meta",
+      "sha256": "d2bd9bcef6af3a2fb9a7386ead80ecc6635670c678c4f1345fb75988b888496a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/063_BathroomMat_01.mat",
+      "sha256": "5956ebfd084ab790902ff61bcba86e960b44b1bfc1e92980e4d39d29374a5a7c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/063_BathroomMat_01.mat.meta",
+      "sha256": "3ce20ebd1b3685fb3738017f1b64de69534e4f60630d6613a7118358e6a8578e"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Brittle_cracker.mat",
+      "sha256": "8e71bb06d1c30c4c272af8f58da9d2e73dad3706968a61e08d0d60324867dcd3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Brittle_cracker.mat.meta",
+      "sha256": "4430879dd74eb4aaba0d4e1f5c8973e445b13a1155199fbee22ca8cfb562279a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Hand_skin.mat",
+      "sha256": "d859b25c1d677fe2c0f2f92c0a3c17974c51113fa1fcf5e3cc814694d4ea42e6"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Hand_skin.mat.meta",
+      "sha256": "6adb19ddc63612e4275b82b4ce1dcf3682aa34f7c95e40b77ec996af466d20fc"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Ivory_porcelain.mat",
+      "sha256": "4c04cf943720a65ca1d234e1b0989b92a9cc6969ab504bb5846a27e775ef2b91"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Ivory_porcelain.mat.meta",
+      "sha256": "d2a885b3f01bdc00f895840d7cd846ea7c16ed2219269b97df1540614515ed84"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Kitchen_sponge.mat",
+      "sha256": "42d4d851b198f48b8fb6f3427ee99db29c21b2bb64551028b5362b56d51ac873"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Kitchen_sponge.mat.meta",
+      "sha256": "3ae6ff9215d2c2d71fe32841df1bb2886654db8654847b2dc02d2eb4fa61ef6a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Navy_cotton.mat",
+      "sha256": "76bcd0119ba6307fe941d4f2ad1eb00515e491dc2165b190ca55a72a47d00c0b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Navy_cotton.mat.meta",
+      "sha256": "693f6bd6370af039594904a3396866a59968819f6e3dc2ae594c4596d013e08d"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Soft_silicone_cup.mat",
+      "sha256": "5fc56f771bb2cc7f7aa1a6583b2dc6702e14a7eae327fae2b4bd33da8f1551dd"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Soft_silicone_cup.mat.meta",
+      "sha256": "b06a9547e6fed699302516f49440752ebb9581ad1d55c314040842e24ca78e1a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Therapy_silicone_blue.mat",
+      "sha256": "9fb9dc268c7bbb3dc8f379215806688d8a71484c6c6fdc3b6e7d8d7badd0bf03"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Therapy_silicone_blue.mat.meta",
+      "sha256": "9cbd2240ed33dbaf21abbaaa8fa333afeea1a7d249d524b23f355ba1753a645e"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Tomato_leaf.mat",
+      "sha256": "13706c0f67e7b7e66230bca9aa32735a76555094544fd2638115b390016ebff0"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Tomato_leaf.mat.meta",
+      "sha256": "4f21aab86a6087f605e7625b77b06fd67d4b2bcc9067acde1b83e5c2b8ce5627"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Tomato_skin.mat",
+      "sha256": "93005a5eb65661bd4e5194720fa84a0ce9df38e5a847ad43814a5a8e9cd55bb3"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Tomato_skin.mat.meta",
+      "sha256": "7c7d966e49b3eb4620fba3d29bc396809946c886c1be88f395c5d769c0debf2f"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Warm_bulb_surface.mat",
+      "sha256": "6a70b0be4ec59c8505d695589e8011f409566efe8070ab62af58952021cf8d87"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Materials/Warm_bulb_surface.mat.meta",
+      "sha256": "e17cbbcbb121f2d491381131c695ad9d722cc8ef89384575ea2350c54be21541"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs.meta",
+      "sha256": "5d6f7b2251f857942f73d7974ee03e72674c59e8f83942abd8c5c01c144a827a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/Apartment02.prefab",
+      "sha256": "3d01744196e9ea0dccc61a93aaa3be3630cc5f01cd39401a91d487aaacfab36b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/Apartment02.prefab.meta",
+      "sha256": "3589f694b532d9ab4c68f53b87e541fb25d149a91b9bfe859fbe6668516fc5db"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/CrackerFragments.prefab",
+      "sha256": "80577c876426114e989bcb692b8334895ed76831312dcabc7612bb1e1f622066"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/CrackerFragments.prefab.meta",
+      "sha256": "21f5043ad5c64497f11580133710cc32ee43006f4d3239da7ee7a3175148283a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/FirstPersonPatient.prefab",
+      "sha256": "9885fe37bba424a3f297c4c9db9897f36d690757f5810f3af33bcbf9f5ab79fa"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/FirstPersonPatient.prefab.meta",
+      "sha256": "3e676b0b918d823aa24ddbcefa7eb3d65e1deb8e6f253283592210678f0a9338"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/PorcelainShards.prefab",
+      "sha256": "3d2093d88f02fa2cabc56f48770f94e216ce7cd2c5cf742e915822692f544200"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/Prefabs/PorcelainShards.prefab.meta",
+      "sha256": "63ac3fb6c32d41ffb4608d33d7b43bf4bfdf4c5b172553902caf4c84f67f56a8"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/TomatoCalyx.asset",
+      "sha256": "df5973b64fd9fb274558cb5a788d2b3cb3ebef1f2dc206a808061be290fb312f"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/TomatoCalyx.asset.meta",
+      "sha256": "16b8da91b5402704ac122c87af4fc5375883543c95469a9bdc78de050880dde8"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/TomatoMesh.asset",
+      "sha256": "767cf1580d9223639f524cd40cb722ce5832fd9cfb5e5c140ad9bc46cd81517c"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/Apartment/TomatoMesh.asset.meta",
+      "sha256": "b9fee1ec19fd29336835fb3fa02179a181b770955d7f861900c60540414f6d47"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/RehabEnvironment.cs",
+      "sha256": "5f60e9ca1f330b7f71c6c80dc94e90ee4ff953e344d8b3604fb3a4cc7aadfb7a"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/RehabEnvironment.cs.meta",
+      "sha256": "fe1e325bb17eecb491325c608b8d12830347ba2cd45402ce83dea585647beab5"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/RehabMaterials.cs",
+      "sha256": "71aa6d8465068d018eb28a45ad085ac42183392b9328f38df524cc98f7ffaefb"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/RehabMaterials.cs.meta",
+      "sha256": "f3aa841b3179e52b452e968e630dfa2feaa83141f6fb65f5b085769fd6bc681b"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/RehabVisualQuality.cs",
+      "sha256": "ee1ac709221023cf8690252f3b2e4b0905b690a037c71ccf21e920fcf266935f"
+    },
+    {
+      "path": "Assets/Rehab/3.1-environment/RehabVisualQuality.cs.meta",
+      "sha256": "a83b4fe5c32faef91f544eb6742ef03deae31a536314783fbb456a525642cab4"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/HandTracking.cs",
+      "sha256": "f75618f12aa0cc89efbbb0030de5bebf28dbef1b1b068d2b6abf33b586601a9f"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/HandTracking.cs.meta",
+      "sha256": "cc7936846ff60f2db2ef7d30547083cf42ed1ce6027f43b04620e8f60832f996"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp.meta",
+      "sha256": "b3bfa16c760c32d120e96325b38f3a73cec61f064ec6867f316f97c2f493ac89"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/Controller.meta",
+      "sha256": "64c7ee1394e507203ce643bfed58a26a3fb946e35284faf5d90aba3d1e6faf96"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/LeftHandMesh.asset",
+      "sha256": "d12f4419b90eb0d286e27b788e081af92441ea2f3232cfcfac60f8f0e81b3002"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/LeftHandMesh.asset.meta",
+      "sha256": "b785603ba4b79fbef1b06ce62849335881fbf8d6b738c3e17d90313601d5c4ca"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/RightHandMesh.asset",
+      "sha256": "661c8ca24ef17f6a656a4bda383ccbfdc3b59d3d154300c1f1697fdc7fcb3d8d"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/RightHandMesh.asset.meta",
+      "sha256": "ed610f8da3cea90dd51df76a90a20804561667c61a42d58f62c869659074fd19"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/VirtualGraspBlue.mat",
+      "sha256": "e0d6110d782d0c4c88e8f24bd34c226d24ca84781ff20a1e813d613f4ca00674"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VirtualGrasp/VirtualGraspBlue.mat.meta",
+      "sha256": "b498e69c82746aa65ecfd500bd1e52fcb70d48b9c9c3cc7a73aa0650b41006f3"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs",
+      "sha256": "80a9254a576a16ca74ebdabcca442d6d4b96e7a9ee4279c72912ff2c54767346"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs.meta",
+      "sha256": "154b4a9e4f119314ef2ae03f9acd08fade209b6922384382692d042cb15825bb"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionLiveAcceptance.cs",
+      "sha256": "c5b76ca216b9867241adbf88d8093f595cdc5420463de19d3fece199ab9cb7d9"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionLiveAcceptance.cs.meta",
+      "sha256": "5846e2f7fb12de3fe264b4a3f6270d3f7c42f06f191676b4bc9317479a2c47b8"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionPerformanceProbe.cs",
+      "sha256": "6d7115e9b71af8e9b1671d01cd9c3a8c860dacd8c1c2fc4dc6eb827d877fdda3"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionPerformanceProbe.cs.meta",
+      "sha256": "9a6c2b55bc936f09a31740fc9514d3110857e14bd45fdb1db2099dc4896fb029"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionPreviewReceiver.cs",
+      "sha256": "5c8ed7013d7be82084c4fb2086b6c3c256a0d80e9fcfdb51131fc4734b91dbd0"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionPreviewReceiver.cs.meta",
+      "sha256": "ed78107dfba694633285f73e36b3775a1613335c2b920452ba456f4131f1b5df"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs",
+      "sha256": "6041dabcc3907cd23cd53d80317a61201214a6ea5cd7d2e63d86b8b0edaf717b"
+    },
+    {
+      "path": "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs.meta",
+      "sha256": "6e8a18836b04434891617ea16ff62f5130ef6e78bcfdb5a0092e1b588d6dc19f"
+    },
+    {
+      "path": "Assets/Rehab/3.3-deformation/GripDeformation.cs",
+      "sha256": "6243d0ebb6a47286b4910755e9c63b6fa6d6db4593df4a9604df84d28c834a70"
+    },
+    {
+      "path": "Assets/Rehab/3.3-deformation/GripDeformation.cs.meta",
+      "sha256": "1ed267bfa7892c96ae5736fe603e4cc2dd1c823ef1fe24624dcb9cc94d03aea5"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/LocalPasswordHash.cs",
+      "sha256": "90a7da725b624ce79596002f8c8823058906791d9b1035faba0b9a66b7226c6f"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/RehabApp.cs",
+      "sha256": "885bcec1eeb7d602e12ad72a7a187542c111d57a3403cc1ed1c1aeb5ba0efde3"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/RehabAppShell.cs",
+      "sha256": "49db49a1ccfdb3f88e702930887c086e7b2314c306854f43bce4c5849ca5af5d"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/RehabDwellPointer.cs",
+      "sha256": "646631031ba1db3b0491ef8a2392e072aa122bb0d9dfe2508ea4c7c0c28120e5"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/RehabExerciseSuite.cs",
+      "sha256": "9a340be0aa5e24d13c96541898914bae8d4a14a3d18166aabbbba6aee691c95a"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/RehabProfileStore.cs",
+      "sha256": "abf7e8b79dd0fed0fbcd0870bafef0832984d77f1acd2e3a7ead054508482a44"
+    },
+    {
+      "path": "Assets/Rehab/3.4-game-modules/WindowsProfileProtection.cs",
+      "sha256": "0ae76832d8832543b7f89748a3c734509bd5d015eb6a764de0b34bf7467602bd"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment.meta",
+      "sha256": "861e2312b92c7693b86f4d5d638fa81cf2337d5b1255db075d3867e6a2dc14a1"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs",
+      "sha256": "210991c1668625938cf3b1d846011ffea1ea6494ec559077de8b204f109c7c55"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs.meta",
+      "sha256": "4dd38f014307a010d50dc4a7c0ddef7e6a5d49199c38ad25cf91731141ba283b"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentChoices.cs",
+      "sha256": "e79c7feb5d0fed533ec39825edfdd8ef5e862d82f0c72f8b7902ed042881f4c4"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentChoices.cs.meta",
+      "sha256": "4bb0bb520da07e7d5150025d4426ed8e466f50ca37454b1f98dfcb3ee5635a1e"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentDoor.cs",
+      "sha256": "5c1c55a6314afcd3ac919a68a6551239faff28f68054324c3c85406512fe0c37"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentDoor.cs.meta",
+      "sha256": "c53bcc150c6ec93a3f68ef733f7b96c1db965b3883f4a7c52134f4e52b5359c2"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs",
+      "sha256": "a7d928f02c7779c82eff8d20d8aaae02ac4620f4283a0c0e19b306b735f0267a"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs.meta",
+      "sha256": "1b724209f1b5340807f2359ea049de42bbffdbed0159cf21836f3419fe83c19b"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentPlayer.cs",
+      "sha256": "d532038de63b4ea2bfa736782262d963214679e695c15f3b7c72079360da42d3"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentPlayer.cs.meta",
+      "sha256": "3ac6811fa53deefb9d7d0e4935d8ae5723bc81309547901b92a8b477e27727ee"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentSettings.cs",
+      "sha256": "926ce1a7221a2862aa53fcac768903f655192bf90d6acd113d9c830634bd1d9b"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentSettings.cs.meta",
+      "sha256": "a519e8541505fa8b2781e1199238ef568e52736dc3c0415051b07c6b720f26a9"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactProbe.cs",
+      "sha256": "ed783f2cae2935fbd399e9cf64b9d64870527b9b55b0f1e31826851a1e585ebf"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactProbe.cs.meta",
+      "sha256": "3b67daf1755ea08ce88ac1408742f492c95cf31470dc17c55a380b2263e0a6da"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs",
+      "sha256": "c190ce6442d3235b3d0556c4214e4515f9ac04da17200b8fd1cba3fb84105c7e"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs.meta",
+      "sha256": "9df1f67575d48841966fa338dea23738764e4ec865a5b4e57883be2e8d10cdeb"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs",
+      "sha256": "2b0860c47026f388c09db20d3024775a887bab852cf6617c6c26a555af1378aa"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs.meta",
+      "sha256": "8cd72881f971290a476266056d1ab6d236cd052668b9c5493983b38f7e0e5b89"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/GripForceFilter.cs",
+      "sha256": "e1a1c9b657de79f87628654703262818220b195e59619358b4d192cfbc6e5666"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/GripForceFilter.cs.meta",
+      "sha256": "570b06b669ac8cf26da9b4fd5ef415a3dbdf77db1123eddd20dfe6484b842834"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs",
+      "sha256": "5b564dd17871203937e6624298115b154b73615e3a1d1fc59c9db4d6b92ab928"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs.meta",
+      "sha256": "b97cf824ab24da27f472d5b8a3eb5ebd8d2673a3df0264698861dddea790fe0a"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles.meta",
+      "sha256": "d58c7aea79dad3ec4dc2cb2d223cc772d038d6521cef81285d5869c63db954ff"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset",
+      "sha256": "ec3cbc0623663f279b401d996739f531b844673f439a14c06a8cc81d9915cd53"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset.meta",
+      "sha256": "843c6421ee16c782b49e9d1ddde3c9bf71c9f637ba3cdf37fea176630c58deff"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/02_Kitchen_sponge.asset",
+      "sha256": "e4357c9d9331ec5e29d75312bf65d14c84ece009ab441487ca3644edc9022c96"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/02_Kitchen_sponge.asset.meta",
+      "sha256": "4680d43bdf27bfa2884a99c5ba29fe4a095ad9a3b912b5d9cb430d966e940f15"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/03_Brittle_cracker.asset",
+      "sha256": "a40d58e1888c375288f222a5f1e5502fe1e43efafa56cf97a1bc0247d5b73ac6"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/03_Brittle_cracker.asset.meta",
+      "sha256": "6c4801a81db9b9c5e80138a4d9f45dbbfe0932ddaf3378bfeb589cd763223f7b"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/04_Porcelain_mug.asset",
+      "sha256": "8e70a73cb1a43a8d438bfef32ffffd5f5e7504c802eff33150fc06dd5df784a9"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/04_Porcelain_mug.asset.meta",
+      "sha256": "9beaed30d03dd2ac6f53bb82792271691d3cfc40a702c777582d8e5be3c5af66"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/05_Silicone_cup.asset",
+      "sha256": "313a566143f57d241c816cab6d8ce51561ec939d35824d0dac068cf298dc3821"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/05_Silicone_cup.asset.meta",
+      "sha256": "ca9cad1e8ffac12511f74e767ba640ff03abfc41e60d666bb214a086b023f1b1"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/06_Ripe_tomato.asset",
+      "sha256": "fea98a67eb345db58a8d89ca418dc71fec28b73235ede251201da5ad30b7171d"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/06_Ripe_tomato.asset.meta",
+      "sha256": "ab4748f9147bedda927f18b277590def5009fd2f6716df6a7c3d0f5c0d6936a7"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVGController.cs",
+      "sha256": "c8f19a885a5aefaef77f5ecc3c96c62a7d3473404d6dbbc491225808a1ab0b4c"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVGController.cs.meta",
+      "sha256": "b20dd312f27d3b557ce321cb0f3513fab3587343d3ff8999dc68c211cfbabeda"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs",
+      "sha256": "ebf1104d95223fcb1cf5349ad4e0ddfc0ae528c865940154ec5e469372b611d1"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs.meta",
+      "sha256": "a39bf6972196843d3f07f87b612fb552e82ab9ad57d6596763d1e406974081b8"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SeatPoint.cs",
+      "sha256": "f9f86069317b18f8491290332ea4e448951e72e79292a2644e15a713a89fe5f7"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SeatPoint.cs.meta",
+      "sha256": "7aef7b8815514a96ed3abcdce77511965d7dc3844607aaac4995d626dbf8ea37"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs",
+      "sha256": "8a9337f6594f083756b1d87e170375bc15e8457d8c6c9d9d3f7131187032c93f"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs.meta",
+      "sha256": "026beb850ecd4852dae41d08d0ea478fabdd7fdb1a278ffd47cc151c9262b20e"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/DemoForceSource.cs",
+      "sha256": "bb859829890e76b11676ae5a658931533b60771d068547167618d88d6c46fcb6"
+    },
+    {
+      "path": "Assets/Rehab/3.4.1-force-object-interaction/DemoForceSource.cs.meta",
+      "sha256": "dfcb0200254876ca8691a8d438575526fb64dab93e0a285303fabf0603ab8b33"
+    },
+    {
+      "path": "Assets/Rehab/3.4.2-cognitive-performance/SequenceMemoryTask.cs",
+      "sha256": "45e2772fe5090e6c724c841e14d618126b96a4bae505397c1187435d4de7c390"
+    },
+    {
+      "path": "Assets/Rehab/3.4.2-cognitive-performance/SequenceMemoryTask.cs.meta",
+      "sha256": "51ce94caac672c12c32fe30fccbd31c1bb28dbcc38b38e55ebcba03b5f05d83b"
+    },
+    {
+      "path": "Assets/Rehab/3.4.2-cognitive-performance/SpatialAssemblyTask.cs",
+      "sha256": "1228857878a6194dfafb4900dd5af1309d204c2118883fafb9fb7a044ef6a527"
+    },
+    {
+      "path": "Assets/Rehab/3.4.2-cognitive-performance/SpatialAssemblyTask.cs.meta",
+      "sha256": "b951c462a1685a7ed95e00127fff53d7164c697bd1c5c9d513ee7fd3ebbe5649"
+    },
+    {
+      "path": "Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs",
+      "sha256": "3cc2df612660af6a2f4a0b9193d9085e24a60994ac6ebcb595775ba1fc83806d"
+    },
+    {
+      "path": "Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs.meta",
+      "sha256": "50aa47d5f1f33db5f6e838330ae8e6e7877bbddf0b72f5234ed75047ee286c7f"
+    },
+    {
+      "path": "Assets/Rehab/6.1-bluetooth-integration/LiveForceReceiver.cs",
+      "sha256": "8df1fe077ef9f85e9c38a98e2e30ee6afe220ea4a25818259824240cc07f82df"
+    },
+    {
+      "path": "Assets/Rehab/6.1-bluetooth-integration/LiveForceReceiver.cs.meta",
+      "sha256": "1c7e4b8c7c8d73e35967dbb8410fa1f1432ad369411c6db56b51e96dc65a0eaa"
+    },
+    {
+      "path": "Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs",
+      "sha256": "bc7f931a34f82c181fd2f3908e08dfa52b68fe7c8abbe89ad290ed0d76c33d26"
+    },
+    {
+      "path": "Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs.meta",
+      "sha256": "1963e726af785c0c13ad963c0154e48eb42916c64667a04ca346ef1e02d7a4a8"
+    },
+    {
+      "path": "Assets/Rehab/6.1-bluetooth-integration/ReceivedDatagram.cs",
+      "sha256": "6991235ba8a5c66b1ec3b0eb9dd1b4cb7fe0eebe7497ca3088563552d27772ae"
+    },
+    {
+      "path": "Assets/Rehab/6.1-bluetooth-integration/ReceivedDatagram.cs.meta",
+      "sha256": "529da65697258b4bff66453b5d0352a5d8af5734ec3534ec8962dd9149e5a09e"
+    },
+    {
+      "path": "Assets/_Project/Core/GripRehab.Core.asmdef",
+      "sha256": "24c433b1375ff5cd7cca058c623e93e0ad53d5b6dca045db3307bc1e0e01b6d6"
+    },
+    {
+      "path": "Assets/_Project/Core/GripRehab.Core.asmdef.meta",
+      "sha256": "5753ab533de7b47b4151c93941230c120b7937eee4bb8afab805fce1c83fdb01"
+    },
+    {
+      "path": "Assets/_Project/Core/InputContracts.cs",
+      "sha256": "b04764c806b9ebb1e05b1b940f253465c1c2fa4a3c1dd2c29dc3c26631dc5c41"
+    },
+    {
+      "path": "Assets/_Project/Core/InputContracts.cs.meta",
+      "sha256": "6df26c8dd9728aed6d4541a8f1613e2d7d42a91ddcf62963a2aa04dcef5f7af7"
+    },
+    {
+      "path": "Assets/_Project/Core/RehabSession.cs",
+      "sha256": "050ce46e010c160a312ebcb8c2c3a91d17062a3261c7cf1088891b3848bde5a0"
+    },
+    {
+      "path": "Assets/_Project/Core/RehabSession.cs.meta",
+      "sha256": "4f96cbf8844c8b953805cdcc037803f9d55cfb5dce1c8ee67a0a5c4a3ec0a547"
+    },
+    {
+      "path": "Assets/_Project/Core/ResearchAdaptivePolicy.cs",
+      "sha256": "b2622b214107b1ae8ca81c4e2c8dc334bd5b980ebfddb3c13d9022456c4216fb"
+    },
+    {
+      "path": "Assets/_Project/Core/ResearchAdaptivePolicy.cs.meta",
+      "sha256": "c93b0779608ca9d23193ff5e27a9a983c84e6160481057915d0a5d1d361a4090"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Doc.meta",
+      "sha256": "dc9c555893dfcc0908dcd699bf75c07e61b347bdaf31eaf988b4bc9a1df246ec"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Doc/EULA.pdf",
+      "sha256": "fd9da14949dba216ee8b730269525750e473db7332437484624062e70c64fa67"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Doc/EULA.pdf.meta",
+      "sha256": "2a52bb08cd3a5b12a3ef9366c9920475e6d86380b73eb31b05e611092eaa7da0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Doc/VirtualGraspSDKUnityAPI.1.7.0.pdf",
+      "sha256": "12b3834d352f2225489fd2a58a6965b062af9069482bed7ea830c359702385e3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Doc/VirtualGraspSDKUnityAPI.1.7.0.pdf.meta",
+      "sha256": "4a950edb21bb0cbdc8b21de11b5038b16e7f23018e506c93a40337a0d9ba1175"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor.meta",
+      "sha256": "c41984be92fd6614e508e8bf34a416fc4f7dbcee6bff67ab1f7d5ed38304921a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Build.meta",
+      "sha256": "26be449109e5dd0f7efc374b2f9ff55bd00aff80736d4c5b6c5410b6dd563ac3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Build/Gleechi.VirtualGrasp.Build.asmdef",
+      "sha256": "e7bc89190401ac3034d48a37080a4e06cb574331bc91881033b1f6dd3945d8d1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Build/Gleechi.VirtualGrasp.Build.asmdef.meta",
+      "sha256": "940940a04e6d229638a5f70cba2b27dba4330ee299e683ccf84a3bfdd1f4a91a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Build/VG_Build.cs",
+      "sha256": "550bbbd787f43a1e154cb78e5d6b3b067e4a6e6fc6a566c4a0175d798e9359d6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Build/VG_Build.cs.meta",
+      "sha256": "3cd1aabd9b712bfb6a07fd25e1c99b6e8c91e92c03baf3a9ddbddf02c7eefac8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Resources.meta",
+      "sha256": "02c8d19c0285acff07915e9ca343e7b9aa587fc48abc499df589240d7ab30d40"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Resources/T_gleechi.png",
+      "sha256": "c794c36cf55df8f9c61fb432cd0ce2495d845696f6a2c031de110dff998418e1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/Resources/T_gleechi.png.meta",
+      "sha256": "8a9a5d3e7e41d070f6a9e2060fafcaec4978cf43821b0eea02295e407be87977"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/VirtualGrasp.meta",
+      "sha256": "fc4bfbb3971548b40b4b78c44813f275289bb982ae74ae511b95fe2a406f98ec"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/VirtualGrasp/Gleechi.VirtualGrasp.Editor.asmdef",
+      "sha256": "9a1f2e65e9592e23fd8109261828d012b6554efe914caf513beed408dd008397"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/VirtualGrasp/Gleechi.VirtualGrasp.Editor.asmdef.meta",
+      "sha256": "d6eca1241e17bb902cbef6349964fb355dbee48db3edded1e87fa5aaf4e5b016"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/VirtualGrasp/VG_RecorderEditor.cs",
+      "sha256": "daa65c065f7c498892e7378dea370658af91dc8b7e7c9020abbd88d16ee471d1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Editor/VirtualGrasp/VG_RecorderEditor.cs.meta",
+      "sha256": "67010a185ff7959f322a2fd3fdd5726394755793020ee1b2f1f6a7496b76ff4c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib.meta",
+      "sha256": "b0efb5c793c5cec2f1bc87ede00413822e1e02162f43bf5e2a7715b3dfe5970d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Android.meta",
+      "sha256": "57104aa67882b43f712cd4caf2f871f778c2db458133bf63d5f1a4ad419b5989"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Android/libvirtualgrasp-selection.so",
+      "sha256": "833797ab64eda4f759aa053e76922f0e5e76dd02f9773644ab006299d3a260d4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Android/libvirtualgrasp-selection.so.meta",
+      "sha256": "1647d22d389a8c8fedd2525eba8fb12d9b1f54398c29f69cccca7ebcf23c2431"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Editor.meta",
+      "sha256": "898eea522469b6ddd9554cf5d78ca3248e8ee56cd746ba1c6d23c2f5c61b294b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Editor/VirtualGrasp.Editor.dll",
+      "sha256": "c44f4c5c038c00be16f413cd1c6f9e66898d824d6e587901ae423dc86a7fb9fe"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Editor/VirtualGrasp.Editor.dll.meta",
+      "sha256": "8b3af421b5d6ea6c1a015a43825bbba65a922e785d21bd6850e3e2c219dc553c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Editor/VirtualGrasp.Editor.xml",
+      "sha256": "5214ef2ec5df06c6e558b4f4a83ab04541cf0563145075b4b600dc45feed4a65"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/Editor/VirtualGrasp.Editor.xml.meta",
+      "sha256": "8601a44e5f6d313bd1cc3bec49c1763c52d1012fc530def8fa07b31e4be7b51d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.dll",
+      "sha256": "783c33fdea4c5dc0e9c617d4d315db071083e06bd23d05c9d20d71df3ac55876"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.dll.meta",
+      "sha256": "87b75de184f884cc2edb9138108e760293dba13f66537799e535dbdc11bf8c01"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.xml",
+      "sha256": "bbd14efa3e3965b32fc8e7e3bfdf3c92834a4889609f972f8ebbfea9f6be86b8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.xml.meta",
+      "sha256": "a7c3ec3a3920618a874d56b316b015a8f990d405d217437cb19eb70b85eb47fa"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/x86_64.meta",
+      "sha256": "e13ec81a33b6cd4dbb6c6e79445abec669f272a799874740f7a6997dac692bad"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/x86_64/virtualgrasp-selection.dll",
+      "sha256": "009b1736cecb4370b1582bdb89754b5def453a07f7103b9f2427f0f65b71323e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Lib/x86_64/virtualgrasp-selection.dll.meta",
+      "sha256": "273f3e51ab5c07d723058f4352a58fa63071bc13eb553508c3f7486411f79f9d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/README.md",
+      "sha256": "1d153383240fa4b2dd7a5a250e795c4b23ec5ae13fc4abc7ac9695a44205458b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/README.md.meta",
+      "sha256": "b070e6218c4f526af9feeb43d54d81432c314f71972710679e833b20f16cd8f6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime.meta",
+      "sha256": "60fe4a792d62d87a6366bf3daf0a4d11fc126e3516c371d99d7c2d057c45e8a4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources.meta",
+      "sha256": "83c68f0c06c627cde731472e907aef3e6b259e14d10d19a602ec061d0456b8ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands.meta",
+      "sha256": "327280dc71c78ccb82ac90a9a0702a3e000f0d2387fccec564f42e5a4be2aeb5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/GleechiLeftHand.fbx",
+      "sha256": "2295f179ba329bb2e898c4cb9dbcc908d3f2bc8593a298e072c8ef63652f1fe4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/GleechiLeftHand.fbx.meta",
+      "sha256": "5858f15c39a4b9c39e0cad3d5aa8d24523b9dae1ffe81ffb0ba6c206713c2ee2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/GleechiRig.fbx",
+      "sha256": "e11794ab1ccc4d704d216d7dd1dc3501580f44d8cd06146ed0a8ac7fd674bf3d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/GleechiRig.fbx.meta",
+      "sha256": "78c9bd18c9bd9a5423a047f6c7f27a0bbe93b6805d26c934c7cd3fb467078f2a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/M_GleechiHands.mat",
+      "sha256": "269be71dcaa450adb81ce596b6166b8867b5fee4240845407595857a2cdb6bcb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/M_GleechiHands.mat.meta",
+      "sha256": "87175016cccee0651ea137de13d6cbcd2aeec80879e2e7a2518aa75d6c2e20c6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/SH_GleechiHands.shader",
+      "sha256": "3ecfb9b99065e1414ce8ba613f38337a7fb667eaab3f8feb5940dbd8d5a529b1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/SH_GleechiHands.shader.meta",
+      "sha256": "d4909573faf88fc1efbe3d927be239eda44387ef37da19b5d6094397afaf361e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/SH_GleechiUnlit.shader",
+      "sha256": "96a3c0e355a5667eb94a3f61a147ba44c6e40f4bd5cbb8ebae5feb8235cb02a8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GleechiHands/SH_GleechiUnlit.shader.meta",
+      "sha256": "05aab1a03aa668276269ff457e3189ee9425482ed4eb3c4c6b0941447e0c62c3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor.meta",
+      "sha256": "25ec989aa9a84400c419a395374dbe8725568c2400309f4a3764c878043cdd8f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/M_Gleechi_Diffuse.mat",
+      "sha256": "4576df21daabd4fa2e2bbb7ccb4af50ddfa9f40e53c61a39bd47486e945acc81"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/M_Gleechi_Diffuse.mat.meta",
+      "sha256": "8b7f1b2926bf4fca9bcb61249bb55970f6b39b04f5019759c7a348faba31a6af"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/SM_graspEditor.fbx",
+      "sha256": "a79f21080a917887f3d1ee1713eef3c57ff1c5785ad3db7a0ac0d45e150e6f76"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/SM_graspEditor.fbx.meta",
+      "sha256": "70e0c59ab2075a60c3371cc10cc343017f6c175436732a5490476f549b04f953"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/SM_recMagnet.fbx",
+      "sha256": "c409a4026bab5d8d72c24514ff46be47cc70b221e07623c87530d6e2d8127dde"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/SM_recMagnet.fbx.meta",
+      "sha256": "5401a45c8008c3aef5d5daa0e4b0cec36317fd97d24561539df1a856b0a67e2f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/T_GraspEditor.png",
+      "sha256": "9d4b4060d188a6e07e1419248737cc5208c1fb970def0bf5e14c84d785386990"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/T_GraspEditor.png.meta",
+      "sha256": "bae7ec5bd0dc0472a3617242449b3338bc0088d736489f7f6678938460b6e2de"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/VG_GraspEditor.prefab",
+      "sha256": "559ecfa98354ed1aa5f4fc405ef13f19ef066af397a9468dc335a3a907f942d0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/GraspEditor/VG_GraspEditor.prefab.meta",
+      "sha256": "dafc21e80becee1dae362eae1195bbe5a21e26b7582f80f8546ef60af994b587"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs.meta",
+      "sha256": "a9b7eea517d8eef2c23811038ef71d7c9dc4ad3f4c04b0e8d573d92aeac3971b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SensorAndReplayAvatars.prefab",
+      "sha256": "a00ee59f0b4d26b3838f2494e66da3676430497baccc453cdc4ee1f93cda7ebd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SensorAndReplayAvatars.prefab.meta",
+      "sha256": "8c70f28db3aefd2f2cbef17605c5e8694ea8d179ee24477424b1ad3d78f9ae01"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SensorAvatar.prefab",
+      "sha256": "3f44aa5c3bab8d57b7d1e293ee481ede515d01724785fbcd3ee6d388f3bb4ad2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SensorAvatar.prefab.meta",
+      "sha256": "bcb08f0e8c3a0c3c592d0daca7e935732eba2f26164f36bbd63a3042c8cdafc1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SensorAvatarLeap.prefab",
+      "sha256": "65f4da256320959cd2b83de81f80149f17abd9f40ca720414835e3affd2aa7f7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SensorAvatarLeap.prefab.meta",
+      "sha256": "7964ad124660fb67a465d9fe577ea583dde0af0c866e0f260ccf6f791e4d0673"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SeparateHandsSensorAndReplayAvatars.prefab",
+      "sha256": "14273c96f69efa471e57c9aa96b9cf9a2c52334abd160d928d4b3e3ea92d22ca"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SeparateHandsSensorAndReplayAvatars.prefab.meta",
+      "sha256": "bdc4a9ab575fa1ba7477673d293709f57741bbf65875d8d9f654963f0b1ff9ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SeparateHandsSensorAvatar.prefab",
+      "sha256": "3eeb94b4318f4ba7bcfd32dea9590f8ca7bb77f2e929c3ab95ba1480e33803c2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/Prefabs/SeparateHandsSensorAvatar.prefab.meta",
+      "sha256": "91c6ff8b4dcdebcbc09a842b4b6792b3d452f196bfb2a9e0a5aa312cd4eb1472"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/SH_RimLight.shader",
+      "sha256": "4881edf5724b4ea38eed9dadddb2296918a776ddc214be187341f59415009707"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/SH_RimLight.shader.meta",
+      "sha256": "c67014aa53cc499fc3ab6b111e794606361fd72b26f5973c1da69237083225c9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles.meta",
+      "sha256": "3f614c1fa5c932061c7eb7ff3c085d87ad8c57391e8ccf0f1df3abc7f0fd1b12"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Common.Generic.asset",
+      "sha256": "d19204f9f791158ba6e4de81a03a1e6656ca433ed8ddda9c140c8a3832e5f9f2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Common.Generic.asset.meta",
+      "sha256": "e5531531821b1e8db3e0a65e1a81cb0efa3d13ab2102e29a128d1399810f4b0a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Common.Mouse.asset",
+      "sha256": "1fc6ae43b76011f64b0b099e0629f8bf8515ff41232f0a22ce19d7b50255a98b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Common.Mouse.asset.meta",
+      "sha256": "58a9ff26074b52177e8e2cd24d23ffa3319b8b6f643c69868c073e9745ac6d6a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Common.Script.asset",
+      "sha256": "9bd44c5b9df736d86c552869d9947fc015d60499e0f1235b87f2f16015f7cb99"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Common.Script.asset.meta",
+      "sha256": "1f089f50ccc7aa9fbabe577ba52c52b639e6954c524958c101a2f5b468730fa1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Gleechi.Remote.asset",
+      "sha256": "d483229399a110090b8d2e3af17d8b244b6e934487b108756791d36d28ef29ee"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Gleechi.Remote.asset.meta",
+      "sha256": "f0e6cf165e0b360086916db3a6af519835b2f50897f130f96f4167c3016ea2b7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Gleechi.Replay.asset",
+      "sha256": "caedac37e958e5df41c19cb07a82f3d942b3ebc7661d191db913a74178a0a1e2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Gleechi.Replay.asset.meta",
+      "sha256": "5ada205b555ed992b6e7fca08c576f5454c156a244bbbdf5848c775e5864773f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Manus.HandTracking.asset",
+      "sha256": "3a157b5d24b2e7c8393f41cb613ea1af16e6f3d7d1c65c32b7f5702f1bbcd684"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Manus.HandTracking.asset.meta",
+      "sha256": "04cb142b5ffdf9700c79867f44d00a14a9bdd86c9aaf2b0ac3d6fb93a19b47a5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Oculus.OVRHand.HandTracking.asset",
+      "sha256": "040a6eb5293a235ded98a9bc6729ab3c37d16b28441e1674df84f72dd7adc4d4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Oculus.OVRHand.HandTracking.asset.meta",
+      "sha256": "1819827550133e82d7dadb7f9864e481ecf7ad7c0f6a76164652bd57b0af58eb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Oculus.OVRLib.HandTracking.asset",
+      "sha256": "e41727eacfcd1927a09e84b56e525e0d165e246059ed4fe0ba0fb41957a06e1b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Oculus.OVRLib.HandTracking.asset.meta",
+      "sha256": "41cdd2b1dd4726815c0646855c6ae1823d6f538f0e28d6222622e207e9178219"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Steam.HandTracking.asset",
+      "sha256": "a143ffb3c1f3ffb7320991bd1acb5f9b51088a437b6abf97f76b412cd7f952bc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Steam.HandTracking.asset.meta",
+      "sha256": "59106d59d7f2b6e9a394e51438f07adaa1052c00eaabaebe0bc648aee2f41154"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_UltraLeap.HandTracking.asset",
+      "sha256": "ad0077378a11ad26b8955d6488d1641fec80469c3dc20e056ad1ff6bb6c4b425"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_UltraLeap.HandTracking.asset.meta",
+      "sha256": "56d285d70ee7e24b7ac82c3707679b5bff8327625680eb83e215dd9d916371b8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Unity.UnityXR.asset",
+      "sha256": "dd38b8c3662739e9974a07915482664403c39e64435a1ab8a8ca4e0a7af4c5b1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Unity.UnityXR.asset.meta",
+      "sha256": "1d99ff6f1932b281b6303707c2c989b6b0ffabb955456aab5234adbeccdc42b0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Unity.XRHands.asset",
+      "sha256": "bcf67c9684450c364cb72c5410ced3da2459713e71d873eb4a3000fc6474ce07"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Unity.XRHands.asset.meta",
+      "sha256": "5d47d25e1d76df61a3166463913984a612bebe5f98667689a0d5cdaa41241dce"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Unity.XRInteraction.asset",
+      "sha256": "e970402456bd29808937ae0faf49a5f44a7830018cbe0749b8544e486d9d7aa0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_ControllerProfiles/VG_CP_Unity.XRInteraction.asset.meta",
+      "sha256": "234ce35985cd114062ef5f8b38dbc8a6f1677bb257247a53f20cc1221b085ca0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles.meta",
+      "sha256": "2b12a22e181458bba0f326d2dc4758013ac6a67c50ce5590836605239e470fb8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_GleechiHands.asset",
+      "sha256": "520751267eda316cd4967abf9259f20401d6da3c0bb3d087a588d479011ee623"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_GleechiHands.asset.meta",
+      "sha256": "55b2d29743f823db7020385916c083fabf5f2a5b11a0d178007bca0e99b303a0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_HandyHands.asset",
+      "sha256": "3a300fbf26e777c839b87f38c77af4f9f42c533bf7b08468474c54dc416424ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_HandyHands.asset.meta",
+      "sha256": "8f6b201e2b9f5c73958b8f9612bf5ea4fe91c8fbf31d4f32dc1d52b9eb3398ad"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_ManusHands.asset",
+      "sha256": "b5f41baf1277d2ba5603631e3e55bdd060760b87ca5e268d6e9b9ad8cd9171f1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_ManusHands.asset.meta",
+      "sha256": "e0cf5abfa273bee4abda7b783b74a85877f17714e5ba7057b4196f3cf45f6bb7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_MixamoAvatar.asset",
+      "sha256": "9c9e585f33124cd84e16028b36f2607ea2cd02bb515c69f0a55b98dc9dcb834f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_MixamoAvatar.asset.meta",
+      "sha256": "2c38955da02a9c86e516f35a13e6729931e64a326460de8940df5c86f8906008"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_OculusHands.asset",
+      "sha256": "74f267560f699149100d5e0cd6e6c226895fdc3cfaa1d2ad232e26f6c735241a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_OculusHands.asset.meta",
+      "sha256": "fd26d8c8798e3c37a3072bacbbb3ec9ce3b195ca06b80e71339314136afa5439"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_OculusSingleHand.asset",
+      "sha256": "7f63c4ada5a7d44c07782bdb3a0b492f44e6d7c149e14146705e4fdf73e577fe"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_OculusSingleHand.asset.meta",
+      "sha256": "bf843f78fed0c442ca4d8ab11c68272f9146275c086aae42b3c174a47d382cd7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_SteamHand.asset",
+      "sha256": "de46ace49dbba0c68f123d95582d59210a0383bcbbd287948c14e041eed4986f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_HandProfiles/VG_HP_SteamHand.asset.meta",
+      "sha256": "32497b4c4e25e5aef4d6d2b9d06d339716d776a763626c7abac6c92b8821d9fe"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_Utility.asset",
+      "sha256": "60ead17509370779e116e24239d9d494095cd23f391426cd5c2badd31ee2fd4b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Resources/VG_Utility.asset.meta",
+      "sha256": "dcd798335229bec2eff4826edf1d8f852718cce5133f6cfb848512f32abde1e5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts.meta",
+      "sha256": "6dea8fa6fa8503708c5b4d98e8b46d562849bd1a45fdb21d1f04b250cf035db5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/Gleechi.VirtualGrasp.Runtime.asmdef",
+      "sha256": "ed63db5d7a3897c4db9f7492cdd6a977f39ae91f703b85f7d5405ddf4618226f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/Gleechi.VirtualGrasp.Runtime.asmdef.meta",
+      "sha256": "d62d3990178ee92a143da7719d0c6fda862456afac3824eb1edf6deaa0c6faef"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/MyVirtualGrasp.cs",
+      "sha256": "f0698eef5b49c4cdc3fb2b472b09362356e9a1337f53a3f42a0ff84fed03e79a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/MyVirtualGrasp.cs.meta",
+      "sha256": "ba414aed1b3aac33ce9dc872a98ddb0f1a08da8cdfd1e78de898bd0527f8a4d7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_AnimationDriver.cs",
+      "sha256": "7d616a053f1aeb637776b20b95325f1444126a2ee2e55ba4eb8ebbe4138ceb75"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_AnimationDriver.cs.meta",
+      "sha256": "e7b1fa101ec49ee7b2ce5454155181dc7dcbeb36001db6b82c6fe3d70fc771d4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Assemble.cs",
+      "sha256": "4fbaa7c6d6f316d5c1539bd4e4e5c1f508a25c9eb3038c593a867ff2df16dede"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Assemble.cs.meta",
+      "sha256": "36e1251b3c3b5291b7fcadf2d699120795e00c5345017886a05e6fa91881e620"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers.meta",
+      "sha256": "ad63c3ada46c1c0aeb3fe2dfa78879c9d0b2deb6b7de95c163ba4b8dfb1aef9b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Generic.cs",
+      "sha256": "f4953276c496fa35a084d2b5dc2563e6c0289a3771aa23008f3c962009a6df8c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Generic.cs.meta",
+      "sha256": "ee71672d30d398cf68ad9f8dac5fa32b201ac3436b65d544eac12cfe0fc6d315"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Leap.cs",
+      "sha256": "32b86f11c2df4a66d8f84bfe2728eec00aee12daef1fd7fbc74317c162d437e1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Leap.cs.meta",
+      "sha256": "e34340844527504772cc3714642266a1ce63c8d3905684108e2d12afdeb5a8e0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Manus.cs",
+      "sha256": "d3d4e0b4fc02ab6fdf68ecc0aeb843494e77fe60124d9ce0701e72dfd0b88111"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Manus.cs.meta",
+      "sha256": "feba8d3fd82bb40e36de5ec43a4bc63162d8441b3923fd561e3358e874725e7b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Mouse.cs",
+      "sha256": "8c6199662c865c1b3e40bbeb8b6f0b1958da6823bcf3df14eba277bb62643963"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Mouse.cs.meta",
+      "sha256": "472e584bdec9909f8d1ecff48a8358d04f506d8e19399f0e2e0a280af3d040a4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_OVR.cs",
+      "sha256": "0f25299283f4202f6ed63db142d6be253a96cb07260a328d1fc5b41582df8ac9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_OVR.cs.meta",
+      "sha256": "1caae2c099c3070416113ff5b8e89eb712c652056008afae284d978e452845c9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Oculus.cs",
+      "sha256": "d5806e2d951bfa6e12a825d3a03ed646d7e29594615f805ee397e2797807b91b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Oculus.cs.meta",
+      "sha256": "967889fa430c1d1299573b2b70ebdde1072e5b93732e7fb17ba3a5944b95252e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Script.cs",
+      "sha256": "27f89291bdeaea190788fc317aeaeecc5bc88e292aa2f8a06392ffedda9eb4a6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Script.cs.meta",
+      "sha256": "1966cb05051204381a8172c699edbd541dfa977b0d510d0f25b5d58588aa7062"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Steam.cs",
+      "sha256": "39ffef80d7e90a1567e5cfb20e2299b2fce41a95d13cbb4fd2715c77c81ab5d1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_Steam.cs.meta",
+      "sha256": "712e10d3eca071c43b9fc16dee72b6c196eb86aeaa066e4a7b3774259d51aa14"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_UnityXR.cs",
+      "sha256": "71e6f359d1519389210be8cea669b6b956485e858b1ad3e8460dd0eccc7a9e55"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_UnityXR.cs.meta",
+      "sha256": "b25b864f4cb6dca3cb5a506eee3086ca61a8e8f1efcc6d03cd092550bfa2682f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_UnityXRHands.cs",
+      "sha256": "96548c00cde8071a06fb923ebe8e5c8ea24ec749b85a3356acbf22339e61d046"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_UnityXRHands.cs.meta",
+      "sha256": "3b70eabfadc05bac9629326023c50e3fbbd85fcff379fd7b65435cbbbb03b9c8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_UnityXRInteraction.cs",
+      "sha256": "00c4baad66762159e65db6466aebd63c5e819a519ea3e20cb2820fb8f4068679"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_EC_UnityXRInteraction.cs.meta",
+      "sha256": "576c30a681818af6710aef63e0fa0f22b78f597d27172118feb469ef95782145"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_XRI_Entries.cs",
+      "sha256": "ce5fee09db810601e89ec47a269e0b6c7c9a4a11a715d442a43bdca2277d7409"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ExternalControllers/VG_XRI_Entries.cs.meta",
+      "sha256": "3e1629f7dea22bdfb57963163363053c835c63f72108ee5728ab8187ab00ca40"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_FingerAnimator.cs",
+      "sha256": "4359973698cbd620fc67581f8539b9ffd7303e2310bbf3b7bb0fa9b356387f5a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_FingerAnimator.cs.meta",
+      "sha256": "f1740ada17226b53755db7c6acf2f517f86f77c6195fed403729f4b144121f85"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_GraspEditor.cs",
+      "sha256": "92f8748d7cbad66b8c229c9cac3fb1f1dac4536df611901cb95f7d3564b98097"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_GraspEditor.cs.meta",
+      "sha256": "409d33fa55c823a0d9e73d5ff2225257f64637ce97f7289dc888de7c9d4f3e82"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_HandStatusDebugger.cs",
+      "sha256": "8c3ba045897ee57062494cef33922dbae66b8f9cf0497e87e6a94e0c32cc129f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_HandStatusDebugger.cs.meta",
+      "sha256": "ad9647e187dfc0aaf4be4c0b45df048ed16ceaec888e7fb49e57bdbd4dc563f7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_HandVisualizer.cs",
+      "sha256": "b6dbc566f560f720e94c1a4ef2040727153f5f53381a3f2e3dc848393ba33ab0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_HandVisualizer.cs.meta",
+      "sha256": "ea66d717310044393d2603fcb9c049131aba0a6f5ec54fa8f71959a377de72e6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Highlighter.cs",
+      "sha256": "16d574c74844cf567f303caaa52775d83b8717e902aac4dec5240a7b1dbd03fc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Highlighter.cs.meta",
+      "sha256": "200d0f15cc5854d8a8ccdf8a3a88395d73d9c07161f761181d90f80cfab2e90d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_HintVisualizer.cs",
+      "sha256": "ae2c7bda28e04e73194987870576454dd05ecea60c4a17f50b46558502cdf671"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_HintVisualizer.cs.meta",
+      "sha256": "74ecb8a353e2ddcada30c97d56cb05b86dd8fd527e13f9e1d7cd22a1a23f149f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Locomotion.cs",
+      "sha256": "3d8d11893feb3daf2aa79a1c83d11775a03822306412161d40f72a9bc11d1b38"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Locomotion.cs.meta",
+      "sha256": "7a27fdedc9044f5be1cb66da69dfaf7d0f6abd9b48c2e18a7c4cf0bd288e2e19"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ObjectAnimator.cs",
+      "sha256": "61fd60d94d2bb06e01b24c08b9ee82d28785e169b549bfb90da88ca01b93ef93"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_ObjectAnimator.cs.meta",
+      "sha256": "ff31742601887a53674ba39ee73296b4dfb002a829c6d7c88664e9b143037eff"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Recorder.cs",
+      "sha256": "cc95f7f5fac1bc5f04fb31193bfe45ed39c9bb77c78ffd12788f7a9e553d5c3c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Recorder.cs.meta",
+      "sha256": "449693ba370cb7c9c957ed8ac566a695ba0ac011131b199a7379c812f5292617"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_RunTimeRegister.cs",
+      "sha256": "6f9769657afc78664065e60439d6fd39ae16f574bb853c9aa05b5eb2df5693a7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_RunTimeRegister.cs.meta",
+      "sha256": "833b5acdf56d79531095b62a27fc3873f1b0795c2d49c7d6a1d7be58b210f5d8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Utility.cs",
+      "sha256": "c15ee4b1fee1439f6e6f4811330c50dfa74cc8ff70aa00bf84b5831ae641cfdb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Runtime/Scripts/VG_Utility.cs.meta",
+      "sha256": "4ff5f1ed6c458869963987217b14db26e4c5f23a4e18c0dba740ae5665fdb352"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples.meta",
+      "sha256": "6b38183e7b88db29014589593aefb6b6a1fcc9840bdae424a188317b4f8c378c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding.meta",
+      "sha256": "a382f4dec067c1510d50252a9b932bd5d65b3a678bdaeceeeed8a7b5a00441b1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Data.meta",
+      "sha256": "5934e6fb86c02c7ee69fc3f9e178497f4311239490dc99cf59e6c980aa984109"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Data/vg-grasps-onboarding.db",
+      "sha256": "c5f221c475f2de3e5100bbbffe10a3f4ac249cd751fadc434da1fc9ba2de51ec"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Data/vg-grasps-onboarding.db.meta",
+      "sha256": "71cd9d99edbdb3eea9802597adf00c2b49c480b237fd57a60937ab573233651c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials.meta",
+      "sha256": "9642d40a5ef9ce0d7ee6de1b788f7e2622fcc3961ad5d88422df59ef6dbc0c4c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_AlphaBlend.mat",
+      "sha256": "b434ab2add5de21fdbbd2a71903bcd6b8d2a21b0f0fed2a4bb3c352a9275136c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_AlphaBlend.mat.meta",
+      "sha256": "6234b43687fe2eb0b057925e70a4080b0011f94fe2f54c3c6272c25aa815b73e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Apple.mat",
+      "sha256": "60d250b90abee579a0b555d25824775c4ce745180d2641813923f9f06a8a7c25"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Apple.mat.meta",
+      "sha256": "335368d4628948ef5d2d0677ffd67c290ff447558d0481bad7513a127e74915f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Glass.mat",
+      "sha256": "0726e5a2f93defb769853e8c63ed9b0a82b79a057559790708566b10a3ec53fd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Glass.mat.meta",
+      "sha256": "b6945378f5b3c61f2ee6012c076109147443f0397d4cc307283c5ee4fe6470d1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Metal.mat",
+      "sha256": "9a1f034f5e3ee2a30c8ab0338b0a806b77091bac1ca890688903c2e2807e4998"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Metal.mat.meta",
+      "sha256": "1818d49ce61a62b797aedc82ae9ef3b91c7a733608ae6dfc788c22593d8cbcab"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Target.mat",
+      "sha256": "0940455b093dc37f40dad97ee5e6438a9377c4f443a19805159e330549358313"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_Target.mat.meta",
+      "sha256": "9f32945c71111c451d2eb9370a759d102f7f5b48962e745e2f661b199f2eead3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_UnlitTex.mat",
+      "sha256": "f8a4c6f3f52cfd46a9eed7526fe2e80f292da0e04d7d0e35e2143a14fa5456c0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_UnlitTex.mat.meta",
+      "sha256": "2ccccfd9adcf80faf2b52b7547205a9b93b64ed00e2b9b5d6a33a1203b717fae"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_factoryA.mat",
+      "sha256": "bc762f386f6cc529684dbcdf4197ec59fd92fe1375080de4f679d523ad50f092"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_factoryA.mat.meta",
+      "sha256": "b55b085603d2d03949839796f5bd2cdcabf138ea9872235c5199a4bae8dc9b9f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_factoryB.mat",
+      "sha256": "d6ba9b3d946cd137d187aa0fbaf666ed9fbd109839de5ca358375c1271c5ae3b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Materials/M_Gleechi_factoryB.mat.meta",
+      "sha256": "2faa631aab1d8416903624ba2ab8ec5d028780f2c088f8b39cd8e8e863ceca00"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes.meta",
+      "sha256": "e8a5d3634e5311cee72440f55a4c4a27acee484f5abbe2d8258173b36eb8a32e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Chain.fbx",
+      "sha256": "e8db1d34c18b93328d3ce18c7b5b22d65bf6b4475b5faa4892ed27ac75caa8f2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Chain.fbx.meta",
+      "sha256": "09c403fb03b81f0ca3be20c8b82c2c84ac27ac806dd4bdfa5e6de420a4f1e86e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Factory.fbx",
+      "sha256": "5293b41d82daaa826f250f6c688e78e38c9306ad0a799cfcf5a617df831b35bf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Factory.fbx.meta",
+      "sha256": "11d917fc0d1bad9de46e7d6d80bf90a22a0ee82c40bf0bf81035eff7958cefad"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Pilers.fbx",
+      "sha256": "a4532641e77150e758230b7e759eb4ec0f3be9c55a8a726f0f6f20448923410c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Pilers.fbx.meta",
+      "sha256": "4b34a9b8c6c5546da9c64876c98e1f6497d12932b3ac1cf379a3175e129ff2e3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_PrimitiveShapes.fbx",
+      "sha256": "27d692d495aabfdf630b256a1a418e9fa5007b2eb2bb95ea2c2d31586324c821"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_PrimitiveShapes.fbx.meta",
+      "sha256": "40731f46467a0f524768aa574e3597ba892ff9e695a94199755d38d0f0fcdadb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_ScrewBox.fbx",
+      "sha256": "eeff0e4baa55b04749f45d2770ebd4fd20444694398b152a4d7c6a1fc12ec7ec"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_ScrewBox.fbx.meta",
+      "sha256": "23df9ef811e7cc8f0041a0f1ddc550aeb2ec1ce698a179216ce17dc6bff592c9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Screw_Seat.fbx",
+      "sha256": "502e62e671625542d2138a0e4923b66aa485b3b455e2e66db4c005d16b17f678"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Screw_Seat.fbx.meta",
+      "sha256": "9188dd16aab430930cbd4a4c63b7bd06c5ad29e7c5b4c03bc69adee6f8a0760e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Screw_SeatDetails.fbx",
+      "sha256": "f09f499e4d855e985cb6d202dd0d68aa7b636408128b14b078da9dab0222792c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Screw_SeatDetails.fbx.meta",
+      "sha256": "10ac02498c1bcb76ad34cf29f426e96aea09d3866978bd70a8f36e8ea1bb6936"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Screwdriver.fbx",
+      "sha256": "705ccf4cd273042eb172e34e6dc7838011f4f9316a058352b57796116f1f0b02"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Screwdriver.fbx.meta",
+      "sha256": "72c0cc6ee603cbaf93b0a8549b9d9326397ebc7f69baea4e7df5460d87e35a6d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Torquewrench.fbx",
+      "sha256": "0d8c7d591d884ab107c1ca92c8bae43d81b521d22565bce26b831f150a26c14a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Torquewrench.fbx.meta",
+      "sha256": "c1cd380e77e06c90b919c6d0d95a793932d08905e6dbb2d393dec44abbf56283"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Valve.fbx",
+      "sha256": "8433b21b024f6a214dec11b7dec2e1911322886d4d300c719efabcebccd7fbd5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_Valve.fbx.meta",
+      "sha256": "f4be1d6125e369ff689e79f9ae09563d9c24536c7ef353bfd1a567b589d66469"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_apple.fbx",
+      "sha256": "88aa7d0dcc188f25a7edac66bfeade30529886fb224d2dacd4f92222b83296e4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_apple.fbx.meta",
+      "sha256": "d5dd80b4b9b7933b009892d31d2290f87512aeea8d2f7c08db914cf45954aae4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_bottleAndCap.fbx",
+      "sha256": "9ef5ea0675055ce4fd256e99c244c7218bb39accede967a3f556277d8d57e6e8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_bottleAndCap.fbx.meta",
+      "sha256": "73eec6f5978443baa201d401c8348e65eff7c8afc258b70cf5e6eab9118deb1d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_magnetBoard.fbx",
+      "sha256": "db7c3648a00d9f3fd2d9aea6c43755bdb98a8fb8b589676b443cd46f07757ff0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_magnetBoard.fbx.meta",
+      "sha256": "11a9e55b69c34803e7842e2da1a7cd13b3269574281b51ee58d280e487f1c209"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_plateSmooth.fbx",
+      "sha256": "89742067876520341eeb347e47dc98625d9a2913462589c5dafd9f7a4af29c6f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_plateSmooth.fbx.meta",
+      "sha256": "6bb1b8a1b3302a9952c14a38de6d703df3ea04ea7ebed62749c0d9f69bdd10c4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_powerButton.fbx",
+      "sha256": "71909f2d21a86e538ba5fef26c6d540686e687c78afa501463e198ca9daea707"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_powerButton.fbx.meta",
+      "sha256": "6960173cbaab9242e69b50e33e74280d80303525ab3d9b8a2782de9983067877"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_radio.fbx",
+      "sha256": "6f66eb536de8e307100047d2c5b301c9781043ff3319905df5b99a6dd6bbef6a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_radio.fbx.meta",
+      "sha256": "cf396f167004a8b3ca9e8f9252bdeede10fe32aae6b3e48290283edcb3f97fbf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_roundMagnet.fbx",
+      "sha256": "4342c44cbb89f2d161bbe8509f5006b6c5af5ecf6a9a27711716d0485608eb77"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_roundMagnet.fbx.meta",
+      "sha256": "5f52d44469a402ce1aeda5975410c37a3c75e920243e2ef08dc2c6cc5b88dae7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_showerHead.fbx",
+      "sha256": "4765fd5fcdf16e212ada5549a9d1eb5849a756e903ea4409cf973f5222312c61"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_showerHead.fbx.meta",
+      "sha256": "9736de9ab9d40cb1b44c7a4e9546fda9c3d2fc7df16f9f67e74a6b8a8355b8cb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_wineGlass.fbx",
+      "sha256": "cf582febf581b7de2e07b32f104083804ad24cf146e5cdeb005633ab33ad7c69"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Meshes/SM_wineGlass.fbx.meta",
+      "sha256": "0dd29be106e01befece724df2487e263200e491ec218649d525b0b5475c1aa62"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials.meta",
+      "sha256": "59b1900a04e48fd7cdfb7b1fe03cb408e6f5725bc7da2dc5546fdd9ee3093a47"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials/Bounce.physicMaterial",
+      "sha256": "36b2be4e5274141a438a188dfae36ce508aedf1598c052aa04b474a76d757b00"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials/Bounce.physicMaterial.meta",
+      "sha256": "d23259166a280c4c383d8d65253c0a30edaff96da6ae7754c5c9c5ffa08a9c2c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials/Slippery.physicMaterial",
+      "sha256": "efa3127396f5943d103ed63e795329f6f5b2fa5fb4013859a05094219133672b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials/Slippery.physicMaterial.meta",
+      "sha256": "316d2f0d4d23f821ac021d1478d093877e18106e82d43efb0a0f25ab1d9c847c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials/Wood.physicMaterial",
+      "sha256": "ab4d30821a0285f8f2c9730e9dea9dfa0063149eee5c2a923bd41a37ecb793bf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/PhysicsMaterials/Wood.physicMaterial.meta",
+      "sha256": "9048e04132052985d1c30eb21071a92f974969c1c77f7e5e26870e3385c61294"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs.meta",
+      "sha256": "4502e471ce70317c08e3a23fb0307d540cf77c40d868837fb69ed79dcf1d43de"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/FactoryEnvironment.prefab",
+      "sha256": "36f4285f4ed2972ec0abd40aca32ef0e3fd093631f43e4075c41fac30a9c77b5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/FactoryEnvironment.prefab.meta",
+      "sha256": "a6cd5fb951608dfb26c25c6da073a19724e5b9cdbb14d4d21dd05de73fc635f1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/apple.prefab",
+      "sha256": "45eb41be9a849e3b11b35c02b6925e618f50ef9249d422cf1868e673647c0c78"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/apple.prefab.meta",
+      "sha256": "1be02ea4234e1d927d06c0732e04a162ea699e9caa1cf88fa9e1a0b5852af5f6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/apple_jumpgrasp.prefab",
+      "sha256": "abbea99e3ccb773d144fad6ca6551b4a06b6e84fb6bd37fd2dd35ee7b7244fd0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/apple_jumpgrasp.prefab.meta",
+      "sha256": "ba8dad1063865893e5d5d56b5da8eed36713f2aa6f97025ea6618522ea1bab3b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/assemble_object.prefab",
+      "sha256": "e3455e1b27638c858044a7e09681030472157cce81baed070fca0b16af1e67e2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/assemble_object.prefab.meta",
+      "sha256": "6c813dd393fddad65e7d0dc21716987f04ad024e8c72516124dbc490c82754e0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/bottle_assemble_vgarticulation.prefab",
+      "sha256": "7c1e13c082da4f3136e2c6b245d815341be28cba5ae966dfadfb620708d03f1b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/bottle_assemble_vgarticulation.prefab.meta",
+      "sha256": "4826dff95a42a2dfb2c8d9d2cb2171026ef3ae680238da876223c12d7c55220e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/bottle_assemble_vgarticulation_physical.prefab",
+      "sha256": "c41c4a77110815725481ce8a14860c7dedf67e5abd5268dd4713b515c39a4dbc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/bottle_assemble_vgarticulation_physical.prefab.meta",
+      "sha256": "cbeed4742cfc41a6fabb5f590bc98e01c20258f9fb39017bc66b5ec14c825038"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/button_indexpush.prefab",
+      "sha256": "9b2ee1f0fa23fd77dbd39b49d11df887b4ae2e5296130ba7578587dc89151dac"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/button_indexpush.prefab.meta",
+      "sha256": "a5e6c1e64330664863f2485dcc350c3a3398dc646c6b1ce43e316f93b0df5521"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/chain_assemble_vgarticulation_physical.prefab",
+      "sha256": "ea27439d07a4b46db030b5fd9d1bbefd50ec18fa8366d7c17cb61a10b9556252"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/chain_assemble_vgarticulation_physical.prefab.meta",
+      "sha256": "18c148b04f8d0be4a02f1b90a3af279145287583e1685b4b35ff2f3836493554"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/chainloop.prefab",
+      "sha256": "d45984faa7f45ee05be73481c2d8fd1dfc6f2592416e6d03f66de83a779fd9a1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/chainloop.prefab.meta",
+      "sha256": "1627247495d09f02d41ee3c3b7edd27931630ed9a473f4fed9db7bfc260abbcc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/chainloop_assemble.prefab",
+      "sha256": "0519a5716d17634732e273f26d05fdd1521c02e46508841b47400eb1c6eea6b6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/chainloop_assemble.prefab.meta",
+      "sha256": "50446de1ce9a0a645082725b308ce65e85daaf1f90b543f811a1cd769e722542"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/pad_with_planar_button.prefab",
+      "sha256": "b9479d0df9173339ed79f5fd1da739ec49bc6c2947be56458f3a3d2340b5646c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/pad_with_planar_button.prefab.meta",
+      "sha256": "98b823d6e5ea003f6bcf6eeae0c56979f43e353cc007191005dac2f728a5fe3e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/plate_container.prefab",
+      "sha256": "3666df6ed4304ab2a7be01218f40df9f0297f3fb5296cdaf85a53ce4c366688c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/plate_container.prefab.meta",
+      "sha256": "782451a369eae52199f3fd2950ecd4a18f111694dac8f23a0dd44fb4c01220c1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/pliers_animate_manipulation.prefab",
+      "sha256": "75683739cf6269b12d2472e8cf1139bec6ce2c82282d5a5854333ea887c59edf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/pliers_animate_manipulation.prefab.meta",
+      "sha256": "0da8caefb6b80bedb965d85e87a7de2637a9d5211ede4a7fd2ef6649d982895f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/radio_assemble.prefab",
+      "sha256": "496f4a107e91264841309b6f2a74ad1594d7a4f785ff923f8d9331f8c10d12bc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/radio_assemble.prefab.meta",
+      "sha256": "6aaa21efbc3061e7b8ab7ee34f0595f765d2a1e5237e36f78a552c861ee6211c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screw.prefab",
+      "sha256": "f5ba81fa1ecd64e1365c09b515566a00c97d157571b9a5f425c1776e04fc465a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screw.prefab.meta",
+      "sha256": "95bcc966c593bdf02118bf61184f853c66fa075d0b4635cfde56fb3556d62d70"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screw_jumpgrasp.prefab",
+      "sha256": "12a02dfb6290d9e7bd3ca7cdae6ec80b51287cefce2ca9a91e4e3fb27395fe2b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screw_jumpgrasp.prefab.meta",
+      "sha256": "17ca0729b4c6a3c0735584683eaa71d097cf9ce8db097c8ebfe3951509dadb83"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screw_jumpgrasp_assemble.prefab",
+      "sha256": "84d621601fac1c4057dae521e2a5eb8894e7bf79c6f031d04f646ada43f9ceca"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screw_jumpgrasp_assemble.prefab.meta",
+      "sha256": "3927350dd4015c42bb3c627682e212583828eed9548b6af8e62be874e90e9244"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screwdriver.prefab",
+      "sha256": "8e772e9a0a964b9c2b0d71fca68654acc9470962d405dfbb11d2aec6cf69e45b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screwdriver.prefab.meta",
+      "sha256": "d573f87ef2e36b6dc342fa75a66a42e46518ad5a33486ed541e68df2de04c975"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screwdriver_assemble.prefab",
+      "sha256": "e44bb373635c75af42221c8ab1c84d3ac5349129b31a00723c6c79de6f12ae48"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/screwdriver_assemble.prefab.meta",
+      "sha256": "66eb33fafae15bed93c0276b8b3d36b1502947fe65d5e1c46f8a10cfab0fc1c3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/showerHead.prefab",
+      "sha256": "dc90a49f50811e1969601baab5c981c7965149748035dfc1cb042df0377aaaa0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/showerHead.prefab.meta",
+      "sha256": "e20f5b4fe0d4000153b5c948ec6fdeb64647b331f6d6e4e131cdc26aebeb0505"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/showerHead_assemble.prefab",
+      "sha256": "dab292e60218187eb6662071401595b21ad870113b56dbb8bb04a5aa0161e7e0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/showerHead_assemble.prefab.meta",
+      "sha256": "2fad69257a78715cf97dc51cfa997fbad3ae592119470c22e50dd4385ca226f0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/showerHead_jumpgrasp.prefab",
+      "sha256": "9c5f820e7922d0f803ab92a3e583fd2c7a35c6aaa02338a090cb004d57bb2a10"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/showerHead_jumpgrasp.prefab.meta",
+      "sha256": "7fffb8ec3328d9e610f2d792aed873c55dadfb5f0d46d8decb916ba1fe57bd51"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/symmetric_assemble.prefab",
+      "sha256": "7b18031af3e88a80d6a8ef04fe2dc2f0cdd630f0b9faff46c1d9e98ecd2c8d19"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/symmetric_assemble.prefab.meta",
+      "sha256": "48d4e7defbf898a0821e8045c8c0a131721b4653727d1f44abd6498a49c9edaf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/symmetric_assemble_curvedbar.prefab",
+      "sha256": "989f3ae3491d3c42f94f87a8ab77603a27d56ee3dd3d9f33dbc02ce05f1c90be"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/symmetric_assemble_curvedbar.prefab.meta",
+      "sha256": "eeac97fba074615289bca2d1f9bc34a7f276b03caf0a8ac23ceea84c1a2aade5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/symmetric_assembles.prefab",
+      "sha256": "5d7f8bbaa6fda18594d0d2fbf23d86a1f72fdf81bc6bd9be536b86674429b4ff"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/symmetric_assembles.prefab.meta",
+      "sha256": "2c6991f3cafe0a09e7b4c988824f48cdab540ebbac59768a5de579ced69a77be"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/valve_assemble_articulationbody.prefab",
+      "sha256": "30521ce19f9634a8c94b86549cf1abe2c24a5a7ace60153ccde70e9033155069"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/valve_assemble_articulationbody.prefab.meta",
+      "sha256": "33241d50fe3d68ba88ccc32ca754483d13de48aec3cd5d29abf09e89cffb8efa"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wineglass.prefab",
+      "sha256": "45342f0ea7fef747295e699ddb087fa0e90481ff6c4a4978ea5f54ca64a1a4e0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wineglass.prefab.meta",
+      "sha256": "86d6571bc72917115f8fcd8a9c5bbb4c85fc276cc26f126b08732f77c88382cd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wineglass_jumpgrasp.prefab",
+      "sha256": "81d7ba697c0baca1808b2977ae9fc2ba51085c7f911525530578b04d6a77e21c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wineglass_jumpgrasp.prefab.meta",
+      "sha256": "778dc1c7e96c8f0290427b5e0a5283b0052e0fe2dfd5403b7f27c96808fe060e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wrench.prefab",
+      "sha256": "647c497f68f2837f0f025f73a657e600019a9f2d7b60e5721c2ec02f10a2fe26"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wrench.prefab.meta",
+      "sha256": "d69963975abebe0bd181ca0893271460a8899e9c80459f8edcefe894bf775d3f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wrench_jumpgrasp.prefab",
+      "sha256": "71645810b3e47aac09993886348a6a6c6a9405025622a7f804c7c634d194d1e1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Prefabs/wrench_jumpgrasp.prefab.meta",
+      "sha256": "a061a31ec38896a2c80e350a72580e6b6c31dc001e5c6370821f38703fd4a919"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/README.md",
+      "sha256": "135a9ac7c0ea1d52546881805eb1cbb57f73189651bdad54811a0049856ccb60"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/README.md.meta",
+      "sha256": "ca7127bbe4a99cfa7eb9dcac2c7b0af70b4cf8c6c5db2065b9e0a0335108c8b7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes.meta",
+      "sha256": "fdc2156b6c17ab582b0eedfbc2fad611ecabb34d731513ec304380529d068299"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding.meta",
+      "sha256": "4d4cd970abebb10a56ac8a90a3292358b3bdbd55335834e65967a3f1e01a356b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding.unity",
+      "sha256": "f0c4342f04343d5782a207964a1d5c70ea44930c2828148c9cd59508e1749511"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding.unity.meta",
+      "sha256": "d9134e6e08d5ef478a78f882ad763b566bc0ac95455ebdf6f02bfd346d918e1d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding/LightingData.asset",
+      "sha256": "6bbe33921222c02f3f9ebeeedb7f2ff2a7f9fb14cda6d60add00535f62697a32"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding/LightingData.asset.meta",
+      "sha256": "3ffeb19e8b12f6ef51228ddef847b95c7a4958544927a9814435dbff58e1a0ff"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding/ReflectionProbe-0.exr",
+      "sha256": "336a97956edd6ffd3f4477a142fa74594676e5f0ebe954f9ca042ece22a83104"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding/ReflectionProbe-0.exr.meta",
+      "sha256": "d8906cf32a195ddf2ec2291743bf7d29c061bb716360ca232565e9ddd925df84"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding/ReflectionProbe-1.exr",
+      "sha256": "844922b87d22ecd9aca91245610bf6ed0cbb819e7b30d14e9c74ee05347f06ec"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scenes/VG_Onboarding/ReflectionProbe-1.exr.meta",
+      "sha256": "b30fc3675f064b30e47c5bd48aa916f6d1ad234b32789183f9f1138c99158016"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts.meta",
+      "sha256": "938aeb22c5302795f9b1cdf75829f3ac02ae95a36382e97ae9ebd39736ef9632"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/AssembleArticulationBody.cs",
+      "sha256": "dbba09076254dbfb9ce8d657782728b7b0e1532f75a7f1e3d8c7ef78defcbde1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/AssembleArticulationBody.cs.meta",
+      "sha256": "bdee1617502423ec2294b79472a6db575fbeef954780c7cb394e88da1a84c8e2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/ChangeSelectionWeight.cs",
+      "sha256": "62b77ec16d16a57cf5af3de44f6975a9627bd39f57e6b8ce274ff660d2b7c6e5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/ChangeSelectionWeight.cs.meta",
+      "sha256": "a60ae2d8b7ad31029f06e8e7b3ee8f23bf79bace577ce89ac09f038b92276ed2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/Gleechi.VirtualGrasp.Onboarding.asmdef",
+      "sha256": "0d4fd2ee3f3125d2519173187a2af2b495235fd992a417b4345bee72fd816259"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/Gleechi.VirtualGrasp.Onboarding.asmdef.meta",
+      "sha256": "4a6c6bf8b8bbd9a84029ec9e4d7a8a151c14b9df7a24447f7e68cea6b3d1169f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/ManageContainerObject.cs",
+      "sha256": "c4071d2a86cc528af9a1747808874c0660d0ee7d9a7b5c1ee51676b01c10112c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/ManageContainerObject.cs.meta",
+      "sha256": "38cf2ed4b1a3f498ad0b013b5e995d22c8361a5d52e19113b8615f6bf39ffd66"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/MetalImpact.cs",
+      "sha256": "8b73c3136f6a477f8d2f0816cb8eb722166efb85a3c14bbdd5e067109b8cb4fb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/MetalImpact.cs.meta",
+      "sha256": "5bf5dd7a3eee2196aa1f313be0560b604990d0d78273ec245c73f37472d43f63"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SimpleImpact.cs",
+      "sha256": "a97d681ed5b1c05cfa7889fecabf3b0967fee5e94913fd4131fc42954d78364d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SimpleImpact.cs.meta",
+      "sha256": "f38aa65672cc628aeaecb88b57c7bdd4e856ccb935dd0e70a2d762d91861d500"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SoundOnGraspEvents.cs",
+      "sha256": "7da4061f0f9253d2cec30f52aab56d7e514650b157f45002bddc14ee3e5fd79a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SoundOnGraspEvents.cs.meta",
+      "sha256": "78192dfb5b77fb055637808cf1c2fcb9149d88965657eaf65788e6eb804bfd69"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SoundOnPushEvents.cs",
+      "sha256": "e11451bc0040bf0491fbb9fbd0367c229fd74c2032d24e0dc70237566d58d514"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SoundOnPushEvents.cs.meta",
+      "sha256": "626221fa6b1785fe6c8b5f08ef287f06f83e6b7779c7acbc360e58c3e492fd58"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/ToggleLight.cs",
+      "sha256": "c3312d9628486f93e32b946b5c43fb719a6202a69fca25d4b848aa334e287566"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/ToggleLight.cs.meta",
+      "sha256": "c0153acc6a6013874de87477731f3b072e6dd88e734edfb9f30c9cf49546bda7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders.meta",
+      "sha256": "267d5bf25af5f4458a3079dbd9581a13ccc6de281acec86c5863091b89c33552"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiAlphaBlend.shader",
+      "sha256": "1d4cb63642d1f7331605f247aef9ad768e84586407193ebe94bc5c43729de2ca"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiAlphaBlend.shader.meta",
+      "sha256": "5351726f038ae5d2985047a7a69208b53b3fc88a66c7aeb7702a11dbfc643e35"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiDiffuse.shader",
+      "sha256": "93ea21d1e6a10e2cfb17d3abc7559492b208d15e122dc48c25db4c47b09925f3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiDiffuse.shader.meta",
+      "sha256": "86811b79fbf6b53b20f1da8a05597e0b2503c49d61be4847fa2ebb1ca75602e0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiGlass.shader",
+      "sha256": "2223e4dca5849321711cb7e9df5450f2d217dd2d7d21727d5a16df27a382c8a8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiGlass.shader.meta",
+      "sha256": "0a148c4ff3fcc9c854268f1f27c1f7ea46444eb6f0f341b0ab746a9b461cbc62"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiMetal.shader",
+      "sha256": "3b5149c8fe534ffc690a09ddd8c1ef87d106358c70cfe0fb17092a56d0203fd3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiMetal.shader.meta",
+      "sha256": "3388035acc922cc7a7397ab9c64adfc82fb06363f90875d35fcfce9c10820642"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiTarget.shader",
+      "sha256": "51a7df45b0f464de11e42ac284dc85b7246fcc258225291c61f3a061b81cf5ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Shaders/SH_GleechiTarget.shader.meta",
+      "sha256": "e2b9cd4185e4a67b2cc6eb2ba0a6a34fbf1c167868c00e38c6d206117298da00"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects.meta",
+      "sha256": "0319eac4c253576b182d924329fc4c611cc114e41b4d8abbd8853316fd9e35ef"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_LightOff.wav",
+      "sha256": "74f65411a81f366f7866073346278f7ae6ee8b2bceba7742c32d2298c3a04114"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_LightOff.wav.meta",
+      "sha256": "35611e98a0add6d5d7b5af401267089c0a810369da229f4b02945fb2c8ec6a4a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_LightOn.wav",
+      "sha256": "01218e1d2132a0dc5d8abb2daad35e50784c2772740c40cd5fada895450e3ec4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_LightOn.wav.meta",
+      "sha256": "2509fdfa7d9017676f193e37ff910e1d1bd452d7398329a64d0158597c7c2f04"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_ScrewFallingOnPlate.wav",
+      "sha256": "67b6fdbb5c83200518fe843135f4710fcdd72fd491d7f262b6ab142d67b38d24"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_ScrewFallingOnPlate.wav.meta",
+      "sha256": "9309f2f81cd5a55ca5c706a80c6e054e1fd4f8cb5d3e951957d394c43dec75ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_ScrewFallingOnTable.wav",
+      "sha256": "e52e7c5f7e4a1d83905379089f9c2ffcc82a2dddb2b16ba29934fa5ab01fa3a9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_ScrewFallingOnTable.wav.meta",
+      "sha256": "31b7f1866fdb6ba156efb52fb2f234e83d2f5b20f98d12f3086b37b2273c6913"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_Throw.wav",
+      "sha256": "1fa94b4dd11a27504b3aad49f1fb899a07703cbdfc49d3527e7e58d93854b376"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_Throw.wav.meta",
+      "sha256": "8b96f1ad787dbb465171172e6b79ad684ae6fa1de658ccfd827432febc10f91c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_Thud.wav",
+      "sha256": "5a7c656f124b94d911e1a39b8659418412727396618a90e71076822eef4d05f8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_Thud.wav.meta",
+      "sha256": "f6459363c3c3c7b33f7bf8b88487e6a8aa1d58011f97df45a5134409507a3335"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_TurnWheel.wav",
+      "sha256": "c363a237dd46492b20405f8c6619f879d9aa0e5b8f9943a71a9381095068e7c0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_TurnWheel.wav.meta",
+      "sha256": "fda8dd5063ee8d93a56241b6f3683fba671a6642e33cc2c2dc621d4c28fc55a2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_UnHinge.wav",
+      "sha256": "2d20c506da53c204e7bec426310dcba4478b43da8fb0206ad00597a5f76530a8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/SoundEffects/AU_VGSound_UnHinge.wav.meta",
+      "sha256": "b2c9851248f63e68905329f42ef96af061dfb2b29bbe34f4cef27ed901b581dc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures.meta",
+      "sha256": "b2e5c935fec00a1e79e6f65a7bfa63f138bc0d0ca34e4133531454d00afdf5fc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_FactoryBakeA.png",
+      "sha256": "da46a93bdf1a8024095b7b2c27eef167487580487d3a9b7e991f631bf92e10f2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_FactoryBakeA.png.meta",
+      "sha256": "91d750043fbcec9515aa710b733721880945cedd57805502b3b5678ee5049ef9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_FactoryBakeB.png",
+      "sha256": "be254fd3ca1d827a5aa81b3bbaa609395dc7184a3d61464a8c7e4ed0f94314da"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_FactoryBakeB.png.meta",
+      "sha256": "20518f1b9c9ed1480485a754be8423dd3dcfbc858f230adc3ab8bc2c33f42355"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_apple.png",
+      "sha256": "e6add2c5f4f7abfa37da769017894ca6a779544e685bc0e55894d2fcdd50ac00"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_apple.png.meta",
+      "sha256": "8bb481598f7c3404377907b1bd05a96f0cdba7e3ca7a9fbbd75ab110507e51c9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_diffuseMap.png",
+      "sha256": "42d3f34d7f78ca8d1c3d58659d70ed429b14bcdbf4a062b73506790253a77e79"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_diffuseMap.png.meta",
+      "sha256": "f8bd132fc5854fef4bd7e3e6df2646b5a41ab874e5e68d3f80bcf5a3ca32e4f6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_navigationTip_Quest2Controllers.png",
+      "sha256": "7ff95b66020676dd690a15b96013789fd12098d6da17ccbf403bd376a9f136d2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_navigationTip_Quest2Controllers.png.meta",
+      "sha256": "c7908edfd5cc24344ec3e03f7d8d1263061d19bf9fdb44f9f188c77c0d92101c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_reflectionMap.png",
+      "sha256": "d9ad2ab22c35c1afa2e048cf83d8b76357a83a239de3d6f95c0b8eccde52ba89"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Textures/T_reflectionMap.png.meta",
+      "sha256": "9f1364adba8c534ae82519700ce05cba8b982218e95f36dc1c869c2d2e8a9d7c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests.meta",
+      "sha256": "eb36b9ab2625a5808d2d8bb79ab1716e75a376e3c8e199b4542824fc91f85bb2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Data.meta",
+      "sha256": "f5b6b45f09117beaba21acf44a4e9a51d0feb99a329f607279003dfdd42c6595"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Data/vg-grasps-userstudy.db",
+      "sha256": "1aacbfd4dd5f6ae267a51ace81526c68f50ba5dfc61b064e06a8049e1aec10c8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Data/vg-grasps-userstudy.db.meta",
+      "sha256": "e655677ee5a05da094f381d5cda4445936b5b8f20958bc6b2e1eaa698b388c19"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials.meta",
+      "sha256": "6dd85eebbde74eb0cfb902354b7efa666a0ca67c43cbb439e21d85a3993fdbeb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Blue.mat",
+      "sha256": "094b93d3d7ab359c58864056ebb18822a55b399b1c7aa63dd8b0a38486602b89"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Blue.mat.meta",
+      "sha256": "f944d97c6c13f1b37f667fa8dbadaa20eae34202de35de540a17863b7393dca1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Gray.mat",
+      "sha256": "634b7d565530f0c0329862506b2c1d8c0d542891f138b6791709c8844db08969"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Gray.mat.meta",
+      "sha256": "9646d1edce079f87fb84d998061393207d1a6e9beeae3c6bb5385f2849c4ced3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Green.mat",
+      "sha256": "96d06eb29aae1c87932b594fe25cc7ebf7842a1aa86b26083a127ad3148c1f0c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Green.mat.meta",
+      "sha256": "16ba231a74cd63894be51b504e2ded2832a3b6809f23b2c4025faad63ae50eb3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_White.mat",
+      "sha256": "6a7ce99d9325686f474536a767b677af96fbbcab53688e659ead199b0a9e421b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_White.mat.meta",
+      "sha256": "3ca855d07fb63bc8997e538fc21f9336d440e169437501ef79458565f5340c17"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Yellow.mat",
+      "sha256": "f5c9f9711b7d6d9cc50c8e1800c047fd190d20a70dc528e6b0138b170816ed3a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Materials/M_Yellow.mat.meta",
+      "sha256": "b5085cdc4e269b942d8887cbc9f428f9e3881a8f470be995a00ffe970c13161e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes.meta",
+      "sha256": "b1eb822fb435dce59d4568f3175ffc0afc09b550c73b6b2ebb8f2e324c6e0fb6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_banana.fbx",
+      "sha256": "59f1fa3534ad7596250481c0544a84ef4748616eaa8b862f3ddef2ccb91afe40"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_banana.fbx.meta",
+      "sha256": "7c2fdde05af81bf103da37a8c5cbf762f7f1654230b9aa72138252cefef8c396"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_cuttingBoard.fbx",
+      "sha256": "db7c3648a00d9f3fd2d9aea6c43755bdb98a8fb8b589676b443cd46f07757ff0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_cuttingBoard.fbx.meta",
+      "sha256": "f3872be03f8a6a65ce6350bafb6dd51181fcf74efa70c963326e33aad48ba92a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_hammer.fbx",
+      "sha256": "18114e8545cdda7cf38161354f136adc240f45429e962d27bbb11b0aee510ee5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_hammer.fbx.meta",
+      "sha256": "90c719a1aafd93c1f5794c25e1ca4a66f5899c9f3075391cd5bc56405292e518"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_off_pivot_cube.fbx",
+      "sha256": "d9a1f4c5c280755f54f1cae9a2f75861427ce0b9ca7f8f3e1f4e55f6d7bc413f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Meshes/SM_off_pivot_cube.fbx.meta",
+      "sha256": "b0a07e702d387d329272dab162a2d0887d0fa33920cee3d1965ecbc718b07eb5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources.meta",
+      "sha256": "683a2bafdcd11b48777a790758361fe479162c477d1cecd97b900dba6c442fde"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing.meta",
+      "sha256": "7ae917e85aed9857bf3a7673f31d56dc1982a234ab45c8a7bcdac3464a2c465b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ChangeObjectJointPlanar.prefab",
+      "sha256": "f0541ca4f877a2202727f1588413ffc8cac3b4c92f8ac06537719405f34c2bc5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ChangeObjectJointPlanar.prefab.meta",
+      "sha256": "2dcaaa279754ce5b910051a9085e1ace4dc6ccde9c7cfabd19ce9d8470cf6f3c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Hammer_vg_revolute.prefab",
+      "sha256": "0c16b1b70663b5f2c0a218d305a03127d6f6661c43f2da642059c8c07ab126bf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Hammer_vg_revolute.prefab.meta",
+      "sha256": "ec305c40ec98d130beee53430c4cedb5fb5f29793c41bc60733e7d8b2aaf4579"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Move_empty_node_parent.prefab",
+      "sha256": "1c7b68c42531267ce0f19382a79d53615d36ac895e74b7354914c3dd57959412"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Move_empty_node_parent.prefab.meta",
+      "sha256": "e86952d642f16041c329e5ec4fe9405bbd3b1c25f80f0b839b64a9f553b27c83"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_floating_prismatic.prefab",
+      "sha256": "cb97b9ac61469735704a299bce683b08bb18fa5b670560e87645e2bb656862a6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_floating_prismatic.prefab.meta",
+      "sha256": "a067e213c0acae00f013093309a99ff955e9184b405ca2469070d019539ba797"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_floating_revolute.prefab",
+      "sha256": "4cf50de0b56a98a820487c1bccf4ed65cd41c8f2c70ea62ca71bb100aa28dc71"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_floating_revolute.prefab.meta",
+      "sha256": "11a58534936181712d82e699f24cf8398696800424498a59b2e505a520b73cf3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_prismatic.prefab",
+      "sha256": "b6e7776719eddb408586f73c3d1f8861ecd24dab99fff920f2bcc874219583be"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_prismatic.prefab.meta",
+      "sha256": "f24325eae81db70cfa75d032b26802e660bf6ea7f137666e194c0cb40a49a049"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_revolute.prefab",
+      "sha256": "eea3442d8f75d2fedb00854895981caa07e0730ada2fff7a9a4290f884d57f44"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_revolute.prefab.meta",
+      "sha256": "9a1552b67a4ad391fc3f6afd9a909a382381e84285868b202c0b3eb75b322fcb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_revolute_cube_root.prefab",
+      "sha256": "2f4797c0fea54e0106e95084047d4c697362eec5c0fe1dc7d052b1d7d0ffd131"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_revolute_cube_root.prefab.meta",
+      "sha256": "dfc9dfdaab46e34c0f1c7cfed86a5e7f9880cc8c451aa1abc75bff4789020c28"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_vg_revolute_multichain_3level.prefab",
+      "sha256": "617b1ae3081d074ef45835add24bf1e9320399b1ba1abcb36fd02980d1889b47"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_ab_vg_revolute_multichain_3level.prefab.meta",
+      "sha256": "3ec0e73dbe8e3f2221b3505f58472dcc1088aeba03b53ee89a5de978439d42c9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_empty_revolute.prefab",
+      "sha256": "63c0890cb745db1622606758a2d1ac0851822271dd06a0e3522181a167b0bb4b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_empty_revolute.prefab.meta",
+      "sha256": "fd2f8a88959f5a5ce32ff164e744b45fe8a9e370eadaef44900c6c8e612bf1d2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_prismatic.prefab",
+      "sha256": "223c2bb149fa8e4f2755bc5c8db021dadb4617e728bfdb5dbd5584260a67d49b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_prismatic.prefab.meta",
+      "sha256": "c28e11fea4f64c55819834bfcd337736333e75a6266892dcc9e771191afd6da7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_prismatic_free.prefab",
+      "sha256": "12d96202ba2a38dc75642b8715d9c36eddc4c880709df265d540c3304f3b019a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_prismatic_free.prefab.meta",
+      "sha256": "fef9f0cb7e6e8f86055f53bc344932823ba331b178c8852840c74e66bb2b5a2c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_revolute.prefab",
+      "sha256": "d357f37597c375f25ecca2f5efdc5ab8cc8b26eef10de4d3bd18c0dcf736652e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_revolute.prefab.meta",
+      "sha256": "ffb0287daf5de67b5b37dcce459164452e32a8c92334572fc61cadd45463bd4b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_revolute_free.prefab",
+      "sha256": "95b9789b9588381354e4b04caa7f34642593959b3b7cc5d3d404959fb9570b48"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_floating_revolute_free.prefab.meta",
+      "sha256": "a17230a294dff165976c3dad8b0978df6831740ad18162a6e4bd2902df16f371"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_multichain_3level.prefab",
+      "sha256": "77a4151a23ca1db86faaae4a74ab45ce31cc37aeb660c66ca863975185e12cfa"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_multichain_3level.prefab.meta",
+      "sha256": "2425c5a745722fb56deb5d69807dadd028c96259b6669bb25e4195f7d73be13c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_prismatic.prefab",
+      "sha256": "e856cfcdbf47aacdf0cdc19f771df5afd2abbd4f921eac666998f2fafa4c28d2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_prismatic.prefab.meta",
+      "sha256": "2cf7ad112d6d0d33f06a1590defab2102afd30b09ef85a5efcbe1c0789b9b7e1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_prismatic_free.prefab",
+      "sha256": "8ba6c6c8290cf26b2470eb57d124dcbf1499dd0c99f0bf6fa18372a1133a8e70"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_prismatic_free.prefab.meta",
+      "sha256": "82e8df14bb8fa1e8d056e1dd6f7480f7c1ad8a4c0cf33eb998354f34f8db1626"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_revolute_multichain_3level.prefab",
+      "sha256": "bda115e5d46d485c13f48ebf9d40b1022e919c455084e1cfbcb2d06596dd1742"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Off_pivot_vg_revolute_multichain_3level.prefab.meta",
+      "sha256": "2b3184a7c0cd6f15cf058f1889e894ab29027dfef80e622e099c9c957dfe071b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ParentChildSetup.prefab",
+      "sha256": "4fce9b291ffc3055f1e59a7e073d8c8649fabacef00e66ebf575ce8e893d00c5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ParentChildSetup.prefab.meta",
+      "sha256": "b847715a1f58549337b6ced55bfe466403c06743637bf4e50c37ed90bef4799d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings.meta",
+      "sha256": "96e0e64e1c27bb1ac329497d00d83a63c7aed6d37a38dc3531b9d0a1d2de02d2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-ab-prismatic.sdb",
+      "sha256": "ce5a0dc0845d3715ee58c51441aa5d75c1df0b846a5f3386fcdc651d8d4d123d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-ab-prismatic.sdb.meta",
+      "sha256": "743d2c14897a851e810638f900f016fb36885ca51e5bfd0f6aa2e40c4a921246"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-ab-revolute.sdb",
+      "sha256": "e9f0ad4710efc7f96e04d4cf0ff511bd2da972265a435607ead386eeecccdc5f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-ab-revolute.sdb.meta",
+      "sha256": "88b85cb87ac5e61cbb104ec807d3402a0aecc22afe48bd5c06118fcb66c7897a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-button-indexpush-with-physical-base.sdb",
+      "sha256": "296e7e78c7919fa64e67ff059be497d8e6d6e90d865580c6c57f5c94718e6844"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-button-indexpush-with-physical-base.sdb.meta",
+      "sha256": "7258543c6e141db51af83495ac515afb6868d6a69583deedf25f351096325785"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-chain-root-rigidbody-iskinematic.sdb",
+      "sha256": "5bd26607bf043792253ef07e4cff19e3cd699cfa2ae133213eeaa4b96c0f5b72"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-chain-root-rigidbody-iskinematic.sdb.meta",
+      "sha256": "dceb391ec928477d3c057fdb4199b006fc6d97cba42e175ba0ea7640a8e428af"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-change-object-joint.sdb",
+      "sha256": "ab62be4877d2d8cbe0ad12066e33f37157531995baf6a8a8fd282895a645012a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-change-object-joint.sdb.meta",
+      "sha256": "acf4ff959d801f1fda54152379f2d4d1d54420b4def53f09939bd2493b7f5801"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-prism-free.sdb",
+      "sha256": "65f859e72091a4d7d71d6bfd0cc9e24e83a60fe5d24c86cd68f4371d34f44b6b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-prism-free.sdb.meta",
+      "sha256": "1db8cf954b2d51187834f6222db62b6920f9434856abd9b5181efd471338238a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-prismatic.sdb",
+      "sha256": "cbc2a20551530d015b5619eccb0c858cfefdacdc98c211ebc8e24bf9dc4f6c19"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-prismatic.sdb.meta",
+      "sha256": "5e6e687a65eb97ed42f98076080b05267bbb6924378d264ef1906017461b8b9d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-revolute-free.sdb",
+      "sha256": "d9ba1640d6ef5496fcb22be5ef00b0151d20e19c21d12397184e68ac001ed8af"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-revolute-free.sdb.meta",
+      "sha256": "d691496d06807393647dc177ea62e10ec3ccae0439ad670448f5856d7dee5ede"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-revolute.sdb",
+      "sha256": "825334dc82358c6aef4af071232ed85ad2ebf824a05f5bb5750f59d74a1bd8ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-floating-revolute.sdb.meta",
+      "sha256": "b1ebb2e913253c7a02c74b0c3e07f12625b7d4c86a0f66f2ec320f0ebf3ec5be"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-physical-hand.sdb",
+      "sha256": "16cc9e2a9de0ae04a87bd3b0001e2a315082d71c07e674c980d8b368bb9c4a2f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-physical-hand.sdb.meta",
+      "sha256": "a415dc73300d5702e4c50342266885d3bfe21f3701855ef69d913d39fe0e320e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-pick-and-place.sdb",
+      "sha256": "45f67fab67e0b0241120832e584be0907c2565e5f5ebb18f87c0bd5f96e8ac04"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-pick-and-place.sdb.meta",
+      "sha256": "65bd7aa6dfc405281807d38902c48bceeafb6a2704b83335002547a4cfd20eeb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-planar-set-joint-state.sdb",
+      "sha256": "00a219f5241c1521d7b846629e6442b389e69797e072803abdafe7f690fc7a0e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-planar-set-joint-state.sdb.meta",
+      "sha256": "a9bb2055ddc305a8155aeaad46d11efd81c02d8ce3346bdbbc2ffa87469b3be7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-planar-switch.sdb",
+      "sha256": "ba6d16ce5038c2aafb6643e17ccd1c9deeedb0729fb243ffc42d46b12c518b37"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-planar-switch.sdb.meta",
+      "sha256": "0db4a45c103956f3a3d2501eaa8e7cce60721d5cc4f5fed28b115b8b5bf98fd9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-prism-free.sdb",
+      "sha256": "0ea8cdb0a2d97ad9c9cc14416718d51c66b26bb1a7050dab8a9608c09e38e762"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-prism-free.sdb.meta",
+      "sha256": "2aa190c55e2a4048d6122b86fb86a3477679261f9acf6260ad0ca0ef8b26de2c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-push-button.sdb",
+      "sha256": "ec4e1dcb1f0fa3a2a890553dc994e6760c8661e6385a5799e2998ff5cb82879e"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-push-button.sdb.meta",
+      "sha256": "0b28ac2c5fcb818866964830fa6f93f63e1d0369b30a88c13f53c694cf6c53ae"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-push-shifted-button.sdb",
+      "sha256": "bbfd2d1543a8a05a66d16b811f47ea191a135d7c3135fa7cdc889f21720761da"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-push-shifted-button.sdb.meta",
+      "sha256": "5882daf709f43ddb94eeda66eb2e21b49d0fb194acab0407d429b9f02f81c88c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-set-object-joint-state.sdb",
+      "sha256": "cba1ee04d56472f9c34acd105cd2ca8c4b36be990b586e4032d5597684dfdb38"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-set-object-joint-state.sdb.meta",
+      "sha256": "03eb097a7bb8b18f6dd68766d0f220728949ae1ed5d327f2ec282e1045b8d403"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-switch-grasp-object.sdb",
+      "sha256": "bbf15bc199acfb51df3a2cb3291ecab052c054a6705bdd9c31956f8128578714"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-switch-grasp-object.sdb.meta",
+      "sha256": "a79db7c0763e3f7b6c4cc27d716f88bde1e5f4738371eef71d2d5b24c3163a13"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-switch-object.sdb",
+      "sha256": "fbd5f7dde84c7f3944782ebf81d0d53073105fb8a40dcaad6c28383e2f481e72"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-switch-object.sdb.meta",
+      "sha256": "ed9e2e9f10218bb10cf42b0e7501542f8756481a1420685be5eeec4881addfe8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-fixed-dual-hand.sdb",
+      "sha256": "7da96dd4c89ee4573a9febf07c66f60657d7d1ac6bc9cf7c47f6dde87df70b1c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-fixed-dual-hand.sdb.meta",
+      "sha256": "a8b49c9f963483858a7a193ca8158be75666e8a879acfa1a0df9492eceba69ef"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-multi-revolute-snap.sdb",
+      "sha256": "395cff0dd17ecff4dde1247081ddb6a0bc21f986d7dd34b13498dee20e926dcd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-multi-revolute-snap.sdb.meta",
+      "sha256": "d548bde5a93dac9556d8c6152369da5d859265721c9defac99cbddf6285616fd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-prismatic-dual-hand.sdb",
+      "sha256": "3a9691912ead65be5790e6ffb1b39c041e558a355cb61388d7861ef97a52a8b2"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-prismatic-dual-hand.sdb.meta",
+      "sha256": "4ce3d8e873bffad166d40ad202924e66080340913b5ffd48d4e9cc37296aa89a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-prismatic.sdb",
+      "sha256": "e6aef530348357de9ede469336bfb350c36c2f69563288c8f26590801466d2a6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-prismatic.sdb.meta",
+      "sha256": "de7d2f5129a01858d48142c83f327a5dfb57a88761aec4859d9de617dea74606"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-bounce.sdb",
+      "sha256": "f425a835c6441422d7c6cad776f538b8d30a83a14274665cbd17fdfadc8edf45"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-bounce.sdb.meta",
+      "sha256": "6c982741d6e9f23c30ceab451b2d6370447d61af9c4a59a5d57b94c49c476421"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-dual-hand.sdb",
+      "sha256": "67edd0d9a034c0619d766c9ab380e41556b1b5d64ad3c63a957b16d2b20b1dc4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-dual-hand.sdb.meta",
+      "sha256": "a663ea0d645b5536073dacb3fd1ca9702056b0a49cf8aee418595694d32a5b5d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-fromtr-rot.sdb",
+      "sha256": "f6c61246145c95743ee7fd163f4bdb3df98d226a77fb5c375c0f35d16e2d6df7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-fromtr-rot.sdb.meta",
+      "sha256": "ff6f15e5ef407529ee7dbe2bbb19d1c09158fdb516d7e7c285c0b99a6dd6126c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-prismatic-double-bounce.sdb",
+      "sha256": "2e3e0d6a3dcb7de74c889af2f682e94d3acc562785b77bf3c000d08dbe0e4400"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-prismatic-double-bounce.sdb.meta",
+      "sha256": "06b80ed37af5f1a0b5308948274f7a8f25b97601b549763d906141aa85882fde"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-prismatic-snap-bounce.sdb",
+      "sha256": "b9786f57f70b1a8303e64f98d2c69df28f40d9415df1fce8a3223036abf643a8"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-prismatic-snap-bounce.sdb.meta",
+      "sha256": "7b7d85b15bab9e30bd26c8e65b873894b432ead48a15cccea3f7d4545d1111fb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-snap-bounce.sdb",
+      "sha256": "db390d05966d9c5fca4b5fa1d6d0826cf498fe4e8b87ce9fd1c7fc41b7dff394"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-snap-bounce.sdb.meta",
+      "sha256": "7388f4b0ff785e797563bb38e7d8fdbdbd497c8ea6b534161e7225b9727f71cd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-snap.sdb",
+      "sha256": "3683792a96a369a8e185fde552174c9297e80337a6283e4da439d522a795c15a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-revolute-snap.sdb.meta",
+      "sha256": "c63be3cfeef54240c5cad37c209c058551af8224328c53b12e8a049763838013"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-sticky-hand.sdb",
+      "sha256": "7f7df780006dd6414b94e991ae4db05917172c3d8b2f1dfdb96a370065fea97d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/Recordings/test-vg-sticky-hand.sdb.meta",
+      "sha256": "1e1cbe093fbc1e0f637b34971053bcaebedc7d0f84f4110257d8efc619974901"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ReplayBaseLine.prefab",
+      "sha256": "67a11be21a71b5ae4a89c6d01795e40a85a26c6ddfeacf3ae017659cdf6bf578"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ReplayBaseLine.prefab.meta",
+      "sha256": "d171bdb16c8591dde447d6564a2a1aef992fb579ac8f69df8e4d4cbc7ced5cc0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ReplayBaseLinePhysicalHand.prefab",
+      "sha256": "47a08723b7d050d1e84fa42f3362b6758d450816035b1c20259bb79314739e67"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ReplayBaseLinePhysicalHand.prefab.meta",
+      "sha256": "5bf9940e3dcc00eb3f341de59c350fcd2be1c05f8faffca38f14c0edca63559d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputButtonTestSetObjectJointState.prefab",
+      "sha256": "a7f073b4890356080622f9df10743bb1282654d851f1195f1d2bfeabe14e65d6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputButtonTestSetObjectJointState.prefab.meta",
+      "sha256": "bc7f7ef2584b06fa0edd3f947ea32655866f9bf9e859e33ac554bdad6fe0c05f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputSphere.prefab",
+      "sha256": "7c5a78bdb4569596d2a69228b39c4623fbad95a2063667d69fe178f75529dfcd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputSphere.prefab.meta",
+      "sha256": "df4838e6349caf69eb0dd9e13d60d9804e7e9fb0d3998c3943f7ee7a733b2b87"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputTestChainRootRigidbodyIskinematic.prefab",
+      "sha256": "942484917f271aa288aea56e07db7f04b35573bf158f2e588c30518ed68151c4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputTestChainRootRigidbodyIskinematic.prefab.meta",
+      "sha256": "7dbe5560d1d12932c8468058b6bd3a6e3c3f4aa25a44a27cb4ccb9c890b04221"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputTestSwitchGraspObject.prefab",
+      "sha256": "9d5d2e874c902c3607cf3bc37c20615eef93cbea30a4e83a59bb07036f7a99f7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/RuntimeInputTestSwitchGraspObject.prefab.meta",
+      "sha256": "44d88a0bf49de34b9b4bb2af29f613fc7dfd73d270efa699be795edc45626461"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ScrewdriverAssemble.prefab",
+      "sha256": "01096253cfb76fba9806e67b83f17e8f52683222bcea41b58046a14367ad1e60"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/ScrewdriverAssemble.prefab.meta",
+      "sha256": "b5c6f067e56b9a44e79b400ffb93ef66b4421ef8dfa2abd13c058e86e71a0e5c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/SetPlanarJointState.prefab",
+      "sha256": "b45fb09996457e4cac62d3136f03b0cb7f66437ee8a75def5a7433cf8551e6bb"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/SetPlanarJointState.prefab.meta",
+      "sha256": "539f27b677364b40b2fc2813ab9a9e72c82f8f7d014b87a8ff6375e7b6cd95b4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/SingleObjectSetup.prefab",
+      "sha256": "e759e94cb23a5ff6744d158f74466502a7bc6e1103e0f51121049c95ca1fb2ed"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/SingleObjectSetup.prefab.meta",
+      "sha256": "b6541e1335979dcc23bb376dc45ad171dcfacb921ac2f74394b150561fad5085"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/SingleObjectSetupLegacy.prefab",
+      "sha256": "ef2ab7ff36829e70426c349e413958bc2274e183593ca8db28748ce5a61a5916"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/SingleObjectSetupLegacy.prefab.meta",
+      "sha256": "ecbb709185ae16f81b0efd115ec93cf88ee8d4164a2760de303e452a33d11ed0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/StickyHandGraspPhysicalObject.prefab",
+      "sha256": "2a2acdc7c02e3644a460c741ce2ef4756360db292805f77ddc616f36ddb0a8b0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/StickyHandGraspPhysicalObject.prefab.meta",
+      "sha256": "d320c0325b706f1fcc89fdbdf31e27dc670971cfeebbc52c528e6c1570d7f5a7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/TestBaseLine.prefab",
+      "sha256": "52b410bc16d508fbef17e95f432b146ee024acca9dd50ce753cc9707ddbb2293"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/TestBaseLine.prefab.meta",
+      "sha256": "b61c4232d46559872181d78ccbabe97112c3bcd1e73ace3022af065afe5dcff6"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/apple.prefab",
+      "sha256": "2f71746c484383e3dd2af36b30bc41fbf66e8f5bde52b6bed04730e58898f2be"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/apple.prefab.meta",
+      "sha256": "4652ef398a4f9aa81d6a4ef891dceb197dfdc7c30e24ed8b770258325adc35f3"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/bottle_assemble_vgarticulation.prefab",
+      "sha256": "e7a627d911d20a9aa33259a20c26414c548ee58211d71fd50e56fefbe546d5bc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/bottle_assemble_vgarticulation.prefab.meta",
+      "sha256": "3011a0d5409b34225dd51007cf38ba23c396f2221a0926b7937b2a9999fe251a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/button_indexpush_with_physical_base.prefab",
+      "sha256": "0542aa5e2f8ee85d3aa8c7afb39e39737a8097ed1ae8b666802431fcffefed5f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Resources/Testing/button_indexpush_with_physical_base.prefab.meta",
+      "sha256": "4e40434b3a8048b7d2ea16ce8beb05b3dbac694228d310dc312cb0a24777fd21"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts.meta",
+      "sha256": "308c3021602f364b048872f0ba5cc32b3a220651efdd15613f7a9fe492e5e520"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components.meta",
+      "sha256": "181cc5316700d7c70193e837855ae638c31094ebad719ec78e406e6c445c974d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components/FixParentOnObjectGrasped.cs",
+      "sha256": "ecb6673e0057c8b6fc91bacfa55cbd4a702587b6d864137dc8b1ef32dfe735dc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components/FixParentOnObjectGrasped.cs.meta",
+      "sha256": "f2c2fd5ffb7a1838839db29dba65ea380697dc7ff43e699939aa05978298cfd9"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components/RuntimeInputTesting.cs",
+      "sha256": "4cf9855b54ab6d7a1f47c1f0dff88ff5596729812c2b2be3d2f979bf5ba00795"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components/RuntimeInputTesting.cs.meta",
+      "sha256": "881deb940d8946e0cb58b3c1420a1d1507351ca1bc0507193808006a8c3d124f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components/TestChangeObjectJointPlanar.cs",
+      "sha256": "262255c7112135de1230fa21c2d0120cbf8f1014eb4c9cbba8f8725f125cf6fc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Components/TestChangeObjectJointPlanar.cs.meta",
+      "sha256": "dc3380080ca8a343625ea13e98004cdbf9a9a011111dc071a22a179dcc6a3872"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Gleechi.VirtualGrasp.Tests.asmdef",
+      "sha256": "ba6eb5c0f856aa6038d4e4993f324444da057c34ed47bde6a08dc4f32cdf7f44"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/Gleechi.VirtualGrasp.Tests.asmdef.meta",
+      "sha256": "3ab4f49c8cdb1dc1a62ce4f4351b178bd1c56189da6594ce6e769c81fec3dcdc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/VG_BaseTests.cs",
+      "sha256": "6b95b34396efea936cb21f7a30e157fbdd6302bfbe1e4684895d6e03cd149648"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/VG_BaseTests.cs.meta",
+      "sha256": "1e6142a742066558501bb739c890af1f827169e57a5665770654c57f99d3c548"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/VG_InteractionEngineTests.cs",
+      "sha256": "562d9cf9e60d67b0d75d4321cec1e8d734f5b158c8bd784b271eea54e054a368"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/VG_InteractionEngineTests.cs.meta",
+      "sha256": "8a191fbcee5e7161829310f4fd3998909b96fa3dc55ebe9c4e3409545f65ea50"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/VG_TestHelpers.cs",
+      "sha256": "629579402959e002206f38777d18e1e2827c5be401648dac5841699422484068"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tests/Scripts/VG_TestHelpers.cs.meta",
+      "sha256": "0eda0121dbef1a10650ff79b882c1956dd141e960e131bc2926391f7e46345fa"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials.meta",
+      "sha256": "a0ea8f96f0da830e4b5a9ad01dd6c4c0250aa9b2a6db6f0e5a58aff047bcb1b1"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/1_ProjectSetup.meta",
+      "sha256": "b190a0087438877c1011bbfbb9eee6b1127f10d034ecb399787c5b10afefae32"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/1_ProjectSetup/0-ContentSummary.asset",
+      "sha256": "86b2e02fba781c66bddd6a067d27bf7f8e4b1ba75c5997c2cf77ee737e564a94"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/1_ProjectSetup/0-ContentSummary.asset.meta",
+      "sha256": "e454d9d8351c4b155a9ab13e2bb2e15fe12652c1e56611d36308c82871dc7f8d"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/2_ObjectBaking.meta",
+      "sha256": "84b546b34340cacf38369ac218a1e9a945d5f705d9d9faeb757cb10c7d76e277"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/2_ObjectBaking/0-ContentSummary.asset",
+      "sha256": "6e0baa6ea235c945d76c61637016e97a692f8496ca3e36992e2ea100928faebf"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/2_ObjectBaking/0-ContentSummary.asset.meta",
+      "sha256": "265869470f4ddb0fb67697a1724b1f2a2c964d20337467281b340642f755c721"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/3_FingerTracking.meta",
+      "sha256": "c9459711f8ba5c1bab3484e874dc0beaf451faa027aac305aeb45857550d9cfc"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/3_FingerTracking/0-ContentSummary.asset",
+      "sha256": "556a8a8498b172903a371fd565fd7ebc1f3d3e34285889a966381668874d0712"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/3_FingerTracking/0-ContentSummary.asset.meta",
+      "sha256": "3b55bd5355c08b8cc9d98417befd3f6fa745e3b83aea005dc22b1aaeaac73b8b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/README.md",
+      "sha256": "940b9df26550b82a6450cb4847493b062b0c5f3de02459a8721be061ac6d08f5"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/README.md.meta",
+      "sha256": "55792b65930419b3d3e52ab0f1a02153d04fca81aa2a587ee260b5009d401994"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Resources.meta",
+      "sha256": "58763802c78fc2de6dd3691424b35653a0f55f4a813c6e57fc883065e9b7456a"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Resources/T_vg.png",
+      "sha256": "a8c6b7d8c7ad43ec98ab0be62a0f5120e0d9d55774087b4f47baf88d0a52447f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Resources/T_vg.png.meta",
+      "sha256": "544ad708b6268f726ca46e08b857648cff90b3b6cbe5c1ffd2ae27036ad765b0"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Settings.asset",
+      "sha256": "276a64f26460cc8635d2f1620490b2a8d75b1f7464e8daaec00c1a291b52e719"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Settings.asset.meta",
+      "sha256": "6d9f414014ca7c97964f58c0caaa795b08104aac1e6f94a947cf87c6cf4f20d4"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialCallbacks.asset",
+      "sha256": "72fba67faf1bd443fbebca3d922d2cce50aeada468f8d650d96b88313d7924ea"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialCallbacks.asset.meta",
+      "sha256": "1ceda9a4f5c22e3885fe4d8b2b524bc3a997f785bbfcf66a75a853108d9315f7"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialCallbacks.cs",
+      "sha256": "0f3ccd848c6c07024d60e5d46400990b33e1502e72708ae0084ced21da31d157"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialCallbacks.cs.meta",
+      "sha256": "20bfa1967160e191e67f5b72be5359bbe844219f8c98c71ed19f9b6faad2a175"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialDependencies.asmdef",
+      "sha256": "553b1eabfd17016c36af6aae78b132879c723a26c2613f6d2e9832bec3da855f"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialDependencies.asmdef.meta",
+      "sha256": "70f5406bdc49c616dea1675ed2b4a1e7ee32036b572ae71060b94cde5e7ab3be"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Tutorials.asset",
+      "sha256": "3e99c949a67c39eb9da3b447d90768f25ebb65242796959c9fc97546db894d7c"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Tutorials.asset.meta",
+      "sha256": "a8278e4d6c8d5a76d9ef8be841e03ab52462505ab52ba4a4eddb5b165f5bf328"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Welcome.asset",
+      "sha256": "afd6ceec445de1770d92a4796418d9d2e45e720730b3e7d35cc3aee9aabb3c63"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/Welcome.asset.meta",
+      "sha256": "54c1d4c5caf2031e0ea404b8ab94eadab81783c7e68e063eb2168dfca000f17b"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/package.json",
+      "sha256": "7a4d95290a8715a2f003e64e67714d26e37f1024e1e139e89872d08ccb48d7bd"
+    },
+    {
+      "path": "Assets/com.gleechi.unity.virtualgrasp/package.json.meta",
+      "sha256": "d83096cbf6efd4fca3d7791f4305eda8eb711ca934a2c66fd4d256b093112822"
+    },
+    {
+      "path": "Tools/Phase2Bridge/__pycache__/monitor.cpython-312.pyc",
+      "sha256": "7b4130030c66ef57dab09afe3be3b12ab2b92df4001c3b871d72db79ec16be25"
+    },
+    {
+      "path": "Tools/Phase2Bridge/__pycache__/protocol.cpython-312.pyc",
+      "sha256": "a96730798adce47d17e4e1ad07e72c7ec994af83567e5c3d7bb5835c6b9e4500"
+    },
+    {
+      "path": "Tools/Phase2Bridge/__pycache__/test_unity_bridge.cpython-312.pyc",
+      "sha256": "d4e852f153cb8e93be5689862dc18b75a2d6c9f8125000a2c660cc166bf3fc3b"
+    },
+    {
+      "path": "Tools/Phase2Bridge/__pycache__/unity_bridge.cpython-312.pyc",
+      "sha256": "8005dafdde6ca7e5e9da5d7d9659d1f204609c0c084925c4ba30ca96941c1889"
+    },
+    {
+      "path": "Tools/Phase2Bridge/monitor.py",
+      "sha256": "123279afcebcc5e0c96804dea3f6f4ef20ef58b859a2b1d5cc0d8d6244c793e4"
+    },
+    {
+      "path": "Tools/Phase2Bridge/protocol.py",
+      "sha256": "0fa8e19f685f5e52c0f0de5ecc42ba6ddb81d32d37b8809e01954955dbb8babc"
+    },
+    {
+      "path": "Tools/Phase2Bridge/test_unity_bridge.py",
+      "sha256": "813c62e8c71b6c8e7b91c117c027d72139b224db0aaf073122a2c3d1f0909f91"
+    },
+    {
+      "path": "Tools/Phase2Bridge/unity_bridge.py",
+      "sha256": "87c396dc8a6eeaa39411fe14e62de17faf05a6dfe7a216e130934f78129080cc"
+    },
+    {
+      "path": "Tools/Vision/__pycache__/mediapipe_bridge.cpython-312.pyc",
+      "sha256": "7c2fb15ee3217aff21b4aa8cdc5619c63a31bae4d63ea31a9ad604a1b47c09da"
+    },
+    {
+      "path": "Tools/Vision/__pycache__/replay_vision.cpython-312.pyc",
+      "sha256": "c829d5ca2523fd102819b16e11351c2f5f5d06eaee81609d56befddff7a229ad"
+    },
+    {
+      "path": "Tools/Vision/__pycache__/test_vision_bridge.cpython-312.pyc",
+      "sha256": "d6ee65130ba287709435e35117d5cac4a1764442ea8442e1d47db227355cd533"
+    },
+    {
+      "path": "Tools/Vision/mediapipe_bridge.py",
+      "sha256": "eddee05664ee2269083c0fd66accbdfe4d36b9e55853f63240607a58a4ef3b2e"
+    },
+    {
+      "path": "Tools/Vision/replay_vision.py",
+      "sha256": "33fd90d1de563eb6f0fca71520a85ddb097e229e6be8bdf11bb7e3f3ee2090dc"
+    },
+    {
+      "path": "Tools/Vision/test_vision_bridge.py",
+      "sha256": "04791caaf0d261419d1f3a97ad419936f6285c25482a0f9fdefaf0ca2acb2d0e"
+    },
+    {
+      "path": "ai-engine/4.1-baseline-protocol/README.md",
+      "sha256": "667c288697a6c44a9a679b5387d470188d274ea17b1a8e482cba189ffe16728c"
+    },
+    {
+      "path": "ai-engine/4.2-data-collection/README.md",
+      "sha256": "6cae20599b12137366f77cfa4cc515a154b4de37bc481378add00095c8aad463"
+    },
+    {
+      "path": "ai-engine/4.2-data-collection/__pycache__/features.cpython-312.pyc",
+      "sha256": "44f90b5c0dc07446171975b7d74c2c08c7b82983597f271097cba0c61e42a124"
+    },
+    {
+      "path": "ai-engine/4.2-data-collection/features.py",
+      "sha256": "53c03bb832a6469ae2f15ab45b2f54393ad2e14f17bccacb041f9fdcd79b0083"
+    },
+    {
+      "path": "ai-engine/4.3-fatigue-model/README.md",
+      "sha256": "0126c5bf09b1afd254047b1127f494b761f55c45c9f0868510ec6b4e27c572c3"
+    },
+    {
+      "path": "ai-engine/4.4-onnx-export/README.md",
+      "sha256": "7d47189ed01d5cb48466c6c05fc3d8725707fb0d15915ccc2caeff9bc0500bf0"
+    },
+    {
+      "path": "ai-engine/4.5-decision-policy/README.md",
+      "sha256": "92a41eac7deea6154dc8447c0f8b924c03ce93e7ca7fefc219233c72331a1949"
+    },
+    {
+      "path": "ai-engine/4.5-decision-policy/__pycache__/policy.cpython-312.pyc",
+      "sha256": "9d130f3e2fc2df7a895041a7470b93c226ec13b4aad30b7791c6a49aae6d6f88"
+    },
+    {
+      "path": "ai-engine/4.5-decision-policy/policy.py",
+      "sha256": "1e1820ce7fcadbcb9fe79157f37da5ceb9c5a14e8918458538d6652869e5d0a8"
+    },
+    {
+      "path": "firmware/.build/test_core.exe",
+      "sha256": "7f84f3d3ac0cea2b6ef9f85078c4366f8f19cef8cdee2da98f975c79e38bcb12"
+    },
+    {
+      "path": "firmware/.build/test_hx711_ready.exe",
+      "sha256": "1f56a8db33f0e84389bb724a25214492472d509678c80b6a6efb850d2fbb8900"
+    },
+    {
+      "path": "firmware/.build/test_telemetry.exe",
+      "sha256": "2e8a39693e946358f75a94502c86c5516c8a5fc709af796bd7447e53bfae879f"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/README.md",
+      "sha256": "296f61f0148f1390c687e1c4e612f467fda19b781784a545c9989ece5eba9e45"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/__pycache__/verify_calibration.cpython-312.pyc",
+      "sha256": "dfa9707bd01e9bc7bf67d20893cbf57cd5e9a0538525cc4d694dba6a9e25ee8d"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/calibration/calibration.ino",
+      "sha256": "c05093d3854dcd701415167ec950bcd8dc39679a74c1202e8b572febb8fe5296"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/library.properties",
+      "sha256": "88961db77decb1a0244731d620b873f0ec4105db499bad093f0eddc46987fefc"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/src/BenchConsole.h",
+      "sha256": "97e977a7b8c4c6868409647ddfdd456b005bbe328c47690f18ae55e6f37e950e"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/src/HX711Ready.h",
+      "sha256": "a959bcaf63d8e2bf7ecd35b67cec57305bba7a80404d335cb1a48f140dbb92df"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/libraries/RehabCore/src/RehabCore.h",
+      "sha256": "9d06ffd9605e4c7d6cd018eb2c77e75504a54503fb588df3bba90be1cebd2159"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/synthetic_verification.csv",
+      "sha256": "ebb0c76375dce7aad1a6cdb4c4e0a1a619f4fec1241e2c4e44fdca7df67d54f5"
+    },
+    {
+      "path": "firmware/2.3-load-cell-calibration/verify_calibration.py",
+      "sha256": "1e943f16205a1b8388bbbdb61b181b23577a4b0e9a0a79db5d346a396366a788"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/README.md",
+      "sha256": "81b4599241a8776b950a5629712dd075134979024101a1281355e93f42673dc6"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/grip_stream/Telemetry.h",
+      "sha256": "62b0574f2360da5092007b35a7f3f887fd6f9ca24cdd1c28e563e3d67cac9baa"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/grip_stream/grip_stream.ino",
+      "sha256": "865e4bc984090ef2f90bd563de91ebcf1b4362689d0ab4c4ca9b4ed91ca63a36"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/__pycache__/monitor.cpython-312.pyc",
+      "sha256": "a71688e52653b44ac9edbf5375e027045528eb6ce1cee688ecdb8e18a543a13a"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/__pycache__/protocol.cpython-312.pyc",
+      "sha256": "5f6559a27899088b97227c01b751bde992b9b092d1c5c71f1eab391d8ffae381"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/__pycache__/unity_bridge.cpython-312.pyc",
+      "sha256": "be453ad6e3c6edf02449fd97929e465ed5e1f0b5299138561c587df3188bb7f9"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/monitor.py",
+      "sha256": "123279afcebcc5e0c96804dea3f6f4ef20ef58b859a2b1d5cc0d8d6244c793e4"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/protocol.py",
+      "sha256": "0fa8e19f685f5e52c0f0de5ecc42ba6ddb81d32d37b8809e01954955dbb8babc"
+    },
+    {
+      "path": "firmware/2.4-wireless-streaming/host/unity_bridge.py",
+      "sha256": "87c396dc8a6eeaa39411fe14e62de17faf05a6dfe7a216e130934f78129080cc"
+    },
+    {
+      "path": "firmware/DEPENDENCIES.md",
+      "sha256": "1712621453d4ef150d61bff5fdc88a52204ad4f05a7f4bc9f6b5c51ca62b7061"
+    },
+    {
+      "path": "firmware/README.md",
+      "sha256": "c9dcaf7f631ec8fcc54de37dbe7b0a6934fb027166ec07d51c6dbacbb8a18373"
+    },
+    {
+      "path": "firmware/arduino-cli.yaml",
+      "sha256": "94688ed8643ecd9c18a2fc0bd2ebccab476defb0fd5b1d632dd8de66310ad9ec"
+    },
+    {
+      "path": "firmware/build.ps1",
+      "sha256": "468d4a7e5cd2e59cd88e22ec93a2a9489a2bba6bcbf742332f3a2578c33195b0"
+    },
+    {
+      "path": "firmware/run_tests.py",
+      "sha256": "1961bc18aed52b36280f245c3753c26789f802c59162672f954c98446402e7e9"
+    },
+    {
+      "path": "firmware/setup.ps1",
+      "sha256": "a67ee736b79dcc3d64d0d957f42b213d6ee76bd32ec92da55bc50e64c9221c15"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/README.md",
+      "sha256": "8bb37bd63b49fd78d1f2a058c150d4db46180e405f3be9e2ada7dfc6e7d4ee55"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/assembly-preview.png",
+      "sha256": "c636ca662362b72e2e733c14a5a9326f41db0bb0b8df884ba842a4e791579e37"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/export_parts.py",
+      "sha256": "a60468246641139e422bfcbb63e46ed91ce640a40fff93594cd2f47c322e67d0"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/cylinder_bottom.stl",
+      "sha256": "64f4a71128c374a38f52a92ae6c7e015febe6be12fcc60428e567961bfe0e40e"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/cylinder_top.stl",
+      "sha256": "545b640653464f83de016e37858160042c79ef4fa225c71856fff40ab9df228d"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/lid.stl",
+      "sha256": "1ef631d0b155dddae454274c69131471a583350109f96ae0be71a0b4344b9804"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/manifest.json",
+      "sha256": "67b70da906f6b30a2fb8ec5e176633e1d03d168ecd4324fd456c146812151cd1"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/mesh_check.json",
+      "sha256": "245528d8a0d454b72287a8d6e98c5cfde96a790d4a4c8f08f8e0e729737b80b9"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/pencil_bottom.stl",
+      "sha256": "6f7f8ce83a5ca96e72d2850bca80c74d7c1908bf576b7355c19a257497692dc8"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/pencil_top.stl",
+      "sha256": "b19015f08abcc4752a11973079aa1da33e0a32b2148f4f20962038cde35b9f58"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/platen.stl",
+      "sha256": "18ca9cd942c87c6beb545a3d22d68cf97849c1305b659d76567055203ef119c4"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/sphere_bottom.stl",
+      "sha256": "9e04315dfe3e693a87f3edb1386f9ef0e0dc1b8b335c7d1e3a488a67e3f84696"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/sphere_top.stl",
+      "sha256": "769a1937d3791995748964d2ff04602a05b57daf204f7aa83aa63b8450a6e572"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/exports/tray.stl",
+      "sha256": "0af00fe6c73762b67b898da7f5874c6bce06d2fdd875a812d511b057c999d222"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/fit_report.csv",
+      "sha256": "65f38f69f581f6226c2c185c1b8c4ff2651b66e6575f33785346105ebe4a0c76"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/grip_core.scad",
+      "sha256": "7387695cc29a11d73c111c3c25481f01e978b235ce02c3d7ce3dec7f4b50dc75"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/render_preview.py",
+      "sha256": "feb27eb5755879055e62998b5a3a4088b84e5d83f01d6901ab24dfe602ee089f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/README.md",
+      "sha256": "10ae83d2acc977dc3bcb288afa8b79c912a066563ff08c729d9518c64a2ce374"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/__pycache__/build.cpython-312.opt-1.pyc",
+      "sha256": "3a63dcb4360485e11bf44d60a121a5b83049e94ada1142103769c6c86e343a72"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/__pycache__/build.cpython-312.pyc",
+      "sha256": "3a63dcb4360485e11bf44d60a121a5b83049e94ada1142103769c6c86e343a72"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/assembly.scad",
+      "sha256": "26227982d6895412a2d95801e9fba9570452a4b5b9a6a0e998ddf2467439bdfd"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/build.py",
+      "sha256": "c2757f7eba2a9473fa26f2368ce3fbdc38ae2d0a8d980b23b1942f97c2b17416"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/check_geometry.py",
+      "sha256": "cbc4563b9e6f00dcb7cc4e6bfc7dbfd096ca255dba226f5a47ef9756f3b1a76f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/active_spacer.dxf",
+      "sha256": "eea97892a5df27e7b5b2704a631572a9a169ff24cb0d1e04997d5f1ea43954f1"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/active_spacer.stl",
+      "sha256": "61d685e5c08917b2baa258ea0b67d1a5fca409be7a5bc0cd997580e1711529ed"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/base_plate.dxf",
+      "sha256": "aa41c4d5c3a59c8c263b8469f824ea6cd73289e81b9401c65ba61b420a04d184"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/base_plate.stl",
+      "sha256": "41594b0a0215fcca9724d3e537c4134b95aeae44665d90c7f8091fc81f830d7f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/cylinder_bottom.stl",
+      "sha256": "242c73a5f7bc7701d494a416fd517f8393bfe687af94f59c7a6ccd05dc8e1665"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/cylinder_top.stl",
+      "sha256": "8839a114af6355db10ab21d4963e7449d91388a7fd2e566e884f3cd9b9ca4f28"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/deck.stl",
+      "sha256": "9a755a7a1d665291230b8571d869148517930ce0b37cf6585d08d111f7c62d52"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/fixed_spacer.dxf",
+      "sha256": "2366819375788d6dc568ac8f53b7c788202ad31337c92a5ed154a6f8da2cdc11"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/fixed_spacer.stl",
+      "sha256": "9320460be78a9a2fd55fbba741f060208d7be8cc4099bb1ef42a785345526dd0"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/pencil_bottom.stl",
+      "sha256": "fa4e6301b34f47630caded1861fedcca60812ae9979d641517b97cce206c41ec"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/pencil_top.stl",
+      "sha256": "f1c05480367d0bd45400a43ffa2e910246660ece7879c4a39483ecd6cd84aa94"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/sphere_bottom.stl",
+      "sha256": "eacd0867bca46a3b7670e1fc63cd3b4dd2b10c5ead145185ac43fbd6a1c10da3"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/sphere_top.stl",
+      "sha256": "577b2e7ba2bf2f1f16b0113060d14da30c59447a7ff819c507dcda02924152e8"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/stop_sleeve.stl",
+      "sha256": "a52786c707e1dfd2876aa756e9dbf1acb4136c68d6b877006e6e984e3856e6fe"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/top_plate.dxf",
+      "sha256": "6ecb73aa2490014d07feaf3228511a67b768addc4fe1a94cde2ab4013d2fa5fe"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/top_plate.stl",
+      "sha256": "a3ff79371d848c2d5565671f624d182e0ecba45cb5a86caf31f63126f9aed998"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/tray.stl",
+      "sha256": "22fced1f2c7b4c668c9b6790352e1afe05f8ab944c133948072e9008aa784dec"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/exports/verification.json",
+      "sha256": "12be1183392b86ca777fc0e02b928ee944961a21cd0a717dd1feb56522f5e4e0"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/layout.json",
+      "sha256": "cf5635877eb95587634fa75dd1aef50915dbd1ca8232aaae48c542c3336133c1"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/packaging.png",
+      "sha256": "52f51181a561e89d67a3b10d9e2bea0746a1813af73c5f21035036670c9d2a4f"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/parameters.scad",
+      "sha256": "2ac99a970c622550ef05fcae6e2deb0194ef0416e7feaccad6c3e427d0ed4f63"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/references/TAL220.pdf",
+      "sha256": "e378569048d0b48befa28791813d05e53690bc81159f536ba29df11a538263b6"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/references/TAL220.png",
+      "sha256": "b036c087bf531a1dbd54bdaa73909d5e3cc1127c6d53b5051f134929f2c73994"
+    },
+    {
+      "path": "hardware/2.1-interchangeable-grips/rev2/render_layout.py",
+      "sha256": "47e8b3285e8c482a4be34f95122e42a30d999c81035f24f8ad2e9e8a84744ca2"
+    },
+    {
+      "path": "hardware/2.2-electronics/README.md",
+      "sha256": "de3aa3d55694c6527f95b6eb30dcfe8dc60efbc1ce1d8a6a86422ce760a4b948"
+    },
+    {
+      "path": "hardware/2.2-electronics/REV2_CIRCUIT.md",
+      "sha256": "3b606b0884674c3492c8c3fc106f629358656614ce13fedbc2cf89fd52551e6f"
+    },
+    {
+      "path": "hardware/2.2-electronics/STARTER_PARTS.md",
+      "sha256": "f9552ac277135ba4a4c2706b00f32f1ef3da1ce6e4e651a44ecb6b21c55a406b"
+    },
+    {
+      "path": "hardware/2.2-electronics/bench_report.csv",
+      "sha256": "fcc1215f611912a14ee1d7266421d37fbc10e164d1b89d6809aa8f93c37eb790"
+    },
+    {
+      "path": "hardware/2.2-electronics/procurement.csv",
+      "sha256": "698109a74ea252f654c3b2c7baec329ea128568aafd435ef68cdf58ae641a585"
+    },
+    {
+      "path": "tests/2.1-mechanical/__pycache__/test_layout.cpython-312.opt-1.pyc",
+      "sha256": "04b6c8739f4b1a9ff0cf44f30ee2229edc0e03883e359f7f8d8f94cfc85608a6"
+    },
+    {
+      "path": "tests/2.1-mechanical/__pycache__/test_layout.cpython-312.pyc",
+      "sha256": "04b6c8739f4b1a9ff0cf44f30ee2229edc0e03883e359f7f8d8f94cfc85608a6"
+    },
+    {
+      "path": "tests/2.1-mechanical/test_layout.py",
+      "sha256": "0f814f211bb138ce532c2dfa843e20c4a7d7994c72cfd1e7214dc85144a0f001"
+    },
+    {
+      "path": "tests/2.3-calibration/README.md",
+      "sha256": "8d04daf304f89c1c83ba332b6f2c5eb05d46dc374e7e9964727ac1f6659cebcf"
+    },
+    {
+      "path": "tests/2.3-calibration/__pycache__/test_verification.cpython-312.pyc",
+      "sha256": "5925b54c04a7b4e5ef066683a3bdc04cb2b05aa231915f12f926a358ee83ece3"
+    },
+    {
+      "path": "tests/2.3-calibration/test_core.cpp",
+      "sha256": "1ca42f288c26f5dd1ce6594ad8ce3646fce6d3f8e715109551469ce23bc846f2"
+    },
+    {
+      "path": "tests/2.3-calibration/test_hx711_ready.cpp",
+      "sha256": "fc4f582114479df15bbace7b2543d4e639c2338cb8e3e6475de112fb55e988a2"
+    },
+    {
+      "path": "tests/2.3-calibration/test_verification.py",
+      "sha256": "baa47d2c73e71534563c42e73eeb864a710e90074bd98052519f27b70b12f4e4"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/README.md",
+      "sha256": "6a8f30ff352f0c2ea32a527f40b5e28daabc4e1b75836c719ebc37c7bddb1004"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/__pycache__/test_capture_delivery.cpython-312.pyc",
+      "sha256": "18fd7fb2461db21ac4cb0dcd5d22ba0a96798240c25574d7f11450a205ca9c7b"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/__pycache__/test_protocol.cpython-312.pyc",
+      "sha256": "8b0144f2f33c3169fa3350f0dd2fc947e3e46237516354271ac5f2d6744c3d68"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/test_capture_delivery.py",
+      "sha256": "419be701499cd082f0ba306dc953e0a92515486a7105ccb710541650d86c9cc0"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/test_protocol.py",
+      "sha256": "9672130644ea7fa5aca79bcf554f55dd2078af0a0584f76f4b8b98f315078818"
+    },
+    {
+      "path": "tests/2.4-wireless-streaming/test_telemetry.cpp",
+      "sha256": "9eed130edd0368304515db574dfd9ed4359004c376a2445fecb227d626d74cc7"
+    },
+    {
+      "path": "tests/3.2-vision/README.md",
+      "sha256": "667b20fdd3ad0bb669cdcc125b99d6ad4c65acd026d5ca6105c11a39b87d39e0"
+    },
+    {
+      "path": "tests/3.3-deformation/README.md",
+      "sha256": "31ae2fc9b4db3a1988e1a3013067d50bfb31412a4a85ccc9bcc653b31e0cf490"
+    },
+    {
+      "path": "tests/3.4-game-modules/README.md",
+      "sha256": "9d2f54d9a11267e35bd323a8cd1ac9ea9665d08d1841ff7cfdd89c3c7a821c5d"
+    },
+    {
+      "path": "tests/3.4.1-force-object-interaction/README.md",
+      "sha256": "fd783583f1c340ead5fcf93a858bd946f9d256057d4e2f10faf701b84a08a93b"
+    },
+    {
+      "path": "tests/3.4.2-cognitive-performance/README.md",
+      "sha256": "6dfcf99b543f2455a7b5846c042515562ef1d0eb3b48d8430dba2b3dd8f5099f"
+    },
+    {
+      "path": "tests/3.4.3-visuomotor-coordination/README.md",
+      "sha256": "3c941547b4da2953009d27f23aa6bdb2d38b1e4d1f45c278a5fd5aa0821beeb4"
+    },
+    {
+      "path": "tests/4.1-baseline/README.md",
+      "sha256": "979646aff39d5c2eb719755347d7b6c11f0448b9242d99e062417012abe49bf7"
+    },
+    {
+      "path": "tests/4.2-data-schema/README.md",
+      "sha256": "c6933e1ee8a0061a1697525b7cb054f469e0d5470df9a6672f58e85fb40daec2"
+    },
+    {
+      "path": "tests/4.2-data-schema/__pycache__/test_features.cpython-312.pyc",
+      "sha256": "dc6f66264cf9da718daf5263d97134b3271568b50d46e483fabb2b70ddb259a3"
+    },
+    {
+      "path": "tests/4.2-data-schema/test_features.py",
+      "sha256": "4a44e5912947651c31ee32c14f4e25d6037034276fcd3bb4163df066bea97bd9"
+    },
+    {
+      "path": "tests/4.3-fatigue-model/README.md",
+      "sha256": "0126c5bf09b1afd254047b1127f494b761f55c45c9f0868510ec6b4e27c572c3"
+    },
+    {
+      "path": "tests/4.4-model-parity/README.md",
+      "sha256": "0c83ac4172a4a4aa4111f52e1d0ae63166d1f528e8650252f443314986dbda61"
+    },
+    {
+      "path": "tests/4.5-decision-policy/README.md",
+      "sha256": "92a41eac7deea6154dc8447c0f8b924c03ce93e7ca7fefc219233c72331a1949"
+    },
+    {
+      "path": "tests/4.5-decision-policy/__pycache__/test_policy.cpython-312.pyc",
+      "sha256": "51bbe1aabfa811b97ff09ff6396ae886ff80ddb6d2ddcfc8aef46d41143c8fb2"
+    },
+    {
+      "path": "tests/4.5-decision-policy/test_policy.py",
+      "sha256": "55516fb6779241b5fd9bf5db4111905aa10eba87ac1774b7292bee9fae11b684"
+    },
+    {
+      "path": "tests/5.1-patient-dashboard/README.md",
+      "sha256": "82a2f78f3e22a753022d6764eff7a8bd74af67e3ca06bdbbdc2475e9b2386222"
+    },
+    {
+      "path": "tests/5.2-doctor-dashboard/README.md",
+      "sha256": "3d713b6d9d3444eacbaa3f1efc903bad1a2c6729496349004d3e988645ceff00"
+    },
+    {
+      "path": "tests/6.1-bluetooth-integration/README.md",
+      "sha256": "cde9233d590d4c0870e103520d31ae7836c8bc09c9f1b71c7e605824bc99d300"
+    },
+    {
+      "path": "tests/6.1-bluetooth-integration/__pycache__/test_unity_bridge.cpython-312.pyc",
+      "sha256": "cfb0caea6d9db6f9bf3f460c32e5735a22b8239f8d6bdad50742e19e06c99077"
+    },
+    {
+      "path": "tests/6.1-bluetooth-integration/test_unity_bridge.py",
+      "sha256": "cc3b721615b8b7b12075160aa2938e6450ab6c86a2789d2dac0663dc45d49038"
+    },
+    {
+      "path": "tests/6.2-closed-loop/README.md",
+      "sha256": "8aae75978423e0a235dbd17ef4b60dcd7d88be29cd5403b44eab55b475e03f94"
+    },
+    {
+      "path": "tests/__pycache__/conftest.cpython-312-pytest-9.0.3.pyc",
+      "sha256": "47368b1b1ca9378e32aa5fac1f97f1cd401d376f312372489ee3e261cb9fb7b5"
+    },
+    {
+      "path": "tests/__pycache__/test_analysis.cpython-312-pytest-8.4.2.pyc",
+      "sha256": "c197bc5bd8b84703ab171bb91fdcc3d73ba6ef0eb3afcd23757bdcffd8736ef8"
+    },
+    {
+      "path": "tests/__pycache__/test_analysis.cpython-312-pytest-9.0.3.pyc",
+      "sha256": "a6de71c05b22c99ad6c262d46a8d1fc462986487c117c9701a3c2e49f4e0f346"
+    },
+    {
+      "path": "tests/__pycache__/test_api.cpython-312-pytest-8.4.2.pyc",
+      "sha256": "6cad6fa8b32123516dbb20fd629db9da01fe00b8b6ad68059fc909d566b69a5d"
+    },
+    {
+      "path": "tests/__pycache__/test_api.cpython-312-pytest-9.0.3.pyc",
+      "sha256": "2f79e45802a9d9cc25f17a71e0a1c072a9d2d4d331626ddb4fda7672717337a9"
+    },
+    {
+      "path": "tests/__pycache__/test_biosim_api.cpython-312-pytest-9.0.3.pyc",
+      "sha256": "a50d3b5fa5106defe4cc9429f06296da5bcbe2dbc955a9ff943af2fe7efbfc5e"
+    },
+    {
+      "path": "tests/__pycache__/test_reporting.cpython-312-pytest-9.0.3.pyc",
+      "sha256": "0a0e43edc950aaeb254f7da3047bf0d4ed16a8ab443900906acda7b1776cd733"
+    },
+    {
+      "path": "tests/__pycache__/test_storage.cpython-312-pytest-9.0.3.pyc",
+      "sha256": "25c110d32904af240b426cc2d2fe7cca661af588d8918368ef83f989f3d87e89"
+    }
+  ]
+}

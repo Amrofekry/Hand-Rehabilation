@@ -1,0 +1,10 @@
+{
+    "passed": true,
+    "unity": "2022.3.20f1",
+    "utc": "2026-10-22T07:18:26.3383892Z",
+    "assertions": 186,
+    "maxFeatureError": 1.1175870895385742e-7,
+    "onnxDifference": 7.450580596923828e-9,
+    "inferenceP50Ms": 0.2938,
+    "inferenceP95Ms": 0.42800000000000007
+}

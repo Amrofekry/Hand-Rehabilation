@@ -1,0 +1,7 @@
+{
+  "automation": "Paused after actionable software closeout; live-user and hardware trials remain.",
+  "scope": "Owned UI font repair, regression test, delivery documents and selected fresh evidence. Existing unrelated working-tree changes preserved.",
+  "commit": "83edaac9d35eb6dd7a37355e0a885e869c3c0a1a",
+  "branch": "3.2-bimanual-tracking",
+  "subject": "6.2 Fix native UI font fallback and verify Unity closeout"
+}

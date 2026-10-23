@@ -1,0 +1,51 @@
+{
+    "hand": "Left",
+    "item": "Silicone ball",
+    "error": "",
+    "engineTracked": true,
+    "grabbed": true,
+    "dropped": true,
+    "finite": true,
+    "contacts": 5,
+    "visibleHands": 1,
+    "colliderPenetrationMm": 3.110241174697876,
+    "maxObjectSpeed": 0.3121587038040161,
+    "ghosted": false,
+    "kinematic": false,
+    "heldAtEnd": true,
+    "nativeHeldAtEnd": true,
+    "brokenAtEnd": false,
+    "apertureClear": true,
+    "damage": 0.0,
+    "otherHeld": "Silicone ball",
+    "heldSeconds": 0.8020606637001038,
+    "mask": 512,
+    "objectLayer": 9,
+    "palm": {
+        "x": 2.472568988800049,
+        "y": 1.0569592714309693,
+        "z": -4.250191688537598
+    },
+    "fingerTip": {
+        "x": 2.467275857925415,
+        "y": 1.0621813535690308,
+        "z": -4.290036201477051
+    },
+    "physicsPalm": {
+        "x": 2.4728124141693117,
+        "y": 1.0566534996032715,
+        "z": -4.250637531280518
+    },
+    "meshCenter": {
+        "x": 2.17903733253479,
+        "y": 0.9243159294128418,
+        "z": -4.246916770935059
+    },
+    "meshSize": {
+        "x": 0.7201939821243286,
+        "y": 0.3921489715576172,
+        "z": 0.22372674942016602
+    },
+    "contactAdapterP95Ms": 0.1032,
+    "frameP95Ms": 8.554400876164437
+}

@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-01T16:30:55.817137+00:00",
+  "checks": [
+    {
+      "name": "wrong-contact-channel-order",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Hand rig checks: 105 passed, 2 failed; managed math/SDK doubles, no native Unity or VirtualGrasp"
+    },
+    {
+      "name": "unvalidated-delta-time",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Hand rig checks: 105 passed, 2 failed; managed math/SDK doubles, no native Unity or VirtualGrasp"
+    },
+    {
+      "name": "mesh-registration-without-input",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Hand rig checks: 104 passed, 3 failed; managed math/SDK doubles, no native Unity or VirtualGrasp"
+    },
+    {
+      "name": "partial-invalid-sdk-frame",
+      "compiled": true,
+      "rejected": true,
+      "exit": 1,
+      "summary": "Hand rig checks: 101 passed, 6 failed; managed math/SDK doubles, no native Unity or VirtualGrasp"
+    }
+  ],
+  "productionReplacedByMutations": false,
+  "sourceHashes": {
+    "FingerPoseDriver.cs": "c652e4c9e7dc85a649677ab067507ca10646dc3ea12bffdb39d961ebf6afa8a5",
+    "HandRigRules.cs": "fd1615e4106f4001299c49a203141347bb3b7becf38db21c59b6832b99ed2e9c",
+    "RehabVGController.cs": "93b8f7e303d45e24515ffeace6704e4136ac78c4705b08cf348d8c0dd5361342",
+    "RehabVirtualGrasp.cs": "58336d8d88103f91a34abc7af530433d1de7c9d369d46418a3c2180d6ef3ead7"
+  }
+}

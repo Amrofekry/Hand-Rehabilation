@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "native_assertions": 186,
+  "python_ai_tests": 32,
+  "existing_regression_tests": 66,
+  "windows_modes": [
+    "smoke",
+    "replay",
+    "rendered",
+    "journey"
+  ],
+  "packaged_assertions_per_mode": 10,
+  "trained_on_device_data": false,
+  "clinical_validation_complete": false
+}
