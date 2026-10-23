@@ -1,22 +1,12 @@
-## Current delivery — 2026-10-06
+# Grip Rehab — Unity apartment and live hand tracking
 
-## Scene workspace
+**Current status (23 October 2026): see [Docs/STATUS.md](Docs/STATUS.md).** That file is the single source of truth for the 23 software tasks, their evidence and open blockers. The active roadmap is the [ultimate upgrade plan](Docs/superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Dated reports such as `CLOSEOUT_2026_10_06.md`, `TASKS.md` and `REPAIR_REPORT.md` are history.
+
+This directory is the unified research-product workspace. `Assets`, `Packages` and `ProjectSettings` are the Unity Hub project; `firmware/`, `hardware/`, `ai-engine/` and `tests/` hold imported sources. All three modules are playable; Modules 2/3 are research prototypes. The doctor screen is a local preview. The fatigue AI is research software trained on a public EMG proxy. None of it is a clinical assessment. The original Gantt and architecture copies are in `Docs/Source/`.
 
 Open `Assets/Scenes/GripRehab.unity` to edit the complete game in one scene. **Grip Rehab > Scenes > Open Complete Workspace** opens that same scene. See [the editing guide](Docs/SCENE_ORGANIZATION.md).
 
-
-The Windows player has been rebuilt and tested with the current English HandMate presentation and without active voice commands. Native gameplay checks pass 168/169/168; UI checks pass 60 at each of two resolutions; gallery checks pass 87 at each of three resolutions. A native font fallback initialization fault was repaired. See [current report](Docs/CLOSEOUT_2026_10_06.md) and [numbered tasks](Docs/TASKS.md).
-
-Input is mouse, keyboard or the whole-hand camera pointer. Voice remains future task 7. Live human testing and real Nano/HX711 testing remain tasks 9 and 10. Existing doctor/AI expansion sources are not presented as a completed clinical backend.
-
-# Grip Rehab — Unity apartment and live hand tracking
-
-**Graduation item 2 source update (6 October):** the default menu now provides local sign-in/account creation, the existing hand-profile form, input preparation, explicit optional research-baseline consent, module selection and protected results. Guest practice does not write patient records. Continue restores the signed-in patient's checkpoint; a local doctor may explicitly assign a preserved legacy profile. See [the journey guide and acceptance status](Docs/JOURNEY_ITEM_2.md). Current source compiles against Unity's cached references; native Play/Stop and a new Windows build are pending the Software Terms dialog. The existing executable is the earlier repair release.
-
-
-This directory is now the **unified research-product workspace**. `Assets`, `Packages` and `ProjectSettings` remain the Unity Hub project; `firmware/`, `hardware/`, `ai-engine/` and `tests/` hold imported sources and continuing work. Start with [requirements](Docs/REQUIREMENTS.md), [progress](Docs/PROGRESS.md), and the [current blockers](Docs/BLOCKERS.md). Modules 2/3 contain playable research-prototype exercises; the doctor screen is a local preview, and adaptive AI remains under development. None is a clinical assessment. The original Gantt and architecture copies are in `Docs/Source/`.
-
-Open `E:\GP\codex\GripRehab-Unity` in Unity Hub with Editor **6000.4.4f1**. The saved main scene is `Assets/Scenes/GripRehab.unity`. For first-time instructions, read [START_HERE_AR.html](START_HERE_AR.html) and the [Arabic camera/hand guide](Docs/HANDS_AND_MEDIAPIPE_AR.md).
+Open `E:\GP\codex\GripRehab-Unity` in Unity Hub with Editor **2022.3.20f1**. The saved main scene is `Assets/Scenes/GripRehab.unity`. For first-time instructions, read [START_HERE_AR.html](START_HERE_AR.html) and the [Arabic camera/hand guide](Docs/HANDS_AND_MEDIAPIPE_AR.md).
 
 Current display controls and the independent component gallery are explained in [APPEARANCE_AR.md](Docs/APPEARANCE_AR.md). The saved gallery is `Assets/UI/GripUiGallery.unity`; its preview data is unrelated to patient sessions. [UI completion checklist](Docs/UI_COMPLETION_CHECKLIST.md) records current English UI verification and remaining live/device trials.
 
