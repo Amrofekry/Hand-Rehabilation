@@ -48,5 +48,3 @@ __pycache__/
 # Stage 0 hygiene
 /.venv*/
 /Tools/**/__pycache__/
-/Assets/_Recovery/
-/Assets/_Recovery.meta
