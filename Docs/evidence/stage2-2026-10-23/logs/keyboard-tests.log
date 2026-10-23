@@ -1,0 +1,73 @@
+PASS startup held inputs wait for release
+PASS Space squeezes after a neutral frame
+PASS Space release stops squeezing
+PASS left mouse also squeezes
+PASS Escape pause: active grip before interruption
+PASS Escape pause: state change blocks all same-frame reads
+PASS Escape pause: held inputs do not squeeze after resume
+PASS Escape pause: release and new Space press restores grip
+PASS Escape pause: release and new mouse press restores grip
+PASS Tab pause: active grip before interruption
+PASS Tab pause: state change blocks all same-frame reads
+PASS Tab pause: held inputs do not squeeze after resume
+PASS Tab pause: release and new Space press restores grip
+PASS Tab pause: release and new mouse press restores grip
+PASS Resume button: active grip before interruption
+PASS Resume button: state change blocks all same-frame reads
+PASS Resume button: held inputs do not squeeze after resume
+PASS Resume button: release and new Space press restores grip
+PASS Resume button: release and new mouse press restores grip
+PASS mode switch: active grip before interruption
+PASS mode switch: state change blocks all same-frame reads
+PASS mode switch: held inputs do not squeeze after resume
+PASS mode switch: release and new Space press restores grip
+PASS mode switch: release and new mouse press restores grip
+PASS focus loss: active grip before interruption
+PASS focus loss: state change blocks all same-frame reads
+PASS focus loss: held inputs do not squeeze after resume
+PASS focus loss: release and new Space press restores grip
+PASS focus loss: release and new mouse press restores grip
+PASS component disable: active grip before interruption
+PASS component disable: state change blocks all same-frame reads
+PASS component disable: held inputs do not squeeze after resume
+PASS component disable: release and new Space press restores grip
+PASS component disable: release and new mouse press restores grip
+PASS Home: keyboard actions and grip are blocked
+PASS Home: another consumer cannot reopen input in the same frame
+PASS Home: held Space does not leak across context
+PASS profile text field: keyboard actions and grip are blocked
+PASS profile text field: another consumer cannot reopen input in the same frame
+PASS profile text field: held Space does not leak across context
+PASS session options: keyboard actions and grip are blocked
+PASS session options: another consumer cannot reopen input in the same frame
+PASS session options: held Space does not leak across context
+PASS research activity: keyboard actions and grip are blocked
+PASS research activity: another consumer cannot reopen input in the same frame
+PASS research activity: held Space does not leak across context
+PASS lost focus: keyboard actions and grip are blocked
+PASS lost focus: another consumer cannot reopen input in the same frame
+PASS lost focus: held Space does not leak across context
+PASS Space can re-arm independently of a held Resume mouse button
+PASS unreleased mouse alone remains blocked
+PASS mouse becomes usable after its own release
+PASS separate gate instances do not share state
+PASS Escape toggles session options
+PASS Tab toggles session options
+PASS Escape and Tab together request one toggle
+PASS no pause key does nothing
+PASS Home/activity cannot be unpaused by apartment keys
+PASS typing cannot toggle gameplay
+PASS background keys cannot toggle gameplay
+PASS Space/mouse uses demo setpoint
+PASS either Shift uses maximum demo force
+PASS Shift alone is not a squeeze
+PASS blocked context produces no demo force
+PASS demo force cannot substitute for Camera/Phase 2
+PASS mouse wheel adds three newtons per notch
+PASS plus increases at defined rate
+PASS minus decreases at defined rate
+PASS opposing plus/minus cancel
+PASS setpoint cannot exceed maximum
+PASS setpoint cannot drop below minimum
+PASS negative elapsed time does not change setpoint
+RESULT 72 passed, 0 failed; production keyboard policy only; no Unity or physical input

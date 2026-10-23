@@ -10,7 +10,7 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0 and 1 are done; the Stage 1 findings are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md). Stage 2 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–2 are done; the findings and Stage 2 outcomes are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md). Stage 3 needs authorization. |
 
 ## Evidence columns
 
@@ -52,7 +52,7 @@ B02 physical device, B03 clinical data/ethics, B04 Obi/YOLO licences, B05 live h
 
 ## Issues found during Stage 0 (for the Stage 1 ledger)
 
-- `Packages/manifest.json` references package tarballs by absolute path `file:E:/GP/codex/GripRehab-Unity/Tools/AI/...`. The project won't open from any other folder or machine. Change these to relative `file:../Tools/AI/...` paths.
+- ~~Absolute package paths in `Packages/manifest.json`~~: fixed in Stage 2 (A-006) with relative `file:../Tools/...` paths.
 - `ROLLBACK_2026_10_12.md` is linked from `TASKS.md` and `SOFTWARE_GRADUATION_PLAN.md` but does not exist. Rollback evidence exists only as JSON under `evidence/rollback-2026-10-12/`.
 - ~~UI/gallery results only from the Unity 6 build~~: re-run 23 Oct on the 2022.3.20f1 build and passing (60 checks at each of 2 resolutions, 87 at each of 3). See AUDIT_LEDGER §1.
 - VirtualGrasp still warns "No baked grasps found" (plan Task 2.2).

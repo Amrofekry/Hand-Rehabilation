@@ -1,0 +1,62 @@
+PASS Maximum pressure saturates at material depth
+PASS Normal demo pressure makes a visible dent
+PASS No contact creates no dent
+PASS Zero force creates no dent
+PASS Negative force creates no dent
+PASS Rigid material cannot bend
+PASS Many phalanges do not each receive full pressure
+PASS Bad force fails closed NaN
+PASS Bad stiffness fails closed NaN
+PASS Bad material depth fails closed NaN
+PASS Bad timestep ignored NaN
+PASS Bad force fails closed Infinity
+PASS Bad stiffness fails closed Infinity
+PASS Bad material depth fails closed Infinity
+PASS Bad timestep ignored Infinity
+PASS Bad force fails closed -Infinity
+PASS Bad stiffness fails closed -Infinity
+PASS Bad material depth fails closed -Infinity
+PASS Bad timestep ignored -Infinity
+PASS Frame hitch cannot fake one second of damage
+PASS Centre indentation is inward and bounded
+PASS Distant vertices untouched
+PASS Degenerate normal creates no displacement
+PASS No frame-to-frame random jitter
+PASS Contact deformation has irregular local shape
+PASS Rubber has a small lateral bulge
+PASS Contact response follows object rotation -1
+PASS Contact response follows object rotation 1
+PASS State never mutates the shared source mesh array
+PASS Rubber visibly indents under a sustained squeeze
+PASS No global object scaling or far-side collapse
+PASS Original rest array unchanged
+PASS Rubber fully recovers after release
+PASS Final recovery position requests a mesh upload
+PASS Settled mesh avoids unnecessary re-uploads
+PASS Tomato-like material retains a bounded dent
+PASS Reset restores both visible mesh and permanent state
+PASS Bad time cannot poison vertices
+PASS Bad displacement is rejected
+PASS One peak frame cannot break a mug
+PASS Contact loss resets continuous high-force dwell
+PASS Subthreshold squeeze does not damage porcelain
+PASS Sustained maximum visual/demo force can break porcelain
+PASS Cracker has its own brittle-force response
+PASS Invalid grip does not accumulate damage
+PASS Invalid dwell setting fails closed
+PASS Invalid damage capacity fails closed
+PASS Gentle porcelain contact is harmless
+PASS Strong porcelain impact fractures
+PASS Bad impact input is rejected
+PASS Invalid impact threshold fails closed
+PASS Fracture produces multiple bounded source-shaped pieces
+PASS No source triangle disappears during fracture
+PASS Reassembled piece vertices match original geometry
+PASS Each fragment uses compact valid mesh indices
+PASS Repeated fracture partition is deterministic
+PASS Piece count is bounded
+PASS Incomplete triangles rejected
+PASS Invalid index rejected
+PASS Nonfinite geometry rejected
+PASS Nonfinite rest vertices rejected
+Deformation/fracture checks passed: 61

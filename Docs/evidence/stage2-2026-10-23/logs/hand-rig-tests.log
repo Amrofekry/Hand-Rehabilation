@@ -1,0 +1,108 @@
+PASS Right independent channel 0:0
+PASS Authored curl axis/sign for False 0
+PASS Right independent channel 0:1
+PASS Authored curl axis/sign for False 1
+PASS Right independent channel 0:2
+PASS Authored curl axis/sign for False 2
+PASS Right independent channel 1:0
+PASS Authored curl axis/sign for False 3
+PASS Right independent channel 1:1
+PASS Authored curl axis/sign for False 4
+PASS Right independent channel 1:2
+PASS Authored curl axis/sign for False 5
+PASS Right independent channel 2:0
+PASS Authored curl axis/sign for False 6
+PASS Right independent channel 2:1
+PASS Authored curl axis/sign for False 7
+PASS Right independent channel 2:2
+PASS Authored curl axis/sign for False 8
+PASS Right independent channel 3:0
+PASS Authored curl axis/sign for False 9
+PASS Right independent channel 3:1
+PASS Authored curl axis/sign for False 10
+PASS Right independent channel 3:2
+PASS Authored curl axis/sign for False 11
+PASS Right independent channel 4:0
+PASS Authored curl axis/sign for False 12
+PASS Right independent channel 4:1
+PASS Authored curl axis/sign for False 13
+PASS Right independent channel 4:2
+PASS Authored curl axis/sign for False 14
+PASS Left independent channel 0:0
+PASS Authored curl axis/sign for True 0
+PASS Left independent channel 0:1
+PASS Authored curl axis/sign for True 1
+PASS Left independent channel 0:2
+PASS Authored curl axis/sign for True 2
+PASS Left independent channel 1:0
+PASS Authored curl axis/sign for True 3
+PASS Left independent channel 1:1
+PASS Authored curl axis/sign for True 4
+PASS Left independent channel 1:2
+PASS Authored curl axis/sign for True 5
+PASS Left independent channel 2:0
+PASS Authored curl axis/sign for True 6
+PASS Left independent channel 2:1
+PASS Authored curl axis/sign for True 7
+PASS Left independent channel 2:2
+PASS Authored curl axis/sign for True 8
+PASS Left independent channel 3:0
+PASS Authored curl axis/sign for True 9
+PASS Left independent channel 3:1
+PASS Authored curl axis/sign for True 10
+PASS Left independent channel 3:2
+PASS Authored curl axis/sign for True 11
+PASS Left independent channel 4:0
+PASS Authored curl axis/sign for True 12
+PASS Left independent channel 4:1
+PASS Authored curl axis/sign for True 13
+PASS Left independent channel 4:2
+PASS Authored curl axis/sign for True 14
+PASS Invalid selected joint stays within the thumb chain
+PASS Malformed keyboard delta cannot poison pose
+PASS Malformed manual/demo channels safely open
+PASS Reset recovers finger joints to captured rest
+PASS Invalid delta cannot move/poison joints NaN
+PASS Invalid delta cannot move/poison joints Infinity
+PASS Invalid delta cannot move/poison joints -Infinity
+PASS Invalid delta cannot move/poison joints -1
+PASS Malformed rig settings retain finite rotations
+PASS Malformed smoothing cannot poison tracked pose
+PASS Corrupted angle buffer recovers on a valid sample
+PASS Held loss pose carries no live sample metadata
+PASS Demo switch immediately clears live pose metadata
+PASS Missing rig rejects tracking without a null exception
+PASS Incomplete replacement rig cannot masquerade as tracking
+PASS Duplicate joint cannot control two finger channels
+PASS Replacement joint gets its own rest rather than stale rest
+PASS LEFT SDK adapter writes wrist and all 15 correct-side bones in SDK order
+PASS LEFT invalid final bone prevents the entire frame being written
+PASS LEFT zero quaternion rejected before any SDK write
+PASS LEFT valid poses recover after transient bad input
+PASS RIGHT SDK adapter writes wrist and all 15 correct-side bones in SDK order
+PASS RIGHT invalid final bone prevents the entire frame being written
+PASS RIGHT zero quaternion rejected before any SDK write
+PASS RIGHT valid poses recover after transient bad input
+PASS Missing source joint cannot report SDK success
+PASS Ambiguous same-side bone cannot overwrite a source silently
+PASS Missing input root fails cleanly
+PASS Wrong-side SDK output mapping rejected
+PASS Incomplete SDK output rejected
+PASS Ready means registration plus both complete contact hands
+PASS Registered mesh alone is not a working project input controller
+PASS Ordinary startup grace does not emit a false SDK error
+PASS Persistent missing controllers produce one actionable SDK error
+PASS Persistent SDK binding error is not logged each physics tick
+PASS Contact channels convert index-first to SDK thumb-first correctly
+PASS Left contacts never reuse right bones
+PASS Hand switches reuse precomputed contact arrays
+PASS Only selected left mesh is visible
+PASS Only selected right mesh is visible
+PASS Repeated same-hand selection is idempotent
+PASS A failed finger lookup does not report Ready
+PASS Unavailable SDK cannot retain the previous hand contact bindings
+PASS Delayed registration retries while the native heartbeat still advances
+PASS One SDK bone cannot stand in for two joints
+PASS Failed startup retries are rate limited
+PASS Missing assets never enter uninitialized SDK lifecycle
+Hand rig checks: 107 passed, 0 failed; managed math/SDK doubles, no native Unity or VirtualGrasp

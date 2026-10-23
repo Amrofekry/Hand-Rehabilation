@@ -1,0 +1,131 @@
+PASS math shim positive Z rotates X to Y
+PASS math shim LookRotation maps forward
+PASS Right rest facing retains vertical finger component
+PASS Right image-up still moves game-up
+PASS Right image-down still moves game-down
+PASS Right larger palm retains forward depth
+PASS Right smaller palm retains backward depth
+PASS Right signed -75 turn on 1,0,0
+PASS Right signed 75 turn on 1,0,0
+PASS Right finger 0 remains independent
+PASS Right finger 1 remains independent
+PASS Right finger 2 remains independent
+PASS Right finger 3 remains independent
+PASS Right finger 4 remains independent
+PASS Right recalibration returns to corrected rest
+PASS Right collapsed palm is rejected
+PASS Right explicit tracking loss stays inactive
+PASS Right tracking resumes after valid frame
+PASS Right legacy image-only input still works
+PASS Right image-only signed -60 turn on 1,0,0
+PASS Right image-only signed 60 turn on 1,0,0
+PASS Right keyboard fingers and authored demo rest unchanged
+PASS Right rest facing retains vertical finger component
+PASS Right image-up still moves game-up
+PASS Right image-down still moves game-down
+PASS Right larger palm retains forward depth
+PASS Right smaller palm retains backward depth
+PASS Right signed -75 turn on 1,0,0
+PASS Right signed 75 turn on 1,0,0
+PASS Right finger 0 remains independent
+PASS Right finger 1 remains independent
+PASS Right finger 2 remains independent
+PASS Right finger 3 remains independent
+PASS Right finger 4 remains independent
+PASS Right recalibration returns to corrected rest
+PASS Right collapsed palm is rejected
+PASS Right explicit tracking loss stays inactive
+PASS Right tracking resumes after valid frame
+PASS Right legacy image-only input still works
+PASS Right image-only signed -60 turn on 1,0,0
+PASS Right image-only signed 60 turn on 1,0,0
+PASS Right keyboard fingers and authored demo rest unchanged
+PASS Left rest facing retains vertical finger component
+PASS Left image-up still moves game-up
+PASS Left image-down still moves game-down
+PASS Left larger palm retains forward depth
+PASS Left smaller palm retains backward depth
+PASS Left signed -75 turn on 1,0,0
+PASS Left signed 75 turn on 1,0,0
+PASS Left finger 0 remains independent
+PASS Left finger 1 remains independent
+PASS Left finger 2 remains independent
+PASS Left finger 3 remains independent
+PASS Left finger 4 remains independent
+PASS Left recalibration returns to corrected rest
+PASS Left collapsed palm is rejected
+PASS Left explicit tracking loss stays inactive
+PASS Left tracking resumes after valid frame
+PASS Left legacy image-only input still works
+PASS Left image-only signed -60 turn on 1,0,0
+PASS Left image-only signed 60 turn on 1,0,0
+PASS Left keyboard fingers and authored demo rest unchanged
+PASS Left rest facing retains vertical finger component
+PASS Left image-up still moves game-up
+PASS Left image-down still moves game-down
+PASS Left larger palm retains forward depth
+PASS Left smaller palm retains backward depth
+PASS Left signed -75 turn on 1,0,0
+PASS Left signed 75 turn on 1,0,0
+PASS Left finger 0 remains independent
+PASS Left finger 1 remains independent
+PASS Left finger 2 remains independent
+PASS Left finger 3 remains independent
+PASS Left finger 4 remains independent
+PASS Left recalibration returns to corrected rest
+PASS Left collapsed palm is rejected
+PASS Left explicit tracking loss stays inactive
+PASS Left tracking resumes after valid frame
+PASS Left legacy image-only input still works
+PASS Left image-only signed -60 turn on 1,0,0
+PASS Left image-only signed 60 turn on 1,0,0
+PASS Left keyboard fingers and authored demo rest unchanged
+RESULT 82 passed, 48 failed; production pose source with managed test math; no Unity/camera/native SDK
+FAIL Right turns palm/back facing over around upright Y
+FAIL Right received image-right moves game-right
+FAIL Right received image-left moves game-left
+FAIL Right signed -75 turn on 0,1,0
+FAIL Right signed 75 turn on 0,1,0
+FAIL Right signed -75 turn on 0,0,1
+FAIL Right signed 75 turn on 0,0,1
+FAIL Right image-only signed -60 turn on 0,1,0
+FAIL Right image-only signed 60 turn on 0,1,0
+FAIL Right image-only signed -60 turn on 0,0,1
+FAIL Right image-only signed 60 turn on 0,0,1
+FAIL Right legacy-to-world transition retains X sign
+FAIL Right turns palm/back facing over around upright Y
+FAIL Right received image-right moves game-right
+FAIL Right received image-left moves game-left
+FAIL Right signed -75 turn on 0,1,0
+FAIL Right signed 75 turn on 0,1,0
+FAIL Right signed -75 turn on 0,0,1
+FAIL Right signed 75 turn on 0,0,1
+FAIL Right image-only signed -60 turn on 0,1,0
+FAIL Right image-only signed 60 turn on 0,1,0
+FAIL Right image-only signed -60 turn on 0,0,1
+FAIL Right image-only signed 60 turn on 0,0,1
+FAIL Right legacy-to-world transition retains X sign
+FAIL Left turns palm/back facing over around upright Y
+FAIL Left received image-right moves game-right
+FAIL Left received image-left moves game-left
+FAIL Left signed -75 turn on 0,1,0
+FAIL Left signed 75 turn on 0,1,0
+FAIL Left signed -75 turn on 0,0,1
+FAIL Left signed 75 turn on 0,0,1
+FAIL Left image-only signed -60 turn on 0,1,0
+FAIL Left image-only signed 60 turn on 0,1,0
+FAIL Left image-only signed -60 turn on 0,0,1
+FAIL Left image-only signed 60 turn on 0,0,1
+FAIL Left legacy-to-world transition retains X sign
+FAIL Left turns palm/back facing over around upright Y
+FAIL Left received image-right moves game-right
+FAIL Left received image-left moves game-left
+FAIL Left signed -75 turn on 0,1,0
+FAIL Left signed 75 turn on 0,1,0
+FAIL Left signed -75 turn on 0,0,1
+FAIL Left signed 75 turn on 0,0,1
+FAIL Left image-only signed -60 turn on 0,1,0
+FAIL Left image-only signed 60 turn on 0,1,0
+FAIL Left image-only signed -60 turn on 0,0,1
+FAIL Left image-only signed 60 turn on 0,0,1
+FAIL Left legacy-to-world transition retains X sign

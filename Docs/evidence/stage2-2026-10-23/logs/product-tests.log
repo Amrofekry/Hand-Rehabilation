@@ -1,0 +1,49 @@
+PASS PBKDF2 password verification
+PASS Verifier corruption and iteration bounds
+PASS Patient cannot read another patient's results
+PASS Returned account cannot grant doctor privileges
+PASS Doctor can read patients and author audited notes
+PASS Patient cannot create an additional doctor
+PASS First doctor setup is explicit and persisted
+PASS Sign-in throttle and sign-out
+PASS Duplicate profile assignment rejected
+PASS Failed save does not change in-memory account
+PASS Session snapshot prevents alias mutation
+PASS Session identity and terminal state immutable
+PASS Invalid and excessive metrics rejected
+PASS Baseline source and ownership preserved
+PASS Camera baseline never stores inferred force
+PASS Catalog corruption fails closed
+PASS 500 ms freshness and invalid sample bounds
+PASS Baseline rejects duplicates and stale samples
+PASS Baseline calibration change requires restart
+PASS Baseline frame hitch cannot fake elapsed time
+PASS Window ignores duplicated sensor samples
+PASS Window resets across source/calibration changes
+PASS Bad hand kinematics cannot poison the window
+PASS Force and motion are independent sign categories
+PASS One persistent sign pauses until explicit resume
+PASS Two persistent signs stop and remain latched
+PASS Invalid inputs cannot increase difficulty
+PASS Difficulty cooldown and upper bound
+PASS Bad policy clock and threshold settings rejected
+PASS CSV formula escaping and numeric culture
+PASS PDF pagination and xref offsets
+PASS Windows DPAPI roundtrip and corruption rejection
+PASS Pointer fires exactly once after five qualified seconds
+PASS Pointer gesture flicker pauses qualified dwell
+PASS Pointer target changes and frame hitches cannot click early
+PASS Memory task repeatability, errors and completion
+PASS Spatial assembly rejects wrong piece and completes ordered set
+PASS Crash recovery is owner-scoped and terminal-state preserving
+PASS Crash recovery failure preserves the saved checkpoint
+PASS Patient session cannot start without a linked profile
+PASS Transient primary lock never restores the older backup
+PASS Primary lock released during retry loads the newest copy
+PASS Corrupt primary is preserved before backup recovery
+PASS Missing primary is restored from its backup
+PASS Both copies unreadable fails closed without replacing the primary
+PASS No files returns the empty default
+PASS Active grip needs real effort, not just fresh input
+PASS Staged baseline counts a sustained grip during the endurance stage
+RESULT 48 passed, 0 failed; fabricated fixtures only

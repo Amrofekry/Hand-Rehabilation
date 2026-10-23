@@ -124,7 +124,44 @@ Scores 1–5 (readability · feedback clarity · visual polish · responsiveness
 | Baseline | 3 | 2 | 1.5 | 3 | 2 | Endurance 0.0 s |
 | **Overall** | **3.6** | **2.4** | **2.3** | **3.8** | **2.7** | Biggest wins: unify on HandMate design, fix Module 2/3 logic, real game loop for Module 1 |
 
-## 5. Severity summary and Stage 2 entry list
+## 5. Stage 2 results (23 Oct 2026)
+
+Branch `3.4-upgrade-baseline`, commits `d97f0c1`..`ee06fd5`. Evidence: `Docs/evidence/stage2-2026-10-23/`. "Verified" means an automated test and/or a fresh look at the rebuilt Windows player; no physical or human trial is implied.
+
+| ID | Outcome | How it was verified |
+|---|---|---|
+| A-003 | **Fixed**: recovery scenes restored to `Assets/_Recovery` | Tools 66/66 |
+| A-002 / A-020 | **Fixed**: `ProtectedFileRecovery` retries busy reads, never rolls back to `.bak`, copies an unreadable primary aside first | 6 new offline tests; product suite 48/48 |
+| P-012 | **Not a game defect; hardening kept.** Instrumented build logs show "MEMORISE …" shown for exactly 3.5 s every time. My computer-use screenshots landed 5–7 s after each click (game clock vs screenshot clock), so they always missed the reveal. Countdown now runs only in visible, focused frames (capped 0.1 s per tick), so a hitch or focus loss can't use it up. | New EditMode `RehabExerciseVerification`; Player.log timings |
+| A-001 | **Fixed**: `HandStreamOrder` accepts a restarted worker after 0.5 s stale | 6 offline cases; tracking 148/148 |
+| P-023 | **Not a calculation defect**: endurance maths is correct (timed-hold test passes); my hold landed in the wrong stage | New offline test |
+| P-021 | **Partly fixed**: baseline status shows "Stage n of 9 · task · s left"; animated coach still Stage 5 | Code + native compile |
+| P-007 | **Fixed**: `activeSeconds` (≥1 N or closure ≥0.6) recorded and shown beside "input available" | Offline test; seen on results screen |
+| A-018 / P-015 | **Fixed**: swept-segment waypoint hits; accuracy is distance to the route segment | 4 offline cases; one drag completed the trace at 100/100 in the player |
+| P-004 | **Fixed**: wheel scrolls; footer scrolls by 80 % of a page; 48 px end padding | Player: one Scroll Down shows CHOOSE A MODULE fully |
+| P-001 | **Fixed**: footer raised above a 44 px status strip | Player screenshot |
+| P-018 | **Fixed** (root cause: theme blend used positional start colours while the page rebuilt) | Player: full Light page. Residual P-018b below |
+| P-017 | **Fixed**: active theme marked `[Selected]` | Player screenshot |
+| P-019 | **Fixed**: fields use Surface plus a border | Player screenshot |
+| A-004 | **Fixed**: validated v1 payload contract restored | Bridges 8/8 |
+| A-005 | **Fixed**: offline verifier follows `ProjectVersion.txt`; revealed and fixed 2 stale tests (A-021, A-022) | All 16 offline checks pass |
+| A-006 | **Fixed**: package tarballs use `file:../Tools/...`; Unity re-resolved and rewrote the lock file | Native compile, 0 errors |
+| A-007 | **Fixed**: stalled camera sleeps 20 ms per retry | Code review; bridges 8/8 |
+| A-012 | **Fixed**: `RehabEditModeTests` runs 4 native verifications through Unity Test Framework | `-runTests` EditMode 4/4 |
+| A-014 | **Blocked on you**: VirtualGrasp 1.7.0-free bakes grasps through Gleechi's online service (uploads object meshes, needs your Gleechi account) | — |
+| A-017 | **Left open**: `RehabApp.cs` is on the protected-file list; retiring it needs your explicit OK | — |
+
+New items found during Stage 2:
+
+| ID | Sev | Finding | Status |
+|---|---|---|---|
+| A-021 | S4 | Product test compared `12 * 0.1` with literal `1.2` (float), so it always failed once the harness ran | Fixed in test |
+| A-022 | S3 | Rollback removed three pose-stability behaviours that tests still described: hold visuals on a lost sample, keep calibration on reacquisition, 90 % response in 80 ms | Checks marked WITHDRAWN in `TrackingTests.cs`; restore in Stage 3/7 |
+| P-018b | S3 | In Light theme, portal button labels render mid-grey (about 4:1 contrast) instead of the palette's near-black | Stage 4 |
+| P-026 | S4 | Module 2/3 results show "Active grip 0.0 s", which isn't meaningful for non-grip tasks | Stage 6 |
+| T-001 | process | Computer-use screenshots can land several seconds after an action. Timed UI states (reveals, countdowns) must be checked with logs or a long-lived state, not one screenshot | Noted for Stage 3+ audits |
+
+## 6. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
 - **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.

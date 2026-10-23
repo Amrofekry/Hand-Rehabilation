@@ -1,0 +1,121 @@
+PASS Right image pointer at scale 1
+PASS Right image pointer at scale 0.25
+PASS Right image pointer at scale 0.08
+PASS Right closed hand can select
+PASS Right open palm can select
+PASS Right thumb and one other finger may stay extended
+PASS Right no curled-finger requirement
+PASS Right world gesture survives -75 rotation on 100
+PASS Right world gesture survives 75 rotation on 100
+PASS Right world gesture survives -75 rotation on 010
+PASS Right world gesture survives 75 rotation on 010
+PASS Right world gesture survives -75 rotation on 001
+PASS Right world gesture survives 75 rotation on 001
+PASS Right bent world index remains a tracked hand
+PASS Right world pointer survives curled-looking image projection
+PASS Right open world palm remains a tracked hand
+PASS Left image pointer at scale 1
+PASS Left image pointer at scale 0.25
+PASS Left image pointer at scale 0.08
+PASS Left closed hand can select
+PASS Left open palm can select
+PASS Left thumb and one other finger may stay extended
+PASS Left no curled-finger requirement
+PASS Left world gesture survives -75 rotation on 100
+PASS Left world gesture survives 75 rotation on 100
+PASS Left world gesture survives -75 rotation on 010
+PASS Left world gesture survives 75 rotation on 010
+PASS Left world gesture survives -75 rotation on 001
+PASS Left world gesture survives 75 rotation on 001
+PASS Left bent world index remains a tracked hand
+PASS Left world pointer survives curled-looking image projection
+PASS Left open world palm remains a tracked hand
+PASS Preferred left is not masked by relaxed right
+PASS Both pointers keep preferred left
+PASS Both pointers keep preferred right
+PASS Gesture flicker preserves chosen hand
+PASS Finger shape cannot steal the preferred hand
+PASS Stale streams never select
+PASS Invalid frame cannot mask usable left
+PASS Bad confidence rejected even with mistaken valid flag
+PASS Nonfinite tip rejected NaN
+PASS Nonfinite tip rejected Infinity
+PASS Nonfinite tip rejected -Infinity
+PASS Left finger curl does not move palm cursor 1
+PASS Left finger curl does not move palm cursor 5
+PASS Left finger curl does not move palm cursor 9
+PASS Left finger curl does not move palm cursor 13
+PASS Left finger curl does not move palm cursor 17
+PASS Left translated palm moves right/up
+PASS Left world-centred pose does not move image cursor
+PASS Right finger curl does not move palm cursor 1
+PASS Right finger curl does not move palm cursor 5
+PASS Right finger curl does not move palm cursor 9
+PASS Right finger curl does not move palm cursor 13
+PASS Right finger curl does not move palm cursor 17
+PASS Right translated palm moves right/up
+PASS Right world-centred pose does not move image cursor
+PASS Incomplete landmarks rejected
+PASS 500 ms boundary rejected
+PASS Unknown side rejected
+PASS Missing hand rejected
+PASS Five-second hold never selects early
+PASS Five qualified seconds activate
+PASS Stationary hold does not repeat activation
+PASS Target switch discards earlier effort
+PASS Flicker cannot click 0
+PASS Flicker cannot click 1
+PASS Flicker cannot click 2
+PASS Flicker cannot click 3
+PASS Flicker cannot click 4
+PASS Grace pauses rather than counts time
+PASS Long gesture loss resets dwell
+PASS Tracking or focus loss clears dwell
+PASS Frame hitch cannot fake observed dwell time
+PASS Bad delta adds no dwell NaN
+PASS Bad delta adds no dwell Infinity
+PASS Bad delta adds no dwell -1
+PASS Bad duration fails closed
+PASS Screen direction at 1280
+PASS Rightward tip moves screen right 1280
+PASS Upward tip moves screen up 1280
+PASS Screen direction at 1920
+PASS Rightward tip moves screen right 1920
+PASS Upward tip moves screen up 1920
+PASS Screen direction at 3840
+PASS Rightward tip moves screen right 3840
+PASS Upward tip moves screen up 3840
+PASS Off-frame tip stays within screen bounds
+PASS New hand snaps to its own position
+PASS Cursor converges without overshoot
+PASS Zero smoothing remains immediate
+PASS Bad smoothing cannot poison cursor NaN
+PASS Bad preferences use safe defaults NaN
+PASS Bad delta is ignored NaN
+PASS Bad smoothing cannot poison cursor Infinity
+PASS Bad preferences use safe defaults Infinity
+PASS Bad delta is ignored Infinity
+PASS Bad smoothing cannot poison cursor -Infinity
+PASS Bad preferences use safe defaults -Infinity
+PASS Bad delta is ignored -Infinity
+PASS Duration stays bounded
+PASS Initial cursor can select
+PASS Newly exposed control cannot click under a stationary hand
+PASS Small pointer jitter cannot rearm
+PASS Deliberate pointer movement rearms
+PASS Brief gesture flicker cannot rearm a selected control
+PASS Relaxed gesture does not itself activate 0
+PASS Relaxed gesture does not itself activate 1
+PASS Relaxed gesture does not itself activate 2
+PASS Relaxed gesture does not itself activate 3
+PASS Relaxed gesture does not itself activate 4
+PASS Relaxed gesture does not itself activate 5
+PASS Relaxed gesture does not itself activate 6
+PASS Relaxed gesture does not itself activate 7
+PASS Relaxed gesture does not itself activate 8
+PASS Relaxed gesture does not itself activate 9
+PASS Relaxed gesture does not itself activate 10
+PASS Relaxed gesture does not itself activate 11
+PASS Deliberate gesture release allows another dwell
+PASS Tracking/focus reset leaves no stale rearm latch
+Pointer checks: 120 passed, 0 failed (fabricated fixtures only)

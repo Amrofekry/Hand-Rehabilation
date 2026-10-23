@@ -1,0 +1,68 @@
+PASS Slightly off-centre -1 side is reachable
+PASS Far off-centre -1 is rejected
+PASS Inspector cone reduces assistance -1
+PASS Pickup orientation preserved -1
+PASS Held item follows palm rotation -1
+PASS Small motion has damped release velocity -1
+PASS Teleport creates no throw -1
+PASS Fast motion speed capped -1
+PASS Slightly off-centre 1 side is reachable
+PASS Far off-centre 1 is rejected
+PASS Inspector cone reduces assistance 1
+PASS Pickup orientation preserved 1
+PASS Held item follows palm rotation 1
+PASS Small motion has damped release velocity 1
+PASS Teleport creates no throw 1
+PASS Fast motion speed capped 1
+PASS Beyond surface reach rejected
+PASS Behind camera rejected
+PASS Degenerate ray rejected
+PASS Invalid reach rejected
+PASS Invalid cone rejected
+PASS Angular closeness wins over mere proximity
+PASS Invalid velocity zeroed NaN
+PASS Invalid timestep zeroed NaN
+PASS Invalid gain zeroed NaN
+PASS Invalid jump threshold zeroed NaN
+PASS Invalid velocity zeroed Infinity
+PASS Invalid timestep zeroed Infinity
+PASS Invalid gain zeroed Infinity
+PASS Invalid jump threshold zeroed Infinity
+PASS Invalid velocity zeroed -Infinity
+PASS Invalid timestep zeroed -Infinity
+PASS Invalid gain zeroed -Infinity
+PASS Invalid jump threshold zeroed -Infinity
+PASS Large finite velocity safely capped
+PASS Zero timestep zeroed
+PASS Negative timestep zeroed
+PASS No gain means ordinary drop
+PASS Invalid speed rejected
+PASS Intersecting boxes remain excluded
+PASS Clearance margin prevents early restore
+PASS Positive axis separation
+PASS Negative axis separation
+PASS Positive axis separation
+PASS Negative axis separation
+PASS Positive axis separation
+PASS Negative axis separation
+PASS Malformed bounds fail closed
+PASS Held player pair excluded
+PASS Finger trigger pairs untouched
+PASS Floor pairs untouched
+PASS Released overlapping body stays excluded
+PASS No timeout restores overlap
+PASS Temporarily disabled controller keeps release guard
+PASS Re-enabled overlapping controller regains guard
+PASS Regrabbing drop retains original pair bookkeeping
+PASS Held separation does not restore prematurely
+PASS Separated release restores original collision
+PASS Originally ignored pair preserved after release
+PASS Clear also preserves original authoring
+PASS Child and multiple player colliders protected
+PASS Native pair reset reapplied while held
+PASS Disabled pair restored independently
+PASS Inactive object restores pair
+PASS Cleanup restores active pairs
+PASS Cleanup leaves no lingering suppression
+PASS Missing collider lists are safe
+Grasp checks passed: 67

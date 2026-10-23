@@ -1,0 +1,149 @@
+PASS math shim positive Z rotates X to Y
+PASS math shim LookRotation maps forward
+PASS Right turns palm/back facing over around upright Y
+PASS Right rest facing retains vertical finger component
+PASS Right received image-right moves game-right
+PASS Right received image-left moves game-left
+PASS Right image-up still moves game-up
+PASS Right image-down still moves game-down
+PASS Right larger palm retains forward depth
+PASS Right smaller palm retains backward depth
+PASS Right signed -75 turn on 1,0,0
+PASS Right signed 75 turn on 1,0,0
+PASS Right signed -75 turn on 0,1,0
+PASS Right signed 75 turn on 0,1,0
+PASS Right signed -75 turn on 0,0,1
+PASS Right signed 75 turn on 0,0,1
+PASS Right finger 0 remains independent
+PASS Right finger 1 remains independent
+PASS Right finger 2 remains independent
+PASS Right finger 3 remains independent
+PASS Right finger 4 remains independent
+PASS Right recalibration returns to corrected rest
+PASS Right collapsed palm is rejected
+PASS Right explicit tracking loss stays inactive
+PASS Right tracking resumes after valid frame
+PASS Right legacy image-only input still works
+PASS Right image-only signed -60 turn on 1,0,0
+PASS Right image-only signed 60 turn on 1,0,0
+PASS Right image-only signed -60 turn on 0,1,0
+PASS Right image-only signed 60 turn on 0,1,0
+PASS Right image-only signed -60 turn on 0,0,1
+PASS Right image-only signed 60 turn on 0,0,1
+PASS Right legacy-to-world transition retains X sign
+PASS Right keyboard fingers and authored demo rest unchanged
+PASS Right turns palm/back facing over around upright Y
+PASS Right rest facing retains vertical finger component
+PASS Right received image-right moves game-right
+PASS Right received image-left moves game-left
+PASS Right image-up still moves game-up
+PASS Right image-down still moves game-down
+PASS Right larger palm retains forward depth
+PASS Right smaller palm retains backward depth
+PASS Right signed -75 turn on 1,0,0
+PASS Right signed 75 turn on 1,0,0
+PASS Right signed -75 turn on 0,1,0
+PASS Right signed 75 turn on 0,1,0
+PASS Right signed -75 turn on 0,0,1
+PASS Right signed 75 turn on 0,0,1
+PASS Right finger 0 remains independent
+PASS Right finger 1 remains independent
+PASS Right finger 2 remains independent
+PASS Right finger 3 remains independent
+PASS Right finger 4 remains independent
+PASS Right recalibration returns to corrected rest
+PASS Right collapsed palm is rejected
+PASS Right explicit tracking loss stays inactive
+PASS Right tracking resumes after valid frame
+PASS Right legacy image-only input still works
+PASS Right image-only signed -60 turn on 1,0,0
+PASS Right image-only signed 60 turn on 1,0,0
+PASS Right image-only signed -60 turn on 0,1,0
+PASS Right image-only signed 60 turn on 0,1,0
+PASS Right image-only signed -60 turn on 0,0,1
+PASS Right image-only signed 60 turn on 0,0,1
+PASS Right legacy-to-world transition retains X sign
+PASS Right keyboard fingers and authored demo rest unchanged
+PASS Left turns palm/back facing over around upright Y
+PASS Left rest facing retains vertical finger component
+PASS Left received image-right moves game-right
+PASS Left received image-left moves game-left
+PASS Left image-up still moves game-up
+PASS Left image-down still moves game-down
+PASS Left larger palm retains forward depth
+PASS Left smaller palm retains backward depth
+PASS Left signed -75 turn on 1,0,0
+PASS Left signed 75 turn on 1,0,0
+PASS Left signed -75 turn on 0,1,0
+PASS Left signed 75 turn on 0,1,0
+PASS Left signed -75 turn on 0,0,1
+PASS Left signed 75 turn on 0,0,1
+PASS Left finger 0 remains independent
+PASS Left finger 1 remains independent
+PASS Left finger 2 remains independent
+PASS Left finger 3 remains independent
+PASS Left finger 4 remains independent
+PASS Left recalibration returns to corrected rest
+PASS Left collapsed palm is rejected
+PASS Left explicit tracking loss stays inactive
+PASS Left tracking resumes after valid frame
+PASS Left legacy image-only input still works
+PASS Left image-only signed -60 turn on 1,0,0
+PASS Left image-only signed 60 turn on 1,0,0
+PASS Left image-only signed -60 turn on 0,1,0
+PASS Left image-only signed 60 turn on 0,1,0
+PASS Left image-only signed -60 turn on 0,0,1
+PASS Left image-only signed 60 turn on 0,0,1
+PASS Left legacy-to-world transition retains X sign
+PASS Left keyboard fingers and authored demo rest unchanged
+PASS Left turns palm/back facing over around upright Y
+PASS Left rest facing retains vertical finger component
+PASS Left received image-right moves game-right
+PASS Left received image-left moves game-left
+PASS Left image-up still moves game-up
+PASS Left image-down still moves game-down
+PASS Left larger palm retains forward depth
+PASS Left smaller palm retains backward depth
+PASS Left signed -75 turn on 1,0,0
+PASS Left signed 75 turn on 1,0,0
+PASS Left signed -75 turn on 0,1,0
+PASS Left signed 75 turn on 0,1,0
+PASS Left signed -75 turn on 0,0,1
+PASS Left signed 75 turn on 0,0,1
+PASS Left finger 0 remains independent
+PASS Left finger 1 remains independent
+PASS Left finger 2 remains independent
+PASS Left finger 3 remains independent
+PASS Left finger 4 remains independent
+PASS Left recalibration returns to corrected rest
+PASS Left collapsed palm is rejected
+PASS Left explicit tracking loss stays inactive
+PASS Left tracking resumes after valid frame
+PASS Left legacy image-only input still works
+PASS Left image-only signed -60 turn on 1,0,0
+PASS Left image-only signed 60 turn on 1,0,0
+PASS Left image-only signed -60 turn on 0,1,0
+PASS Left image-only signed 60 turn on 0,1,0
+PASS Left image-only signed -60 turn on 0,0,1
+PASS Left image-only signed 60 turn on 0,0,1
+PASS Left legacy-to-world transition retains X sign
+PASS Left keyboard fingers and authored demo rest unchanged
+PASS alternating webcam-sized wrist noise is attenuated without overshoot
+PASS close dwell establishes grip
+PASS hysteresis band retains grip
+PASS open dwell releases grip
+PASS alternating webcam-sized wrist noise is attenuated without overshoot
+PASS close dwell establishes grip
+PASS hysteresis band retains grip
+PASS open dwell releases grip
+PASS next packet accepted
+PASS duplicate sequence rejected while stream is live
+PASS older capture rejected while stream is live
+PASS restarted worker accepted after the stream went stale
+PASS sequence reset rejected while the old stream is still live
+PASS legacy packet without sequence or capture accepted
+PASS tracing exactly along the path completes with high accuracy (1)
+PASS a fast drag that straddles each waypoint still reaches every waypoint (5)
+PASS wandering far from the path lowers accuracy (0.04761905)
+PASS jumping to the last waypoint cannot skip the route (1)
+RESULT 148 passed, 0 failed; production pose source with managed test math; no Unity/camera/native SDK
