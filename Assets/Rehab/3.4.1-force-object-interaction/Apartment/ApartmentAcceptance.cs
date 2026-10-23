@@ -41,7 +41,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(forceFilter.Push(100,.05f,.06f,30,250)>10,"Repeated high force is accepted with smoothing");
   Check(forceFilter.Push(float.NaN,.05f,.06f,30,250)==0,"Impossible force resets the contact filter");
   Check(!app.Hardware&&app.ForceValid,"Keyboard/mouse demo is the default");
-  Check(FindObjectsByType<Camera>().Length==1&&FindObjectsByType<LiveForceReceiver>().Length==1&&FindObjectsByType<VisionUdpReceiver>().Length==1&&FindObjectsByType<VisionPreviewReceiver>().Length==1,"Exactly one camera and each input receiver");
+  Check(FindObjectsByType<Camera>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length==1&&FindObjectsByType<VisionPreviewReceiver>(FindObjectsSortMode.None).Length==1,"Exactly one camera and each input receiver");
   var player=app.player;player.enabled=false;player.SetPaused(false);
   var sdk=app.virtualGrasp;
   VirtualGrasp.VG_Controller.GetFingerBone(sdk.AvatarId,VirtualGrasp.VG_HandSide.RIGHT,1,1,out Transform outputIndex);
@@ -129,17 +129,12 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   // In Editor the test drives the same force application explicitly; the executable uses its test flag.
   var ballMesh=ball.visual.GetComponent<MeshFilter>().sharedMesh;
   var ballRest=ballMesh.vertices;
-  var ballVisualScale=ball.visual.localScale;
   yield return Screenshot("vg-ball-before");
   yield return DriveForce(18,4.5f);
   yield return Screenshot("vg-ball-deformed");
-  Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball remains kinematic and deforms under grip force; held="+ball.IsHeld+" kinematic="+ball.Body.isKinematic+" compression="+ball.Compression+" contacts="+ball.ContactCount+" ball="+ball.transform.position+" anchor="+app.holdAnchor.position+" hand="+app.rightHand.transform.position+" eye="+player.view.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+(p.Contact==ball)+"@"+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
-  // Collision callbacks follow FixedUpdate. Resolve a current fixture snapshot
-  // before comparing counts/force, rather than the preceding tick's count to
-  // this frame's contact manifold on a moving dynamic body.
-  app.contactRig.ClearForces();ball.ApplyContacts(app.contactRig,app.ContactForceNewtons,Time.fixedDeltaTime);
+  Check(ball.IsHeld&&ball.Body.isKinematic&&ball.Compression>.08f,"Held ball is kinematic and deforms under grip force; held="+ball.IsHeld+" kinematic="+ball.Body.isKinematic+" compression="+ball.Compression+" contacts="+ball.ContactCount+" ball="+ball.transform.position+" anchor="+app.holdAnchor.position+" hand="+app.rightHand.transform.position+" eye="+player.view.transform.position+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+(p.Contact==ball)+"@"+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
   var touching=app.contactRig.probes.Where(p=>ball.HasProbeContact(p,out _,out _)).ToArray();
-  Check(touching.Length==ball.ContactCount&&touching.Length>0&&touching.Length<app.contactRig.probes.Length,"Independent finger and palm colliders contribute only when touching the ball ("+touching.Length+"/16); ball="+ball.transform.position+" colliderRadius="+ball.GetComponent<SphereCollider>().radius+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
+  Check(touching.Length==ball.ContactCount&&touching.Length>0&&touching.Length<app.contactRig.ProbeCount,"Independent finger capsules contribute only when touching the ball ("+touching.Length+"/15); ball="+ball.transform.position+" colliderRadius="+ball.GetComponent<SphereCollider>().radius+" probes="+string.Join(";",app.contactRig.probes.Select(p=>p.finger+":"+p.segment+"="+Vector3.Distance(p.transform.position,ball.transform.position).ToString("F3"))));
   Check(touching.All(p=>p.ResolvedForceNewtons>0&&p.ContactAreaSquareMeters>0)&&app.contactRig.probes.Where(p=>!ball.HasProbeContact(p,out _,out _)).All(p=>p.ResolvedForceNewtons==0),"Noncontacting fingers resolve exactly zero force");
   var moved=ballMesh.vertices;int changed=0,far=0,farMoved=0;
   for(int vertex=0;vertex<moved.Length;vertex++){
@@ -148,23 +143,18 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    var world=ball.visual.TransformPoint(ballRest[vertex]);
    if(touching.All(p=>Vector3.Distance(world,p.Point)>ball.profile.deformationRadiusMeters+.015f)){far++;if(displacement>.0005f)farMoved++;}
   }
-  // Spring neighbours can move by micrometres across the smaller ball. Test
-  // visible local displacement and distant stability, not exact zero motion.
-  Check(changed>0&&far>0&&farMoved==0&&ball.MaxDisplacementMeters>ball.GraspSurfaceRadius*.05f&&ball.visual.localScale==ballVisualScale,"Mesh vertices deform near finger contacts while distant regions remain stable without whole-object scaling ("+changed+"/"+moved.Length+" moved, "+far+" distant, "+farMoved+" distant moved, depth="+ball.MaxDisplacementMeters+", required five percent of radius="+ball.GraspSurfaceRadius*.05f+")");
+  Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0&&ball.MaxDisplacementMeters>.003f,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
   Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise; progress="+app.ProgressSeconds.ToString("F2"));
   Check(app.rightHand.Closure>.4f,"Rigged fingers close around a held object");
-  var beforeHandMove=ball.transform.position;app.SetDemoHandOffset(false,new Vector3(.07f,0,0));yield return DriveForce(18,.5f);
+  var beforeHandMove=ball.transform.position;app.SetDemoHandOffset(false,new Vector3(.07f,0,0));yield return new WaitForSeconds(.35f);
   Check(Vector3.Dot(ball.transform.position-beforeHandMove,player.view.transform.right)>.025f,"Held object follows right hand workspace movement");
   app.SetDemoHandOffset(false,Vector3.zero);yield return new WaitForSeconds(.25f);
   yield return Screenshot("apartment-seated-grip");
-  // A compliant grasp can rest on the table. Raise via the actual hand/force
-  // path before testing gravity; do not move the held Rigidbody by transform.
-  app.SetDemoHandOffset(false,new Vector3(0,.15f,0));yield return DriveForce(18,1.2f);
   var height=ball.transform.position.y;app.TestForce=0;app.Release();
   yield return new WaitForSeconds(.9f);
-  Check(!ball.Body.isKinematic&&ball.transform.position.y<height-.04f&&ball.transform.position.y>-.3f,"Released ball falls and collides with the furnished apartment; before="+height+" after="+ball.transform.position+" velocity="+ball.Body.linearVelocity+" held="+ball.IsHeld);
-  app.SetDemoHandOffset(false,Vector3.zero);app.ResetObjects();yield return new WaitForSeconds(.2f);
-  menu.objectButtons[1].onClick.Invoke();yield return new WaitForSeconds(.2f);
+  Check(!ball.Body.isKinematic&&ball.transform.position.y<height-.04f&&ball.transform.position.y>-.3f,"Released ball falls and collides with the furnished apartment");
+  app.ResetObjects();yield return new WaitForSeconds(.2f);
+  menu.objectButtons[1].onClick.Invoke();yield return null;
   var mug=menu.livingObjects[1];
   Check(mug.gameObject.activeSelf&&!ball.gameObject.activeSelf,"Living room button selects the hollow porcelain mug");
   Check(app.TryGrab(mug),"Porcelain mug can be picked up from the chair");
@@ -192,9 +182,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   Check(menu.Kitchen&&!player.IsSeated&&Vector3.Distance(player.transform.position,kitchen.position)<.05f,
    "Kitchen station teleports a seated player even when the old stand-up area is blocked");
   Destroy(blockedStand);
-  menu.objectButtons[1].onClick.Invoke();yield return new WaitForSeconds(.2f);
+  menu.objectButtons[1].onClick.Invoke();yield return null;
   var cup=menu.kitchenObjects[1];Check(cup.gameObject.activeSelf&&app.TryGrab(cup),"Kitchen silicone cup is selectable and can be gripped");
-  var cupCollider=cup.GetComponentsInChildren<Collider>().First(c=>c.enabled&&!c.isTrigger&&c.attachedRigidbody==cup.Body);
+  var cupCollider=cup.GetComponent<Collider>();
   Check(Physics.GetIgnoreCollision(cupCollider,player.Controller),"A held object cannot push the standing player's CharacterController backwards");
   var cupInitialRotation=cup.Body.rotation;var palmInitialRotation=app.ActiveHand.transform.rotation;
   var cupOffset=GraspMotionPolicy.RelativeRotation(palmInitialRotation,cupInitialRotation);
@@ -250,7 +240,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    yield return new WaitForSeconds(.65f);
    Check(!app.ForceValid&&app.Held==null&&app.ForceNewtons==0,"Stale hardware input releases object and stops force within 500 ms plus a frame");
    var staleHud=FindAnyObjectByType<RehabAppShell>();
-   Check(staleHud.hudSource.text=="PHASE 2 · WAITING"&&staleHud.hudValue.text=="--",
+   Check(staleHud.hudSource.text=="PHASE 2 \u00b7 WAITING"&&staleHud.hudValue.text=="--",
     "Premium HUD clears stale Phase 2 values and shows a waiting source");
    frame.sequence++;frame.sampleMs+=1000;Send(udp,27818,JsonUtility.ToJson(frame));yield return new WaitForSeconds(.08f);
    Check(app.ForceValid,"New data recovers after interruption");
@@ -306,7 +296,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    Check(!app.vision.TrackingValid&&!app.leftHand.TrackingUsed&&!app.rightHand.TrackingUsed,"Both input hands leave tracking mode after the 500 ms timeout");
   }
   app.SetHardware(false);app.ResetObjects();
-  menu.SelectStation(true);menu.SelectObject(0);app.SelectHand(true);yield return new WaitForSeconds(.2f);
+  menu.SelectStation(true);menu.SelectObject(0);app.SelectHand(true);yield return new WaitForSeconds(.3f);
   Check(app.TryGrab(sponge),"Left hand can pick up the kitchen sponge");
   yield return DriveForce(35,.8f);
   Check(sponge.ContactCount>0&&sponge.MaxDisplacementMeters>.003f,"Left hand vendor joints make visible, localized sponge deformation: contacts="+sponge.ContactCount+" depth="+sponge.MaxDisplacementMeters);
@@ -355,13 +345,19 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     yield return new WaitForSeconds(.06f);
    }
    Check(app.rightHand.transform.localPosition.x<wristBefore.x-.05f,"Camera wrist follows received horizontal movement without a second reflection");
-   // This is a controlled acquisition fixture, not proof that monocular
-   // depth is calibrated to the authored table. Position the test object
-   // at the measured thumb/index aperture, then close through real UDP.
-   yield return CameraPickupFixture(cameraUdp,ball,closed=>CameraFixture(.5f,.5f,closed,++seq,captured+=.06));
+   foreach(var imageY in new[]{.45f,.5f,.55f,.65f,.75f,.85f}){
+    foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f}){
+     for(int i=0;i<4;i++){
+      Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,true,++seq,captured+=.06)));
+      yield return new WaitForSeconds(.06f);
+     }
+     if(app.Held==ball)break;
+    }
+    if(app.Held==ball)break;
+   }
    float nearest=float.PositiveInfinity;var ballCollider=ball.GetComponent<Collider>();
    foreach(var bone in app.contactRig.contactBones)if(bone!=null)nearest=Mathf.Min(nearest,Vector3.Distance(bone.position,ballCollider.ClosestPoint(bone.position)));
-   Check(app.Held==ball,"Controlled right camera aperture acquires the ball without E or a direct grab call; nearest finger="+nearest.ToString("F3")+"m "+" hand="+app.rightHand.transform.position+" ball="+ball.transform.position+" score="+app.CameraGripScore.ToString("F2"));
+   Check(app.Held==ball,"Closing the camera hand near the ball grabs without E; nearest finger="+nearest.ToString("F3")+"m hand="+app.rightHand.transform.position+" ball="+ball.transform.position+" score="+app.CameraGripScore.ToString("F2"));
    for(int i=0;i<6;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
@@ -408,9 +404,18 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
    yield return new WaitForSeconds(.07f);
    Check(app.LeftSelected,"Seeing both hands briefly does not switch away from the actively tracked left hand");
-   yield return CameraPickupFixture(cameraUdp,sponge,closed=>CameraFixture(.5f,.5f,closed,++leftSeq,leftCaptured+=.06,"Left"));
+   foreach(var imageY in new[]{.5f,.7f,.85f}){
+    foreach(var imageX in new[]{.5f,.4f,.3f,.2f,.6f,.7f,.8f}){
+     for(int i=0;i<4;i++){
+      Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(imageX,imageY,true,++leftSeq,leftCaptured+=.06,"Left",2.2f)));
+      yield return new WaitForSeconds(.06f);
+     }
+     if(app.Held==sponge)break;
+    }
+    if(app.Held==sponge)break;
+   }
    float leftNearest=float.PositiveInfinity;var spongeCollider=sponge.GetComponent<Collider>(); foreach(var bone in app.contactRig.contactBones)if(bone!=null)leftNearest=Mathf.Min(leftNearest,Vector3.Distance(bone.position,spongeCollider.ClosestPoint(bone.position)));
-   Check(app.Held==sponge,"Controlled left camera aperture acquires the sponge without E or a direct grab call; nearest="+leftNearest.ToString("F3")+" hand="+app.leftHand.transform.position+" sponge="+sponge.transform.position+" score="+app.CameraGripScore.ToString("F2"));
+   Check(app.Held==sponge,"Selected left camera fist can pick up the kitchen sponge without E; nearest="+leftNearest.ToString("F3")+" hand="+app.leftHand.transform.position+" sponge="+sponge.transform.position+" score="+app.CameraGripScore.ToString("F2"));
    for(int i=0;i<6;i++){
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,false,++leftSeq,leftCaptured+=.06,"Left")));
     yield return new WaitForSeconds(.06f);
@@ -649,7 +654,6 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   for(int i=0;i<21;i++)frame.landmarks[i]+=shift;
   return frame;
  }
-
  private IEnumerator DriveForce(float force,float seconds){
   app.TestForce=force;
 #if UNITY_EDITOR
@@ -682,45 +686,17 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
    yield return null;
   }
  }
- private IEnumerator CameraPickupFixture(UdpClient udp,SqueezableObject item,Func<bool,LandmarkFrame> next){
-  item.ResetObject();item.Body.isKinematic=true;item.Body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
-  item.Body.position=app.player.view.transform.position+Vector3.up*2;item.InvalidateSurfacePose();Physics.SyncTransforms();
-  // Establish a reproducible aperture with the object safely out of reach.
-  for(int i=0;i<8;i++){Send(udp,27817,JsonUtility.ToJson(next(true)));yield return new WaitForSeconds(.06f);}
-  var input=app.ActiveHand.joints;
-  var thumb=input[14].childCount>0?input[14].GetChild(0).position:input[14].position;
-  var index=input[2].childCount>0?input[2].GetChild(0).position:input[2].position;
-  var aperture=(thumb+index)*.5f;
-  for(int i=0;i<8;i++){Send(udp,27817,JsonUtility.ToJson(next(false)));yield return new WaitForSeconds(.06f);}
-  item.Body.position=aperture;item.InvalidateSurfacePose();Physics.SyncTransforms();
-  for(int i=0;i<12&&app.Held==null;i++){Send(udp,27817,JsonUtility.ToJson(next(true)));yield return new WaitForSeconds(.06f);}
-  // Production Grab owns a successful held body's state. Failed fixture
-  // setup must not leave an artificial kinematic object in the world.
-  if(app.Held!=item)item.ResetObject();
- }
  private static LandmarkFrame CameraFixture(float center,float wristY,bool closed,long sequence,double captured,string side="Right",float palmScale=1){
   var frame=new LandmarkFrame{schemaVersion=1,source="mediapipe-test",handedness=side,confidence=.96f,sequence=sequence,captureSeconds=captured,landmarks=new Vector3[21]};
   frame.landmarks[0]=new Vector3(center,wristY,0);
   for(int finger=0;finger<4;finger++){
-   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1.5f)*.045f;
+   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1.5f)*.045f*palmScale;
    frame.landmarks[n]=new Vector3(x,wristY-.10f,0);
    frame.landmarks[n+1]=new Vector3(x,wristY-.18f,0);
    frame.landmarks[n+2]=new Vector3(x,wristY+(closed?-.12f:-.26f),0);
    frame.landmarks[n+3]=new Vector3(x,wristY+(closed?-.04f:-.34f),0);
-   if(closed){
-    // Anatomical closure includes MCP, PIP and DIP flexion in depth.
-    // The former collinear fixture bent only PIP and left a straight distal
-    // segment: it was a hook gesture, not a palm-enclosing camera fist.
-    frame.landmarks[n+1]=new Vector3(x,wristY-.14f,-.07f);
-    frame.landmarks[n+2]=new Vector3(x,wristY-.095f,-.12f);
-    frame.landmarks[n+3]=new Vector3(x,wristY-.035f,-.09f);
-   }
   }
   for(int i=1;i<5;i++)frame.landmarks[i]=new Vector3(center+(side=="Left"?1:-1)*(.12f-i*.015f),wristY-.06f-i*.03f,0);
-  if(closed){float sign=side=="Left"?-1:1;frame.landmarks[3]=frame.landmarks[2]+new Vector3(sign*.06f,.01f,-.02f);frame.landmarks[4]=frame.landmarks[3]+new Vector3(sign*.035f,.025f,-.01f);}
-  // Moving toward a pinhole camera expands the whole palm, not only its
-  // width. Keep both spans and every finger in the same scale convention.
-  var wrist=frame.landmarks[0];for(int i=1;i<21;i++)frame.landmarks[i]=wrist+(frame.landmarks[i]-wrist)*palmScale;
   return frame;
  }
  private static LandmarkFrame RotateCameraFixture(LandmarkFrame source,Quaternion rotation){

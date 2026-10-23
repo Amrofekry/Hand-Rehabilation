@@ -18,8 +18,11 @@ namespace GripRehab
 
         IEnumerator Start()
         {
+            yield return null; // Let all authored Start methods finish first.
+            Application.runInBackground = true;
             var app = FindAnyObjectByType<ApartmentExperience>();
             var preview = FindAnyObjectByType<VisionPreviewReceiver>();
+            if (app != null) { app.player.SetPaused(false); app.SetCameraMode(); }
             float deadline = Time.realtimeSinceStartup + 30;
             float streamReadyAt = -1;
             while (Time.realtimeSinceStartup < deadline)
@@ -45,6 +48,9 @@ namespace GripRehab
                 previewPackets = preview?.ReceivedPackets ?? 0,
                 rightTracked = app?.vision?.RightValid ?? false,
                 leftTracked = app?.vision?.LeftValid ?? false,
+                readMs = app?.cameraLauncher?.CaptureReadMilliseconds ?? 0,
+                inferenceMs = app?.cameraLauncher?.InferenceMilliseconds ?? 0,
+                humanMotionVerified = false,
                 utc = DateTime.UtcNow.ToString("O")
             };
             Directory.CreateDirectory("Logs");
@@ -61,6 +67,8 @@ namespace GripRehab
             public float fps;
             public int previewPackets;
             public bool rightTracked, leftTracked;
+            public bool humanMotionVerified;
+            public float readMs, inferenceMs;
         }
     }
 }

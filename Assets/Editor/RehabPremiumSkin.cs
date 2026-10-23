@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace GripRehab.Editor
 {
@@ -48,6 +49,113 @@ namespace GripRehab.Editor
             AssetDatabase.SaveAssets();
             ApartmentAuthoring.VerifyScene();
             Debug.Log("[REHAB_PREMIUM_UI] PASS: full menu, profile, modules, HUD and options restyled in saved scene");
+        }
+
+        [MenuItem("Grip Rehab/Repair HUD and Dropdown Contrast")]
+        public static void RepairLegibility()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (scene.path != ApartmentAuthoring.ScenePath)
+            {
+                if (!Application.isBatchMode)
+                    throw new Exception("Open the saved GripRehab scene before repairing its UI");
+                scene = EditorSceneManager.OpenScene(ApartmentAuthoring.ScenePath);
+            }
+            var shell = UnityEngine.Object.FindAnyObjectByType<RehabAppShell>();
+            if (shell == null) throw new Exception("The saved app shell is missing");
+            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            rounded = AssetDatabase.LoadAssetAtPath<Sprite>(UiFolder + "/Rounded96.png");
+            if (rounded == null) throw new Exception("Saved rounded UI sprite is missing");
+            foreach (var dropdown in new[] { shell.profilePicker, shell.genderPicker,
+                         shell.affectedPicker, shell.dominantPicker })
+            {
+                if (dropdown == null) throw new Exception("A profile dropdown is missing");
+                var rect = dropdown.GetComponent<RectTransform>();
+                StyleDropdown(dropdown, rect.anchoredPosition, rect.sizeDelta);
+            }
+            StyleTopBar(shell);
+            VerifyLegibility();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("[REHAB_UI] PASS: top-bar text contained and all four dropdowns readable");
+        }
+
+        [MenuItem("Grip Rehab/Enable Module 02 and 03 Cards")]
+        public static void EnableModuleCards()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (scene.path != ApartmentAuthoring.ScenePath)
+            {
+                if (!Application.isBatchMode)
+                    throw new Exception("Open the saved GripRehab scene before updating module cards");
+                scene = EditorSceneManager.OpenScene(ApartmentAuthoring.ScenePath);
+            }
+            var shell = UnityEngine.Object.FindAnyObjectByType<RehabAppShell>();
+            if (shell == null) throw new Exception("Saved menu shell is missing");
+            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            rounded = AssetDatabase.LoadAssetAtPath<Sprite>(UiFolder + "/Rounded96.png");
+            if (rounded == null) throw new Exception("Saved rounded UI sprite is missing");
+            ChildText(shell.homePanel.transform.Find("Introduction"), "Prototype note").text =
+                "THREE PLAYABLE MODULES  /  LOCAL RESEARCH PROTOTYPE";
+            ChildText(shell.modulePanel.transform, "Module instruction").text =
+                "Choose a training pathway. All three modules are playable prototypes.";
+            ChildText(shell.modulePanel.transform.Find("Module 02"), "Description").text =
+                "Sequence memory and spatial assembly using accessible buttons and keys.";
+            ChildText(shell.modulePanel.transform.Find("Module 03"), "Description").text =
+                "Visual tracing and maze navigation with game accuracy feedback.";
+            PaintButton(shell.cognitiveLockedButton, Hex("167E6F"), White, 16,
+                new Vector2(0, -142), new Vector2(330, 55), "START MODULE 02  →");
+            PaintButton(shell.visuomotorLockedButton, Hex("167E6F"), White, 16,
+                new Vector2(0, -142), new Vector2(330, 55), "START MODULE 03  →");
+            ChildText(shell.modulePanel.transform, "Future pipeline").text =
+                "RESEARCH PROTOTYPE  /  Game scores are not clinical assessments.";
+            ChildText(shell.doctorPanel.transform.Find("Doctor roadmap layout"), "Title").text =
+                "RESEARCH DASHBOARD";
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("[REHAB_UI] PASS: Modules 02 and 03 presented as playable prototypes");
+        }
+
+        public static void VerifyLegibility()
+        {
+            var shell = UnityEngine.Object.FindAnyObjectByType<RehabAppShell>();
+            if (shell == null) throw new Exception("UI shell missing");
+            Canvas.ForceUpdateCanvases();
+            var bar = (RectTransform)shell.telemetry.transform.parent;
+            var bounds = new Vector3[4];
+            bar.GetWorldCorners(bounds);
+            foreach (var item in new RectTransform[] { shell.telemetry.rectTransform,
+                         shell.gameplayHomeButton.GetComponent<RectTransform>() })
+            {
+                var corners = new Vector3[4];
+                item.GetWorldCorners(corners);
+                foreach (var point in corners)
+                    if (point.x < bounds[0].x - 1 || point.x > bounds[2].x + 1 ||
+                        point.y < bounds[0].y - 1 || point.y > bounds[2].y + 1)
+                        throw new Exception("Top bar content extends beyond its background: " + item.name);
+            }
+            foreach (var dropdown in new[] { shell.profilePicker, shell.genderPicker,
+                         shell.affectedPicker, shell.dominantPicker })
+            {
+                if (dropdown == null || dropdown.template == null || dropdown.itemText == null)
+                    throw new Exception("Dropdown template or item text is missing");
+                var background = dropdown.template.GetComponent<Image>();
+                if (background == null || Contrast(dropdown.itemText.color, background.color) < 7f)
+                    throw new Exception("Dropdown item text lacks contrast: " + dropdown.name);
+                if (Contrast(dropdown.captionText.color, dropdown.GetComponent<Image>().color) < 7f)
+                    throw new Exception("Dropdown selected text lacks contrast: " + dropdown.name);
+            }
+        }
+
+        static float Contrast(Color a, Color b)
+        {
+            float Lum(Color c)
+            {
+                float Channel(float v) => v <= .04045f ? v / 12.92f : Mathf.Pow((v + .055f) / 1.055f, 2.4f);
+                return .2126f * Channel(c.r) + .7152f * Channel(c.g) + .0722f * Channel(c.b);
+            }
+            var x = Lum(a); var y = Lum(b);
+            return (Mathf.Max(x, y) + .05f) / (Mathf.Min(x, y) + .05f);
         }
 
         static Color Hex(string value)
@@ -182,7 +290,7 @@ namespace GripRehab.Editor
                       new Vector2(-259 + i * 78, -219 + (height - 82) * .5f), new Vector2(48, height));
                 SetImage(bar.gameObject, i == 2 ? Jade : Hex("225A5C"));
             }
-            Type(ChildText(hero, "Prototype note"), "01  /  FORCE + OBJECT AVAILABLE     •     02—03 PLANNED",
+            Type(ChildText(hero, "Prototype note"), "THREE PLAYABLE MODULES  /  LOCAL RESEARCH PROTOTYPE",
                  15, Hex("97B6B5"), TextAnchor.MiddleLeft, new Vector2(-5, -335), new Vector2(660, 29));
 
             Place((RectTransform)actions, new Vector2(.5f, .5f), new Vector2(.5f, .5f),
@@ -250,7 +358,7 @@ namespace GripRehab.Editor
             Type(s.moduleGreeting, s.moduleGreeting.text, 37, White, TextAnchor.MiddleLeft,
                  new Vector2(-18, 311), new Vector2(1330, 58));
             Type(ChildText(s.modulePanel.transform, "Module instruction"),
-                 "Choose a training pathway. Force + Object is ready to practise today.",
+                 "Choose a training pathway. All three modules are playable prototypes.",
                  19, Hex("A8C7C5"), TextAnchor.MiddleLeft, new Vector2(-18, 262), new Vector2(1320, 38));
             var cards = new[] { s.modulePanel.transform.Find("Module 01"),
                                 s.modulePanel.transform.Find("Module 02"),
@@ -271,12 +379,12 @@ namespace GripRehab.Editor
             }
             PaintButton(s.openModuleButton, Hex("167E6F"), White, 18,
                         new Vector2(0, -142), new Vector2(330, 55), "START MODULE 01  →");
-            PaintButton(s.cognitiveLockedButton, Hex("295158"), Hex("B4CCC9"), 16,
-                        new Vector2(0, -142), new Vector2(330, 55), "COMING IN GP2");
-            PaintButton(s.visuomotorLockedButton, Hex("295158"), Hex("B4CCC9"), 16,
-                        new Vector2(0, -142), new Vector2(330, 55), "COMING IN GP2");
+            PaintButton(s.cognitiveLockedButton, Hex("167E6F"), White, 16,
+                        new Vector2(0, -142), new Vector2(330, 55), "START MODULE 02  →");
+            PaintButton(s.visuomotorLockedButton, Hex("167E6F"), White, 16,
+                        new Vector2(0, -142), new Vector2(330, 55), "START MODULE 03  →");
             Type(ChildText(s.modulePanel.transform, "Future pipeline"),
-                 "COMING LATER  /  BASELINE ASSESSMENT  ·  FATIGUE ENGINE  ·  PATIENT RESULTS  ·  DOCTOR HISTORY",
+                 "RESEARCH PROTOTYPE  /  Game scores are not clinical assessments. Camera closure is not measured force.",
                  15, Hex("A8C7C5"), TextAnchor.MiddleCenter,
                  new Vector2(0, -286), new Vector2(1390, 40));
             PaintButton(s.homeFromModulesButton, PanelRaised, White, 16,
@@ -290,7 +398,7 @@ namespace GripRehab.Editor
             {
                 SetImage(panel.gameObject, Ivory);
                 Type(ChildText(panel, "Title"), panel == s.patientPanel.transform.Find("Patient results layout") ?
-                    "PATIENT DASHBOARD" : "DOCTOR DASHBOARD / PREVIEW", 37, Ink,
+                    "PATIENT DASHBOARD" : "RESEARCH DASHBOARD", 37, Ink,
                     TextAnchor.MiddleLeft, new Vector2(0, 280), new Vector2(1020, 60));
             }
             Type(s.patientSummary, s.patientSummary.text, 22, Hex("244247"), TextAnchor.UpperLeft,
@@ -306,24 +414,42 @@ namespace GripRehab.Editor
         static void StyleDropdown(Dropdown dropdown, Vector2 position, Vector2 size)
         {
             Place(dropdown.GetComponent<RectTransform>(), new Vector2(.5f, .5f), new Vector2(.5f, .5f), position, size);
-            SetImage(dropdown.gameObject, White);
-            dropdown.captionText.color = Ink;
+            SetImage(dropdown.gameObject, Deep);
+            dropdown.captionText.color = White;
             dropdown.captionText.font = font;
             var arrow = dropdown.transform.Find("Arrow/Chevron");
-            if (arrow != null) arrow.GetComponent<Text>().color = Hex("167E6F");
+            if (arrow != null) arrow.GetComponent<Text>().color = Mint;
             if (dropdown.template != null)
             {
                 var templateImage = dropdown.template.GetComponent<Image>();
-                if (templateImage != null) templateImage.color = Ivory;
+                if (templateImage != null) templateImage.color = Panel;
+                var viewport = dropdown.template.Find("Viewport");
+                if (viewport != null && viewport.TryGetComponent<Image>(out var viewportImage))
+                    viewportImage.color = Panel;
+                foreach (var image in dropdown.template.GetComponentsInChildren<Image>(true))
+                    if (image.name == "Item Background") image.color = PanelRaised;
                 foreach (var text in dropdown.template.GetComponentsInChildren<Text>(true))
-                    text.color = Ink;
+                    text.color = White;
             }
+            if (dropdown.itemText != null) dropdown.itemText.color = White;
         }
 
         static void AddShadow(Graphic graphic, Color color, Vector2 distance)
         {
             var shadow = graphic.GetComponent<Shadow>() ?? graphic.gameObject.AddComponent<Shadow>();
             shadow.effectColor = color; shadow.effectDistance = distance;
+        }
+
+        static void StyleTopBar(RehabAppShell shell)
+        {
+            var chrome = shell.telemetry.transform.parent;
+            Place((RectTransform)chrome, new Vector2(.5f, 1), new Vector2(.5f, 1),
+                  new Vector2(0, -12), new Vector2(1540, 58));
+            SetImage(chrome.gameObject, new Color(Deep.r, Deep.g, Deep.b, .95f));
+            Type(shell.telemetry, shell.telemetry.text, 15, Hex("BCE9D9"), TextAnchor.MiddleLeft,
+                 new Vector2(-333, 0), new Vector2(800, 40));
+            PaintButton(shell.gameplayHomeButton, PanelRaised, White, 14,
+                        new Vector2(676, 0), new Vector2(150, 40), "MAIN MENU");
         }
 
         static void Hud(RehabAppShell shell, ApartmentExperience app)
@@ -338,15 +464,7 @@ namespace GripRehab.Editor
             }
             app.progressFill.color = Color.clear;
             var canvas = shell.root.GetComponentInParent<Canvas>();
-            var chrome = shell.telemetry.transform.parent;
-            Place((RectTransform)chrome, new Vector2(.5f, 1), new Vector2(.5f, 1),
-                  new Vector2(0, -17), new Vector2(1540, 47));
-            SetImage(chrome.gameObject, new Color(Deep.r, Deep.g, Deep.b, .95f));
-            Type(shell.telemetry, shell.telemetry.text, 15, Hex("BCE9D9"), TextAnchor.MiddleLeft,
-                 new Vector2(-333, -23), new Vector2(800, 32));
-            PaintButton(shell.gameplayHomeButton, PanelRaised, White, 14,
-                        new Vector2(676, -23), new Vector2(150, 34), "MAIN MENU");
-
+            StyleTopBar(shell);
             var root = canvas.transform.Find("Premium session HUD");
             if (root == null)
             {

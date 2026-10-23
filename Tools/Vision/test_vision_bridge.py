@@ -1,8 +1,13 @@
 import unittest
+import json
 from types import SimpleNamespace
 
-from mediapipe_bridge import make_payload
-from replay_vision import hand_points
+if __package__:
+    from .mediapipe_bridge import make_payload
+    from .replay_vision import hand_points
+else:
+    from mediapipe_bridge import make_payload
+    from replay_vision import hand_points
 
 
 class VisionBridgeContractTest(unittest.TestCase):
@@ -29,6 +34,32 @@ class VisionBridgeContractTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             make_payload(hand, SimpleNamespace(category_name="Unknown", score=0.8),
                          1.0, 1, "test", False)
+
+    def test_world_pose_and_image_dimensions_are_optional_v1_extensions(self):
+        image = [SimpleNamespace(x=.4, y=.5, z=-.02)] * 21
+        world = [SimpleNamespace(x=.01, y=-.02, z=.03)] * 21
+        category = SimpleNamespace(category_name="Left", score=.95)
+        payload = make_payload(image, category, 2.0, 3, "test", False, 12.5,
+                               world_hand=world, image_width=640, image_height=480)
+        self.assertEqual(payload['schemaVersion'], 1)
+        self.assertEqual((payload['imageWidth'], payload['imageHeight']), (640, 480))
+        self.assertEqual(payload['worldLandmarks'][0], {'x':.01, 'y':-.02, 'z':.03})
+        self.assertLess(len(json.dumps(payload).encode('utf-8')), 8192)
+        legacy = make_payload(image, category, 2.0, 3, "test", False)
+        self.assertNotIn('worldLandmarks', legacy)
+        self.assertNotIn('imageWidth', legacy)
+
+    def test_invalid_extensions_cannot_poison_unity_pose(self):
+        points = [SimpleNamespace(x=.01, y=.02, z=.03)] * 21
+        category = SimpleNamespace(category_name="Right", score=.95)
+        for kwargs in ({'world_hand':points[:20]},
+                       {'world_hand':[SimpleNamespace(x=float('nan'),y=0,z=0)]*21},
+                       {'image_width':640}, {'image_width':-1,'image_height':480}):
+            with self.subTest(kwargs=list(kwargs)):
+                with self.assertRaises(ValueError):
+                    make_payload(points, category, 2.0, 3, 'test', False, **kwargs)
+        with self.assertRaises(ValueError):
+            make_payload(points, category, 2.0, 3, 'test', False, float('nan'))
 
 
 if __name__ == "__main__":

@@ -16,18 +16,12 @@ public sealed class PhysicalMaterialProfile : ScriptableObject {
  [Min(.005f)] public float deformationRadiusMeters=.06f;
  [Range(0,1)] public float plasticity=0;
  [Min(.01f)] public float recoveryPerSecond=8;
- [Header("Baked node/spring deformation (experimental material parameters)")]
- public SoftBodyTopology softBodyTopology;
- public bool hollowCup;
- [Range(0,.25f)] public float springCoupling=.025f;
- [Range(1,100)] public float pressureResponsePerSecond=30;
  [Header("Damage")]
  public bool breakable;
  [Min(.01f)] public float impactEnergyJoules=1;
  [Min(1)] public float sustainedForceNewtons=55;
  [Min(.05f)] public float forceDwellSeconds=.4f;
  [Min(.01f)] public float damageCapacity=1;
- [Min(.1f)] public float maximumGripDamagePerSecond=3;
  [Header("Performance")][Min(128)] public int maxVertices=4096;
  [Header("Debug")]
  public bool showContactGizmos;

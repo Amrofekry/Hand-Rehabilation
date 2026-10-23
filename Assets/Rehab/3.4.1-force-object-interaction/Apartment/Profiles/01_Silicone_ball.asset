@@ -19,18 +19,12 @@ MonoBehaviour:
   deformable: 1
   fullCompressionNewtons: 35
   maxDepthMeters: 0.018
-  deformationRadiusMeters: 0.035
+  deformationRadiusMeters: 0.07
   plasticity: 0
   recoveryPerSecond: 9
-  softBodyTopology: {fileID: 11400000, guid: e0e1d41fe8535d24a95fa8d1a44cae55, type: 2}
-  hollowCup: 0
-  springCoupling: 0.025
-  pressureResponsePerSecond: 32
   breakable: 0
   impactEnergyJoules: 1
   sustainedForceNewtons: 55
   forceDwellSeconds: 0.4
   damageCapacity: 1
-  maximumGripDamagePerSecond: 3
-  maxVertices: 4096
   showContactGizmos: 0

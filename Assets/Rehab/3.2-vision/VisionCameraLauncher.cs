@@ -25,6 +25,8 @@ namespace GripRehab
         public string LastError { get; private set; } = "";
         public float FramesPerSecond { get; private set; }
         public int DetectedHandsPerSecond { get; private set; }
+        public float CaptureReadMilliseconds { get; private set; }
+        public float InferenceMilliseconds { get; private set; }
         public bool IsRunning { get { try { return worker != null && !worker.HasExited; } catch { return false; } } }
         public bool CameraOpened => IsRunning && State == "camera_open";
 
@@ -100,6 +102,8 @@ namespace GripRehab
                         State = status.state ?? "UNKNOWN";
                         FramesPerSecond = status.fps;
                         DetectedHandsPerSecond = status.hands;
+                        CaptureReadMilliseconds = status.readMs;
+                        InferenceMilliseconds = status.inferenceMs;
                         if (State == "camera_error") LastError = "Camera " + cameraIndex + " could not open";
                     }
                     catch (ArgumentException) { LastError = "Malformed vision status"; }
@@ -126,6 +130,7 @@ namespace GripRehab
             State = "OFF";
             FramesPerSecond = 0;
             DetectedHandsPerSecond = 0;
+            CaptureReadMilliseconds = InferenceMilliseconds = 0;
         }
         void OnDisable() { StopWorker(); }
         void OnApplicationQuit() { StopWorker(); }
@@ -145,6 +150,7 @@ namespace GripRehab
             public string state;
             public int camera, frames, detections, hands;
             public float fps;
+            public float readMs, inferenceMs;
         }
     }
 }

@@ -3296,7 +3296,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 246614041}
-  m_Mesh: {fileID: 4300000, guid: 31f263b4a02634b4d811504677e5742c, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 491a69e852c94b7448dd6c7ab0a62c13, type: 2}
 --- !u!1 &250968093
 GameObject:
   m_ObjectHideFlags: 0
@@ -7973,7 +7973,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559516217}
-  m_Mesh: {fileID: 4300000, guid: 02785a746e50c944dbe74eb4b4b5a8fb, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 491a69e852c94b7448dd6c7ab0a62c13, type: 2}
 --- !u!1 &559855009
 GameObject:
   m_ObjectHideFlags: 0
@@ -10168,7 +10168,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732579915}
-  m_Mesh: {fileID: 4300000, guid: 6d0f5c8aa08a2ba409d11c4a1a500160, type: 2}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &740417544
 GameObject:
   m_ObjectHideFlags: 0
@@ -11798,7 +11798,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!65 &854146010
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11842,7 +11842,6 @@ MonoBehaviour:
   breakable: 0
   fragmentsPrefab: {fileID: 0}
   showContactGizmos: 0
-  handContactTolerance: 0.0015
 --- !u!1 &854784671
 GameObject:
   m_ObjectHideFlags: 0
@@ -13264,7 +13263,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.482755, y: 0.87394506, z: -4.4129624}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 56707453}
@@ -13292,7 +13291,6 @@ MonoBehaviour:
   breakable: 0
   fragmentsPrefab: {fileID: 0}
   showContactGizmos: 0
-  handContactTolerance: 0.0015
 --- !u!54 &908917050
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13319,7 +13317,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!135 &908917051
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -16390,7 +16388,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!65 &1130527520
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16434,7 +16432,6 @@ MonoBehaviour:
   breakable: 1
   fragmentsPrefab: {fileID: 7390892661083385111, guid: 27a977f884ff43e4c9ef6ff8ca582b02, type: 3}
   showContactGizmos: 0
-  handContactTolerance: 0.0015
 --- !u!1 &1133584667
 GameObject:
   m_ObjectHideFlags: 0
@@ -16507,7 +16504,6 @@ MonoBehaviour:
   breakable: 0
   fragmentsPrefab: {fileID: 0}
   showContactGizmos: 0
-  handContactTolerance: 0.0015
 --- !u!4 &1135522304
 Transform:
   m_ObjectHideFlags: 0
@@ -16550,7 +16546,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!65 &1135522306
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16924,7 +16920,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168401408}
-  m_Mesh: {fileID: 4300000, guid: 3c29e27d94f2df846af76928b0650b9f, type: 2}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1174059953
 GameObject:
   m_ObjectHideFlags: 0
@@ -17512,7 +17508,6 @@ MonoBehaviour:
   breakable: 1
   fragmentsPrefab: {fileID: 5673475605238040774, guid: e2a9fc657a008724b911fb7e8a125e2a, type: 3}
   showContactGizmos: 0
-  handContactTolerance: 0.0015
 --- !u!54 &1224716530
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17539,7 +17534,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!65 &1224716531
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30258,7 +30253,6 @@ MonoBehaviour:
   breakable: 0
   fragmentsPrefab: {fileID: 0}
   showContactGizmos: 0
-  handContactTolerance: 0.0015
 --- !u!54 &2062597756
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30285,7 +30279,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!65 &2062597757
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30862,7 +30856,6 @@ GameObject:
   - component: {fileID: 8690337224916914490}
   - component: {fileID: 8737890429124235521}
   - component: {fileID: 8737890429124235522}
-  - component: {fileID: 8737890429124235523}
   m_Layer: 8
   m_Name: "03 \xB7 First person patient"
   m_TagString: Untagged
@@ -31449,7 +31442,6 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 6a90580ec3f9bf64fa38bd55fa13ad67, type: 2}
   forceReceiver: {fileID: 8737890429124235520}
   vision: {fileID: 8002241294058599735}
-  surfaceGuard: {fileID: 8737890429124235523}
   virtualGrasp: {fileID: 574063377}
   cameraLauncher: {fileID: 8737890429124235521}
   holdAnchor: {fileID: 4420606296072567756}
@@ -31519,29 +31511,6 @@ MonoBehaviour:
   image: {fileID: 926554348}
   panel: {fileID: 75506460}
   visible: 1
---- !u!114 &8737890429124235523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 66425107249635757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba1772e46eb54f418f6eea0482a6e835, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.HandSurfaceGuard
-  app: {fileID: 8690337224916914490}
-  skinData: {fileID: 11400000, guid: 2f386148eed75e6459bc8767a61773df, type: 2}
-  surfacePadding: 0.0005
-  jointSearchSteps: 8
-  maximumSweepAngle: 4
-  passes: 3
-  maximumContactOpeningDegrees: 15
-  maximumWristCorrection: 0.15
-  cupPadBias: 1
-  skinSamplesPerSegment: 24
-  showGizmos: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

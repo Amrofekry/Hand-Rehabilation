@@ -10,7 +10,7 @@ namespace GripRehab
 {
     // Two independent 21-point streams on loopback. A legacy packet without handedness is Right.
     // Receive age includes time spent queued for Unity's main thread.
-    public sealed class VisionUdpReceiver : MonoBehaviour
+    public sealed class VisionUdpReceiver : MonoBehaviour, IHandTracker
     {
         public int port = 27817;
         public LandmarkFrame LatestRight { get; private set; }
@@ -33,8 +33,21 @@ namespace GripRehab
         private Thread _thread;
         private volatile bool _running;
         private double _rightReceivedAt, _leftReceivedAt;
+        private double _rightArrivedAt, _leftArrivedAt;
         private double _rightCapture, _leftCapture;
         private long _rightSequence, _leftSequence;
+
+        public bool TryGetHand(HandSide side, double now, out HandSample sample)
+        {
+            var left = side == HandSide.Left;
+            var frame = left ? LatestLeft : LatestRight;
+            var capturedAt = left ? _leftReceivedAt : _rightReceivedAt;
+            var arrivedAt = left ? _leftArrivedAt : _rightArrivedAt;
+            sample = new HandSample(side, frame?.landmarks, capturedAt, arrivedAt,
+                frame?.sequence ?? 0, frame?.confidence ?? 0,
+                HandKinematics.IsUsable(frame));
+            return sample.IsFresh(now);
+        }
 
         private static bool Valid(LandmarkFrame frame, double at) =>
             frame != null && HandKinematics.IsUsable(frame) &&
@@ -99,11 +112,13 @@ namespace GripRehab
                     if (left)
                     {
                         LatestLeft = frame; _leftReceivedAt = receivedAt;
+                        _leftArrivedAt = Time.realtimeSinceStartupAsDouble - received.ElapsedSeconds;
                         _leftCapture = frame.captureSeconds; _leftSequence = frame.sequence;
                     }
                     else
                     {
                         LatestRight = frame; _rightReceivedAt = receivedAt;
+                        _rightArrivedAt = Time.realtimeSinceStartupAsDouble - received.ElapsedSeconds;
                         _rightCapture = frame.captureSeconds; _rightSequence = frame.sequence;
                     }
                     AcceptedPackets++;
@@ -124,6 +139,7 @@ namespace GripRehab
         {
             LatestRight = LatestLeft = null;
             _rightReceivedAt = _leftReceivedAt = 0;
+            _rightArrivedAt = _leftArrivedAt = 0;
             _rightCapture = _leftCapture = 0;
             _rightSequence = _leftSequence = 0;
             ReceivedPackets = AcceptedPackets = RejectedPackets = 0;

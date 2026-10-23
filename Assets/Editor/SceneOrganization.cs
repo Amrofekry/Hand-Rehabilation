@@ -255,7 +255,7 @@ namespace GripRehab.Editor
                 layout = AssetDatabase.LoadAssetAtPath<SceneComposition>(SceneComposition.Asset);
                 for (int i = 0; i < layout.parts.Length; i++) layout.parts[i].path = originalParts[i];
                 EditorUtility.SetDirty(layout); AssetDatabase.SaveAssets(); EditorBuildSettings.scenes = originalBuild;
-                EditorBuildSettings.globalScenes = originalBuild;
+                EditorBuildSettings.scenes = originalBuild;
                 converting = false; throw;
             }
         }
@@ -345,7 +345,7 @@ namespace GripRehab.Editor
                 EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(SceneComposition.Main, true) }
                     .Concat(EditorBuildSettings.scenes.Where(s => s.enabled && s.path != oldEntry && s.path != SceneComposition.Main &&
                         !partPaths.Contains(s.path) && !s.path.StartsWith("Assets/SceneBackups/"))).ToArray();
-                EditorBuildSettings.globalScenes = EditorBuildSettings.scenes;
+                EditorBuildSettings.scenes = EditorBuildSettings.scenes;
                 foreach (var path in partPaths) if (!AssetDatabase.DeleteAsset(path)) throw new Exception("Cannot remove merged partition: " + path);
                 if (!AssetDatabase.DeleteAsset(SceneComposition.Asset)) throw new Exception("Cannot remove retired composition manifest.");
                 AssetDatabase.SaveAssets();
@@ -372,10 +372,10 @@ namespace GripRehab.Editor
         public static void ConfigureBuildScenes()
         {
             EditorBuildSettings.scenes = BuildScenePaths().Select(p => new EditorBuildSettingsScene(p, true)).ToArray();
-            EditorBuildSettings.globalScenes = EditorBuildSettings.scenes;
+            EditorBuildSettings.scenes = EditorBuildSettings.scenes;
             AssetDatabase.SaveAssets();
-            if (!EditorBuildSettings.globalScenes.Select(s => s.path).SequenceEqual(BuildScenePaths())) throw new Exception("Build scene list did not update.");
-            File.WriteAllText("Logs/scene-build-settings.json", JsonUtility.ToJson(new BuildBackup { scenes = EditorBuildSettings.globalScenes.Select(s => s.path).ToArray() }, true));
+            if (!EditorBuildSettings.scenes.Select(s => s.path).SequenceEqual(BuildScenePaths())) throw new Exception("Build scene list did not update.");
+            File.WriteAllText("Logs/scene-build-settings.json", JsonUtility.ToJson(new BuildBackup { scenes = EditorBuildSettings.scenes.Select(s => s.path).ToArray() }, true));
         }
         public static void VerifyEditPersistence()
         {
@@ -412,7 +412,7 @@ namespace GripRehab.Editor
             if (layout == null) { ApartmentAuthoring.VerifyScene(); return; }
             EnsureWorkspace(); layout.Bind();
             if (layout.parts.Length != 6) throw new Exception("Expected six focused content scenes.");
-            if (UnityEngine.Object.FindObjectsByType<SceneBootstrap>().Length != 1) throw new Exception("Expected one bootstrap.");
+            if (UnityEngine.Object.FindObjectsByType<SceneBootstrap>(FindObjectsSortMode.None).Length != 1) throw new Exception("Expected one bootstrap.");
             foreach (var part in layout.parts)
             {
                 var scene = SceneManager.GetSceneByPath(part.path);

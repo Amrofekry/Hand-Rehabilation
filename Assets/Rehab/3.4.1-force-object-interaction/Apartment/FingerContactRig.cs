@@ -7,7 +7,6 @@ public sealed class FingerContactRig : MonoBehaviour {
  [Header("Hand Tracking")][Tooltip("Existing animated 15-bone hand rig.")]
  public FingerPoseDriver pose;
  [System.NonSerialized] public Transform[] contactBones;
- [System.NonSerialized] public HandSkinSurface skin;
  [Header("Contact")][Min(.003f)] public float radiusMeters=.009f;
  [Tooltip("Layer 9 = grippable objects only.")] public LayerMask objectLayers=1<<9;
  [SerializeField] public FingerContactProbe[] probes;
@@ -27,10 +26,9 @@ public sealed class FingerContactRig : MonoBehaviour {
   }
  }
  void Awake(){Configure();if(probes!=null)foreach(var probe in probes)if(probe!=null)probe.GetComponent<Rigidbody>().interpolation=RigidbodyInterpolation.None;}
- void FixedUpdate(){RefreshGeometry();}
- public void RefreshGeometry(bool sync=true,int first=0,int last=15){
+ void FixedUpdate(){
   if(probes==null||pose==null||pose.joints==null)return;
-  for(int i=Mathf.Max(0,first);i<Mathf.Min(last,probes.Length);i++) {
+  for(int i=0;i<Mathf.Min(15,probes.Length);i++) {
    var probe=probes[i];var bones=contactBones??pose.joints;var bone=i<bones.Length?bones[i]:null;
    if(probe==null||bone==null){if(probe!=null)probe.gameObject.SetActive(false);continue;}
    Transform end=bone.childCount>0?bone.GetChild(0):null;
@@ -44,7 +42,7 @@ public sealed class FingerContactRig : MonoBehaviour {
    // Contact sensors have a moving camera parent; assign world pose immediately after station teleports.
    probe.transform.SetPositionAndRotation(midpoint,Quaternion.FromToRotation(Vector3.up,b-a));
   }
-  if(sync)Physics.SyncTransforms();
+  Physics.SyncTransforms();
  }
  void OnDrawGizmos(){if(!showGizmos||probes==null)return;Gizmos.color=Color.cyan;foreach(var p in probes)if(p!=null&&p.Contact!=null)Gizmos.DrawWireSphere(p.Point,radiusMeters);}
 }

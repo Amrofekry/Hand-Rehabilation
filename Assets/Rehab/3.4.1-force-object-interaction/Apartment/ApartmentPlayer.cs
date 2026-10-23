@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 namespace GripRehab {
 [RequireComponent(typeof(CharacterController))]
+[DefaultExecutionOrder(-80)]
 public sealed class ApartmentPlayer:MonoBehaviour {
  public ApartmentSettings settings;
  public Camera view;
@@ -10,14 +11,26 @@ public sealed class ApartmentPlayer:MonoBehaviour {
  public CharacterController Controller{get;private set;}
  public Vector3 Spawn{get;private set;}
  private float _pitch,_vertical;private SeatPoint _seat;private Vector3 _returnPosition;private Quaternion _returnRotation;private RehabAppShell _shell;
- private void Awake(){Controller=GetComponent<CharacterController>();Spawn=transform.position;}
+ private readonly RehabKeyboardGate _keyboard=new RehabKeyboardGate();private bool _acceptanceInput;
+ private bool InputFocused=>Application.isFocused||_acceptanceInput;
+ public bool GameplayInputAllowed{get{ObserveKeyboard();return _keyboard.Allowed;}}
+ public bool DemoSqueezing{get{ObserveKeyboard();return _keyboard.Squeezing;}}
+ private void ObserveKeyboard(){_keyboard.Sample(Time.frameCount,!Paused&&(isActiveAndEnabled||_acceptanceInput)&&InputFocused&&(_shell==null||!_shell.BlocksGameplay)&&!RehabAppShell.TextEntryHasFocus(),Input.GetKey(KeyCode.Space),Input.GetMouseButton(0));}
+ public void ResetGameplayInput()=>_keyboard.Block(Time.frameCount);
+ private void OnApplicationFocus(bool focused){if(!focused)ResetGameplayInput();}
+ private void Awake(){Controller=GetComponent<CharacterController>();Spawn=transform.position;
+  _acceptanceInput=Array.Exists(Environment.GetCommandLineArgs(),a=>a.StartsWith("-apartment-"));
+#if UNITY_EDITOR
+  _acceptanceInput|=UnityEditor.SessionState.GetBool("ApartmentQA.Active",false);
+#endif
+ }
  private void Start(){_shell=FindAnyObjectByType<RehabAppShell>();SetPaused(true);}
- private void OnDisable(){Cursor.lockState=CursorLockMode.None;Cursor.visible=true;}
- public void SetPaused(bool paused){Paused=paused;Cursor.lockState=paused?CursorLockMode.None:CursorLockMode.Locked;Cursor.visible=paused;}
+ private void OnDisable(){_keyboard.Block(Time.frameCount);Cursor.lockState=CursorLockMode.None;Cursor.visible=true;}
+ public void SetPaused(bool paused){if(Paused!=paused)_keyboard.Block(Time.frameCount);Paused=paused;Cursor.lockState=paused?CursorLockMode.None:CursorLockMode.Locked;Cursor.visible=paused;}
  private void Update(){
   if(_shell!=null&&_shell.BlocksGameplay){if(!Paused)SetPaused(true);return;}
-  if(Input.GetKeyDown(KeyCode.Escape))SetPaused(!Paused);
-  if(Paused)return;
+  if(RehabKeyboardGate.TogglePause(Input.GetKeyDown(KeyCode.Escape),Input.GetKeyDown(KeyCode.Tab),_shell!=null&&_shell.BlocksGameplay,RehabAppShell.TextEntryHasFocus(),InputFocused))SetPaused(!Paused);
+  if(!GameplayInputAllowed)return;
   transform.Rotate(0,Input.GetAxisRaw("Mouse X")*settings.mouseSensitivity,0);
   _pitch=Mathf.Clamp(_pitch-Input.GetAxisRaw("Mouse Y")*settings.mouseSensitivity,-75,75);
   view.transform.localRotation=Quaternion.Euler(_pitch,0,0);
@@ -50,5 +63,12 @@ public sealed class ApartmentPlayer:MonoBehaviour {
   view.transform.localRotation=Quaternion.Euler(_pitch,0,0);
  }
  public void Teleport(Vector3 position,Quaternion rotation){Controller.enabled=false;transform.SetPositionAndRotation(position,rotation);Controller.enabled=true;_vertical=0;}
+ // Changing stations is a teleport, so a blocked stand-up area at the old
+ // chair must not trap the player in the wrong room or keep seated eye height.
+ public void TeleportToStanding(Vector3 position,Quaternion rotation){
+  Controller.enabled=false;transform.SetPositionAndRotation(position,rotation);
+  view.transform.localPosition=new Vector3(0,1.62f,0);
+  _seat=null;_vertical=0;IsSeated=false;Controller.enabled=true;
+ }
 }
 }

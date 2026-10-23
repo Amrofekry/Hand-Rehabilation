@@ -121,7 +121,7 @@ namespace GripRehab.Editor
                 PanelAt(hero.transform, "Finger motion " + (i + 1), new Vector2(.5f, .5f),
                     new Vector2(-225 + i * 75, -226 + (lengths[i] - 90) * .27f), new Vector2(52, lengths[i]),
                     i == 1 ? Mint : new Color(.12f, .42f, .49f, 1));
-            Label(hero.transform, "Prototype note", "LOCAL PROTOTYPE   •   MODULE 01 AVAILABLE   •   GP2 MODULES PLANNED",
+            Label(hero.transform, "Prototype note", "LOCAL PROTOTYPE   •   THREE PLAYABLE MODULES",
                 new Vector2(-5, -320), new Vector2(620, 28), 13, Muted, TextAnchor.MiddleLeft);
 
             var actions = PanelAt(p, "Patient actions", new Vector2(.5f, .5f), new Vector2(430, 0), new Vector2(670, 720), Card);
@@ -167,15 +167,15 @@ namespace GripRehab.Editor
         {
             var p = s.modulePanel.transform;
             s.moduleGreeting = Label(p, "Module greeting", "CHOOSE A TRAINING MODULE", new Vector2(0, 315), new Vector2(1360, 55), 34, White);
-            Label(p, "Module instruction", "One interactive module is available. GP2 modules are visible for planning.",
+            Label(p, "Module instruction", "Choose a playable research exercise. Scores are game metrics only.",
                 new Vector2(0, 267), new Vector2(1300, 35), 18, Muted);
             var first = ModuleCard(p, "01", "FORCE + OBJECT", "Grip an everyday object. Watch its response and practise a controlled hold.", -478, Mint);
             s.openModuleButton = ButtonAt(first, "Open force object module", "OPEN MODULE 01", new Vector2(0, -142), new Vector2(330, 55), Mint, 18, Navy);
-            var second = ModuleCard(p, "02", "COGNITIVE", "Gesture sequence memory and spatial assembly. MediaPipe + YOLO planned.", 0, Blue);
-            s.cognitiveLockedButton = ButtonAt(second, "Cognitive module locked", "GP2  /  PLANNED", new Vector2(0, -142), new Vector2(330, 55), Disabled, 17);
-            var third = ModuleCard(p, "03", "VISUOMOTOR", "Maze navigation and visual tracing with accuracy feedback. Planned for GP2.", 478, Blue);
-            s.visuomotorLockedButton = ButtonAt(third, "Visuomotor module locked", "GP2  /  PLANNED", new Vector2(0, -142), new Vector2(330, 55), Disabled, 17);
-            Label(p, "Future pipeline", "COMING LATER  /  Baseline assessment  •  Fatigue-aware adaptation  •  Patient results  •  Doctor history",
+            var second = ModuleCard(p, "02", "COGNITIVE", "Sequence memory and spatial assembly using accessible buttons and keys.", 0, Blue);
+            s.cognitiveLockedButton = ButtonAt(second, "Cognitive module", "START MODULE 02", new Vector2(0, -142), new Vector2(330, 55), Blue, 17);
+            var third = ModuleCard(p, "03", "VISUOMOTOR", "Visual tracing and maze navigation with game accuracy feedback.", 478, Blue);
+            s.visuomotorLockedButton = ButtonAt(third, "Visuomotor module", "START MODULE 03", new Vector2(0, -142), new Vector2(330, 55), Blue, 17);
+            Label(p, "Future pipeline", "LOCAL PROTOTYPE  /  Game scores are not clinical measures or recommendations.",
                 new Vector2(0, -283), new Vector2(1390, 40), 16, Muted);
             s.homeFromModulesButton = ButtonAt(p, "Back to main menu", "BACK TO MENU", new Vector2(0, -357), new Vector2(230, 44), Panel, 15);
         }

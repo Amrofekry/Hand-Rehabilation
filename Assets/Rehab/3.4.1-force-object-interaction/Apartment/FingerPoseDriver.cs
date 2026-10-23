@@ -26,12 +26,6 @@ namespace GripRehab
         public Vector3 spreadAxis = Vector3.up;
         [Range(0, 1)] public float palmRotationWeight = 1f;
         [Range(0, 180)] public float maxPalmRotationDegrees = 160;
-        [Header("Pose stability")]
-        [Tooltip("Small motion uses the existing smoothing; intentional motion responds faster.")]
-        [Range(0,60)] public float translationResponsiveness=24;
-        [Range(0,.2f)] public float rotationResponsiveness=.045f;
-        [Range(.05f,.5f)] public float trackingLossHoldSeconds=.15f;
-        private float _trackingLossSeconds;
         [Header("Tracking loss")]
         [Tooltip("If false, blend to the visible demo/rest pose when this hand disappears.")]
         public bool holdLastTrackedPoseOnLoss = false;
@@ -129,7 +123,7 @@ namespace GripRehab
             Vector3[] points = null;
             if (TrackingUsed)
             {
-                _everTracked = true;_trackingLossSeconds=0;
+                _everTracked = true;
                 points = _points;
                 // The worker already mirrors the image into the patient-facing view.
                 // Use that same horizontal convention for position and rotation;
@@ -141,12 +135,7 @@ namespace GripRehab
                 PalmNormal = Vector3.Cross(palmSide, palmUp).normalized;
 
                 var wristImage = HandKinematics.ToCameraSpace(frame.landmarks[0]);
-                // Both palm spans, in isotropic image coordinates, reduce depth
-                // pumping from a single noisy landmark or a narrowing silhouette.
-                float aspect=frame.imageWidth>0?(float)frame.imageHeight/frame.imageWidth:1;
-                var lateral=frame.landmarks[5]-frame.landmarks[17];lateral.y*=aspect;
-                var longitudinal=frame.landmarks[9]-frame.landmarks[0];longitudinal.y*=aspect;
-                var width=(Vector3.Distance(lateral,new Vector3())+Vector3.Distance(longitudinal,new Vector3()))*.5f;
+                var width = Vector3.Distance(frame.landmarks[5], frame.landmarks[17]);
                 HandKinematics.TryPalmBasis(palmSide, palmUp, out var currentBasis);
                 if (!_anchored)
                 {
@@ -165,9 +154,7 @@ namespace GripRehab
                     Mathf.Clamp(delta.x * travelMeters, -.23f, .23f),
                     Mathf.Clamp(delta.y * travelMeters, -.20f, .20f),
                     Mathf.Clamp((width / _palmWidthReference - 1f) * (absoluteImageSpace ? .75f : .08f), absoluteImageSpace ? -.20f : -.12f, absoluteImageSpace ? .65f : .12f));
-                float positionError=Vector3.Distance(transform.localPosition,requested);
-                float positionAlpha=1-Mathf.Exp(-dt/smoothing*(1+positionError*Mathf.Clamp(translationResponsiveness,0,60)));
-                transform.localPosition = Vector3.Lerp(transform.localPosition, requested, positionAlpha);
+                transform.localPosition = Vector3.Lerp(transform.localPosition, requested, alpha);
                 // Preserve the upright fingers, then turn the palm over around
                 // the upright vertical axis: the camera sees the opposite side
                 // of the hand from the patient. This changes the rest facing,
@@ -178,16 +165,12 @@ namespace GripRehab
                     : _rootRest;
                 var measured = currentBasis * Quaternion.Inverse(_cameraPalmReference) * poseRest;
                 var limited = Quaternion.RotateTowards(poseRest, measured, float.IsFinite(maxPalmRotationDegrees)?Mathf.Clamp(maxPalmRotationDegrees,0,180):160);
-                var rotationTarget=Quaternion.Slerp(poseRest,limited,float.IsFinite(palmRotationWeight)?Mathf.Clamp01(palmRotationWeight):1);
-                float rotationAlpha=1-Mathf.Exp(-dt/smoothing*(1+Quaternion.Angle(transform.localRotation,rotationTarget)*Mathf.Clamp(rotationResponsiveness,0,.2f)));
-                transform.localRotation=Quaternion.Slerp(transform.localRotation,rotationTarget,rotationAlpha);
+                transform.localRotation = Quaternion.Slerp(transform.localRotation,
+                    Quaternion.Slerp(poseRest, limited, float.IsFinite(palmRotationWeight)?Mathf.Clamp01(palmRotationWeight):1), alpha);
             }
             else
             {
-                // Never recalibrate orientation/depth because of one lost frame.
-                // Visual hold does not grant valid tracking or permit gripping.
-                _trackingLossSeconds+=dt;
-                if(_everTracked&&_trackingLossSeconds<Mathf.Clamp(trackingLossHoldSeconds,.05f,.5f))return;
+                _anchored = false;
                 if (_everTracked && holdLastTrackedPoseOnLoss) return;
                 transform.localPosition = Vector3.Lerp(transform.localPosition, restingPosition, alpha);
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, _rootRest, alpha);
@@ -223,9 +206,7 @@ namespace GripRehab
                 for (int joint = 0; joint < 3; joint++)
                 {
                     var n = finger * 3 + joint;
-                    float previous=float.IsFinite(_smoothed[n])?_smoothed[n]:0;
-                    float fingerAlpha=TrackingUsed?1-Mathf.Exp(-dt/smoothing*(1+Mathf.Abs(_angles[n]-previous)*.04f)):alpha;
-                    _smoothed[n] = Mathf.Lerp(previous, _angles[n], fingerAlpha);
+                    _smoothed[n] = Mathf.Lerp(float.IsFinite(_smoothed[n])?_smoothed[n]:0, _angles[n], alpha);
                     if (n < joints.Length && joints[n] != null)
                     {
                         var curl = Quaternion.AngleAxis(_smoothed[n] * liveCurlSign, liveCurlAxis);

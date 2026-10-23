@@ -15,7 +15,7 @@ public static class ApartmentOptionsAuthoring {
   var app=UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>();
   var white=Material("Ivory porcelain",new Color(.85f,.88f,.82f),.7f);var teal=Material("Soft silicone cup",new Color(.09f,.43f,.40f),.36f);var red=Material("Tomato skin",new Color(.66f,.045f,.025f),.4f);var green=Material("Tomato leaf",new Color(.12f,.22f,.025f),.15f);
   var fallback=Material("Warm bulb surface",new Color(.95f,.92f,.8f),.4f);
-  int missing=0;foreach(var renderer in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include)){
+  int missing=0;foreach(var renderer in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include,FindObjectsSortMode.None)){
    var mats=renderer.sharedMaterials;bool changed=false;for(int i=0;i<mats.Length;i++)if(mats[i]==null||mats[i].shader==null||mats[i].shader.name=="Hidden/InternalErrorShader"){mats[i]=fallback;changed=true;missing++;}
    if(changed)renderer.sharedMaterials=mats;
   }

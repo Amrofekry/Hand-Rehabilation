@@ -79,15 +79,15 @@ namespace GripRehab.Editor
                     var app = UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>();
                     Require(app != null && app.statusText != null && app.forceText != null && app.objects.All(o => o != null) && app.seats.All(s => s != null), "Gameplay cross-scene references missing.");
                     Require(app.virtualGrasp.Ready && app.contactRig != null, "Native VirtualGrasp/contact rig not ready.");
-                    Require(UnityEngine.Object.FindObjectsByType<Camera>().Length == 1 && UnityEngine.Object.FindObjectsByType<EventSystem>().Length == 1, "Duplicate camera/EventSystem.");
-                    Require(UnityEngine.Object.FindObjectsByType<LiveForceReceiver>().Length == 1 && UnityEngine.Object.FindObjectsByType<VisionUdpReceiver>().Length == 1 && UnityEngine.Object.FindObjectsByType<VisionPreviewReceiver>().Length == 1, "Duplicate receivers.");
+                    Require(UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Length == 1 && UnityEngine.Object.FindObjectsByType<EventSystem>(FindObjectsSortMode.None).Length == 1, "Duplicate camera/EventSystem.");
+                    Require(UnityEngine.Object.FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length == 1 && UnityEngine.Object.FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length == 1 && UnityEngine.Object.FindObjectsByType<VisionPreviewReceiver>(FindObjectsSortMode.None).Length == 1, "Duplicate receivers.");
                     app.SetHardware(false); app.SelectHand(true);
                     Require(app.virtualGrasp.outputMesh.sharedMesh == app.virtualGrasp.leftOnlyMesh && app.contactRig.pose == app.leftHand, "Left SDK hand binding failed.");
                     app.SelectHand(false);
                     Require(app.virtualGrasp.outputMesh.sharedMesh == app.virtualGrasp.rightOnlyMesh && app.contactRig.pose == app.rightHand, "Right SDK hand binding failed.");
                     Require(app.choices.SelectStation(true) && app.choices.Kitchen && app.choices.SelectedObject != null, "Kitchen bindings missing.");
                     Require(app.choices.SelectStation(false) && !app.choices.Kitchen && app.choices.SelectedObject != null, "Living/seat bindings missing.");
-                    Require(UnityEngine.Object.FindObjectsByType<Button>().Any(b => b.IsInteractable()), "No usable UI controls.");
+                    Require(UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None).Any(b => b.IsInteractable()), "No usable UI controls.");
                     Require(app.objects.All(o => o.profile != null && o.visual != null), "Material/visual assets missing.");
                     var selected = app.choices.SelectedObject;
                     Require(!selected.profile.deformable || selected.HasLocalizedDeformation, "Selected deformable object did not initialize its mesh.");

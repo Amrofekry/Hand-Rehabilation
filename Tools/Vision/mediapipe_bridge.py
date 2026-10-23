@@ -5,10 +5,8 @@ individual finger force, or a clinically validated hand pose.
 """
 import argparse
 import json
-import math
 import socket
 import time
-import threading
 from pathlib import Path
 
 DEFAULT_MODEL = Path(__file__).resolve().parents[2] / "models" / "hand_landmarker.task"
@@ -31,20 +29,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool,
-                 age_ms: float = 0, *, world_hand=None, image_width: int = 0, image_height: int = 0) -> dict:
+def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool, age_ms: float = 0) -> dict:
     label = category.category_name
     if label not in ("Left", "Right"):
         raise ValueError(f"Unknown hand label: {label}")
     if swap:
         label = "Left" if label == "Right" else "Right"
-    if len(hand) != 21 or any(not math.isfinite(v) for p in hand for v in (p.x, p.y, p.z)):
-        raise ValueError("Expected 21 finite image landmarks")
-    if not math.isfinite(age_ms) or age_ms < 0 or not math.isfinite(category.score):
-        raise ValueError("Invalid frame age or handedness score")
-    if (image_width or image_height) and not (1 <= image_width <= 8192 and 1 <= image_height <= 8192):
-        raise ValueError("Invalid image dimensions")
-    payload = {
+    return {
         "schemaVersion": 1,
         "source": f"mediapipe-{version}",
         "captureSeconds": captured,
@@ -57,61 +48,6 @@ def make_payload(hand, category, captured: float, sequence: int, version: str, s
         "gestureConfidence": 0.0,
         "landmarks": [{"x": p.x, "y": p.y, "z": p.z} for p in hand],
     }
-    if image_width and image_height:
-        payload.update(imageWidth=image_width, imageHeight=image_height)
-    if world_hand is not None:
-        if len(world_hand) != 21 or any(not math.isfinite(v) or abs(v) > 2
-                                       for p in world_hand for v in (p.x, p.y, p.z)):
-            raise ValueError("Expected 21 finite estimated world landmarks")
-        payload['worldLandmarks'] = [{"x": p.x, "y": p.y, "z": p.z} for p in world_hand]
-    return payload
-
-
-class LatestCameraFrame:
-    """One producer owns capture/read/release; inference consumes only the newest frame.
-
-    Dropped intermediate frames are intentional. No raw frames are written to disk.
-    A blocked driver cannot deadlock shutdown: the worker is a daemon, with a bounded join.
-    """
-    def __init__(self, capture):
-        self.capture = capture
-        self.condition = threading.Condition()
-        self.stop = threading.Event()
-        self.latest = None
-        self.sequence = self.consumed = 0
-        self.thread = threading.Thread(target=self._run, name="camera-latest-frame", daemon=True)
-        self.thread.start()
-
-    def _run(self):
-        try:
-            while not self.stop.is_set():
-                ok, frame = self.capture.read()
-                captured = time.monotonic()
-                if not ok:
-                    self.stop.wait(.02)
-                    continue
-                with self.condition:
-                    self.sequence += 1
-                    self.latest = (frame, captured)
-                    self.condition.notify_all()
-        finally:
-            self.capture.release()
-            with self.condition:
-                self.condition.notify_all()
-
-    def read(self, timeout=1):
-        with self.condition:
-            self.condition.wait_for(lambda: self.sequence != self.consumed or self.stop.is_set(), timeout)
-            if self.sequence == self.consumed:
-                return False, None, time.monotonic()
-            self.consumed = self.sequence
-            return True, self.latest[0], self.latest[1]
-
-    def close(self):
-        self.stop.set()
-        with self.condition:
-            self.condition.notify_all()
-        self.thread.join(timeout=1)
 
 
 def main() -> None:
@@ -155,24 +91,20 @@ def main() -> None:
                 capture.set(cv2.CAP_PROP_EXPOSURE, args.exposure)
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         preview_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) if args.preview_port else None
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "ai-engine" / "src"))
+        from fatigue_ai.camera import ResearchCamera
+        research_camera = ResearchCamera(Path(__file__).resolve().parents[2])
         next_preview = 0.0
         started = time.monotonic()
         last_timestamp_ms = -1
         frames = detections = sequence = 0
         status_at = started
         interval_frames = interval_detections = 0
-        read_total_ms = inference_total_ms = 0.0
         print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':0,'detections':0,'fps':0}), flush=True)
-        reader = None if args.video else LatestCameraFrame(capture)
         try:
             while args.seconds <= 0 or time.monotonic() - started < args.seconds:
-                read_started = time.monotonic()
-                if reader is None:
-                    ok, frame = capture.read()
-                    captured = time.monotonic()
-                else:
-                    ok, frame, captured = reader.read()
-                read_ms = (time.monotonic() - read_started) * 1000
+                ok, frame = capture.read()
                 if not ok:
                     if args.video:
                         break
@@ -182,28 +114,24 @@ def main() -> None:
                     continue
                 if args.mirror:
                     frame = cv2.flip(frame, 1)
+                captured = time.monotonic()
+                research_camera.submit(frame, captured)
                 timestamp_ms = max(int((captured - started) * 1000), last_timestamp_ms + 1)
                 last_timestamp_ms = timestamp_ms
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
-                inference_started = time.monotonic()
                 result = landmarker.detect_for_video(image, timestamp_ms)
-                inference_ms = (time.monotonic() - inference_started) * 1000
                 frames += 1
                 interval_frames += 1
-                read_total_ms += read_ms
-                inference_total_ms += inference_ms
                 # No detection packet: Unity expires that hand independently after 500 ms.
-                for hand_index, (hand, handedness) in enumerate(zip(result.hand_landmarks, result.handedness)):
+                for hand, handedness in zip(result.hand_landmarks, result.handedness):
                     if len(hand) != 21 or not handedness:
                         continue
                     sequence += 1
                     payload = make_payload(hand, handedness[0], captured, sequence,
                                            mp.__version__, args.swap_handedness,
-                                           max(0.0, (time.monotonic() - captured) * 1000),
-                                           world_hand=result.hand_world_landmarks[hand_index],
-                                           image_width=frame.shape[1], image_height=frame.shape[0])
-                    sock.sendto(json.dumps(payload, separators=(",", ":"), allow_nan=False).encode("utf-8"),
+                                           max(0.0, (time.monotonic() - captured) * 1000))
+                    sock.sendto(json.dumps(payload, separators=(",", ":")).encode("utf-8"),
                                 ("127.0.0.1", args.port))
                     detections += 1
                     interval_detections += 1
@@ -231,19 +159,14 @@ def main() -> None:
                         preview_sock.sendto(jpeg.tobytes(), ("127.0.0.1", args.preview_port))
                     next_preview = now + .2
                 if now - status_at >= 1:
-                    print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':frames,'detections':detections,'fps':round(interval_frames/(now-status_at),1),'hands':interval_detections,
-                          'readMs':round(read_total_ms/max(1,interval_frames),2),
-                          'inferenceMs':round(inference_total_ms/max(1,interval_frames),2)}), flush=True)
+                    print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':frames,'detections':detections,'fps':round(interval_frames/(now-status_at),1),'hands':interval_detections}), flush=True)
                     status_at = now
                     interval_frames = interval_detections = 0
-                    read_total_ms = inference_total_ms = 0.0
         except KeyboardInterrupt:
             pass
         finally:
-            if reader is not None:
-                reader.close()
-            else:
-                capture.release()
+            research_camera.close()
+            capture.release()
             sock.close()
             if preview_sock is not None:
                 preview_sock.close()

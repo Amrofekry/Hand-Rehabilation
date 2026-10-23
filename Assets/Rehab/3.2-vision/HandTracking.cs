@@ -128,17 +128,6 @@ namespace GripRehab
             return total / 4f;
         }
 
-        // Thumb/index opposition is independent of the other three fingers.
-        // Normalize by palm width: a pinch should not change with camera distance.
-        public static float PinchScore(LandmarkFrame frame)
-        {
-            if(!HasPoseGeometry(frame))return 0;
-            float span=Vector3.Distance(PosePoint(frame,5),PosePoint(frame,17));
-            if(span<.005f)return 0;
-            float aperture=Vector3.Distance(PosePoint(frame,4),PosePoint(frame,8))/span;
-            return 1-Mathf.Clamp01((aperture-.1f)/.35f);
-        }
-
         static float FingerBend(Vector3 a, Vector3 b, Vector3 c)
         {
             Vector3 first = b - a, second = c - b;

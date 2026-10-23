@@ -24,7 +24,7 @@ public static class ApartmentAuthoring {
    if(t.TryGetComponent<Renderer>(out var renderer)&&renderer.sharedMaterials.Any(x=>x==null||x.shader==null||x.shader.name=="Hidden/InternalErrorShader"))throw new Exception("Missing material/shader: "+t.name);
   }
   if(exp.settings.startWithHardware||!exp.settings.startWithCamera||exp.forceReceiver.allowSyntheticInEditor)throw new Exception("Delivery must default to camera mode with synthetic force replay disabled");
-  if(UnityEngine.Object.FindObjectsByType<Camera>().Length!=1||UnityEngine.Object.FindObjectsByType<LiveForceReceiver>().Length!=1||UnityEngine.Object.FindObjectsByType<VisionUdpReceiver>().Length!=1)throw new Exception("Expected one player camera and each receiver");
+  if(UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Length!=1||UnityEngine.Object.FindObjectsByType<LiveForceReceiver>(FindObjectsSortMode.None).Length!=1||UnityEngine.Object.FindObjectsByType<VisionUdpReceiver>(FindObjectsSortMode.None).Length!=1)throw new Exception("Expected one player camera and each receiver");
   Debug.Log("[APARTMENT_VERIFY] PASS: furnished apartment, scene references/materials/scripts, first-person rig, six selectable objects, seated station, camera default");
  }
  [MenuItem("Grip Rehab/Create Separate Scene Copy")]

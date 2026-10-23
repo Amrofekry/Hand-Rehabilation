@@ -13,7 +13,7 @@ namespace GripRehab.Editor {
    var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();
    var app=UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>();
    if(app.player.view.GetComponent<AudioListener>()==null)app.player.view.gameObject.AddComponent<AudioListener>();
-   foreach(var door in UnityEngine.Object.FindObjectsByType<ApartmentDoor>()) {
+   foreach(var door in UnityEngine.Object.FindObjectsByType<ApartmentDoor>(FindObjectsSortMode.None)) {
     if(door.transform.parent==null||!door.transform.parent.name.StartsWith("DoorFrame"))UnityEngine.Object.DestroyImmediate(door);
     else GameObjectUtility.SetStaticEditorFlags(door.gameObject,0);
    }
@@ -32,9 +32,9 @@ namespace GripRehab.Editor {
   }
   public static void Inspect(){
    EditorSceneManager.OpenScene(ApartmentAuthoring.ScenePath);
-   var all=UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include);
+   var all=UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include,FindObjectsSortMode.None);
    File.WriteAllLines("Logs/apartment-doors.txt",all.Where(x=>x.name.ToLowerInvariant().Contains("door")).Select(x=>x.name+" pos="+x.position+" mesh="+(x.GetComponent<MeshFilter>()!=null)+" parent="+x.parent?.name));
-   File.WriteAllLines("Logs/apartment-bounds.txt",UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include).OrderByDescending(x=>x.bounds.size.sqrMagnitude).Take(35).Select(x=>x.name+" "+x.bounds+" active="+x.gameObject.activeInHierarchy));
+   File.WriteAllLines("Logs/apartment-bounds.txt",UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include,FindObjectsSortMode.None).OrderByDescending(x=>x.bounds.size.sqrMagnitude).Take(35).Select(x=>x.name+" "+x.bounds+" active="+x.gameObject.activeInHierarchy));
    var exp=UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>();
    if(exp.objects.Any(x=>x==null)||exp.seats.Any(x=>x==null)||exp.statusText==null||exp.forceText==null||exp.holdAnchor==null)throw new Exception("Missing scene references");
    Debug.Log("[APARTMENT_BINDINGS] PASS");

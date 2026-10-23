@@ -16,6 +16,10 @@ MonoBehaviour:
   mouseSensitivity: 1.2
   demoForceNewtons: 18
   reachMeters: 1.6
+  pickupAssistDegrees: 9
+  releaseVelocityGain: 0.15
+  maximumReleaseSpeed: 1.2
+  maximumReleaseStep: 0.25
   trackingSmoothing: 0.045
   trackingTravelMeters: 0.85
   startWithCamera: 1
@@ -23,7 +27,7 @@ MonoBehaviour:
   cameraOpenAt: 0.28
   cameraGestureDwellSeconds: 0.12
   cameraGrabRadiusMeters: 0.09
-  cameraVisualMaxNewtons: 38
+  cameraVisualMaxNewtons: 80
   leftWristSetbackMeters: 0.18
   seatedHoldLiftMeters: 0.28
   seatedHandsLiftMeters: 0.22
