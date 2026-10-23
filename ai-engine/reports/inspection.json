@@ -1,0 +1,152 @@
+[
+  {
+    "subject": "sub1",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.4,
+    "samples": 1205,
+    "baseline": 45.07049315140041,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub10",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.2,
+    "samples": 1203,
+    "baseline": 42.12468478221095,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub11",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.9,
+    "samples": 1210,
+    "baseline": 33.98970032468618,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub12",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.4,
+    "samples": 1205,
+    "baseline": 27.879923423108842,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub13",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.30000000000001,
+    "samples": 1204,
+    "baseline": 39.19100426413884,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub14",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.4,
+    "samples": 1205,
+    "baseline": 35.948118914435135,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub15",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.30000000000001,
+    "samples": 1204,
+    "baseline": 37.8283010597674,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub2",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.5,
+    "samples": 1206,
+    "baseline": 43.21382115071746,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub3",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.2,
+    "samples": 1203,
+    "baseline": 26.220568362172582,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub4",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.2,
+    "samples": 1203,
+    "baseline": 46.187437742830554,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub5",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.2,
+    "samples": 1203,
+    "baseline": 27.873943958366752,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub6",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.30000000000001,
+    "samples": 1204,
+    "baseline": 33.747090981395125,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub7",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.2,
+    "samples": 1203,
+    "baseline": 47.593512944677116,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub8",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.5,
+    "samples": 1206,
+    "baseline": 37.873380052237565,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "sub9",
+    "trial": "6kg-elbow",
+    "source": "Zenodo-5189275",
+    "unit": "EMG_RMS_PROXY",
+    "seconds": 120.4,
+    "samples": 1205,
+    "baseline": 33.09882520992986,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  }
+]

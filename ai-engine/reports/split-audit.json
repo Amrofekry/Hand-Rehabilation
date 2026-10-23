@@ -1,0 +1,25 @@
+{
+  "train": [
+    "sub8",
+    "sub11",
+    "sub9",
+    "sub7",
+    "sub10",
+    "sub13",
+    "sub5",
+    "sub12",
+    "sub15"
+  ],
+  "validation": [
+    "sub3",
+    "sub4",
+    "sub6"
+  ],
+  "test": [
+    "sub1",
+    "sub2",
+    "sub14"
+  ],
+  "unit": "subject",
+  "seed": 20261022
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://media.githubusercontent.com/media/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/face_detection_yunet_2023mar.onnx",
+    "commit": "48b10fa505aeb51fbd127fc60a5c660040e823b7",
+    "file": "face_detection_yunet_2023mar.onnx",
+    "bytes": 232589,
+    "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+    "license": "MIT"
+  },
+  {
+    "url": "https://media.githubusercontent.com/media/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/facial_expression_recognition/facial_expression_recognition_mobilefacenet_2022july.onnx",
+    "commit": "48b10fa505aeb51fbd127fc60a5c660040e823b7",
+    "file": "facial_expression_recognition_mobilefacenet_2022july.onnx",
+    "bytes": 4791892,
+    "sha256": "4f61307602fc089ce20488a31d4e4614e3c9753a7d6c41578c854858b183e1a9",
+    "license": "Apache-2.0"
+  }
+]

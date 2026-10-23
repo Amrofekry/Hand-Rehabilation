@@ -1,0 +1,122 @@
+[
+  {
+    "subject": "SYNTHETIC_00",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_01",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_02",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_03",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_04",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_05",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_06",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_07",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_08",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_09",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_10",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  },
+  {
+    "subject": "SYNTHETIC_11",
+    "trial": "SYNTHETIC_trial",
+    "source": "SYNTHETIC_OWN",
+    "unit": "N",
+    "seconds": 99.9,
+    "samples": 1000,
+    "baseline": 50.0,
+    "labels": "WEAK time-in-task early<=30%, late>=70%; not fatigue ground truth"
+  }
+]

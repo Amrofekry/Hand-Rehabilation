@@ -1,0 +1,22 @@
+{
+  "train": [
+    "SYNTHETIC_10",
+    "SYNTHETIC_02",
+    "SYNTHETIC_05",
+    "SYNTHETIC_08",
+    "SYNTHETIC_01",
+    "SYNTHETIC_04",
+    "SYNTHETIC_03",
+    "SYNTHETIC_06"
+  ],
+  "validation": [
+    "SYNTHETIC_07",
+    "SYNTHETIC_00"
+  ],
+  "test": [
+    "SYNTHETIC_09",
+    "SYNTHETIC_11"
+  ],
+  "unit": "subject",
+  "seed": 20261022
+}

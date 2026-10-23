@@ -1,0 +1,20 @@
+{
+  "oxford": {
+    "url": "https://data.mrc.ox.ac.uk/data-set/investigating-motor-fatigue-using-force-emg-and-kinematic-data",
+    "license": "CC-BY-SA-4.0",
+    "kind": "force",
+    "access": "registration required; no credentials requested"
+  },
+  "zenodo": {
+    "url": "https://zenodo.org/api/records/5189275",
+    "license": "CC-BY-4.0",
+    "kind": "EMG-PROXY",
+    "doi": "10.5281/zenodo.5189275"
+  },
+  "mendeley": {
+    "url": "https://data.mendeley.com/datasets/8j2p29hnbv/1",
+    "license": "CC-BY-4.0",
+    "kind": "EMG-PROXY",
+    "access": "adapter prepared; not included in this experiment"
+  }
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "early_ratio": 0.2,
+    "late_ratio": 0.8,
+    "stable": 180,
+    "late": 240,
+    "weak": true
+  },
+  {
+    "early_ratio": 0.25,
+    "late_ratio": 0.75,
+    "stable": 240,
+    "late": 300,
+    "weak": true
+  },
+  {
+    "early_ratio": 0.3,
+    "late_ratio": 0.7,
+    "stable": 300,
+    "late": 360,
+    "weak": true
+  }
+]

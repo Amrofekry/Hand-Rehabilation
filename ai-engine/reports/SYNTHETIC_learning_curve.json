@@ -1,0 +1,317 @@
+[
+  {
+    "training_subjects": 2,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 2.5617460812955456e-06,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "training_subjects": 3,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 1.1157933822283598e-06,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "training_subjects": 4,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 8.316090115745431e-07,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "training_subjects": 5,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 6.764525819368606e-07,
+      "roc_auc": 1.0,
+      "pr_auc": 0.9999999999999998
+    }
+  },
+  {
+    "training_subjects": 6,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 5.165549385740277e-07,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "training_subjects": 7,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 4.439051003763247e-07,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "training_subjects": 8,
+    "test": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 3.842875050172655e-07,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  }
+]

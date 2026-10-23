@@ -1,0 +1,19 @@
+# Data card - 2026-10-22
+## Actually used
+Zenodo **10.5281/zenodo.5189275**, Ebied et al., Upper Limb Muscle Fatigue Analysis Using Multi-channel Surface EMG, DOI **10.1109/NILES50944.2020.9257909**. https://zenodo.org/records/5189275. CC BY 4.0, metadata and acquisition log saved. 10,603,743-byte ZIP, published MD5 `a954b4eff5594fd8b1670b1a1d0eb864`, matched after download. Fifteen healthy subjects; 200Hz, eight-channel ADC counts, elbow flexion with 6kg load, nominal 120 seconds. Actual per-subject durations/counts in `reports/inspection.json` supersede nominal description. No force channel, Borg labels or clinical patients were present in the parsed text files.
+
+Transformation: mean channel squared signal -> causal 3Hz low-pass -> RMS -> decimate to 10Hz -> early reference normalization -> 5s windows, 1s stride. `pct_mvc` in this PROXY model is a fraction of early EMG effort, NOT measured MVC or Newtons. No EMG-to-N conversion is made. Early<=30% vs late>=70% task time are **WEAK** class targets. Middle intervals are excluded. Time itself is excluded from model features to avoid trivial time-label prediction. These labels do not prove biological fatigue. Reported classifier numbers measure weak-label discrimination only.
+
+Split: 9 train / 3 validation / 3 held-out subjects, seed 20261022. Scaler fitted on train subjects only; grouped train-only CV fits a new scaler for each fold. Temperature/early stopping/seed choice use validation only. No held-out test threshold tuning. Augmentation is training-only. Small test N and within-source weak labels limit external validity.
+
+## Requested but not used for training
+- Oxford: https://data.mrc.ox.ac.uk/data-set/investigating-motor-fatigue-using-force-emg-and-kinematic-data. CC BY-SA 4.0, DOI 10.60964/rnd-rtyw-9w81. Access page explicitly requires registration/login. No account submission or credential handling. Authenticated download/actual calibration files remain required. Explicit channel/calibration XDF and MAT adapters are provided; unknown channel layouts are not guessed. Share-alike/attribution must be retained on applicable derived material if these data are later used.
+- Mendeley 8j2p29hnbv/1, https://data.mendeley.com/datasets/8j2p29hnbv/1. CC BY 4.0; 30-subject EMG/arm-movement development candidate, no measured grip-force evidence used here.
+- Additional open candidate EMG-FMFP, https://data.mendeley.com/datasets/2prvk292rp/1, DOI 10.17632/2prvk292rp.1, CC BY 4.0; six participants, dynamometer/EMG sessions. Needs inspection of its actual file units and fatigue annotations before inclusion; not pooled blindly with this experiment.
+- UBFC-rPPG: https://sites.google.com/view/ybenezeth/ubfcrppg. Source says shared for research; no unrestricted commercial permission inferred. Not downloaded/redistributed or used for accuracy claims. PURE requires author access. Real pulse/HRV validation remains open.
+
+## Pretrained models
+OpenCV Zoo commit, URLs, bytes and SHA256s in `reports/pretrained-models.json`. YuNet face detector: MIT. MobileFaceNet Progressive Teacher seven expressions: README explicitly licenses all directory files Apache-2.0 (linked directory LICENSE currently absent); that declaration, full root Apache license and attribution are retained. The model's reported upstream RAF-DB accuracy is NOT a result measured by this project. No expression training or face-identity recognition is performed.
+
+## Own / synthetic
+Own CSV requires pseudonymous subject/trial, hand/shape, calibration revision, timestamp, force_N, explicit independent fatigue labels and measured pre-task/game MVC. Identity changes split trials. Consent/ethics authorization must precede human collection. Synthetic files are marked `SYNTHETIC_`, isolated, and used solely for QA/fine-tune plumbing. Raw video is never retained by the optional runtime. Data directories and environment are excluded from Git. Do not put patient names/emails in subject IDs.

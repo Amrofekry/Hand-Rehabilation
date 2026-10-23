@@ -1,0 +1,2010 @@
+{
+  "provenance": "SYNTHETIC",
+  "label_quality": "Explicit own-data labels; review protocol and ethics",
+  "deployment_allowed_on_humans": false,
+  "samples": 672,
+  "class_balance": [
+    312,
+    360
+  ],
+  "split": {
+    "train": [
+      "SYNTHETIC_10",
+      "SYNTHETIC_02",
+      "SYNTHETIC_05",
+      "SYNTHETIC_08",
+      "SYNTHETIC_01",
+      "SYNTHETIC_04",
+      "SYNTHETIC_03",
+      "SYNTHETIC_06"
+    ],
+    "validation": [
+      "SYNTHETIC_07",
+      "SYNTHETIC_00"
+    ],
+    "test": [
+      "SYNTHETIC_09",
+      "SYNTHETIC_11"
+    ],
+    "unit": "subject",
+    "seed": 20261022
+  },
+  "results": {
+    "logistic": {
+      "validation": {
+        "report": {
+          "0": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 52.0
+          },
+          "1": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 60.0
+          },
+          "accuracy": 1.0,
+          "macro avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          },
+          "weighted avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            52,
+            0
+          ],
+          [
+            0,
+            60
+          ]
+        ],
+        "brier": 2.8296907865860944e-05,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0
+      },
+      "test": {
+        "report": {
+          "0": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 52.0
+          },
+          "1": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 60.0
+          },
+          "accuracy": 1.0,
+          "macro avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          },
+          "weighted avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            52,
+            0
+          ],
+          [
+            0,
+            60
+          ]
+        ],
+        "brier": 3.2438090946407737e-05,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0
+      }
+    },
+    "gradient_boosting": {
+      "validation": {
+        "report": {
+          "0": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 52.0
+          },
+          "1": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 60.0
+          },
+          "accuracy": 1.0,
+          "macro avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          },
+          "weighted avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            52,
+            0
+          ],
+          [
+            0,
+            60
+          ]
+        ],
+        "brier": 2.603583037196592e-08,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0
+      },
+      "test": {
+        "report": {
+          "0": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 52.0
+          },
+          "1": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 60.0
+          },
+          "accuracy": 1.0,
+          "macro avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          },
+          "weighted avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 112.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            52,
+            0
+          ],
+          [
+            0,
+            60
+          ]
+        ],
+        "brier": 2.6035830371965924e-08,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0
+      }
+    },
+    "rule": {
+      "test": {
+        "report": {
+          "0": {
+            "precision": 0.6419753086419753,
+            "recall": 1.0,
+            "f1-score": 0.7819548872180451,
+            "support": 52.0
+          },
+          "1": {
+            "precision": 1.0,
+            "recall": 0.5166666666666667,
+            "f1-score": 0.6813186813186813,
+            "support": 60.0
+          },
+          "accuracy": 0.7410714285714286,
+          "macro avg": {
+            "precision": 0.8209876543209876,
+            "recall": 0.7583333333333333,
+            "f1-score": 0.7316367842683632,
+            "support": 112.0
+          },
+          "weighted avg": {
+            "precision": 0.833774250440917,
+            "recall": 0.7410714285714286,
+            "f1-score": 0.7280426340576717,
+            "support": 112.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            52,
+            0
+          ],
+          [
+            29,
+            31
+          ]
+        ],
+        "brier": 0.14397866152351477,
+        "roc_auc": 1.0,
+        "pr_auc": 1.0
+      },
+      "note": "force-decay rule evaluated on EMG effort proxy; expected domain mismatch"
+    },
+    "gru": [
+      {
+        "seed": 11,
+        "epochs": 3,
+        "validation_loss": [
+          0.5560917258262634,
+          0.3650374412536621,
+          0.205267071723938
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 7.541892450622498e-05,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.00017763427180048782,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 23,
+        "epochs": 3,
+        "validation_loss": [
+          0.5358399152755737,
+          0.38377708196640015,
+          0.2531951367855072
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0010379487383000024,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0018616025755632457,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 37,
+        "epochs": 3,
+        "validation_loss": [
+          0.5485490560531616,
+          0.396347314119339,
+          0.24744273722171783
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0010585650732430282,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0023167185342575364,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            3.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 51,
+        "epochs": 3,
+        "validation_loss": [
+          0.5129709839820862,
+          0.35701945424079895,
+          0.2123892456293106
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0003610591098106987,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0008004382521238255,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 71,
+        "epochs": 3,
+        "validation_loss": [
+          0.4522351324558258,
+          0.2922978699207306,
+          0.16046872735023499
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 2.0360104369105438e-05,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 6.218130267716608e-05,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      }
+    ],
+    "lstm": [
+      {
+        "seed": 11,
+        "epochs": 3,
+        "validation_loss": [
+          0.480384886264801,
+          0.34240126609802246,
+          0.20808669924736023
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 7.327397764195535e-05,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 8.790839036763767e-05,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 23,
+        "epochs": 3,
+        "validation_loss": [
+          0.5280802845954895,
+          0.39812159538269043,
+          0.2755151689052582
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0008562131449199881,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0008346817387739543,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 37,
+        "epochs": 3,
+        "validation_loss": [
+          0.5760960578918457,
+          0.4628288447856903,
+          0.32947710156440735
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0018615994057144818,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0018652907597679603,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 51,
+        "epochs": 3,
+        "validation_loss": [
+          0.534294605255127,
+          0.400846928358078,
+          0.248069629073143
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0004444969897464147,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0005852009004532448,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 71,
+        "epochs": 3,
+        "validation_loss": [
+          0.5465382933616638,
+          0.43935638666152954,
+          0.30472639203071594
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0016772306688595873,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0027349627865046818,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      }
+    ],
+    "cnn": [
+      {
+        "seed": 11,
+        "epochs": 3,
+        "validation_loss": [
+          0.3817768394947052,
+          0.1305401623249054,
+          0.026560183614492416
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 1.0908966619124834e-09,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 1.813387329207055e-09,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 23,
+        "epochs": 3,
+        "validation_loss": [
+          0.43475475907325745,
+          0.19672496616840363,
+          0.05001671239733696
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 3.82104543014194e-07,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 5.671665083359756e-07,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 37,
+        "epochs": 3,
+        "validation_loss": [
+          0.47118476033210754,
+          0.2708835303783417,
+          0.10926960408687592
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.0001297922926289926,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 0.00015752111461443365,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 51,
+        "epochs": 3,
+        "validation_loss": [
+          0.44689708948135376,
+          0.22109195590019226,
+          0.06833473592996597
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 2.8162519422576204e-06,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 3.892436300641177e-06,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      },
+      {
+        "seed": 71,
+        "epochs": 3,
+        "validation_loss": [
+          0.42414307594299316,
+          0.18017569184303284,
+          0.04443810135126114
+        ],
+        "temperature": 0.25,
+        "validation": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 2.55661349344523e-08,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "test": {
+          "report": {
+            "0": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 52.0
+            },
+            "1": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 60.0
+            },
+            "accuracy": 1.0,
+            "macro avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            },
+            "weighted avg": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 112.0
+            }
+          },
+          "confusion_matrix": [
+            [
+              52,
+              0
+            ],
+            [
+              0,
+              60
+            ]
+          ],
+          "brier": 4.237969226446235e-08,
+          "roc_auc": 1.0,
+          "pr_auc": 1.0
+        },
+        "events": {
+          "false_stop_candidates_per_10min": 0.0,
+          "detection_delay_seconds": [
+            2.0,
+            2.0
+          ],
+          "detected_subjects": 2,
+          "note": "single modality candidates; production stop needs >1 independent signs; weak-label onset"
+        }
+      }
+    ]
+  },
+  "group_cv_train_only": [
+    {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 78.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 90.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 168.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 168.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          78,
+          0
+        ],
+        [
+          0,
+          90
+        ]
+      ],
+      "brier": 6.396680031836847e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 0.9999999999999999
+    },
+    {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 78.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 90.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 168.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 168.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          78,
+          0
+        ],
+        [
+          0,
+          90
+        ]
+      ],
+      "brier": 5.658611450789263e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 0.9999999999999999
+    },
+    {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 4.786878572191289e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  ],
+  "exports": {
+    "gru": {
+      "file": "SYNTHETIC_gru.onnx",
+      "bytes": 19142,
+      "sha256": "0971470ef3196e2aeb1e9738728446a2a5e17f6e6a782e09f1158faae9b19c67",
+      "max_abs_diff": 5.98374754190445e-08,
+      "parity_pass": true,
+      "p50_ms": 0.1680999999962296,
+      "p95_ms": 0.2746149999893532,
+      "ops": [
+        "Concat",
+        "Constant",
+        "Div",
+        "Expand",
+        "GRU",
+        "Gather",
+        "Gemm",
+        "Shape",
+        "Sigmoid",
+        "Squeeze",
+        "Transpose",
+        "Unsqueeze"
+      ],
+      "seed": 11
+    },
+    "lstm": {
+      "file": "SYNTHETIC_lstm.onnx",
+      "bytes": 25547,
+      "sha256": "5572e9be8f37670068e9fe300926c027d5d85f93b6a9a7690712154eb4fd9d34",
+      "max_abs_diff": 6.880145519971848e-08,
+      "parity_pass": true,
+      "p50_ms": 0.15124999998761268,
+      "p95_ms": 0.32213499994213635,
+      "ops": [
+        "Concat",
+        "Constant",
+        "Div",
+        "Expand",
+        "Gather",
+        "Gemm",
+        "LSTM",
+        "Shape",
+        "Sigmoid",
+        "Squeeze",
+        "Transpose",
+        "Unsqueeze"
+      ],
+      "seed": 11
+    },
+    "cnn": {
+      "file": "SYNTHETIC_cnn.onnx",
+      "bytes": 17533,
+      "sha256": "4cd73be167bde176f4e3c188c96ab0aef2e4f0e31fbadf2ab02e47aa1dbc91c3",
+      "max_abs_diff": 6.165151944514946e-08,
+      "parity_pass": true,
+      "p50_ms": 0.09889999995493781,
+      "p95_ms": 0.24529500003040983,
+      "ops": [
+        "Constant",
+        "Conv",
+        "Div",
+        "Gemm",
+        "ReduceMean",
+        "Relu",
+        "Sigmoid",
+        "Squeeze",
+        "Transpose"
+      ],
+      "seed": 11
+    }
+  },
+  "selected_deployment": "cnn",
+  "selection_reason": "Sentis fallback; best seed by validation macro F1",
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.5.1+cpu",
+    "numpy": "1.26.4",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "threads": 2
+  }
+}

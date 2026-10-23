@@ -1,0 +1,319 @@
+[
+  {
+    "feature_set": "amplitude_only",
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 0.00012429156578034866,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "feature_set": "without_slope",
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 2.9550514517418806e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "feature_set": "all",
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 2.8296907865860944e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "window_seconds": 5,
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 2.8296907865860944e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "window_seconds": 10,
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 42.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 102.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 102.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          42,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 3.4992122859480523e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  {
+    "cnn_hidden": 16,
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 0.0708732316694143,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    },
+    "epochs": 3
+  },
+  {
+    "cnn_hidden": 64,
+    "validation": {
+      "report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 52.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 60.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          52,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "brier": 1.9218505496933186e-05,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    },
+    "epochs": 3
+  }
+]

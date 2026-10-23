@@ -1,0 +1,9 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "versions": {
+    "mediapipe": "1.0.1",
+    "opencv-contrib-python": "5.0.0.93",
+    "numpy": "2.5.3"
+  },
+  "opencv_runtime": "5.0.0"
+}

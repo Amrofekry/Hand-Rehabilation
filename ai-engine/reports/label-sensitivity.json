@@ -1,0 +1,26 @@
+[
+  {
+    "early_ratio": 0.2,
+    "late_ratio": 0.8,
+    "stable": 210,
+    "ambiguous_warning": 1080,
+    "late": 361,
+    "weak": true
+  },
+  {
+    "early_ratio": 0.25,
+    "late_ratio": 0.75,
+    "stable": 300,
+    "ambiguous_warning": 900,
+    "late": 451,
+    "weak": true
+  },
+  {
+    "early_ratio": 0.3,
+    "late_ratio": 0.7,
+    "stable": 390,
+    "ambiguous_warning": 720,
+    "late": 541,
+    "weak": true
+  }
+]
