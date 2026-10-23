@@ -106,8 +106,9 @@ namespace GripRehab
                     var oldCapture = left ? _leftCapture : _rightCapture;
                     var oldSequence = left ? _leftSequence : _rightSequence;
                     // The Python bridge supplies both. Legacy packets may omit either value.
-                    if (frame.captureSeconds > 0 && oldCapture > 0 && frame.captureSeconds <= oldCapture) { Reject("old capture"); continue; }
-                    if (frame.sequence > 0 && oldSequence > 0 && frame.sequence <= oldSequence) { Reject("duplicate sequence"); continue; }
+                    // A stale side may be a restarted worker whose sequence began again (audit A-001).
+                    var stale = Time.realtimeSinceStartupAsDouble - (left ? _leftReceivedAt : _rightReceivedAt) >= 0.5;
+                    if (!HandStreamOrder.Accepts(frame.sequence, frame.captureSeconds, oldSequence, oldCapture, stale)) { Reject("old or duplicate packet"); continue; }
                     var receivedAt = Time.realtimeSinceStartupAsDouble - received.ElapsedSeconds - frame.ageMs / 1000.0;
                     if (left)
                     {

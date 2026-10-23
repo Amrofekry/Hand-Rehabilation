@@ -125,6 +125,16 @@ class TrackingTests
         for(int i=0;i<10;i++)gate.Step(.1f,true,.02f,.55f,.28f,.12f);
         Check(!gate.Closed,"open dwell releases grip");
     }
+    // AUDIT A-001: a restarted camera worker restarts its sequence at 1.
+    static void StreamOrder()
+    {
+        Check(HandStreamOrder.Accepts(11,2.1,10,2.0,false),"next packet accepted");
+        Check(!HandStreamOrder.Accepts(10,2.1,10,2.0,false),"duplicate sequence rejected while stream is live");
+        Check(!HandStreamOrder.Accepts(11,1.9,10,2.0,false),"older capture rejected while stream is live");
+        Check(HandStreamOrder.Accepts(1,5.0,20000,3.0,true),"restarted worker accepted after the stream went stale");
+        Check(!HandStreamOrder.Accepts(1,5.0,20000,3.0,false),"sequence reset rejected while the old stream is still live");
+        Check(HandStreamOrder.Accepts(0,0,10,2.0,false),"legacy packet without sequence or capture accepted");
+    }
     static int Main()
     {
         try
@@ -134,6 +144,7 @@ class TrackingTests
             Check(Vector3.Distance(Quaternion.LookRotation(Vector3.right,Vector3.up)*Vector3.forward,Vector3.right)<.0001f,"math shim LookRotation maps forward");
             foreach(bool left in new[]{false,true})foreach(var rest in new[]{Quaternion.identity,Quaternion.AngleAxis(35,Vector3.up)})Run(left,rest);
             Stability(false);Stability(true);
+            StreamOrder();
             Console.WriteLine("RESULT "+passed+" passed, "+failed+" failed; production pose source with managed test math; no Unity/camera/native SDK");return failed==0?0:1;
         }
         catch(Exception e) { Console.Error.WriteLine("FAIL "+e);return 1; }

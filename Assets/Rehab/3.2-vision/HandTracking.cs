@@ -22,6 +22,20 @@ namespace GripRehab
         public int imageWidth, imageHeight;
     }
 
+    // Per-hand packet ordering. While a stream is live, older or repeated packets are
+    // rejected. Once it has gone stale, a restarted worker (sequence back at 1) is a new
+    // stream rather than a replay, so its first packet is accepted.
+    public static class HandStreamOrder
+    {
+        public static bool Accepts(long sequence, double capture, long lastSequence, double lastCapture, bool lastStale)
+        {
+            if (lastStale) return true;
+            if (capture > 0 && lastCapture > 0 && capture <= lastCapture) return false;
+            if (sequence > 0 && lastSequence > 0 && sequence <= lastSequence) return false;
+            return true;
+        }
+    }
+
     public static class HandKinematics
     {
         // MediaPipe image x goes right and y goes down. The imported
