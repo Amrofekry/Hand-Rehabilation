@@ -1,0 +1,66 @@
+...............................EEEE..................................
+======================================================================
+ERROR: test_scene_logic_and_protected_assets_are_unchanged (test_handmate_design.HandMateDesignTests.test_scene_logic_and_protected_assets_are_unchanged) (path='Assets/_Recovery/0 (1).unity')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\test_handmate_design.py", line 98, in test_scene_logic_and_protected_assets_are_unchanged
+    self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\GP\\codex\\GripRehab-Unity\\Assets\\_Recovery\\0 (1).unity'
+
+======================================================================
+ERROR: test_scene_logic_and_protected_assets_are_unchanged (test_handmate_design.HandMateDesignTests.test_scene_logic_and_protected_assets_are_unchanged) (path='Assets/_Recovery/0 (2).unity')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\test_handmate_design.py", line 98, in test_scene_logic_and_protected_assets_are_unchanged
+    self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\GP\\codex\\GripRehab-Unity\\Assets\\_Recovery\\0 (2).unity'
+
+======================================================================
+ERROR: test_scene_logic_and_protected_assets_are_unchanged (test_handmate_design.HandMateDesignTests.test_scene_logic_and_protected_assets_are_unchanged) (path='Assets/_Recovery/0 (3).unity')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\test_handmate_design.py", line 98, in test_scene_logic_and_protected_assets_are_unchanged
+    self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\GP\\codex\\GripRehab-Unity\\Assets\\_Recovery\\0 (3).unity'
+
+======================================================================
+ERROR: test_scene_logic_and_protected_assets_are_unchanged (test_handmate_design.HandMateDesignTests.test_scene_logic_and_protected_assets_are_unchanged) (path='Assets/_Recovery/0.unity')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\test_handmate_design.py", line 98, in test_scene_logic_and_protected_assets_are_unchanged
+    self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\GP\\codex\\GripRehab-Unity\\Assets\\_Recovery\\0.unity'
+
+----------------------------------------------------------------------
+Ran 66 tests in 4.235s
+
+FAILED (errors=4)
+exit=1

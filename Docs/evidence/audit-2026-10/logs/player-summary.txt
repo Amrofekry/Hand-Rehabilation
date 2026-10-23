@@ -1,0 +1,8 @@
+smoke exit=0
+{"mode": "smoke", "passed": true, "game_checks": 168, "model_assertions": 10, "onnx_difference": 7.450580596923828e-09}
+replay exit=0
+{"mode": "replay", "passed": true, "game_checks": 169, "model_assertions": 10, "onnx_difference": 7.450580596923828e-09}
+journey exit=0
+{"mode": "journey", "passed": true, "game_checks": 74, "model_assertions": 10, "onnx_difference": 7.450580596923828e-09}
+ui exit=0
+gallery exit=0

@@ -3,7 +3,7 @@
   "passed": true,
   "game": {
     "passed": true,
-    "utc": "2026-10-22T07:21:06.7714553Z",
+    "utc": "2026-10-23T16:57:18.2675879Z",
     "error": "",
     "checks": [
       "Serialized scene bindings survive reload",
@@ -81,7 +81,7 @@
       "Kitchen silicone cup is selectable and can be gripped",
       "A held object cannot push the standing player's CharacterController backwards",
       "Pickup preserves cup orientation",
-      "Silicone cup visibly yields to demo grip force; compression=1 contacts=9 force=30.00003 hand=(0.72, 1.31, -1.94) cup=(0.69, 1.21, -1.90) probes=0:0=0.034;0:1=0.039;0:2=0.044;1:0=0.057;1:1=0.054;1:2=0.056;2:0=0.077;2:1=0.071;2:2=0.069;3:0=0.093;3:1=0.086;3:2=0.083;4:0=0.053;4:1=0.055;4:2=0.080",
+      "Silicone cup visibly yields to demo grip force; compression=1 contacts=9 force=30.00005 hand=(0.72, 1.31, -1.94) cup=(0.69, 1.21, -1.90) probes=0:0=0.034;0:1=0.039;0:2=0.044;1:0=0.057;1:1=0.054;1:2=0.056;2:0=0.077;2:1=0.071;2:2=0.069;3:0=0.093;3:1=0.086;3:2=0.083;4:0=0.053;4:1=0.055;4:2=0.080",
       "Overlapping held cup cannot displace the standing player horizontally; drift=0.0000 m",
       "Overlapping release retains player exclusion until separation",
       "Dropped object remains dynamic with gravity",
@@ -128,12 +128,12 @@
       "Summoned object is positioned at the right hand without requiring camera depth alignment",
       "Summoned object drops if the tracked hand stays open beyond the grace period",
       "Stale camera landmarks clear visual pressure and cannot keep holding",
-      "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=31.60 next=31.69288",
+      "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=31.80 next=31.89134",
       "G cannot summon an object without a fresh tracked hand",
       "Right camera data automatically switches the selected hand from left to right",
       "Left camera data automatically selects and drives the left vendor mesh",
       "Seeing both hands briefly does not switch away from the actively tracked left hand",
-      "Selected left camera fist can pick up the kitchen sponge without E; nearest=0.001 hand=(0.46, 1.03, -1.57) sponge=(0.48, 1.09, -1.64) score=0.76",
+      "Selected left camera fist can pick up the kitchen sponge without E; nearest=0.000 hand=(0.46, 1.03, -1.57) sponge=(0.48, 1.09, -1.64) score=0.76",
       "Opening the left camera hand drops the sponge",
       "G brings the selected kitchen object into the tracked left hand without changing camera mode",
       "Summoned kitchen object is positioned at the left hand",
@@ -175,8 +175,8 @@
       "Lost managed pointer event is rebuilt when the cached EventSystem survives reload",
       "Production five-second left palm dwell survives finger bending beside a low-confidence right hand; hover="
     ],
-    "contactMeanMs": 0.954821400394479,
-    "contactMaxMs": 8.5421,
+    "contactMeanMs": 0.9347009542612685,
+    "contactMaxMs": 8.6833,
     "name": "ai-player-smoke",
     "exit": 0,
     "rendered": false
@@ -185,10 +185,10 @@
     "passed": true,
     "assertions": 10,
     "unity": "2022.3.20f1",
-    "utc": "2026-10-22T07:20:26.2387410Z",
+    "utc": "2026-10-23T16:56:37.7713965Z",
     "error": "",
     "onnxDifference": 7.450580596923828e-09,
-    "inferenceP50Ms": 0.2544,
-    "inferenceP95Ms": 0.36860000000000004
+    "inferenceP50Ms": 0.2681,
+    "inferenceP95Ms": 0.5271
   }
 }

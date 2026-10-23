@@ -1,0 +1,56 @@
+EEEEF..E....
+======================================================================
+ERROR: test_invalid_extensions_cannot_poison_unity_pose (Tools.Vision.test_vision_bridge.VisionBridgeContractTest.test_invalid_extensions_cannot_poison_unity_pose) (kwargs=['world_hand'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\Vision\test_vision_bridge.py", line 60, in test_invalid_extensions_cannot_poison_unity_pose
+    make_payload(points, category, 2.0, 3, 'test', False, **kwargs)
+TypeError: make_payload() got an unexpected keyword argument 'world_hand'
+
+======================================================================
+ERROR: test_invalid_extensions_cannot_poison_unity_pose (Tools.Vision.test_vision_bridge.VisionBridgeContractTest.test_invalid_extensions_cannot_poison_unity_pose) (kwargs=['world_hand'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\Vision\test_vision_bridge.py", line 60, in test_invalid_extensions_cannot_poison_unity_pose
+    make_payload(points, category, 2.0, 3, 'test', False, **kwargs)
+TypeError: make_payload() got an unexpected keyword argument 'world_hand'
+
+======================================================================
+ERROR: test_invalid_extensions_cannot_poison_unity_pose (Tools.Vision.test_vision_bridge.VisionBridgeContractTest.test_invalid_extensions_cannot_poison_unity_pose) (kwargs=['image_width'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\Vision\test_vision_bridge.py", line 60, in test_invalid_extensions_cannot_poison_unity_pose
+    make_payload(points, category, 2.0, 3, 'test', False, **kwargs)
+TypeError: make_payload() got an unexpected keyword argument 'image_width'
+
+======================================================================
+ERROR: test_invalid_extensions_cannot_poison_unity_pose (Tools.Vision.test_vision_bridge.VisionBridgeContractTest.test_invalid_extensions_cannot_poison_unity_pose) (kwargs=['image_width', 'image_height'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\Vision\test_vision_bridge.py", line 60, in test_invalid_extensions_cannot_poison_unity_pose
+    make_payload(points, category, 2.0, 3, 'test', False, **kwargs)
+TypeError: make_payload() got an unexpected keyword argument 'image_width'
+
+======================================================================
+ERROR: test_world_pose_and_image_dimensions_are_optional_v1_extensions (Tools.Vision.test_vision_bridge.VisionBridgeContractTest.test_world_pose_and_image_dimensions_are_optional_v1_extensions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\Vision\test_vision_bridge.py", line 42, in test_world_pose_and_image_dimensions_are_optional_v1_extensions
+    payload = make_payload(image, category, 2.0, 3, "test", False, 12.5,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: make_payload() got an unexpected keyword argument 'world_hand'
+
+======================================================================
+FAIL: test_invalid_extensions_cannot_poison_unity_pose (Tools.Vision.test_vision_bridge.VisionBridgeContractTest.test_invalid_extensions_cannot_poison_unity_pose)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\Vision\test_vision_bridge.py", line 61, in test_invalid_extensions_cannot_poison_unity_pose
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.421s
+
+FAILED (failures=1, errors=5)
+exit=1

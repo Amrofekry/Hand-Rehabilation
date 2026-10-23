@@ -1,0 +1,133 @@
+# Stage 1 audit ledger — 23 October 2026
+
+Audit only. No game code was changed in Stage 1. Evidence: `Docs/evidence/audit-2026-10/`. Severities: **S1** crash/data loss, **S2** wrong behaviour or broken check, **S3** degraded quality/missing scope, **S4** cosmetic. Owning stage refers to the [upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md).
+
+## 1. Automated baseline (Task 1.1)
+
+| Suite | Result | Log |
+|---|---|---|
+| AI Python (`ai-engine/run.py test`) | **PASS 32/32** | `logs/ai-tests.log` |
+| WBS tests (`pytest tests/`) | **PASS 45/45** | `logs/wbs-pytest.log` |
+| Tools Python (`unittest discover -s Tools`) | **FAIL**: 66 run, 4 errors (A-003) | `logs/tools-unittest.log` |
+| Vision/Phase 2 bridge contracts | **FAIL**: 1 failure, 5 errors (A-004) | `logs/bridges.log` |
+| Offline verifier, metadata + assembly graph | PASS (840 metas, 4 assemblies) | `logs/offline-verify.log` |
+| Offline verifier `--compile --tests` | **FAIL**: Unity 6000.4.4f1 path missing (A-005) | `logs/offline-verify-full.log` |
+| Native Unity: FatigueAiVerification | **PASS 186 checks**, Sentis parity | `logs/unity-FatigueAiVerification.Run.log` |
+| Native Unity: SceneOrganization.Verify | **PASS** | `logs/unity-SceneOrganization.Verify.log` |
+| Native Unity: RehabDwellVerification | **PASS** | `logs/unity-RehabDwellVerification.Run.log` |
+| Unity EditMode/PlayMode test assemblies | **None exist** for project code (A-012) | — |
+| Windows player smoke / replay / journey (22 Oct build, 2022.3.20f1) | **PASS** 168 / 169 / 74 game checks, each with 10 model assertions; ONNX diff 7.45e-09 | `logs/player-summary.txt`, `Docs/ai-player-*.json` |
+| Windows UI presentation | **PASS** 60 checks at 1280×720 and at 1600×900 | `Docs/ui-player-checks.json` |
+| Windows UI gallery | **PASS** 87 checks at each of 1280×720, 1280×800, 1024×768 | `Docs/gallery-checks.json` |
+
+These player suites close the STATUS.md note that UI/gallery results were only from Unity 6: they now pass on the 2022.3 build. **Coverage gap:** the UI/gallery suites test the HandMate components and gallery, not the research-portal pages (main menu, Prepare, Create account, Appearance), where the playthrough found layout and contrast defects P-001, P-004, P-018 and P-019.
+
+## 2. Defects
+
+| ID | Sev | WBS | Finding | Repro / evidence | Stage |
+|---|---|---|---|---|---|
+| A-001 | S2 | 3.2 | After a camera-worker restart (auto-restarted every 5 s by `RehabDwellPointer.cs:169`), `VisionUdpReceiver.cs:110` rejects every packet as "duplicate sequence" until the new sequence passes the old one. Tracking can be dead for minutes. | Code trace: `EnsureStarted()` without `vision.BeginNewSession()`; the worker's sequence restarts at 1 | 2 |
+| A-002 | S1 | 5.x | `RehabProfileStore` constructor: any read error on `profiles.dat` (e.g. an antivirus lock) overwrites the newer primary with the older `.bak`, silently losing the last save. | `RehabProfileStore.cs:57-65`; `Save()` keeps the previous version in `.bak` | 2 |
+| A-003 | S2 | 6.3 | **Stage 0 regression (mine):** moving `Assets/_Recovery` broke the protected-asset hash test. | `test_handmate_design` 4 errors; commit `a19d2dd` | 2 (restore files or re-baseline) |
+| A-004 | S2 | 3.2 | Vision bridge tests expect `world_hand` / `image_width` payload extensions that the 12 Oct rollback removed from `mediapipe_bridge.py`. | `TypeError: make_payload() got an unexpected keyword argument` | 2 |
+| A-005 | S2 | 6.2 | `Tools/offline_verify.py:10` hard-codes the Unity 6000.4.4f1 editor, so the offline C# domain/grasp/deformation/pointer tests can't run on 2022.3.20f1. | `[WinError 2]` | 2 |
+| A-006 | S2 | 3.1 | `Packages/manifest.json` uses absolute `file:E:/GP/codex/GripRehab-Unity/...` package paths. The project won't open from another folder or machine. | manifest | 2 |
+| A-007 | S3 | 3.2 | `mediapipe_bridge.py:108` busy-spins a CPU core while the camera is stalled (no sleep on failed `read()`). | Code trace | 7 |
+| A-008 | S3 | 5.2 | Profile results capped at 100; oldest are silently dropped, losing long-term history for the doctor dashboard. | `RehabProfileStore.cs:260` | 6 |
+| A-009 | S3 | 5.x | Autosave failure dialog says "Practice is paused" but the session keeps running and the dialog is rebuilt every 5 s. | `ResearchSessionRuntime.cs:133-138` | 5 |
+| A-010 | S3 | 6.1 | Phase 2 bridge relays force only every 200 ms (metadata confirmation), adding up to 200 ms latency in 5 Hz bursts. | `unity_bridge.py:105` | 7/8 |
+| A-011 | S4 | 3.2 | Launcher reads `readMs` / `inferenceMs` that the bridge never sends, so they always show 0. | `VisionCameraLauncher.cs:105` | 7 |
+| A-012 | S3 | 6.2 | No Unity Test Framework assemblies for project code. Native checks are custom editor/player gates only, with no `-runTests` coverage. | Only VirtualGrasp's sample test asmdef exists | 2/3 |
+| A-013 | S3 | 6.3 | `ROLLBACK_2026_10_12.md` is linked from `TASKS.md` and `SOFTWARE_GRADUATION_PLAN.md` but missing. | `Docs/` | 2 |
+| A-014 | S3 | 3.4.1 | VirtualGrasp "No baked grasps found" (object Grasp DB not baked). | Known since 30 Sep | 2 (Task 2.2) |
+| A-015 | S4 | 3.4.2 | Sequence Memory seed is `DayOfYear + 2048`, so the same sequence repeats all day. | `RehabExerciseSuite.cs:137` | 3 |
+| A-016 | S3 | 3.2 | Camera launcher needs project-root `.venv`, `Tools/Vision` and `models` next to the build, so the build is not standalone. | `VisionCameraLauncher.cs:51,139` | 9 |
+
+| A-017 | S4 | 3.4 | `RehabApp.cs` (668 lines) is not in the main scene; only `RehabAction` references it. It's legacy controller code beside `RehabAppShell` / `ApartmentExperience`. | GUID `40d584fa…` absent from `GripRehab.unity` | 2 |
+| A-018 | S3 | 3.4.3 | Tracing accuracy counts correct on-path tracing as off-path: off-path = distance to the *next waypoint* > 0.2, but every segment is 0.206–0.25 long, so the first part of each segment is always penalised. | `VisuomotorTasks.cs:25-27`; segment lengths 0.247/0.206/0.23/0.25 | 3 |
+
+| A-019 | S2 | 3.2 | Whenever a menu is open and the game is focused, the hand pointer starts the webcam worker automatically (retried every 5 s), with no opt-in step and no camera indicator beyond a status line. | `RehabDwellPointer.cs:166-170` | 4 (UX) / 5 (consent) |
+| A-020 | S3 | 5.x | `WindowsProductStore.Load` uses the same restore-from-`.bak` pattern as A-002. The real data folder had `research-accounts.dat.bak` with no primary file, a state that rollback produces silently. | `WindowsProductStore.cs:16-22`; observed in LocalLow | 2 |
+
+### Playthrough defects (Windows build, 1600×900 windowed, keyboard/mouse, camera deliberately unavailable)
+
+| ID | Sev | Screen | Finding | Evidence |
+|---|---|---|---|---|
+| P-001 | S3 | Research portal footer | "CAMERA UNAVAILABLE / USE MOUSE OR KEYBOARD" status text overlaps the SCROLL UP button label. | `play/01-main-menu.jpg` |
+| P-002 | S3 | Prepare to train | Camera is preselected even when the camera is unavailable. | playthrough |
+| P-003 | S4 | Prepare / menus | Several buttons show cyan focus borders at once (selection, keyboard focus and dwell hover look identical). | playthrough |
+| P-004 | **S2** | Prepare to train | The primary CHOOSE A MODULE button stays half-hidden behind the footer even at maximum scroll. The mouse wheel doesn't scroll, the SCROLL DOWN step is tiny, and scroll position varies, which made a scripted click toggle SYNTHETIC MODEL DEMO by mistake. | `play/05-prepare-cta-hidden.jpg` |
+| P-005 | S3 | All | Two visual languages: flat research-portal pages (menu, prepare, results, account) vs. polished HandMate pages (module select, profile form). | screenshots |
+| P-006 | S4 | Module 1 HUD | Force readout uses a slashed-zero display font, so "0.0" reads like "Ø.Ø". It didn't update visibly while squeezing in Keyboard Demo. | `play/02-module1-living-room.jpg` |
+| P-007 | **S2** | Module 1 results | "Valid input 92.2 s" counted idle time: Keyboard Demo samples are always "fresh", so the whole session counts as valid input. | results screen |
+| P-008 | S3 | Module 1 | The session ends after one 3 s hold with score 100/100 and no rounds, objectives or feedback. | results screen |
+| P-009 | S3 | Results → menu | BACK TO MENU returns to the root menu. Trying another module means repeating Guest → Prepare → scroll → Choose a module. | playthrough |
+| P-010 | S3 | Module 2 Memory | No "show pattern again" control. | playthrough |
+| P-011 | S3 | Startup | A second instance starts silently with all UDP ports unavailable; the user only sees "CAMERA UNAVAILABLE". No single-instance guard or clear message. | Player.log of second instance |
+| P-012 | **S1** | Module 2 Sequence Memory | **Pattern never shown.** The screen goes straight to "ENTER PATTERN 0/4" on start and after RESTART (no "MEMORISE …" text, no "Pattern hides shortly"), so the task can't be played; guesses count as retries. Code looks correct (`RehabExerciseSuite.cs:141,242`), so the root cause is runtime. Needs debugging. | `play/03-module2-memory-no-pattern.jpg` |
+| P-013 | S4 | Logs | `[VISION_CAMERA] Tools/Vision not found` is logged as an error every 5 s while the camera is unavailable. | Player.log |
+| P-014 | S3 | Module 2/3 results | Results show only score and valid seconds, not the PDF's metrics (reaction time, accuracy, trajectory, velocity). | results screen |
+| P-015 | **S2** | Module 3 Tracing | Dragging exactly through waypoints 1→5 never registers waypoint 5 (a separate click does), and accuracy falls 54% → 38% while on the path (confirms A-018). No dashed guide line or green/red feedback as the PDF specifies. | `play/04-module3-tracing.jpg`, `play/08-tracing-accuracy-38.jpg` |
+| P-016 | S3 | How to play | A wall of text; no images, animation or per-module tutorial. | playthrough |
+| P-017 | S3 | Appearance | The active theme isn't indicated (Dark/Light/High contrast buttons look the same). | playthrough |
+| P-018 | **S2** | Appearance → Light | In the research portal, Light theme keeps the dark background but turns some buttons white with pale text ("HIGH CONTRAST" nearly unreadable). This is an accessibility contrast failure on the accessibility page itself. | `play/06-light-theme-contrast.jpg` |
+| P-019 | **S2** | Create account | Text input fields have no visible border or contrast; empty fields are almost invisible. | `play/07-account-fields-invisible.jpg` |
+| P-020 | S4 | Profile form | Asks for the name again right after "Display name". | playthrough |
+| P-021 | S3 | Baseline | Thin bar plus one line of text; no coach, countdown, per-stage timer or "paused" message. The game pauses silently when the window loses focus (progress froze while another app was in front). | playthrough |
+| P-022 | S4 | Patient home | "Continue practice" is shown disabled with no explanation. | playthrough |
+| P-023 | **S2** | Baseline summary | Endurance reads **0.0 s** after holding the grip about 10 s during the endurance stage (peak 18.0 N recorded). | `play/09-baseline-endurance-zero.jpg` |
+| P-024 | S4 | Patient home | SIGN OUT is only one level up in the root menu, not on the patient home. | playthrough |
+| P-025 | S4 | Session history | Developer codes "D3–D4" shown in patient-facing subtitle. | playthrough |
+
+Not played by hand: doctor journey D1–D5 (covered by the native 74-check journey suite), Phase 2 live input (no hardware), live camera (deliberately disabled to avoid opening your webcam). Test data: one throwaway patient account; the LocalLow data folder was backed up first and restored afterwards (10/10 SHA-256 match). Preferences remained at Dark / 100% / 5 s.
+
+## 3. Requirement map (PDF pipeline + block diagram)
+
+| Requirement | Status | Gap → stage |
+|---|---|---|
+| 01 Patient: power on, open app, open profile | Implemented (local accounts, guest) | — |
+| 02 Prepare and assess: connect grip and camera, starting trial | Implemented (54 s staged baseline); real grip absent | Physical test → 8 |
+| 03 Select and start a module | Implemented (3 modules) | — |
+| 04 Adaptive guidance: level changes, fatigue warning Resume/Quit, automatic stop | Policy implemented; difficulty mapped to Module 1 only | Adaptation in Modules 2/3 → 5 |
+| 05 Review results: patient dashboard (force, endurance, stability) | Partial: score, valid seconds, peak N; no trend charts | 6 |
+| 06 Save and switch off | Implemented (protected local store) | A-002 → 2 |
+| D1 Doctor sign-in | Implemented (local role) | — |
+| D2 Select patient: list, search, sort, paging | Implemented | — |
+| D3 Review progress: compare force, endurance, stability, reaction time, accuracy | Partial: session history; no cross-module statistics/charts | 6 |
+| D4 Recommendations / notes | Partial (notes) | 6 |
+| D5 Save and sign out | Implemented | — |
+| Module 1 Force-Object: Sphere/Cylinder/Pencil, Obi deformation, force/endurance/stability | Partial: 6 everyday objects, in-house deformation, no grip-shape variants, no Obi | 3 |
+| Module 2: Gesture Sequence Memory (avatar), Spatial Assembly (virtual hand) | Prototype: numeric tokens and fixed order puzzle in a UI card | 3 |
+| Module 3: Maze (avatar, collision penalty), Visual Tracing (green/red) | Prototype: text grid with buttons; 5-waypoint trace pad | 3 |
+| Vision: MediaPipe hand tracking | Implemented; live human trial pending (B05) | Human trial |
+| YOLO gesture recognition | Not implemented (no model) | 3 (document substitute) |
+| Facial 7-emotion, rPPG HR/HRV | Implemented (opt-in), accuracy not validated | — |
+| LSTM/GRU temporal model → ONNX → Sentis | CNN in Sentis (GRU unsupported); EMG proxy only | 5 |
+| Force mapping from load cell over BLE | Software path + synthetic replay; no hardware (B02) | 8 |
+
+## 4. Playthrough rubric (Task 1.3)
+
+Scores 1–5 (readability · feedback clarity · visual polish · responsiveness · bugs, where 5 = no bugs). Subjective, from one session at 1600×900.
+
+| Screen | Read | Feedback | Polish | Resp. | Bugs | Notes |
+|---|---|---|---|---|---|---|
+| Main menu (research portal) | 4 | 3 | 2 | 4 | 3 | Flat list, footer overlap |
+| Prepare to train | 3 | 2 | 2 | 3 | 2 | Hidden CTA, no wheel scroll |
+| Module select (HandMate) | 4 | 4 | 4 | 4 | 5 | Best screen |
+| Module 1 gameplay | 4 | 2 | 2.5 | 4 | 3 | Blue glove hand, marble table fills view, HUD doesn't react |
+| Module 2 Memory | 4 | 1 | 2 | 4 | 1 | Pattern never shown |
+| Module 2 Assembly | 4 | 3 | 2 | 4 | 4 | Copy-the-numbers, not spatial |
+| Module 3 Tracing | 4 | 2 | 2 | 3 | 2 | Accuracy bug, no guide line |
+| Results | 4 | 2 | 1.5 | 4 | 3 | No metrics, always 100 |
+| Appearance | 3 | 2 | 2 | 4 | 2 | Light theme contrast failure |
+| Create account / profile | 2 / 4 | 3 | 2 / 4 | 4 | 3 | Invisible fields; profile form good |
+| Baseline | 3 | 2 | 1.5 | 3 | 2 | Endurance 0.0 s |
+| **Overall** | **3.6** | **2.4** | **2.3** | **3.8** | **2.7** | Biggest wins: unify on HandMate design, fix Module 2/3 logic, real game loop for Module 1 |
+
+## 5. Severity summary and Stage 2 entry list
+
+- **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
+- **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.
+- **S3/S4:** remaining items, owned by Stages 3–9 as listed.
+
+Recommended Stage 2 order: A-003 → A-002/A-020 → P-012 → A-001 → P-023 → P-007 → A-018/P-015 → P-004/P-001 → P-018/P-019 → A-004/A-005/A-006 → A-014 (Grasp DB) → A-012 (test assemblies) → A-017 cleanup.
