@@ -15,6 +15,10 @@ namespace GripRehab.Product
         public string Problem { get; private set; }
         public bool Complete => stage >= durations.Length && Problem == null;
         public string Instruction => Complete ? "Baseline complete" : names[stage];
+        // Shown to the player so a hold lands in the intended stage (audit P-021/P-023).
+        public int StageNumber => Math.Min(stage + 1, durations.Length);
+        public int StageCount => durations.Length;
+        public float StageSecondsLeft => Complete ? 0 : Math.Max(0, durations[stage] - elapsed);
         public float Progress { get { float total = elapsed; for (int i = 0; i < stage; i++) total += durations[i]; return Math.Min(1, total / 54); } }
         public StagedCapabilityTrial(string account, string profile, bool consent)
         { summary = new CapabilityTrial(account, profile, consent, 120); }

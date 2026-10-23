@@ -63,7 +63,7 @@ namespace GripRehab
         {
             Show("Session result", record.state + (record.synthetic ? " · SYNTHETIC DATA" : " · source details below"), () => History(id));
             view.Text("Module " + record.module + " · task " + (record.task + 1) + "\nGame score: " + record.score + "/100\nDuration: " + record.durationSeconds.ToString("0.0") +
-                " s · valid input: " + record.validSeconds.ToString("0.0") + " s\n" + (record.hasForce ? "Peak: " + record.peakNewtons.ToString("0.0") + " N" : "Measured force: not available"), 156);
+                " s · active grip: " + record.activeSeconds.ToString("0.0") + " s · input available: " + record.validSeconds.ToString("0.0") + " s\n" + (record.hasForce ? "Peak: " + record.peakNewtons.ToString("0.0") + " N" : "Measured force: not available"), 156);
             if (record.metrics.Count > 0) view.Text("Input: " + record.metrics[0].source + " · " + record.metrics[0].unit + "\nSamples saved: " + record.metrics.Count, 80);
             if (record.policyEvents.Count == 0) view.Text("No research guidance events were recorded.");
             foreach (var item in record.policyEvents)

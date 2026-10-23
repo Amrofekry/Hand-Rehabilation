@@ -151,6 +151,25 @@ static class ProductTests
         Test("No files returns the empty default", () => {
             var dir = recoveryFolder(); Check(ProtectedFileRecovery.Load(Path.Combine(dir, "store.dat"), readText, _ => { }) == null, "Nothing to load"); Directory.Delete(dir, true);
         });
+        // AUDIT P-007: idle but fresh input is not active grip time.
+        Test("Active grip needs real effort, not just fresh input", () => {
+            Check(!SessionRecord.IsActiveGrip(Sample(1, InputUnit.Newtons, 0)), "Idle keyboard demo is not active");
+            Check(SessionRecord.IsActiveGrip(Sample(1, InputUnit.Newtons, 18)), "Squeeze is active");
+            Check(!SessionRecord.IsActiveGrip(Sample(1, InputUnit.ClosureRatio, .3f)), "Open hand is not active");
+            Check(SessionRecord.IsActiveGrip(Sample(1, InputUnit.ClosureRatio, .7f)), "Closed hand is active");
+            var stale = Sample(1, InputUnit.Newtons, 18); stale.valid = false; Check(!SessionRecord.IsActiveGrip(stale), "Invalid input is never active");
+        });
+        // AUDIT P-023: a correctly timed sustained grip must produce endurance seconds.
+        Test("Staged baseline counts a sustained grip during the endurance stage", () => {
+            var trial = new StagedCapabilityTrial("patient.one", "profile-patient.one", true);
+            for (int i = 1; i <= 600 && !trial.Complete; i++)
+            {
+                double t = i * .1; bool gripStage = t < 3 || (t >= 8 && t < 11) || (t >= 16 && t < 19) || (t >= 34 && t < 44);
+                var s = Sample(i, InputUnit.Newtons, gripStage ? 18 : 0); trial.Step(s, .1f);
+            }
+            var result = trial.Finish();
+            Check(Math.Abs(result.mvcNewtons - 18) < .01f, "Peak from grip trials"); Check(result.enduranceSeconds > 9 && result.enduranceSeconds <= 10.1f, "Endurance ~10 s, got " + result.enduranceSeconds);
+        });
         Console.WriteLine("RESULT " + passed + " passed, " + failed + " failed; fabricated fixtures only");
         return failed == 0 ? 0 : 1;
     }

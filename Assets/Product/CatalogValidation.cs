@@ -33,6 +33,7 @@ namespace GripRehab.Product
         {
             if (s.task < 0 || s.task > 1 || !Enum.IsDefined(typeof(RecordState), s.state) || s.score < 0 || s.score > 100 ||
                 !Positive(s.durationSeconds) || !Positive(s.validSeconds) || s.validSeconds > s.durationSeconds + .2 ||
+                !Positive(s.activeSeconds) || s.activeSeconds > s.validSeconds + .2 ||
                 !Positive(s.peakNewtons) || (!s.hasForce && s.peakNewtons != 0) || !Ratio(s.meanClosure) ||
                 s.metrics == null || s.metrics.Count > 1800 || s.policyEvents == null || s.policyEvents.Count > 500)
                 throw new ArgumentException("Invalid or excessive session metrics.");

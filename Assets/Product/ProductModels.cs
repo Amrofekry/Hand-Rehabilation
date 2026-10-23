@@ -47,11 +47,15 @@ namespace GripRehab.Product
     {
         public string id, accountId, profileId, startedUtc, endedUtc, baselineId;
         public int module, task, score;
-        public float durationSeconds, validSeconds, peakNewtons, meanClosure;
+        // validSeconds = fresh input was available; activeSeconds = the player was gripping (audit P-007).
+        public float durationSeconds, validSeconds, activeSeconds, peakNewtons, meanClosure;
         public bool synthetic, hasForce;
         public RecordState state;
         public List<MetricRecord> metrics = new List<MetricRecord>();
         public List<PolicyEvent> policyEvents = new List<PolicyEvent>();
+        public const float ActiveNewtons = 1f, ActiveClosure = .6f;
+        public static bool IsActiveGrip(TrialSample input) => input.Fresh &&
+            (input.unit == InputUnit.Newtons ? input.value >= ActiveNewtons : input.value >= ActiveClosure);
     }
     [Serializable] public sealed class ClinicalNote
     { public string id, doctorId, patientId, createdUtc, text, supersedesId; }

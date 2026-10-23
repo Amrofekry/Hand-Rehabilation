@@ -65,7 +65,7 @@ namespace GripRehab
             if (show)
             {
                 Show(state == RecordState.Completed ? "Practice complete" : "Take a break", "Your game results are a record of practice, not a clinical assessment.", Welcome);
-                view.Text("Module " + session.module + " · " + state + "\nScore: " + session.score + "/100\nValid input: " + session.validSeconds.ToString("0.0") + " s", 112);
+                view.Text("Module " + session.module + " · " + state + "\nScore: " + session.score + "/100\nActive grip: " + session.activeSeconds.ToString("0.0") + " s · input available: " + session.validSeconds.ToString("0.0") + " s", 112);
                 view.Text(guest ? "Guest practice was not saved." : savingFailed ? "Saving failed: " + LastSaveProblem + ". Keep this screen open and retry." : "Saved locally in protected storage.");
                 if (savingFailed) view.Button("RETRY SAVE", () => Guard(() => { repository.SaveSession(session); savingFailed = false; Dashboard(); }), true);
                 view.Button("BACK TO MENU", Welcome, !savingFailed);
@@ -81,7 +81,7 @@ namespace GripRehab
             if (collecting)
             {
                 baseline.Step(input, .1f); view.SetProgress(baseline.Progress);
-                view.SetStatus(baseline.Problem ?? (input.Fresh ? baseline.Instruction + " - " + "Collecting valid samples. Move comfortably; stop if uncomfortable." : "Waiting for fresh input. Keyboard demo: hold Space. Hardware: check calibration/bridge."));
+                view.SetStatus(baseline.Problem ?? (input.Fresh ? "Stage " + baseline.StageNumber + " of " + baseline.StageCount + " · " + baseline.Instruction + " · " + Mathf.CeilToInt(baseline.StageSecondsLeft) + " s left. Move comfortably; stop if uncomfortable." : "Waiting for fresh input. Keyboard demo: hold Space. Hardware: check calibration/bridge."));
                 if (baseline.Complete)
                 {
                     collecting = false;
@@ -99,6 +99,7 @@ namespace GripRehab
             if (practising && unique)
             {
                 session.validSeconds += .1f; session.synthetic |= input.synthetic;
+                if (SessionRecord.IsActiveGrip(input)) session.activeSeconds += .1f;
                 if (input.unit == InputUnit.Newtons) { session.hasForce = true; session.peakNewtons = Mathf.Max(session.peakNewtons, input.value); }
                 session.meanClosure += (input.closure - session.meanClosure) / Mathf.Max(1, session.validSeconds * 10);
                 features.Add(input);
