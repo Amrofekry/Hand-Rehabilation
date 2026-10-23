@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.burst": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/PackageCache/com.unity.burst-1.8.17.tgz",
+      "version": "file:../Tools/AI/PackageCache/com.unity.burst-1.8.17.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -10,7 +10,7 @@
       }
     },
     "com.unity.collections": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/Unity2022Packages/com.unity.collections-2.2.1.tgz",
+      "version": "file:../Tools/AI/Unity2022Packages/com.unity.collections-2.2.1.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -28,7 +28,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/Unity2022Packages/com.unity.ext.nunit-1.0.6.tgz",
+      "version": "file:../Tools/AI/Unity2022Packages/com.unity.ext.nunit-1.0.6.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
@@ -44,13 +44,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/Unity2022Packages/com.unity.mathematics-1.2.6.tgz",
+      "version": "file:../Tools/AI/Unity2022Packages/com.unity.mathematics-1.2.6.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
     },
     "com.unity.nuget.mono-cecil": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/PackageCache/com.unity.nuget.mono-cecil-1.11.4.tgz",
+      "version": "file:../Tools/AI/PackageCache/com.unity.nuget.mono-cecil-1.11.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
@@ -94,7 +94,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.sentis": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/Unity2022Packages/com.unity.sentis-2.0.0.tgz",
+      "version": "file:../Tools/AI/Unity2022Packages/com.unity.sentis-2.0.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -120,7 +120,7 @@
       }
     },
     "com.unity.test-framework": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/Unity2022Packages/com.unity.test-framework-1.1.33.tgz",
+      "version": "file:../Tools/AI/Unity2022Packages/com.unity.test-framework-1.1.33.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -130,7 +130,7 @@
       }
     },
     "com.unity.test-framework.performance": {
-      "version": "file:E:/GP/codex/GripRehab-Unity/Tools/AI/Unity2022Packages/com.unity.test-framework.performance-3.0.2.tgz",
+      "version": "file:../Tools/AI/Unity2022Packages/com.unity.test-framework.performance-3.0.2.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {

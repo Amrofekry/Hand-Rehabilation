@@ -1,0 +1,50 @@
+{
+  "scope": "Stage 2 audit fixes only, each tied to a Docs/AUDIT_LEDGER.md ID. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/Product/CatalogValidation.cs": {
+      "previousSha256": "c785f16ac3a379370bc769fc0eae1cdf5410ca8405f7bed48bda989b959d6ef1",
+      "currentSha256": "ff44df8891a8f340b692e0e2e94b86464ede5d2ce7373ce752f9f24894dedff0",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit P-007: bound the new activeSeconds field (>=0, <= validSeconds + 0.2)."
+    },
+    "Assets/Product/ProductModels.cs": {
+      "previousSha256": "e8d576f5f525fbe44f2ddd0fb0669af02b312003754a8ddff9bab2a9789e6394",
+      "currentSha256": "cc1970fccb907ee0ad6d3de6093abdbe2bc569e5058b4dbbb185a1412be9a3a3",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit P-007: SessionRecord.activeSeconds and the tested IsActiveGrip rule (>=1 N or closure >=0.6)."
+    },
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "51e6987c797c2d5a2306b8f3504196ecd76fc8d55ae26e266d604089e3594c34",
+      "currentSha256": "97e20e18bb0e1f06a458d656a4d59711add3e0e810af5e18ecef30205204e0f6",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit P-007/P-017: history shows active grip vs input available; Appearance marks the selected theme."
+    },
+    "Assets/ProductIntegration/ResearchSessionRuntime.cs": {
+      "previousSha256": "e435c19dbfe74e33272d9c15371bf6866a2c93115397c5a0e1a187b9c5887305",
+      "currentSha256": "48cb9e4479ab3a7dd25a9477dac973a25db4fd5767c488b36904469410b6c035",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit P-007/P-021: accumulate activeSeconds; baseline status shows stage number and seconds left."
+    },
+    "Assets/ProductIntegration/WindowsProductStore.cs": {
+      "previousSha256": "8da6e9a04780ca13bbc3b08c540de8b1ebbca3cc6268f5baa6e78310a6767963",
+      "currentSha256": "1e75373703f4c93f461dc6aeade66710a3267c90ea54d686e617c8f2e7267114",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit A-020: load through ProtectedFileRecovery so a busy primary is never rolled back to .bak."
+    },
+    "Assets/Rehab/3.2-vision/HandTracking.cs": {
+      "previousSha256": "3ad83715ff62ecc173b60b4bcb0c75e3a832aa655d0d8a1107e6270121cb6fae",
+      "currentSha256": "05af84e7f26351b7ca281b47cb4e05deb0768aa44a9230e69ae8b185207ec1ef",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit A-001: HandStreamOrder accepts a restarted worker after a 0.5 s stale gap."
+    },
+    "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs": {
+      "previousSha256": "6041dabcc3907cd23cd53d80317a61201214a6ea5cd7d2e63d86b8b0edaf717b",
+      "currentSha256": "d40b84f62bdc8b0c0a54f13221257012cb58378a2b42a49730e9ac7bdf160aaf",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit A-001: per-hand ordering via HandStreamOrder."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabProfileStore.cs": {
+      "previousSha256": "4649fd71d23866b199de5a3ee49e9f91758e0580ce94c5e0ddb35733a732140e",
+      "currentSha256": "bec578ad17b034ba71e9e5bcc07f06ce27c0821cdca8e13f8935e264f7def573",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit A-002: load through ProtectedFileRecovery so a busy primary is never rolled back to .bak."
+    },
+    "Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs": {
+      "previousSha256": "3cc2df612660af6a2f4a0b9193d9085e24a60994ac6ebcb595775ba1fc83806d",
+      "currentSha256": "421d5b028db9b66a252c2c42bfd1b72ca35ed9fcd8645c7d713047e139bc789a",
+      "reason": "User-authorized Stage 2 defect fix (2026-10-23). Audit A-018/P-015: swept-segment waypoint hits and route-segment accuracy."
+    }
+  }
+}

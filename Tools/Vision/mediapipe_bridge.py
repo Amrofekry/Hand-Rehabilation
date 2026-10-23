@@ -5,6 +5,7 @@ individual finger force, or a clinically validated hand pose.
 """
 import argparse
 import json
+import math
 import socket
 import time
 from pathlib import Path
@@ -29,13 +30,21 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool, age_ms: float = 0) -> dict:
+def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool,
+                 age_ms: float = 0, *, world_hand=None, image_width: int = 0, image_height: int = 0) -> dict:
     label = category.category_name
     if label not in ("Left", "Right"):
         raise ValueError(f"Unknown hand label: {label}")
     if swap:
         label = "Left" if label == "Right" else "Right"
-    return {
+    # Reject values that would poison Unity's pose before they reach the socket.
+    if len(hand) != 21 or any(not math.isfinite(v) for p in hand for v in (p.x, p.y, p.z)):
+        raise ValueError("Expected 21 finite image landmarks")
+    if not math.isfinite(age_ms) or age_ms < 0 or not math.isfinite(category.score):
+        raise ValueError("Invalid frame age or handedness score")
+    if (image_width or image_height) and not (1 <= image_width <= 8192 and 1 <= image_height <= 8192):
+        raise ValueError("Invalid image dimensions")
+    payload = {
         "schemaVersion": 1,
         "source": f"mediapipe-{version}",
         "captureSeconds": captured,
@@ -48,6 +57,15 @@ def make_payload(hand, category, captured: float, sequence: int, version: str, s
         "gestureConfidence": 0.0,
         "landmarks": [{"x": p.x, "y": p.y, "z": p.z} for p in hand],
     }
+    # Optional schema-v1 extensions; Unity's LandmarkFrame already accepts both.
+    if image_width and image_height:
+        payload.update(imageWidth=image_width, imageHeight=image_height)
+    if world_hand is not None:
+        if len(world_hand) != 21 or any(not math.isfinite(v) or abs(v) > 2
+                                       for p in world_hand for v in (p.x, p.y, p.z)):
+            raise ValueError("Expected 21 finite estimated world landmarks")
+        payload["worldLandmarks"] = [{"x": p.x, "y": p.y, "z": p.z} for p in world_hand]
+    return payload
 
 
 def main() -> None:
@@ -111,6 +129,7 @@ def main() -> None:
                     if time.monotonic() - status_at >= 1:
                         print('VISION_STATUS '+json.dumps({'state':'camera_stalled','camera':args.camera,'frames':frames,'detections':detections,'fps':0}), flush=True)
                         status_at = time.monotonic()
+                    time.sleep(0.02)  # A stalled camera must not spin a CPU core (audit A-007).
                     continue
                 if args.mirror:
                     frame = cv2.flip(frame, 1)

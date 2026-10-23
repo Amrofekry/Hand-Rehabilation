@@ -69,6 +69,8 @@ class HandMateDesignTests(unittest.TestCase):
             'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/1_ProjectSetup/0-ContentSummary.asset',
             'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/2_ObjectBaking/0-ContentSummary.asset',
             'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/3_FingerTracking/0-ContentSummary.asset'})
+        stage2_review = json.loads((ROOT/'Docs/evidence/stage2-2026-10-23/protected-source-review.json').read_text(encoding='utf-8'))['changes']
+        self.assertEqual(set(stage2_review), {'Assets/Rehab/3.4-game-modules/RehabProfileStore.cs', 'Assets/Rehab/3.2-vision/HandTracking.cs', 'Assets/ProductIntegration/ResearchPortalPages.cs', 'Assets/Product/CatalogValidation.cs', 'Assets/Rehab/3.2-vision/VisionUdpReceiver.cs', 'Assets/ProductIntegration/ResearchSessionRuntime.cs', 'Assets/Product/ProductModels.cs', 'Assets/ProductIntegration/WindowsProductStore.cs', 'Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs'})
         for path, expected in before.items():
             with self.subTest(path=path):
                 if path in changes:
@@ -95,6 +97,10 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(ai_review[path]['previousSha256'],expected)
                     self.assertTrue(ai_review[path]['reason'])
                     expected=ai_review[path]['currentSha256']
+                if path in stage2_review:
+                    self.assertEqual(stage2_review[path]['previousSha256'], expected)
+                    self.assertTrue(stage2_review[path]['reason'])
+                    expected = stage2_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()
