@@ -28,8 +28,10 @@ namespace GripRehab
         TraceTask tracing;
         MazeTask maze;
         Exercise current;
-        float revealUntil;
-        bool memoryRevealVisible;
+        // Counted only in visible, focused frames so hitches or another window cannot
+        // consume the reveal before the player sees it (audit P-012).
+        float revealRemaining;
+        const float RevealSeconds = 3.5f, MaxRevealStep = .1f;
         float startedAt;
         float lastTraceAt;
         bool recorded;
@@ -40,6 +42,8 @@ namespace GripRehab
         readonly GripRehab.UI.GripUiThemeController presentation;
 
         public CanvasGroup Group => group;
+        public Func<float> FrameDelta { get; set; } = () => Time.unscaledDeltaTime;
+        bool Revealing => current == Exercise.Memory && revealRemaining > 0;
         public bool SaveEnabled { get; set; } = true;
         public Exercise Current => current;
         public bool Complete => current == Exercise.Memory ? memory.Complete :
@@ -138,8 +142,7 @@ namespace GripRehab
             assembly = new SpatialAssemblyTask();
             tracing = new TraceTask();
             maze = new MazeTask();
-            revealUntil = Time.unscaledTime + 3.5f;
-            memoryRevealVisible = current == Exercise.Memory;
+            revealRemaining = current == Exercise.Memory ? RevealSeconds : 0;
             choiceArea.SetActive(current == Exercise.Memory || current == Exercise.Assembly);
             traceArea.SetActive(current == Exercise.Tracing);
             mazeArea.SetActive(current == Exercise.Maze);
@@ -158,7 +161,12 @@ namespace GripRehab
 
         public void Tick()
         {
-            if (current == Exercise.Memory && !memory.Complete && Time.unscaledTime >= revealUntil)
+            if (Revealing)
+            {
+                revealRemaining -= Mathf.Clamp(FrameDelta(), 0, MaxRevealStep);
+                if (!Revealing) Refresh();
+            }
+            else if (current == Exercise.Memory && !memory.Complete)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1)) Submit(0);
                 if (Input.GetKeyDown(KeyCode.Alpha2)) Submit(1);
@@ -179,12 +187,6 @@ namespace GripRehab
                 if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveMaze(-1, 0);
                 if (Input.GetKeyDown(KeyCode.RightArrow)) MoveMaze(1, 0);
             }
-            if (current == Exercise.Memory && memoryRevealVisible &&
-                Time.unscaledTime >= revealUntil)
-            {
-                memoryRevealVisible = false;
-                Refresh();
-            }
         }
 
         public void Submit(int token)
@@ -192,7 +194,7 @@ namespace GripRehab
             if (token < 0 || token > 3 || Complete) return;
             if (current == Exercise.Memory)
             {
-                if (Time.unscaledTime < revealUntil) return;
+                if (Revealing) return;
                 memory.Submit(token);
             }
             else if (current == Exercise.Assembly) assembly.Place(token);
@@ -239,7 +241,7 @@ namespace GripRehab
             switch (current)
             {
                 case Exercise.Memory:
-                    bool showing = Time.unscaledTime < revealUntil;
+                    bool showing = Revealing;
                     cue.text = memory.Complete ? "PATTERN COMPLETE" : showing ?
                         "MEMORISE   " + memory.SequenceDisplay :
                         "ENTER PATTERN   " + memory.Correct + " / " + memory.Length;
