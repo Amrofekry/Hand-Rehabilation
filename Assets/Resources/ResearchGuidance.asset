@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8462bd9caf4650a0be78b27596fd6725, type: 3}
+  m_Name: ResearchGuidance
+  m_EditorClassIdentifier: Assembly-CSharp::GripRehab.ResearchGuidanceSettings
+  limits:
+    version: research-demo-2
+    minimumLevel: 1
+    maximumLevel: 5
+    persistence: 1.5
+    stableSeconds: 8
+    cooldown: 10
+    forceDecline: 0.35
+    jitterRatio: 2
+    minimumJitter: 0.025
+  fatigue:
+    consecutive: 3
+    clearWindows: 3
+    maximumLevel: 5
+    high: 0.7
+    low: 0.4
+    stableSeconds: 8
+    cooldown: 10
+    version: research-ai-1
+  physiologicalRiseRatio: 1.25
+  facialConfidenceMinimum: 0.65
+  pulseQualityMinimum: 0.8
+  pulseReferenceWindows: 15
+  maximumHoldSeconds: 5

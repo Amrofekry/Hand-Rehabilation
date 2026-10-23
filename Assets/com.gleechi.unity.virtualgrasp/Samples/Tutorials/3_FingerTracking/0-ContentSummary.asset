@@ -12,16 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 0_Tutorial_Hand_Tracking
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 0
   Title:
     m_Untranslated: 'Tutorial: Hand Tracking'
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: 2886488644747512123}
-  - {fileID: -7336735140063975704}
-  - {fileID: 3513717579165125918}
-  - {fileID: -5720079611288701399}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -43,7 +37,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -119,41 +112,6 @@ MonoBehaviour:
       for the plugins are met.</b> \n\nYou will have noticed that (if you did not
       have the guard symbol already added) that you were asked if you want to add
       it."
---- !u!114 &-5900984876501761873
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: VGHasControlledAvatarBySensor
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: 
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &-5720079611288701399
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -216,15 +174,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 1_Replace_VG_ControllerProfile_of_your_Avatar
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 1
   Title:
     m_Untranslated: Replace VG_ControllerProfile of your Avatar
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: -664243776041883592}
-  - {fileID: 7737842593167320045}
-  - {fileID: -2325018279023806258}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -246,7 +199,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -442,18 +394,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f107dc6d4c984c45bdafd3bb15f98f0, type: 3}
   m_Name: 0-ContentSummary
   m_EditorClassIdentifier: 
-  m_Version: 1
   TutorialTitle:
     m_Untranslated: VirtualGrasp Hand Tracking
+  m_ProgressTrackingEnabled: 0
   m_LessonId: 
-  m_Pages:
-    m_Items:
-    - {fileID: -8261422864476112976}
-    - {fileID: -1763145637447140129}
-    - {fileID: 4064898827519047128}
-    - {fileID: 4380132682008594979}
+  m_Version: 1
   m_SceneManagementBehavior: 1
-  m_ReturnToPreviousScenes: 1
   m_Scenes: []
   m_DefaultSceneCameraSettings:
     m_CameraMode: 0
@@ -471,9 +417,17 @@ MonoBehaviour:
       m_AssetObject: {fileID: 0}
       m_Prefab: {fileID: 0}
     m_Enabled: 0
-  m_ProgressTrackingEnabled: 0
   m_WindowLayout: {fileID: 0}
+  m_Pages:
+    m_Items:
+    - {fileID: -8261422864476112976}
+    - {fileID: -1763145637447140129}
+    - {fileID: 4064898827519047128}
+    - {fileID: 4380132682008594979}
   CompletionDialog: {fileID: 0}
+  Modified:
+    m_PersistentCalls:
+      m_Calls: []
   Initiated:
     m_PersistentCalls:
       m_Calls: []
@@ -491,7 +445,6 @@ MonoBehaviour:
       m_Calls: []
   m_Scene: {fileID: 0}
   m_TutorialTitle: 
-  m_FaqEntries: []
 --- !u!114 &650069325763119160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -609,15 +562,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 2_Rplace_VG_ControllerProfile_of_your_Avatar
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 2
   Title:
     m_Untranslated: Rplace VG_ControllerProfile of your Avatar
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: -1384620729875857800}
-  - {fileID: -6599951072756760014}
-  - {fileID: 650069325763119160}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -639,7 +587,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -685,16 +632,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 3_Well_Done!
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 3
   Title:
     m_Untranslated: Well Done!
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: 8488931187933598837}
-  - {fileID: 9186340318648177341}
-  - {fileID: 5868628088799758287}
-  - {fileID: 2755593917580258240}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -716,7 +657,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -750,41 +690,6 @@ MonoBehaviour:
       m_Calls: []
   m_NextButton: Next
   m_DoneButton: Done
---- !u!114 &5711768213361828593
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: OneAvatarIsFingerControlled
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: ActiveObjectHasVGMainScript
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &5868628088799758287
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -809,41 +714,6 @@ MonoBehaviour:
   m_CriteriaCompletion: 0
   m_Criteria:
     m_Items: []
---- !u!114 &6018999308164458958
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: IsOculusHandEnabled
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: ActiveObjectHasVGMainScript
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &7737842593167320045
 MonoBehaviour:
   m_ObjectHideFlags: 1

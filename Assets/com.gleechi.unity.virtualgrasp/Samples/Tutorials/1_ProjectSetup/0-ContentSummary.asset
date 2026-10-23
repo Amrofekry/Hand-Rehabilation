@@ -49,41 +49,6 @@ MonoBehaviour:
     m_Url: 
     m_AutoStart: 1
     m_Loop: 1
---- !u!114 &-7065138528243166924
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: VGHasControlledAvatarBySensor
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: 
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &-4383927151986159064
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -158,15 +123,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 3_Assign_an_Avatar
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 3
   Title:
     m_Untranslated: Assign an Avatar
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: -4037676796224304486}
-  - {fileID: -2559487354475567925}
-  - {fileID: 1901554551813679870}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -188,7 +148,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -298,41 +257,6 @@ MonoBehaviour:
 
       To
       finish this tutorial, you can now play your scene.'
---- !u!114 &-3178263422096161393
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: VGHasControlledAvatar
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: 
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &-3161848737460627226
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -452,14 +376,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 0_Tutorial_Project_Setup_
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 0
   Title:
     m_Untranslated: 'Tutorial: Project Setup '
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: 1070926968995979570}
-  - {fileID: 1010385076080979868}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -481,7 +401,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -550,20 +469,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f107dc6d4c984c45bdafd3bb15f98f0, type: 3}
   m_Name: 0-ContentSummary
   m_EditorClassIdentifier: 
-  m_Version: 1
   TutorialTitle:
     m_Untranslated: VirtualGrasp Project Setup
+  m_ProgressTrackingEnabled: 0
   m_LessonId: 
-  m_Pages:
-    m_Items:
-    - {fileID: -1238070439759662931}
-    - {fileID: 4966215993299880446}
-    - {fileID: 4550277752545211540}
-    - {fileID: -4092043494616721024}
-    - {fileID: 5885458753616666516}
-    - {fileID: 8858283403413467714}
+  m_Version: 1
   m_SceneManagementBehavior: 1
-  m_ReturnToPreviousScenes: 1
   m_Scenes: []
   m_DefaultSceneCameraSettings:
     m_CameraMode: 0
@@ -581,9 +492,19 @@ MonoBehaviour:
       m_AssetObject: {fileID: 0}
       m_Prefab: {fileID: 0}
     m_Enabled: 0
-  m_ProgressTrackingEnabled: 0
   m_WindowLayout: {fileID: 0}
+  m_Pages:
+    m_Items:
+    - {fileID: -1238070439759662931}
+    - {fileID: 4966215993299880446}
+    - {fileID: 4550277752545211540}
+    - {fileID: -4092043494616721024}
+    - {fileID: 5885458753616666516}
+    - {fileID: 8858283403413467714}
   CompletionDialog: {fileID: 0}
+  Modified:
+    m_PersistentCalls:
+      m_Calls: []
   Initiated:
     m_PersistentCalls:
       m_Calls: []
@@ -601,7 +522,6 @@ MonoBehaviour:
       m_Calls: []
   m_Scene: {fileID: 0}
   m_TutorialTitle: 
-  m_FaqEntries: []
 --- !u!114 &950435813747637302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -748,41 +668,6 @@ MonoBehaviour:
     m_Untranslated: <b>MyVirtualGrasp</b> is the main component responsible of starting,
       updating and stopping the VirtualGrasp engine in your project.<br/>. You will
       find <b>MyVirtualGrasp.cs</b> in the the Runtime/Scripts folder
---- !u!114 &3123291471142225815
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: SceneHasSkinnedMeshRenderer
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: ActiveObjectHasVGMainScript
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &4550277752545211540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -795,15 +680,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 2_MyVirtualGrasp
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 2
   Title:
     m_Untranslated: MyVirtualGrasp
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: -4383927151986159064}
-  - {fileID: 2464382723428771789}
-  - {fileID: 1068178733049885790}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -825,7 +705,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -931,15 +810,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 1_Add_an_Avatar_to_the_Scene_
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 1
   Title:
     m_Untranslated: 'Add an Avatar to the Scene '
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: -7792081264820744646}
-  - {fileID: -2435850500742268146}
-  - {fileID: -3056183481568450548}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -961,7 +835,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -1019,15 +892,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 4_Configure_your_controller_type
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 4
   Title:
     m_Untranslated: Configure your controller type
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: 6808561216702795640}
-  - {fileID: 6861591542783178768}
-  - {fileID: -3161848737460627226}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -1049,7 +917,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:
@@ -1152,41 +1019,6 @@ MonoBehaviour:
     m_Untranslated: 'In the <b>MyVirtualGrasp</b> component you can also assign sensors
       / controllers to control each avatar. <br/> To setup a controller, you simply
       assign a <b>Controller Profile</b> to your sensor setup. '
---- !u!114 &8514442604510192199
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7231e8df50e16c74c979c4a2affab91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Completed:
-    m_PersistentCalls:
-      m_Calls: []
-  Invalidated:
-    m_PersistentCalls:
-      m_Calls: []
-  isTesting: 0
-  m_Callback:
-    _target: {fileID: 11400000, guid: d66fbade1bcaed448b6398fd6ea84d2c, type: 2}
-    _methodName: ActiveObjectHasVGMainScript
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
-  m_AutoCompleteCallback:
-    _target: {fileID: 0}
-    _methodName: 
-    _args: []
-    _dynamic: 0
-    _typeName: Unity.Tutorials.Editor.ArbitraryCriterion+BoolCallback, Unity.Tutorials.Editor,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    dirty: 0
 --- !u!114 &8858283403413467714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1199,16 +1031,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff771ccdf4150419d9ff4d342b069aae, type: 3}
   m_Name: 5_Well_Done!
   m_EditorClassIdentifier: 
-  <IndexInTutorial>k__BackingField: 5
   Title:
     m_Untranslated: Well Done!
-  m_LegacyParagraphs:
+  m_Paragraphs:
     m_Items: []
-  m_PageParagraphs:
-  - {fileID: 4684924355301639451}
-  - {fileID: -3984043897950320152}
-  - {fileID: -322295352904998706}
-  - {fileID: 950435813747637302}
   m_CameraSettings:
     m_CameraMode: 0
     m_FocusMode: 0
@@ -1230,7 +1056,6 @@ MonoBehaviour:
   DoneButton:
     m_Untranslated: Done
   m_CompletedSound: {fileID: 0}
-  m_FaqEntries: []
   m_AutoAdvance: 0
   Showing:
     m_PersistentCalls:

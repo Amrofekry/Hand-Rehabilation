@@ -1,0 +1,785 @@
+{
+  "cases": [
+    {
+      "name": "stable",
+      "steps": [
+        {
+          "now": 0,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 1,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 2,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 3,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 4,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 5,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 6,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 7,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 8,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 9,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 10,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 11,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 12,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 13,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 14,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 15,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 16,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 17,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 2,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 18,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 3,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 19,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 3,
+          "signs": 0,
+          "reason": "active"
+        }
+      ]
+    },
+    {
+      "name": "one",
+      "steps": [
+        {
+          "now": 0,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 1,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 2,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 1,
+          "reason": "one persistent sign"
+        },
+        {
+          "now": 3,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 1,
+          "reason": "one persistent sign"
+        },
+        {
+          "now": 4,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 1,
+          "reason": "one persistent sign"
+        },
+        {
+          "now": 5,
+          "valid": true,
+          "signals": [
+            0.1,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        },
+        {
+          "now": 6,
+          "valid": true,
+          "signals": [
+            0.1,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        },
+        {
+          "now": 7,
+          "valid": true,
+          "signals": [
+            0.1,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        },
+        {
+          "now": 8,
+          "valid": true,
+          "signals": [
+            0.1,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        }
+      ]
+    },
+    {
+      "name": "two",
+      "steps": [
+        {
+          "now": 0,
+          "valid": true,
+          "signals": [
+            0.9,
+            0.9,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 1,
+          "valid": true,
+          "signals": [
+            0.9,
+            0.9,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 2,
+          "valid": true,
+          "signals": [
+            0.9,
+            0.9,
+            -1,
+            -1
+          ],
+          "state": "stopped",
+          "level": 1,
+          "signs": 3,
+          "reason": "multiple independent signs"
+        },
+        {
+          "now": 3,
+          "valid": true,
+          "signals": [
+            0.9,
+            0.9,
+            -1,
+            -1
+          ],
+          "state": "stopped",
+          "level": 1,
+          "signs": 3,
+          "reason": "stop latched"
+        },
+        {
+          "now": 4,
+          "valid": true,
+          "signals": [
+            0.9,
+            0.9,
+            -1,
+            -1
+          ],
+          "state": "stopped",
+          "level": 1,
+          "signs": 3,
+          "reason": "stop latched"
+        },
+        {
+          "now": 5,
+          "valid": true,
+          "signals": [
+            0.9,
+            0.9,
+            -1,
+            -1
+          ],
+          "state": "stopped",
+          "level": 1,
+          "signs": 3,
+          "reason": "stop latched"
+        }
+      ]
+    },
+    {
+      "name": "dropout",
+      "steps": [
+        {
+          "now": 0,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 1,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 2,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "active"
+        },
+        {
+          "now": 3,
+          "valid": false,
+          "signals": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "invalid input or model; explicit resume required"
+        },
+        {
+          "now": 4,
+          "valid": false,
+          "signals": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "invalid input or model; explicit resume required"
+        },
+        {
+          "now": 5,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        },
+        {
+          "now": 6,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        },
+        {
+          "now": 7,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        },
+        {
+          "now": 8,
+          "valid": true,
+          "signals": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "state": "warning",
+          "level": 1,
+          "signs": 0,
+          "reason": "explicit resume required"
+        }
+      ]
+    },
+    {
+      "name": "nonconsecutive",
+      "steps": [
+        {
+          "now": 0,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 1,
+          "valid": true,
+          "signals": [
+            0.5,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 2,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 3,
+          "valid": true,
+          "signals": [
+            0.5,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 4,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 5,
+          "valid": true,
+          "signals": [
+            0.5,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 6,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 7,
+          "valid": true,
+          "signals": [
+            0.5,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 8,
+          "valid": true,
+          "signals": [
+            0.9,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        },
+        {
+          "now": 9,
+          "valid": true,
+          "signals": [
+            0.5,
+            -1,
+            -1,
+            -1
+          ],
+          "state": "active",
+          "level": 1,
+          "signs": 0,
+          "reason": "difficulty held"
+        }
+      ]
+    }
+  ]
+}

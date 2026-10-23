@@ -27,7 +27,7 @@ namespace VirtualGrasp.Tutorials
         /// <returns>The created asset</returns>
         public static ScriptableObject CreateAndShowAsset(string assetPath = null)
         {
-            assetPath = assetPath ?? $"{Unity.Tutorials.Editor.TutorialEditorUtils.GetActiveFolderPath()}/{DefaultFileName}.asset";
+            assetPath = assetPath ?? $"{Unity.Tutorials.Core.Editor.TutorialEditorUtils.GetActiveFolderPath()}/{DefaultFileName}.asset";
             var asset = CreateInstance<TutorialCallbacks>();
             AssetDatabase.CreateAsset(asset, AssetDatabase.GenerateUniqueAssetPath(assetPath));
             EditorUtility.FocusProjectWindow(); // needed in order to make the selection of newly created asset to really work

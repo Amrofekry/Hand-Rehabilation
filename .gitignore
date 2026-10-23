@@ -16,8 +16,31 @@
 *.booproj
 /.venv/
 /release/
+/firmware/.build/
+/firmware/.arduino-data/
+/firmware/.arduino-downloads/
+/firmware/.arduino-user/
+/firmware/.tools/
+/hardware/.tools/
+/delivery/
+**/profiles.json
+**/profiles.json.bak
+**/profiles.json.tmp
+**/profiles.dat
+**/profiles.dat.bak
+**/profiles.dat.tmp
+*.pfx
+*.p12
+*.key
 
 __pycache__/
 *.pyc
 /Assets/Resources/PerformanceTestRunInfo.json*
 /Assets/Resources/PerformanceTestRunSettings.json*
+
+# WBS 4 - private data and reproducible local ML environment
+/ai-engine/.venv-ai/
+/ai-engine/data_raw/
+/ai-engine/data_interim/
+/ai-engine/data_processed/
+/ai-engine/data_own/
