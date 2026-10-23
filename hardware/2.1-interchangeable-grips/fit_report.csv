@@ -1,0 +1,7 @@
+shape,cad_revision,printer,material,core_clearance_mm,guide_binding,spring_travel_mm,load_cell_part,adapter_revision,load_path_verified,reviewer,status
+sphere,1,,,,,,,,,,NOT_PERFORMED
+cylinder,1,,,,,,,,,,NOT_PERFORMED
+pencil,1,,,,,,,,,,NOT_PERFORMED
+sphere,2.1-R2,,,,,,,,,,NOT_PERFORMED
+cylinder,2.1-R2,,,,,,,,,,NOT_PERFORMED
+pencil,2.1-R2,,,,,,,,,,NOT_PERFORMED

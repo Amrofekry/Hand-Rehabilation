@@ -1,0 +1,184 @@
+{
+  "revision": "2.1-R2",
+  "units": "mm",
+  "status": "dimensioned bench prototype; physical validation pending",
+  "electronics_bay": {
+    "min": [
+      -50,
+      -27,
+      3
+    ],
+    "max": [
+      50,
+      27,
+      29
+    ]
+  },
+  "components": [
+    {
+      "id": "battery_2011",
+      "part": "Adafruit 2011",
+      "min": [
+        -45,
+        -18,
+        4
+      ],
+      "size": [
+        60,
+        36,
+        9
+      ],
+      "basis": "60 x 36 x 7 mm published body; 2 mm reserved height; no compression"
+    },
+    {
+      "id": "nano",
+      "part": "Arduino Nano 33 IoT ABX00027",
+      "min": [
+        -47,
+        -25,
+        16
+      ],
+      "size": [
+        46,
+        20,
+        10
+      ],
+      "basis": "45 x 18 mm PCB rounded up; low-profile soldered wiring, no tall headers"
+    },
+    {
+      "id": "boost",
+      "part": "Adafruit PowerBoost 1000C 2465",
+      "min": [
+        1,
+        -25,
+        16
+      ],
+      "size": [
+        45,
+        23,
+        10
+      ],
+      "basis": "published assembled 45 x 23 x 10 mm envelope"
+    },
+    {
+      "id": "hx711",
+      "part": "SparkFun SEN-13879",
+      "min": [
+        -46,
+        3,
+        16
+      ],
+      "size": [
+        36,
+        22,
+        10
+      ],
+      "basis": "design reservation; verify actual populated board and solder connections"
+    },
+    {
+      "id": "connectors",
+      "part": "wire and connector reservation",
+      "min": [
+        5,
+        3,
+        16
+      ],
+      "size": [
+        40,
+        22,
+        12
+      ],
+      "basis": "allocated routing volume; cable bend radii require physical verification"
+    }
+  ],
+  "cell": {
+    "part": "HT Sensor TAL220 100 kg alloy-steel configuration",
+    "min": [
+      -40,
+      -6.35,
+      38
+    ],
+    "size": [
+      80,
+      12.7,
+      12.7
+    ],
+    "active_holes_x": [
+      -35,
+      -20
+    ],
+    "active_thread": "M4",
+    "fixed_holes_x": [
+      20,
+      35
+    ],
+    "fixed_thread": "M5",
+    "hole_y": 0
+  },
+  "base_plate": {
+    "size": [
+      132,
+      80,
+      4
+    ],
+    "z": 30
+  },
+  "top_plate": {
+    "size": [
+      132,
+      80,
+      4
+    ],
+    "z": 54.7
+  },
+  "fixed_spacer": {
+    "min": [
+      15,
+      -6.35,
+      34
+    ],
+    "size": [
+      25,
+      12.7,
+      4
+    ]
+  },
+  "active_spacer": {
+    "min": [
+      -40,
+      -6.35,
+      50.7
+    ],
+    "size": [
+      25,
+      12.7,
+      4
+    ]
+  },
+  "guides": {
+    "x": [
+      -48,
+      48
+    ],
+    "y": [
+      -25,
+      25
+    ],
+    "diameter": 4,
+    "clearance_hole": 4.6
+  },
+  "stop_gap_proposal": 0.25,
+  "shells": {
+    "sphere_diameter": 190,
+    "cylinder_length": 158,
+    "cylinder_diameter": 124,
+    "pencil_length": 174,
+    "pencil_across_corners": 144
+  },
+  "sources": [
+    "https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/TAL220M4M5Update.pdf",
+    "https://docs.arduino.cc/hardware/nano-33-iot/",
+    "https://www.adafruit.com/product/2011",
+    "https://www.adafruit.com/product/2465"
+  ]
+}

@@ -1,0 +1,11 @@
+wbs,item,quantity,reference,selection_status,purchased,invoice_path,notes
+2.2,Arduino Nano 33 IoT,1,ABX00027,selected,no,,Do not substitute classic Nano or Nano 33 BLE
+2.2,HX711 split-rail breakout,1,SparkFun SEN-13879 v11,selected,no,,Verify actual revision VCC/VDD wiring
+2.2,100 kg full bridge load cell,1,HT Sensor TAL220 100 kg alloy steel,R2 selected configuration; supplier confirmation pending,no,,Match saved 80 mm drawing and M4/M5 pattern; do not buy common 10 kg version
+2.2,Protected Li-ion battery,1,Adafruit 2011 protected 2000 mAh,R2 selected; physical verification pending,no,,Match charger and connector polarity
+2.2,Charger/protection/load-sharing/boost,1,Adafruit PowerBoost 1000C 2465,R2 selected; physical verification pending,no,,Verify all functions and reverse-current behavior
+2.2,Micro-USB data cable,1,Nano connector,selected,no,,Bench programming
+2.2,Multimeter and current-limited supply,1,Bench equipment,required,no,,May borrow from lab
+2.2,Wire connectors switch insulation,1,Assembly-dependent,required,no,,Strain relief and serviceable connectors
+2.1,Guide rods stops fasteners,1,Mechanical selection pending,open,no,,R2 omits auxiliary springs; final guides and stop setting need mechanical review
+2.3,Known masses and calibration fixture,1,Traceable references,required,no,,Do not use patient squeezing as a calibration reference

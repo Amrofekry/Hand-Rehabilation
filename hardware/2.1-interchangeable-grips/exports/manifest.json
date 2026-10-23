@@ -1,0 +1,47 @@
+[
+  {
+    "part": "tray",
+    "bytes": 1567022,
+    "sha256": "0af00fe6c73762b67b898da7f5874c6bce06d2fdd875a812d511b057c999d222"
+  },
+  {
+    "part": "lid",
+    "bytes": 1090884,
+    "sha256": "1ef631d0b155dddae454274c69131471a583350109f96ae0be71a0b4344b9804"
+  },
+  {
+    "part": "platen",
+    "bytes": 968523,
+    "sha256": "18ca9cd942c87c6beb545a3d22d68cf97849c1305b659d76567055203ef119c4"
+  },
+  {
+    "part": "sphere_top",
+    "bytes": 1255029,
+    "sha256": "769a1937d3791995748964d2ff04602a05b57daf204f7aa83aa63b8450a6e572"
+  },
+  {
+    "part": "sphere_bottom",
+    "bytes": 1276638,
+    "sha256": "9e04315dfe3e693a87f3edb1386f9ef0e0dc1b8b335c7d1e3a488a67e3f84696"
+  },
+  {
+    "part": "cylinder_top",
+    "bytes": 843045,
+    "sha256": "545b640653464f83de016e37858160042c79ef4fa225c71856fff40ab9df228d"
+  },
+  {
+    "part": "cylinder_bottom",
+    "bytes": 856617,
+    "sha256": "64f4a71128c374a38f52a92ae6c7e015febe6be12fcc60428e567961bfe0e40e"
+  },
+  {
+    "part": "pencil_top",
+    "bytes": 816920,
+    "sha256": "b19015f08abcc4752a11973079aa1da33e0a32b2148f4f20962038cde35b9f58"
+  },
+  {
+    "part": "pencil_bottom",
+    "bytes": 829998,
+    "sha256": "6f7f8ce83a5ca96e72d2850bca80c74d7c1908bf576b7355c19a257497692dc8"
+  }
+]

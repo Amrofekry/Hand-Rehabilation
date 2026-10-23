@@ -1,0 +1,7 @@
+directories:
+  data: E:/GP/codex/firmware/.arduino-data
+  downloads: E:/GP/codex/firmware/.arduino-downloads
+  user: E:/GP/codex/firmware/.arduino-user
+updater:
+  enable_notification: false
+

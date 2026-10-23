@@ -1,0 +1,56 @@
+[
+  {
+    "part": "cylinder_bottom",
+    "triangles": 4552,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "cylinder_top",
+    "triangles": 4536,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "lid",
+    "triangles": 5568,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "pencil_bottom",
+    "triangles": 4408,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "pencil_top",
+    "triangles": 4392,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "platen",
+    "triangles": 4884,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "sphere_bottom",
+    "triangles": 6604,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "sphere_top",
+    "triangles": 6588,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  },
+  {
+    "part": "tray",
+    "triangles": 8056,
+    "nonmanifold_edges": 0,
+    "closed_mesh": true
+  }
+]

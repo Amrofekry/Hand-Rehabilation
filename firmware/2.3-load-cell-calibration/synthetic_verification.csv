@@ -1,0 +1,7 @@
+reference_n,measured_n,direction
+0,0.1,loading
+9.80665,9.9,loading
+19.6133,19.7,loading
+19.6133,19.6,unloading
+9.80665,9.8,unloading
+0,-0.1,unloading

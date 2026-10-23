@@ -1,0 +1,189 @@
+{
+  "revision": "2.1-R2",
+  "nominal_envelope_check": "PASS",
+  "component_pairs_checked": 10,
+  "drawing_hole_pattern_check": "PASS",
+  "physical_fit": "NOT_PERFORMED",
+  "strength_and_stop_setting": "NOT_VALIDATED",
+  "component_basis": [
+    {
+      "id": "battery_2011",
+      "part": "Adafruit 2011",
+      "min": [
+        -45,
+        -18,
+        4
+      ],
+      "size": [
+        60,
+        36,
+        9
+      ],
+      "basis": "60 x 36 x 7 mm published body; 2 mm reserved height; no compression"
+    },
+    {
+      "id": "nano",
+      "part": "Arduino Nano 33 IoT ABX00027",
+      "min": [
+        -47,
+        -25,
+        16
+      ],
+      "size": [
+        46,
+        20,
+        10
+      ],
+      "basis": "45 x 18 mm PCB rounded up; low-profile soldered wiring, no tall headers"
+    },
+    {
+      "id": "boost",
+      "part": "Adafruit PowerBoost 1000C 2465",
+      "min": [
+        1,
+        -25,
+        16
+      ],
+      "size": [
+        45,
+        23,
+        10
+      ],
+      "basis": "published assembled 45 x 23 x 10 mm envelope"
+    },
+    {
+      "id": "hx711",
+      "part": "SparkFun SEN-13879",
+      "min": [
+        -46,
+        3,
+        16
+      ],
+      "size": [
+        36,
+        22,
+        10
+      ],
+      "basis": "design reservation; verify actual populated board and solder connections"
+    },
+    {
+      "id": "connectors",
+      "part": "wire and connector reservation",
+      "min": [
+        5,
+        3,
+        16
+      ],
+      "size": [
+        40,
+        22,
+        12
+      ],
+      "basis": "allocated routing volume; cable bend radii require physical verification"
+    }
+  ],
+  "meshes": [
+    {
+      "part": "tray",
+      "triangles": 1024,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "22fced1f2c7b4c668c9b6790352e1afe05f8ab944c133948072e9008aa784dec"
+    },
+    {
+      "part": "deck",
+      "triangles": 436,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "9a755a7a1d665291230b8571d869148517930ce0b37cf6585d08d111f7c62d52"
+    },
+    {
+      "part": "base_plate",
+      "triangles": 1832,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "41594b0a0215fcca9724d3e537c4134b95aeae44665d90c7f8091fc81f830d7f"
+    },
+    {
+      "part": "top_plate",
+      "triangles": 1812,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "a3ff79371d848c2d5565671f624d182e0ecba45cb5a86caf31f63126f9aed998"
+    },
+    {
+      "part": "fixed_spacer",
+      "triangles": 340,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "9320460be78a9a2fd55fbba741f060208d7be8cc4099bb1ef42a785345526dd0"
+    },
+    {
+      "part": "active_spacer",
+      "triangles": 340,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "61d685e5c08917b2baa258ea0b67d1a5fca409be7a5bc0cd997580e1711529ed"
+    },
+    {
+      "part": "stop_sleeve",
+      "triangles": 320,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "a52786c707e1dfd2876aa756e9dbf1acb4136c68d6b877006e6e984e3856e6fe"
+    },
+    {
+      "part": "sphere_bottom",
+      "triangles": 2932,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "eacd0867bca46a3b7670e1fc63cd3b4dd2b10c5ead145185ac43fbd6a1c10da3"
+    },
+    {
+      "part": "sphere_top",
+      "triangles": 2060,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "577b2e7ba2bf2f1f16b0113060d14da30c59447a7ff819c507dcda02924152e8"
+    },
+    {
+      "part": "cylinder_bottom",
+      "triangles": 1928,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "242c73a5f7bc7701d494a416fd517f8393bfe687af94f59c7a6ccd05dc8e1665"
+    },
+    {
+      "part": "cylinder_top",
+      "triangles": 1224,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "8839a114af6355db10ab21d4963e7449d91388a7fd2e566e884f3cd9b9ca4f28"
+    },
+    {
+      "part": "pencil_bottom",
+      "triangles": 1848,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "fa4e6301b34f47630caded1861fedcca60812ae9979d641517b97cce206c41ec"
+    },
+    {
+      "part": "pencil_top",
+      "triangles": 1168,
+      "edge_closure": "PASS",
+      "connected_bodies": 1,
+      "sha256": "f1c05480367d0bd45400a43ffa2e910246660ece7879c4a39483ecd6cd84aa94"
+    }
+  ],
+  "source_sha256": {
+    "assembly.scad": "26227982d6895412a2d95801e9fba9570452a4b5b9a6a0e998ddf2467439bdfd",
+    "layout.json": "fa0fa27684c7df61505410715f05ee29792011603fb1e09052d340d35a81b734",
+    "parameters.scad": "c7e3ab9d0d36c3da3a2ae7932417a7d9d193f28cd0d58ee8e3fc9a4ab3f294db"
+  },
+  "dxf_sha256": {
+    "base_plate": "aa41c4d5c3a59c8c263b8469f824ea6cd73289e81b9401c65ba61b420a04d184",
+    "top_plate": "6ecb73aa2490014d07feaf3228511a67b768addc4fe1a94cde2ab4013d2fa5fe",
+    "fixed_spacer": "2366819375788d6dc568ac8f53b7c788202ad31337c92a5ed154a6f8da2cdc11",
+    "active_spacer": "eea97892a5df27e7b5b2704a631572a9a169ff24cb0d1e04997d5f1ea43954f1"
+  }
+}

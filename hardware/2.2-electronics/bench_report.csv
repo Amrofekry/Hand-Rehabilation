@@ -1,0 +1,12 @@
+test,expected,measured,unit,part_revision,reviewer,status
+Nano logic rail,3.3 nominal,,V,,,NOT_PERFORMED
+HX711 VDD,3.3 nominal,,V,,,NOT_PERFORMED
+HX711 VCC,R2 measured boost 5.0-5.4,,V,,,NOT_PERFORMED
+DAT maximum,within MCU allowed input,,V,,,NOT_PERFORMED
+BLE active supply current,record worst case,,mA,,,NOT_PERFORMED
+Converter ripple,review selected module specification,,mV,,,NOT_PERFORMED
+Power path reverse current,verify USB/battery isolation,,mA,,,NOT_PERFORMED
+No-sensor timeout,invalid within 500,,ms,,,NOT_PERFORMED
+TAL220 external excitation,R2 measured 5.0-5.4; stock E+ isolated,,V,,,NOT_PERFORMED
+HX711 input common mode,1.2 to measured AVDD minus 1.3,,V,,,NOT_PERFORMED
+HX711 AVDD,measure regulator output; do not assume excitation equals VCC,,V,,,NOT_PERFORMED

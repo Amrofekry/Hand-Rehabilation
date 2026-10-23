@@ -1,0 +1,23 @@
+// Generated from layout.json by build.py. Do not edit.
+base_size = [132, 80, 4];
+base_z = 30;
+top_z = 54.7;
+active_x = [-35, -20];
+fixed_x = [20, 35];
+guide_x = [-48, 48];
+guide_y = [-25, 25];
+guide_d = 4;
+guide_clear = 4.6;
+stop_gap = 0.25;
+cell_min = [-40, -6.35, 38];
+cell_size = [80, 12.7, 12.7];
+fixed_min = [15, -6.35, 34];
+fixed_size = [25, 12.7, 4];
+active_min = [-40, -6.35, 50.7];
+active_size = [25, 12.7, 4];
+sphere_d = 190;
+cylinder_l = 158;
+cylinder_d = 124;
+pencil_l = 174;
+pencil_d = 144;
+component_boxes = [[[-45, -18, 4], [60, 36, 9]], [[-47, -25, 16], [46, 20, 10]], [[1, -25, 16], [45, 23, 10]], [[-46, 3, 16], [36, 22, 10]], [[5, 3, 16], [40, 22, 12]]];
