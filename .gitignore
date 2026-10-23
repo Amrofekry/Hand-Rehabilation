@@ -44,3 +44,9 @@ __pycache__/
 /ai-engine/data_interim/
 /ai-engine/data_processed/
 /ai-engine/data_own/
+
+# Stage 0 hygiene
+/.venv*/
+/Tools/**/__pycache__/
+/Assets/_Recovery/
+/Assets/_Recovery.meta
