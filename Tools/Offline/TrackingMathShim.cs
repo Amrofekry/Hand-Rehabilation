@@ -35,6 +35,7 @@ namespace UnityEngine
     public struct Vector2
     {
         public float x,y;
+        public Vector2(float x,float y) { this.x=x;this.y=y; }
         public static implicit operator Vector2(Vector3 p) { return new Vector2 { x=p.x,y=p.y }; }
         public static float Distance(Vector2 a,Vector2 b) { return (float)Math.Sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)); }
     }

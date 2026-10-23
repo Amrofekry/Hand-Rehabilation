@@ -150,6 +150,7 @@ def main():
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(tracking),
                  *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),
                  'Tools/Offline/TrackingMathShim.cs','Tools/Offline/TrackingTests.cs',
+                 'Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs',
                  'Assets/Rehab/3.2-vision/HandTracking.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs'],OUTPUT/'tracking-tests-compile.log')

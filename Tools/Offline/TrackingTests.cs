@@ -135,6 +135,33 @@ class TrackingTests
         Check(!HandStreamOrder.Accepts(1,5.0,20000,3.0,false),"sequence reset rejected while the old stream is still live");
         Check(HandStreamOrder.Accepts(0,0,10,2.0,false),"legacy packet without sequence or capture accepted");
     }
+    // AUDIT A-018/P-015: accuracy follows the drawn path and fast drags cannot skip a waypoint.
+    static TraceTask TraceAlong(int stepsPerSegment)
+    {
+        var task=new TraceTask();var path=TraceTask.Path;task.Submit(path[0]);
+        for(int i=1;i<path.Length;i++)for(int k=1;k<=stepsPerSegment;k++)
+        { float t=(float)k/stepsPerSegment;task.Submit(new Vector2(path[i-1].x+(path[i].x-path[i-1].x)*t,path[i-1].y+(path[i].y-path[i-1].y)*t)); }
+        return task;
+    }
+    static void Tracing()
+    {
+        var careful=TraceAlong(20);
+        Check(careful.Complete&&careful.Accuracy>=.95f,"tracing exactly along the path completes with high accuracy ("+careful.Accuracy+")");
+        // Samples land about 0.1 before and after each waypoint, never inside its 0.095 radius.
+        var path=TraceTask.Path;var fast=new TraceTask();fast.Submit(path[0]);
+        for(int i=1;i<path.Length;i++)
+        {
+            var a=path[i-1];var b=path[i];var c=i+1<path.Length?path[i+1]:new Vector2(b.x+(b.x-a.x),b.y+(b.y-a.y));
+            fast.Submit(new Vector2(a.x+(b.x-a.x)*.55f,a.y+(b.y-a.y)*.55f));
+            fast.Submit(new Vector2(b.x+(c.x-b.x)*.45f,b.y+(c.y-b.y)*.45f));
+        }
+        Check(fast.Complete,"a fast drag that straddles each waypoint still reaches every waypoint ("+fast.NextWaypoint+")");
+        var wander=new TraceTask();wander.Submit(TraceTask.Path[0]);
+        for(int k=0;k<20;k++)wander.Submit(new Vector2(.3f+k*.02f,.9f));
+        Check(!wander.Complete&&wander.Accuracy<.5f,"wandering far from the path lowers accuracy ("+wander.Accuracy+")");
+        var jump=new TraceTask();jump.Submit(TraceTask.Path[0]);jump.Submit(TraceTask.Path[4]);
+        Check(jump.NextWaypoint<=2,"jumping to the last waypoint cannot skip the route ("+jump.NextWaypoint+")");
+    }
     static int Main()
     {
         try
@@ -145,6 +172,7 @@ class TrackingTests
             foreach(bool left in new[]{false,true})foreach(var rest in new[]{Quaternion.identity,Quaternion.AngleAxis(35,Vector3.up)})Run(left,rest);
             Stability(false);Stability(true);
             StreamOrder();
+            Tracing();
             Console.WriteLine("RESULT "+passed+" passed, "+failed+" failed; production pose source with managed test math; no Unity/camera/native SDK");return failed==0?0:1;
         }
         catch(Exception e) { Console.Error.WriteLine("FAIL "+e);return 1; }
