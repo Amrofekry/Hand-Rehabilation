@@ -187,6 +187,7 @@ namespace GripRehab.UI
 
         public GripUiTheme Current => selectedTheme == 1 ? lightTheme : selectedTheme == 2 ? highContrast : dark;
         public void RefreshPresentation() => ApplyImmediate();
+        public int SelectedTheme => selectedTheme;
         public void UseDark() => Select(0);
         public void UseLight() => Select(1);
         public void UseContrast() => Select(2);
@@ -203,9 +204,11 @@ namespace GripRehab.UI
 
         IEnumerator Blend(float duration)
         {
-            var start = new Color[bindings.Count];
+            // Keyed by graphic: pages rebuilt during the blend remove and append bindings,
+            // so positional start colours would be applied to the wrong controls (audit P-018).
+            var start = new Dictionary<Graphic, Color>();
             for (int i = 0; i < bindings.Count; i++)
-                start[i] = bindings[i].graphic != null ? bindings[i].graphic.color : Color.clear;
+                if (bindings[i].graphic != null) start[bindings[i].graphic] = bindings[i].graphic.color;
             float elapsed = 0f;
             while (elapsed < duration)
             {
@@ -218,7 +221,8 @@ namespace GripRehab.UI
                     var target = TargetColor(item);
                     if (item.role == GripUiRole.Backdrop && selectedTheme == 0 && item.artwork != null)
                     { target = Current.backdropArtworkTint; target.a *= item.alpha; }
-                    item.graphic.color = Color.Lerp(start[i], target, eased);
+                    // Controls created during the blend are already painted for the new theme.
+                    item.graphic.color = start.TryGetValue(item.graphic, out var from) ? Color.Lerp(from, target, eased) : target;
                 }
                 yield return null;
             }

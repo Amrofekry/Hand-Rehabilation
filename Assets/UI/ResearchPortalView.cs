@@ -35,23 +35,34 @@ namespace GripRehab.UI
             description = Label(page, "", 19, 70); Anchor(description.rectTransform, new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, -112), new Vector2(0, 65));
             var scrollRoot = Rect("Accessible content", page);
             scrollRoot.anchorMin = new Vector2(0, 0); scrollRoot.anchorMax = new Vector2(1, 1);
-            scrollRoot.offsetMin = new Vector2(0, 76); scrollRoot.offsetMax = new Vector2(0, -157);
-            scroll = scrollRoot.gameObject.AddComponent<UnityEngine.UI.ScrollRect>(); scroll.horizontal = false;
+            scrollRoot.offsetMin = new Vector2(0, 76 + StatusStrip); scrollRoot.offsetMax = new Vector2(0, -157);
+            scroll = scrollRoot.gameObject.AddComponent<UnityEngine.UI.ScrollRect>(); scroll.horizontal = false; scroll.scrollSensitivity = 40;
             var viewport = Rect("Viewport", scrollRoot); Fill(viewport);
             var maskImage = viewport.gameObject.AddComponent<UnityEngine.UI.Image>(); Paint(maskImage, GripUiRole.Backdrop);
             viewport.gameObject.AddComponent<UnityEngine.UI.Mask>().showMaskGraphic = false;
             content = Rect("Content", viewport); content.anchorMin = new Vector2(0, 1); content.anchorMax = Vector2.one;
             content.pivot = new Vector2(.5f, 1); content.sizeDelta = Vector2.zero;
             var layout = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
-            layout.spacing = Palette.gridPixels * 2; layout.padding = new RectOffset(8, 20, 8, 16);
+            layout.spacing = Palette.gridPixels * 2; layout.padding = new RectOffset(8, 20, 8, 48);
             layout.childControlWidth = layout.childControlHeight = true; layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
             content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>().verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
             scroll.viewport = viewport; scroll.content = content; scroll.movementType = UnityEngine.UI.ScrollRect.MovementType.Clamped;
-            var footer = Rect("Navigation", page); Anchor(footer, Vector2.zero, new Vector2(1, 0), new Vector2(0, 28), new Vector2(0, 60));
+            var footer = Rect("Navigation", page); Anchor(footer, Vector2.zero, new Vector2(1, 0), new Vector2(0, 28 + StatusStrip), new Vector2(0, 60));
             backButton = AddFooter(footer, "BACK", 0, .31f, () => back?.Invoke());
-            AddFooter(footer, "SCROLL UP", .345f, .655f, () => scroll.verticalNormalizedPosition = Mathf.Clamp01(scroll.verticalNormalizedPosition + .25f));
-            AddFooter(footer, "SCROLL DOWN", .69f, 1, () => scroll.verticalNormalizedPosition = Mathf.Clamp01(scroll.verticalNormalizedPosition - .25f));
+            AddFooter(footer, "SCROLL UP", .345f, .655f, () => ScrollPage(1));
+            AddFooter(footer, "SCROLL DOWN", .69f, 1, () => ScrollPage(-1));
             Hide();
+        }
+        // Height reserved below the footer for the hand-pointer/camera status line (audit P-001).
+        const float StatusStrip = 44;
+        // Scrolls by most of one visible page so each press reveals new controls (audit P-004).
+        void ScrollPage(int direction)
+        {
+            Canvas.ForceUpdateCanvases();
+            float overflow = content.rect.height - scroll.viewport.rect.height;
+            if (overflow <= 0) { scroll.verticalNormalizedPosition = 1; return; }
+            float step = scroll.viewport.rect.height * .8f / overflow;
+            scroll.verticalNormalizedPosition = Mathf.Clamp01(scroll.verticalNormalizedPosition + direction * step);
         }
         UnityEngine.UI.Button AddFooter(RectTransform parent, string caption, float left, float right, Action action)
         {
@@ -94,7 +105,10 @@ namespace GripRehab.UI
         {
             Label(content, caption, Palette.captionSize + 2, 32);
             var rect = Rect(key, content); Height(rect.gameObject, multiline ? 144 : TargetHeight);
-            Paint(rect.gameObject.AddComponent<UnityEngine.UI.Image>(), GripUiRole.DarkSurface);
+            // Surface plus a border: DarkSurface matched the dark backdrop and hid empty fields (audit P-019).
+            Paint(rect.gameObject.AddComponent<UnityEngine.UI.Image>(), GripUiRole.Surface);
+            var border = rect.gameObject.AddComponent<UnityEngine.UI.Outline>();
+            border.effectColor = new Color(.55f, .63f, .74f, .95f); border.effectDistance = new Vector2(2, -2);
             var input = rect.gameObject.AddComponent<UnityEngine.UI.InputField>(); input.characterLimit = limit;
             input.targetGraphic = rect.GetComponent<UnityEngine.UI.Image>();
             input.contentType = secret ? UnityEngine.UI.InputField.ContentType.Password : UnityEngine.UI.InputField.ContentType.Standard;

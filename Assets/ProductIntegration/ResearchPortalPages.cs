@@ -97,9 +97,9 @@ namespace GripRehab
         void Settings()
         {
             Show("Make it comfortable", "English interface · appearance preferences are separate from patient records.", Welcome);
-            view.Button("DARK", () => { theme.UseDark(); accessibility?.Save(); Settings(); });
-            view.Button("LIGHT", () => { theme.UseLight(); accessibility?.Save(); Settings(); });
-            view.Button("HIGH CONTRAST", () => { theme.UseContrast(); accessibility?.Save(); Settings(); });
+            view.Button((theme.SelectedTheme == 0 ? "[Selected]  " : "") + "DARK", () => { theme.UseDark(); accessibility?.Save(); Settings(); });
+            view.Button((theme.SelectedTheme == 1 ? "[Selected]  " : "") + "LIGHT", () => { theme.UseLight(); accessibility?.Save(); Settings(); });
+            view.Button((theme.SelectedTheme == 2 ? "[Selected]  " : "") + "HIGH CONTRAST", () => { theme.UseContrast(); accessibility?.Save(); Settings(); });
             if (accessibility != null)
             {
                 view.Button(theme.reduceMotion ? "REDUCE MOTION: ON" : "REDUCE MOTION: OFF", () => { accessibility.ToggleMotion(); Settings(); });
