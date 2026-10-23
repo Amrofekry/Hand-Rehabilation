@@ -47,18 +47,6 @@ class HandMateDesignTests(unittest.TestCase):
         scene_review = json.loads((ROOT/'Docs/evidence/scene-organization-2026-10-07/protected-source-review.json').read_text())['changes']
         flat_review = json.loads((ROOT/'Docs/evidence/flat-scene-folder-2026-10-07/protected-source-review.json').read_text())['changes']
         merge_review = json.loads((ROOT/'Docs/evidence/single-scene-2026-10-07/protected-source-review.json').read_text())['changes']
-        deformation_review = json.loads((ROOT/'Docs/evidence/deformation-2026-10-08/protected-source-review.json').read_text())['changes']
-        correction_review = json.loads((ROOT/'Docs/evidence/hand-correction-2026-10-08/protected-source-review.json').read_text())['changes']
-        interaction_review = json.loads((ROOT/'Docs/evidence/interaction-2026-10-09/protected-source-review.json').read_text())['changes']
-        self.assertEqual(set(interaction_review), {'Assets/Editor/RehabGateRunner.cs', 'Assets/Rehab/3.2-vision/HandTracking.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs'})
-        self.assertLessEqual(set(correction_review), {'Assets/Editor/RehabIntegrationChecks.cs', 'Assets/Rehab/6.1-bluetooth-integration/LiveForceState.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerContactRig.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/01_Silicone_ball.asset'})
-        self.assertEqual(set(deformation_review), {
-            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ObjectFractureVisuals.cs',
-            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs',
-            *(p.relative_to(ROOT).as_posix() for p in (ROOT/'Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles').glob('*.asset')),
-            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs',
-            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs',
-            'Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs'})
         self.assertEqual(set(merge_review), set(flat_review))
         self.assertEqual(set(flat_review), {'Assets/Editor/ApartmentAuthoring.cs',
             'Assets/Editor/GripUiGalleryAuthoring.cs',
@@ -71,6 +59,16 @@ class HandMateDesignTests(unittest.TestCase):
             'Assets/ProductIntegration/ResearchPortalHost.cs', 'Assets/ProductIntegration/ResearchSessionRuntime.cs',
             'Assets/Rehab/3.4-game-modules/RehabAppShell.cs',
             'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs'})
+        rollback = json.loads((ROOT/'Docs/evidence/rollback-2026-10-12/protected-source-review.json').read_text())['changes']
+        self.assertEqual(set(rollback), {'Assets/Rehab/3.4-game-modules/RehabAppShell.cs', 'Assets/Editor/VirtualGraspAuthoring.cs.meta', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs', 'Assets/Editor/ApartmentVisualPolish.cs', 'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/TutorialCallbacks.cs', 'Assets/com.gleechi.unity.virtualgrasp/Lib/VirtualGrasp.dll', 'Assets/Editor/ApartmentAuthoring.cs', 'Assets/Editor/ApartmentOptionsAuthoring.cs', 'Assets/Editor/ApartmentVisualDiagnostics.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs.meta', 'Assets/Editor/ApartmentMaintenance.cs', 'Assets/Editor/VirtualGraspProjectSettings.cs.meta', 'Assets/Rehab/3.2-vision/HandTracking.cs', 'Assets/Editor/ApartmentCandleBalance.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs', 'Assets/Editor/VisionCameraAuthoring.cs', 'Assets/com.gleechi.unity.virtualgrasp/Samples/Onboarding/Scripts/SimpleImpact.cs', 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs'} )
+        ai_review=json.loads((ROOT/'Docs/evidence/ai-2026-10-22/protected-source-review.json').read_text(encoding='utf-8'))['changes']
+        self.assertEqual(set(ai_review), {
+            'Assets/Product/CapabilityTrial.cs','Assets/Product/CatalogValidation.cs','Assets/Product/ProductModels.cs','Assets/Product/ResearchExport.cs','Assets/Product/ResearchGuidance.cs',
+            'Assets/ProductIntegration/ResearchGuidanceSettings.cs','Assets/ProductIntegration/ResearchPortalHost.cs','Assets/ProductIntegration/ResearchSessionRuntime.cs',
+            'Assets/ProductIntegration/WindowsProductStore.cs','Assets/Resources/ResearchGuidance.asset','Assets/Settings/PC_Renderer.asset','Assets/Settings/PC_RPAsset.asset',
+            'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/1_ProjectSetup/0-ContentSummary.asset',
+            'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/2_ObjectBaking/0-ContentSummary.asset',
+            'Assets/com.gleechi.unity.virtualgrasp/Samples/Tutorials/3_FingerTracking/0-ContentSummary.asset'})
         for path, expected in before.items():
             with self.subTest(path=path):
                 if path in changes:
@@ -89,23 +87,19 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(merge_review[path]['previousSha256'], expected)
                     self.assertTrue(merge_review[path]['reason'])
                     expected = merge_review[path]['currentSha256']
-                if path in deformation_review:
-                    self.assertEqual(deformation_review[path]['previousSha256'], expected)
-                    self.assertTrue(deformation_review[path]['reason'])
-                    expected = deformation_review[path]['currentSha256']
-                if path in correction_review:
-                    self.assertEqual(correction_review[path]['previousSha256'], expected)
-                    self.assertTrue(correction_review[path]['reason'])
-                    expected = correction_review[path]['currentSha256']
-                if path in interaction_review:
-                    self.assertEqual(interaction_review[path]['previousSha256'], expected)
-                    self.assertTrue(interaction_review[path]['reason'])
-                    expected = interaction_review[path]['currentSha256']
+                if path in rollback:
+                    self.assertEqual(rollback[path]['previousSha256'], expected)
+                    self.assertTrue(rollback[path]['reason'])
+                    expected = rollback[path]['currentSha256']
+                if path in ai_review:
+                    self.assertEqual(ai_review[path]['previousSha256'],expected)
+                    self.assertTrue(ai_review[path]['reason'])
+                    expected=ai_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()
         for key, expected in logic.items():
-            self.assertEqual(hashlib.sha256(re.sub(r'^  (?:handContactTolerance: 0\.0015|surfaceGuard: \{fileID: \d+\})\n', '', current[key], flags=re.M).encode()).hexdigest(), expected, key)
+            self.assertEqual(hashlib.sha256(current[key].encode()).hexdigest(), expected, key)
 
     def test_all_three_palettes_have_readable_foregrounds(self):
         for name in ['Dark', 'Light', 'HighContrast']:

@@ -42,7 +42,13 @@ namespace GripRehab
             {
                 using (var file = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None))
                 { file.Write(encrypted, 0, encrypted.Length); file.Flush(true); }
-                if (JsonUtility.ToJson(Read(temporary)) != expected) throw new IOException("Account save did not pass read-back.");
+                // Validate the parsed catalog, then compare decrypted persisted bytes to
+                // the exact JSON we encrypted. Re-serializing floats can change a decimal
+                // representation by one ULP and falsely reject a correct atomic save.
+                Read(temporary);
+                var restored = WindowsProfileProtection.Unprotect(File.ReadAllBytes(temporary));
+                try { if (Encoding.UTF8.GetString(restored) != expected) throw new IOException("Account save did not pass exact-content read-back."); }
+                finally { Array.Clear(restored, 0, restored.Length); }
                 if (File.Exists(path)) File.Replace(temporary, path, path + ".bak");
                 else { File.Move(temporary, path); File.Copy(path, path + ".bak", true); }
             }

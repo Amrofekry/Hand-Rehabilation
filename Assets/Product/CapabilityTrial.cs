@@ -11,12 +11,18 @@ namespace GripRehab.Product
         public InputUnit unit;
         public float value, closure, speed, jitter;
         public bool valid, handValid, synthetic;
+        public float romDegrees; public bool romValid;
         public bool Fresh => valid && Finite(now) && Finite(capturedAt) && now >= capturedAt &&
             now - capturedAt < .5 && Finite(value) && value >= 0 &&
             (unit == InputUnit.Newtons || (unit == InputUnit.ClosureRatio && value <= 1));
         public static bool Finite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
         public bool MotionValid => handValid && Finite(closure) && closure >= 0 && closure <= 1 &&
             Finite(speed) && Finite(jitter) && speed >= 0 && jitter >= 0;
+        // A receiver's missing/default sample is not evidence of a changed
+        // device or calibration. It pauses input but must not latch that fault.
+        public bool ChangesIdentity(TrialSample previous) => Fresh &&
+            (previous.source != source || previous.unit != unit || previous.shape != shape ||
+             previous.calibrationRevision != calibrationRevision || previous.synthetic != synthetic);
     }
     /// <summary>Consented, source-specific research baseline. No inferred MVC from camera data.</summary>
     public sealed class CapabilityTrial
@@ -66,6 +72,11 @@ namespace GripRehab.Product
         public CapabilityProfile Finish()
         {
             if (!Complete) throw new InvalidOperationException(Problem ?? "Keep collecting valid baseline samples.");
+            return Snapshot();
+        }
+        public CapabilityProfile Snapshot()
+        {
+            if (result.acceptedSamples < 2) throw new InvalidOperationException("Insufficient valid samples.");
             if (result.hasForce)
             {
                 result.meanNewtons = (float)(sum / result.acceptedSamples);
@@ -103,7 +114,9 @@ namespace GripRehab.Product
         }
         public WindowFeatures Read(double now, double seconds = 10)
         {
-            var result = new WindowFeatures(); double total = 0, square = 0, jitter = 0; int force = 0, hand = 0;
+            var result = new WindowFeatures();
+            if (!initialized || now < previous.capturedAt || now - previous.capturedAt >= .5) return result;
+            double total = 0, square = 0, jitter = 0; int force = 0, hand = 0;
             if (!TrialSample.Finite(now) || !TrialSample.Finite(seconds) || seconds <= 0) return result;
             for (int i = 0; i < count; i++)
             {

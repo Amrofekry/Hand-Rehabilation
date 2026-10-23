@@ -45,8 +45,8 @@ namespace GripRehab.UI
             yield return SceneManager.LoadSceneAsync("GripUiGallery"); yield return new WaitForSecondsRealtime(.5f);
             var gallery = FindAnyObjectByType<GripUiGallery>();
             Check(gallery != null && gallery.theme != null && gallery.input != null && gallery.progress != null, "Saved sandbox references resolve");
-            Check(FindObjectsByType<EventSystem>().Length == 1, "One EventSystem after scene transition");
-            Check(FindObjectsByType<GripUiGallery>().Length == 1, "One independent UI gallery");
+            Check(FindObjectsByType<EventSystem>(FindObjectsSortMode.None).Length == 1, "One EventSystem after scene transition");
+            Check(FindObjectsByType<GripUiGallery>(FindObjectsSortMode.None).Length == 1, "One independent UI gallery");
             var ambient = FindAnyObjectByType<GripUiAmbientBackground>();
             Check(ambient != null && ambient.layers.Length == 3, "Shared-sprite background is saved");
             var theme = gallery.theme;

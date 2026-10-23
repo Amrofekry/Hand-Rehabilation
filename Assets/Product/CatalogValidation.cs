@@ -25,6 +25,9 @@ namespace GripRehab.Product
                 !Positive(b.forceCv) || !Ratio(b.meanClosure) || !Positive(b.closureStability) ||
                 !Positive(b.motionSpeed) || !Positive(b.motionJitter) || (!b.hasForce && (b.peakNewtons != 0 || b.meanNewtons != 0)))
                 throw new ArgumentException("Invalid baseline values or force provenance.");
+            if(b.baselineProtocol!=null && (!Positive(b.mvcTrial1)||!Positive(b.mvcTrial2)||!Positive(b.mvcTrial3)||!Positive(b.mvcNewtons)||
+                !Positive(b.enduranceSeconds)||b.enduranceSeconds>b.validSeconds||!Ratio(b.closureRange)||!Positive(b.romDegrees)||b.romDegrees>180||
+                (!b.hasForce&&(b.mvcNewtons!=0||b.enduranceSeconds!=0))))throw new ArgumentException("Invalid staged baseline values.");
         }
         public static void Session(SessionRecord s)
         {
@@ -38,13 +41,15 @@ namespace GripRehab.Product
             {
                 if (m == null || !Positive(m.seconds) || m.seconds < prior || m.seconds > s.durationSeconds + .2 || !Unit(m.unit) ||
                     !Positive(m.value) || (m.unit == InputUnit.ClosureRatio && !Ratio(m.value)) || !Ratio(m.handClosure) ||
-                    !Positive(m.motionSpeed) || !Positive(m.motionJitter) || string.IsNullOrWhiteSpace(m.source))
+                    !Positive(m.motionSpeed) || !Positive(m.motionJitter) || string.IsNullOrWhiteSpace(m.source) || !Positive(m.romDegrees)||m.romDegrees>180||
+                    !Ratio(m.emotionConfidence)||!Positive(m.heartRateBpm)||m.heartRateBpm>240||!Positive(m.hrvRmssdMs)||
+                    !Ratio(m.pulseQuality)||!Ratio(m.modelProbability)||!Positive(m.measurementAgeMs)||m.emotionClass < -1||m.emotionClass>6)
                     throw new ArgumentException("Invalid session sample.");
                 prior = m.seconds;
             }
             foreach (var e in s.policyEvents)
                 if (e == null || !Positive(e.seconds) || e.seconds > s.durationSeconds + .2 || e.level < 1 || e.level > 100 ||
-                    e.signs < 0 || e.signs > 3 || string.IsNullOrWhiteSpace(e.settingsVersion)) throw new ArgumentException("Invalid guidance event.");
+                    e.signs < 0 || e.signs > 15 || string.IsNullOrWhiteSpace(e.settingsVersion)) throw new ArgumentException("Invalid guidance event.");
         }
     }
 }

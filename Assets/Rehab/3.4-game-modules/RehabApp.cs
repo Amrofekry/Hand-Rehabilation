@@ -262,6 +262,7 @@ namespace GripRehab
 
         private void Update()
         {
+            _demoForce.Shape = _shape;
             _demoForce.Step(Time.realtimeSinceStartupAsDouble, Time.deltaTime);
             var force = _useLiveForce ? _liveForce.Latest : _demoForce.Latest;
             if (_useLiveForce && _seenForceGeneration != _liveForce.State.Generation)

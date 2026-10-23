@@ -56,7 +56,6 @@ namespace GripRehab
         private long _lastSampleMs = -1;
         private double _expiresAt;
         private double _lastPacketAt = -1;
-        private double _lastProcessedAt = -1;
 
         public void Invalidate(string reason)
         {
@@ -117,19 +116,15 @@ namespace GripRehab
                 var advance = (uint)((uint)frame.sampleMs - (uint)_lastSampleMs);
                 if (advance == 0 || advance >= 0x80000000u) return false;
             }
-            if (_lastProcessedAt >= 0 && now < _lastProcessedAt) return false;
-            // A rendering/physics hitch is not a BLE reconnect when samples
-            // kept arriving. Queue age still consumes the full 500 ms budget.
-            var arrivedAt = now - queueDelaySeconds;
-            if (!changed && _lastPacketAt >= 0 && arrivedAt - _lastPacketAt >= .5)
+            if (_lastPacketAt >= 0 && now < _lastPacketAt) return false;
+            if (!changed && _lastPacketAt >= 0 && now - _lastPacketAt >= .5)
             {
                 Generation++;
                 Invalidate("BLE resumed after a stale gap; start a new session");
             }
             _lastSequence = frame.sequence;
             _lastSampleMs = frame.sampleMs;
-            _lastPacketAt = arrivedAt;
-            _lastProcessedAt = now;
+            _lastPacketAt = now;
             _expiresAt = now + (500 - frame.ageMs) / 1000.0 - queueDelaySeconds;
             SampleMs = frame.sampleMs;
             LastAgeMs = frame.ageMs + (int)(queueDelaySeconds * 1000);
@@ -153,7 +148,7 @@ namespace GripRehab
             _sessionId = sessionId;
             _lastSequence = -1;
             _lastSampleMs = -1;
-            _lastPacketAt = _lastProcessedAt = -1;
+            _lastPacketAt = -1;
         }
 
         public void Tick(double now)

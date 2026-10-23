@@ -28,7 +28,7 @@ namespace GripRehab.Product
             var signs = ResearchSigns.None;
             if (features.forceValid && baseline.hasForce && baseline.meanNewtons > 0 &&
                 features.forceMean < baseline.meanNewtons * (1 - limits.forceDecline)) signs |= ResearchSigns.Force;
-            if (features.motionValid && baseline.hasMotion &&
+            if (features.motionValid && baseline.hasMotion && (baseline.hasStability || baseline.baselineProtocol == null) &&
                 features.jitter > Math.Max(limits.minimumJitter, baseline.motionJitter * limits.jitterRatio)) signs |= ResearchSigns.Motion;
             return signs;
         }

@@ -16,9 +16,16 @@ namespace GripRehab
         GripUiAccessibility accessibility;
         ProductRepository repository;
         SessionRecord session;
-        CapabilityTrial baseline;
+        StagedCapabilityTrial baseline;
+        FatigueSafetyPolicy fatigueSafety;
+        ResearchAiRuntime fatigueAi;
+        ResearchAuxiliaryReceiver auxiliary;
+        bool faceConsent, physiologyConsent, proxyDemo, lastModelValid, sourceFault;
+        float lastModelProbability;
+        TemporalForceWindow aiWindow = new TemporalForceWindow();
+        readonly float[] aiFeatures = new float[400];
+        double nextConsentWrite, nextAiWindow;
         readonly FeatureWindow features = new FeatureWindow();
-        GuidancePolicy policy;
         public ResearchGuidanceSettings guidanceSettings;
         GuidanceLimits limits = new GuidanceLimits();
         CapabilityProfile capability;
@@ -27,10 +34,8 @@ namespace GripRehab
         long demoSequence;
         Vector3 previousWrist, previousVelocity;
         bool hadWrist, collecting, guidance, liveSession, savingFailed, guest;
-        GuidanceState previousPolicyState;
         TrialSample previousInput;
         bool hadInput;
-        int previousLevel;
         public int InputMode { get; private set; } = 0;
         public bool HasAccount => repository?.Current != null;
         public string ProfileId => repository?.Current?.profileId;
@@ -38,6 +43,7 @@ namespace GripRehab
         public bool LiveSession => liveSession;
         public string ScreenTitle { get; private set; }
         public ResearchPortalView View => view;
+        public string LastSaveProblem {get;private set;} = "";
         bool initialized;
         string storageProblem;
         string pendingProfileId;
@@ -201,7 +207,9 @@ namespace GripRehab
             view.Choice("Input source", new[] { "Camera · visual closure estimate", "Keyboard demo · synthetic force", "Phase 2 · calibrated measured force" }, InputMode,
                 selected => { InputMode = selected; Prepare(guest); });
             view.Button(guidance ? "RESEARCH GUIDANCE: ON" : "RESEARCH GUIDANCE: OFF", () => { guidance = !guidance; Prepare(guest); });
-            view.Text("Guidance uses a statistical fallback with unvalidated research thresholds. Camera closure is not force in Newtons.");
+            view.Text("Guidance uses unvalidated research thresholds. The public EMG model is a development proxy, never a device-force model. Camera closure is not force in Newtons.");
+            view.Button("OPTIONAL FACE / PULSE SENSING", SensingConsent);
+            view.Button(proxyDemo ? "SYNTHETIC MODEL DEMO: ON" : "SYNTHETIC MODEL DEMO: OFF",()=>{proxyDemo=!proxyDemo;Prepare(guest);});
             if (!guest) view.Button("COLLECT BASELINE", BaselineConsent);
             view.Button("CHOOSE A MODULE", () => Guard(() => {
                 shell.SetResearchIdentity(guest ? null : ProfileId); view.Hide(); shell.ShowModules();
@@ -213,7 +221,7 @@ namespace GripRehab
         public void ApplyChosenInput() => ApplyInput();
         void BaselineConsent()
         {
-            Show("Baseline consent", "This optional 12-second research trial records derived hand/force metrics locally, without saving camera images. It is not the staged clinical baseline planned for item 3.", () => Prepare(false));
+            Show("Baseline consent", "This optional staged research baseline has three grip trials with rest, followed by motion and endurance stages. It records derived metrics locally without camera images.", () => Prepare(false));
             view.Text("You may cancel at any time. Camera closure is not measured force; Keyboard Demo is synthetic. Consent applies to this trial only.", 110);
             view.Button("I AGREE · START BASELINE", BeginBaseline, true);
             view.Button("NOT NOW", () => Prepare(false));
@@ -222,7 +230,7 @@ namespace GripRehab
             if (!AuthorizeTraining()) return;
             var profile = shell.Store?.Active;
             if (profile != null) shell.experience.SelectHand(profile.affectedHand.StartsWith("Left", StringComparison.OrdinalIgnoreCase));
-            ApplyInput(); baseline = new CapabilityTrial(repository.Current.id, ProfileId, true); collecting = true;
+            ApplyInput(); baseline = new StagedCapabilityTrial(repository.Current.id, ProfileId, true); collecting = true;
             Show("Research baseline", "Step 2 of 3 · follow your usual comfortable hand movement. Camera data is a visual estimate. Keyboard data is synthetic. Stop if uncomfortable.", () => { collecting = false; Dashboard(); });
             view.Progress(); view.Status("Waiting for valid input. Keyboard: hold Space to simulate a squeeze.");
             view.Button("CANCEL BASELINE", () => { collecting = false; Dashboard(); });
@@ -233,7 +241,8 @@ namespace GripRehab
             Show("Baseline summary", "Research reference only. This is not a clinical strength or range-of-motion assessment.", Dashboard);
             view.Text(b == null ? "No baseline collected yet." : b.source + (b.synthetic ? " · SYNTHETIC" : "") + "\nValid samples: " + b.acceptedSamples +
                 (b.hasForce ? "\nPeak: " + b.peakNewtons.ToString("0.0") + " N" : "\nMeasured force: unavailable") +
-                "\nVisual hand data: " + (b.hasMotion ? "available" : "unavailable"), 120);
+                "\nVisual hand data: " + (b.hasMotion ? "available" : "unavailable") +
+                (b.baselineProtocol != null ? (b.hasForce ? "\nGrip reference: " + b.mvcNewtons.ToString("0.0") + " N; endurance: " + b.enduranceSeconds.ToString("0.0") + " s" : "\nForce/endurance: not measured") + "\nVisual ROM span: " + (b.hasRom ? b.romDegrees.ToString("0.0") + " deg (estimate)" : "unavailable") : ""), 200);
             view.Button("PREPARE TO TRAIN", () => Prepare(false), true);
         }
         void ConfirmQuit()
@@ -243,6 +252,7 @@ namespace GripRehab
         }
         void OnDestroy()
         {
+            RevokeSensing(); fatigueAi?.Dispose();
             collecting = false;
             if (liveSession) EndSession(RecordState.Interrupted, 0, false);
             if (view != null) Destroy(view.gameObject);

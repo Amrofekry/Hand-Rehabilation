@@ -9,7 +9,7 @@ using UnityEngine;
 namespace GripRehab
 {
     // The OS BLE stack stays in the Phase 2 Python bridge. Only loopback data is accepted.
-    public sealed class LiveForceReceiver : MonoBehaviour, IForceSource
+    public sealed class LiveForceReceiver : MonoBehaviour, IForceSource, IRehabForceSource
     {
         private readonly ConcurrentQueue<ReceivedDatagram> _pending = new ConcurrentQueue<ReceivedDatagram>();
         private UdpClient _socket;
@@ -21,6 +21,8 @@ namespace GripRehab
 #endif
         public LiveForceState State { get; } = new LiveForceState();
         public ForceReading Latest => State.Latest;
+        public ForceSourceKind Kind => State.Kind;
+        public bool TryGetSample(double now, out ForceSample sample) => State.TryGetSample(now, out sample);
 
         private void OnEnable()
         {

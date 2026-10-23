@@ -27,12 +27,16 @@ namespace GripRehab.Product
         }
         public static string MetricsCsv(SessionRecord session)
         {
-            var text = new StringBuilder("session_id,seconds,source,unit,value,valid,synthetic,shape,calibration_revision,hand_closure,speed,jitter\r\n");
+            var text = new StringBuilder("session_id,seconds,source,unit,value,valid,synthetic,shape,calibration_revision,hand_closure,speed,jitter,sequence,age_ms,rom_deg,rom_valid,face_consented,emotion_class,emotion_confidence,face_valid,pulse_consented,heart_rate_bpm,rmssd_ms,pulse_quality,pulse_valid,hrv_valid,model_probability,model_valid,model_provenance\r\n");
             foreach (var m in session.metrics) text.Append(CsvCell(session.id)).Append(',').Append(Number(m.seconds)).Append(',')
                 .Append(CsvCell(m.source)).Append(',').Append(m.unit).Append(',').Append(Number(m.value)).Append(',')
                 .Append(m.valid ? "true" : "false").Append(',').Append(m.synthetic ? "true" : "false").Append(',')
                 .Append(CsvCell(m.shape)).Append(',').Append(CsvCell(m.calibrationRevision)).Append(',')
-                .Append(Number(m.handClosure)).Append(',').Append(Number(m.motionSpeed)).Append(',').Append(Number(m.motionJitter)).Append("\r\n");
+                .Append(Number(m.handClosure)).Append(',').Append(Number(m.motionSpeed)).Append(',').Append(Number(m.motionJitter)).Append(',')
+                .Append(m.sequence).Append(',').Append(Number(m.measurementAgeMs)).Append(',').Append(m.romValid?Number(m.romDegrees):"").Append(',').Append(m.romValid).Append(',')
+                .Append(m.faceConsented).Append(',').Append(m.faceValid?m.emotionClass.ToString():"").Append(',').Append(m.faceValid?Number(m.emotionConfidence):"").Append(',').Append(m.faceValid).Append(',')
+                .Append(m.pulseConsented).Append(',').Append(m.pulseValid?Number(m.heartRateBpm):"").Append(',').Append(m.hrvValid?Number(m.hrvRmssdMs):"").Append(',').Append(m.pulseValid?Number(m.pulseQuality):"").Append(',')
+                .Append(m.pulseValid).Append(',').Append(m.hrvValid).Append(',').Append(m.modelValid?Number(m.modelProbability):"").Append(',').Append(m.modelValid).Append(',').Append(CsvCell(m.modelProvenance)).Append("\r\n");
             return text.ToString();
         }
         static string Number(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);

@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53976f6e0a8541b43ba5cb6ac3d645b0, type: 3}
+  m_Name: HighContrast
+  m_EditorClassIdentifier: GripRehab.UI::GripRehab.UI.GripUiTheme
+  backdrop: {r: 0, g: 0, b: 0, a: 1}
+  surface: {r: 0, g: 0, b: 0, a: 1}
+  darkSurface: {r: 0, g: 0, b: 0, a: 1}
+  primary: {r: 1, g: 1, b: 0, a: 1}
+  secondary: {r: 1, g: 1, b: 1, a: 1}
+  accent: {r: 1, g: 1, b: 0, a: 1}
+  textOnDark: {r: 1, g: 1, b: 1, a: 1}
+  textOnLight: {r: 1, g: 1, b: 1, a: 1}
+  textOnPrimary: {r: 0, g: 0, b: 0, a: 1}
+  textOnSecondary: {r: 0, g: 0, b: 0, a: 1}
+  mutedOnDark: {r: 1, g: 1, b: 1, a: 1}
+  mutedOnLight: {r: 1, g: 1, b: 1, a: 1}
+  danger: {r: 1, g: 0.666666667, b: 0.666666667, a: 1}
+  warning: {r: 1, g: 1, b: 0, a: 1}
+  success: {r: 0.666666667, g: 1, b: 0.666666667, a: 1}
+  latinFont: {fileID: 12800000, guid: 10277b1e8ba95fb6a9d10ea7fd039581, type: 3}
+  arabicFont: {fileID: 0}
+  displayFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  controlSeconds: 0.14
+  hoverScale: 1.015
+  focusPixels: 4
+  modalOpacity: 0.8
+  hoverToneHz: 540
+  clickToneHz: 720
+  transitionSeconds: 0.28
+  shadowOpacity: 0.18
+  glowOpacity: 0.12
+  gridPixels: 8
+  patientTargetPixels: 64
+  doctorTargetPixels: 44
+  displaySize: 64
+  h1Size: 34
+  h2Size: 26
+  bodySize: 18
+  captionSize: 14
+  headingFont: {fileID: 12800000, guid: e1e724773f347584aadc7321ee43fd6a, type: 3}
+  backdropArtworkTint: {r: 0.345098039, g: 0.415686275, b: 0.501960784, a: 1}

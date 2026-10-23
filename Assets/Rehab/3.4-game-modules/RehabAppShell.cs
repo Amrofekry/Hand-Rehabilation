@@ -225,7 +225,7 @@ namespace GripRehab
             profilePicker.ClearOptions();
             var labels = new List<string>();
             if (Store != null) foreach (var profile in Store.Catalog.profiles)
-                labels.Add(profile.name + "  ·  " + profile.affectedHand + " hand");
+                labels.Add(profile.name + "  \u00b7  " + profile.affectedHand + " hand");
             if (labels.Count == 0) labels.Add("No profiles yet");
             profilePicker.AddOptions(labels);
             if (Store != null && Store.Active != null)
@@ -465,21 +465,21 @@ namespace GripRehab
         void UpdateTelemetry()
         {
             if (telemetry == null && hudValue == null) return;
-            string input = experience.CameraMode ? "CAMERA · VISUAL ESTIMATE" :
+            string input = experience.CameraMode ? "CAMERA \u00b7 VISUAL ESTIMATE" :
                 experience.Hardware ? (experience.ForceValid && experience.forceReceiver.State.IsSynthetic ?
-                    "SYNTHETIC REPLAY" : "PHASE 2 · " + (experience.ForceValid ? "LIVE" : "WAITING")) : "KEYBOARD DEMO";
+                    "SYNTHETIC REPLAY" : "PHASE 2 \u00b7 " + (experience.ForceValid ? "LIVE" : "WAITING")) : "KEYBOARD DEMO";
             if (telemetry != null)
                 telemetry.text = "GRIP REHAB   /   FORCE + OBJECT   /   MODULE 01";
             if (hudRoom == null) return;
             hudRoom.text = choices.Kitchen ? "Kitchen station" : "Living room station";
-            hudHand.text = (experience.LeftSelected ? "LEFT" : "RIGHT") + " HAND  ·  MODULE 01";
+            hudHand.text = (experience.LeftSelected ? "LEFT" : "RIGHT") + " HAND  \u00b7  MODULE 01";
             hudSource.text = input;
             hudValue.text = experience.CameraMode ? (experience.ForceValid ?
                 (experience.CameraGripScore * 100).ToString("F0") : "--") :
                 experience.ForceValid ? experience.ForceNewtons.ToString("F1") : "--";
             hudUnit.text = experience.CameraMode ? "% closure" : "newtons";
             hudObject.text = experience.Held == null ? "OBJECT  /  " + choices.SelectedObject.displayName :
-                "HOLDING  /  " + experience.Held.displayName + "  ·  " +
+                "HOLDING  /  " + experience.Held.displayName + "  \u00b7  " +
                 (experience.Held.MaxDisplacementMeters * 1000).ToString("F1") + " mm";
             hudPrompt.text = experience.player.Paused ? "Choose a room, object and input. Press Resume when ready." :
                 experience.CameraMode ? (experience.ForceValid ?

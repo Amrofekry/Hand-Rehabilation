@@ -69,8 +69,8 @@ namespace GripRehab
             shell = FindAnyObjectByType<RehabAppShell>(); portal = shell.Research;
             Check(portal != null && portal.ScreenTitle == "GRIP / REHAB", "Ordinary journey entry is initialized");
             Check(portal.StorageDirectory.Contains("GripRehab-Journey-") && !portal.StorageDirectory.StartsWith(Application.persistentDataPath, StringComparison.OrdinalIgnoreCase), "Isolated fabricated storage only");
-            Check(FindObjectsByType<ResearchPortalHost>().Length == 1, "One account host");
-            Check(FindObjectsByType<GripRehab.UI.ResearchPortalView>().Length == 1, "One account view");
+            Check(FindObjectsByType<ResearchPortalHost>(FindObjectsSortMode.None).Length == 1, "One account host");
+            Check(FindObjectsByType<GripRehab.UI.ResearchPortalView>(FindObjectsSortMode.None).Length == 1, "One account view");
             var legacy = shell.Store.Create("Fabricated preserved profile", 30, "Prefer not to say", "Right", "Right", "", "", -1);
             shell.Store.SaveCheckpoint(true, 0, 0, false, 1);
             Click("GUEST PRACTICE");
@@ -92,9 +92,9 @@ namespace GripRehab
             Check(portal.ScreenTitle == "Baseline consent", "Baseline requires explicit consent");
             Click("NOT NOW"); Check(repo.LatestBaseline(repo.Current.id) == null, "Declining does not write a baseline");
             Click("COLLECT BASELINE"); Click("I AGREE · START BASELINE");
-            float deadline = Time.realtimeSinceStartup + 25;
+            float deadline = Time.realtimeSinceStartup + 90;
             while (portal.ScreenTitle != "Baseline summary" && Time.realtimeSinceStartup < deadline) yield return null;
-            Check(portal.ScreenTitle == "Baseline summary", "Quick research baseline reaches its saved summary");
+            Check(portal.ScreenTitle == "Baseline summary", "Staged research baseline reaches its saved summary");
             repo = Reload(); repo.SignIn("patient.one", Secret);
             Check(repo.LatestBaseline(repo.Current.id)?.synthetic == true, "Baseline source and consent persist");
             Click("PREPARE TO TRAIN"); Click("CHOOSE A MODULE"); shell.openModuleButton.onClick.Invoke();
@@ -113,7 +113,7 @@ namespace GripRehab
             foreach (var token in tokens) suite.Submit(token);
             Check(portal.ScreenTitle == "Practice complete" && !portal.LiveSession, "Completed task opens result page");
             repo = Reload(); repo.SignIn("patient.one", Secret);
-            Check(repo.Sessions(repo.Current.id).Any(s => s.module == 2 && s.state == RecordState.Completed && s.synthetic), "Completion is saved with its source");
+            Check(repo.Sessions(repo.Current.id).Any(s => s.module == 2 && s.state == RecordState.Completed && s.synthetic), "Completion is saved with its source: " + portal.LastSaveProblem + " / " + string.Join(",", repo.Sessions(repo.Current.id).Select(s=>s.module+":"+s.state+":"+s.synthetic)));
             Check(repo.Sessions(repo.Current.id).Count(s => s.module == 1 && s.state == RecordState.Interrupted) == 2, "Interrupted attempts remain distinct");
             Click("BACK TO MENU"); Click("OPEN DASHBOARD"); Click("PREPARE TO TRAIN"); Click("CHOOSE A MODULE");
             shell.visuomotorLockedButton.onClick.Invoke();
@@ -135,7 +135,7 @@ namespace GripRehab
             Check(shell.CurrentPage == "Game" && shell.choices.Kitchen && !shell.experience.LeftSelected && !shell.experience.CameraMode, "Doctor-linked legacy Continue restores the preserved checkpoint");
             shell.ReturnHome(); Click("OPEN DASHBOARD");
             for (int i = 0; i < 5; i++) { portal.Welcome(); Click("OPEN DASHBOARD"); }
-            Check(FindObjectsByType<ResearchPortalHost>().Length == 1 && FindObjectsByType<GripRehab.UI.ResearchPortalView>().Length == 1, "Repeated navigation never duplicates hosts or views");
+            Check(FindObjectsByType<ResearchPortalHost>(FindObjectsSortMode.None).Length == 1 && FindObjectsByType<GripRehab.UI.ResearchPortalView>(FindObjectsSortMode.None).Length == 1, "Repeated navigation never duplicates hosts or views");
             repo = Reload(); repo.SignIn("patient.one", Secret);
             Check(shell.Store.Catalog.profiles.Any(p => p.id == legacy.id && p.name == legacy.name), "Preserved legacy profile remains unchanged");
             var orphan = repo.Begin(3, 0, true); repo = Reload(); repo.SignIn("patient.one", Secret);

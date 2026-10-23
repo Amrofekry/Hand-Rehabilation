@@ -24,6 +24,8 @@ namespace GripRehab.Product
         public float peakNewtons, meanNewtons, forceCv, validSeconds;
         public float meanClosure, closureStability, motionSpeed, motionJitter;
         public int acceptedSamples, rejectedSamples;
+        public float mvcTrial1, mvcTrial2, mvcTrial3, mvcNewtons, enduranceSeconds, closureRange, romDegrees;
+        public bool hasRom, hasStability; public string baselineProtocol;
     }
     [Serializable] public sealed class MetricRecord
     {
@@ -32,6 +34,12 @@ namespace GripRehab.Product
         public InputUnit unit;
         public bool valid, synthetic;
         public string source, shape, calibrationRevision;
+        public float romDegrees, emotionConfidence, heartRateBpm, hrvRmssdMs, pulseQuality, modelProbability;
+        public float measurementAgeMs;
+        public long sequence;
+        public bool romValid, faceConsented, faceValid, pulseConsented, pulseValid, hrvValid, modelValid;
+        public int emotionClass = -1;
+        public string modelProvenance;
     }
     [Serializable] public sealed class PolicyEvent
     { public double seconds; public string status, reason, settingsVersion; public int level, signs; }

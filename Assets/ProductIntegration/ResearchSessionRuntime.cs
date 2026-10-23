@@ -6,15 +6,19 @@ namespace GripRehab
 {
     public sealed partial class ResearchPortalHost
     {
+        static readonly int[] ResearchFingerStarts = {1,5,9,13,17};
         public bool ModuleStarted(int module, int task)
         {
             if (!LeavingGame()) return false;
             if (!AuthorizeTraining()) return false;
             started = Time.realtimeSinceStartupAsDouble; nextSample = started; nextSave = started + 5;
-            visualHold = 0; hadWrist = false; hadInput = false; features.Clear(); savingFailed = false;
+            visualHold = 0; hadWrist = false; hadInput = false; features.Clear(); savingFailed = false; LastSaveProblem="";
             capability = !guest && HasAccount ? repository.LatestBaseline(repository.Current.id) : null;
-            policy = new GuidancePolicy(limits); previousPolicyState = GuidanceState.Active;
-            previousLevel = policy.Level;
+
+            fatigueSafety = new FatigueSafetyPolicy(guidanceSettings != null ? guidanceSettings.FatigueSnapshot() : new FatigueSafetyConfig { maximumLevel = limits.maximumLevel });
+            nextAiWindow = started; aiWindow.Clear(); sourceFault=false;
+            fatigueAi?.Dispose(); fatigueAi = proxyDemo ? new ResearchAiRuntime() : null; lastModelValid=false;
+
             shell.experience.SetResearchDifficulty(guidance ? limits.minimumLevel : 1, limits.maximumLevel, guidanceSettings != null ? guidanceSettings.maximumHoldSeconds : 5);
             bool synthetic = !shell.experience.CameraMode && !shell.experience.Hardware;
             if (!guest && HasAccount)
@@ -54,21 +58,22 @@ namespace GripRehab
             if (!guest && HasAccount)
             {
                 try { repository.SaveSession(session); }
-                catch (Exception) { savingFailed = true; }
+                catch (Exception error) { savingFailed = true; LastSaveProblem=error.Message; }
             }
-            liveSession = false;
+            liveSession = false; fatigueAi?.Dispose(); fatigueAi=null; lastModelValid=false;
             if (shell != null && shell.experience != null) shell.experience.Release();
             if (show)
             {
                 Show(state == RecordState.Completed ? "Practice complete" : "Take a break", "Your game results are a record of practice, not a clinical assessment.", Welcome);
                 view.Text("Module " + session.module + " · " + state + "\nScore: " + session.score + "/100\nValid input: " + session.validSeconds.ToString("0.0") + " s", 112);
-                view.Text(guest ? "Guest practice was not saved." : savingFailed ? "Saving failed. Keep this screen open and retry." : "Saved locally in protected storage.");
+                view.Text(guest ? "Guest practice was not saved." : savingFailed ? "Saving failed: " + LastSaveProblem + ". Keep this screen open and retry." : "Saved locally in protected storage.");
                 if (savingFailed) view.Button("RETRY SAVE", () => Guard(() => { repository.SaveSession(session); savingFailed = false; Dashboard(); }), true);
                 view.Button("BACK TO MENU", Welcome, !savingFailed);
             }
         }
         void Update()
         {
+            TickSensing(Time.realtimeSinceStartupAsDouble);
             if (!collecting && !liveSession) return;
             double now = Time.realtimeSinceStartupAsDouble;
             if (now < nextSample) return; nextSample = now + .1;
@@ -76,7 +81,7 @@ namespace GripRehab
             if (collecting)
             {
                 baseline.Step(input, .1f); view.SetProgress(baseline.Progress);
-                view.SetStatus(baseline.Problem ?? (input.Fresh ? "Collecting valid samples. Move comfortably; stop if uncomfortable." : "Waiting for fresh input. Keyboard demo: hold Space. Hardware: check calibration/bridge."));
+                view.SetStatus(baseline.Problem ?? (input.Fresh ? baseline.Instruction + " - " + "Collecting valid samples. Move comfortably; stop if uncomfortable." : "Waiting for fresh input. Keyboard demo: hold Space. Hardware: check calibration/bridge."));
                 if (baseline.Complete)
                 {
                     collecting = false;
@@ -86,9 +91,8 @@ namespace GripRehab
             }
             if (session == null) return;
             session.durationSeconds = (float)(now - started);
-            bool changedSource = hadInput && (previousInput.source != input.source || previousInput.unit != input.unit ||
-                previousInput.shape != input.shape || previousInput.calibrationRevision != input.calibrationRevision || previousInput.synthetic != input.synthetic);
-            if (changedSource) { features.Clear(); visualHold = 0; hadWrist = false; }
+            bool changedSource = hadInput && input.ChangesIdentity(previousInput);
+            if (changedSource) { sourceFault=true; lastModelValid=false; aiWindow.Clear(); features.Clear(); visualHold = 0; hadWrist = false; }
             bool unique = input.Fresh && (!hadInput || changedSource || input.sequence > previousInput.sequence);
             if (unique) { previousInput = input; hadInput = true; }
             bool practising = shell.CurrentPage == "Activity" || (shell.CurrentPage == "Game" && !shell.experience.player.Paused);
@@ -98,35 +102,23 @@ namespace GripRehab
                 if (input.unit == InputUnit.Newtons) { session.hasForce = true; session.peakNewtons = Mathf.Max(session.peakNewtons, input.value); }
                 session.meanClosure += (input.closure - session.meanClosure) / Mathf.Max(1, session.validSeconds * 10);
                 features.Add(input);
+                if(input.unit==InputUnit.Newtons) aiWindow.Add(input.capturedAt,input.value,capability!=null && capability.mvcNewtons>0?capability.mvcNewtons:50);
             }
-            else if (policy.State == GuidanceState.Warning && unique) features.Add(input);
+            else if ((fatigueSafety?.State == "warning") && unique) {
+                features.Add(input); if(input.unit==InputUnit.Newtons)aiWindow.Add(input.capturedAt,input.value,capability!=null&&capability.mvcNewtons>0?capability.mvcNewtons:50);
+            }
             if (session.metrics.Count < 1800 && (session.metrics.Count == 0 || now - started - session.metrics[session.metrics.Count - 1].seconds >= 1))
-                session.metrics.Add(new MetricRecord { seconds = now - started, value = input.value, valid = practising && input.Fresh,
-                    unit = input.unit, source = input.source, synthetic = input.synthetic, shape = input.shape,
-                    calibrationRevision = input.calibrationRevision, handClosure = input.closure, motionSpeed = input.speed, motionJitter = input.jitter });
-            if (guidance && session.module == 1 && (practising || policy.State == GuidanceState.Warning))
             {
-                var stats = features.Read(now); bool comparable = capability != null && capability.source == input.source &&
-                    capability.shape == input.shape && capability.calibrationRevision == input.calibrationRevision && capability.unit == input.unit && capability.synthetic == input.synthetic;
-                bool analysing = shell.experience.Held != null || policy.State == GuidanceState.Warning;
-                var signs = comparable && analysing ? StatisticalPredictor.Evaluate(stats, capability, limits) : ResearchSigns.None;
-                policy.Step(now, input.Fresh, comparable && input.Fresh && input.MotionValid && stats.forceValid && stats.motionValid && shell.experience.Held != null, signs);
-                if (policy.Level != previousLevel)
-                {
-                    previousLevel = policy.Level;
-                    shell.experience.SetResearchDifficulty(policy.Level, limits.maximumLevel, guidanceSettings != null ? guidanceSettings.maximumHoldSeconds : 5);
-                    if (session.policyEvents.Count < 500) session.policyEvents.Add(new PolicyEvent { seconds = now - started, status = "Difficulty changed",
-                        reason = "Bounded research hold-duration change", settingsVersion = limits.version, level = policy.Level, signs = (int)policy.Confirmed });
-                }
-                if (policy.State != previousPolicyState)
-                {
-                    previousPolicyState = policy.State;
-                    if (session.policyEvents.Count < 500) session.policyEvents.Add(new PolicyEvent { seconds = now - started, status = policy.State.ToString(),
-                        reason = "Statistical research fallback / " + policy.Confirmed, settingsVersion = limits.version, level = policy.Level, signs = (int)policy.Confirmed });
-                    if (policy.State == GuidanceState.Stopped) { EndSession(RecordState.SafetyStopped, 0, true); return; }
-                    if (policy.State == GuidanceState.Warning) Warning();
-                }
+                var metric=new MetricRecord { seconds = now - started, value = input.value, valid = practising && input.Fresh,
+                    unit = input.unit, source = input.source, synthetic = input.synthetic, shape = input.shape,
+                    calibrationRevision = input.calibrationRevision, handClosure = input.closure, motionSpeed = input.speed, motionJitter = input.jitter };
+                EnrichMetric(metric,input,now);session.metrics.Add(metric);
             }
+            bool comparable = capability != null && capability.source == input.source && capability.shape == input.shape &&
+                capability.calibrationRevision == input.calibrationRevision && capability.unit == input.unit && capability.synthetic == input.synthetic;
+            ApplyFatigueSafety(now, input, practising, comparable);
+            if (!liveSession) return;
+            if (guidance && fatigueSafety != null && fatigueSafety.State != "active") practising = false;
             if (session.module == 1 && practising)
             {
                 if (shell.experience.CameraMode)
@@ -146,22 +138,12 @@ namespace GripRehab
                 }
             }
         }
-        void Warning()
-        {
-            Show("Let's pause for a moment", "One persistent research signal was detected. This is an unvalidated estimate. Resume only when input has settled, or finish now.", () => EndSession(RecordState.Interrupted, 0, true));
-            view.Status("Wait for fresh, settled input before resuming.");
-            view.Button("RESUME WHEN READY", () => {
-                try { policy.Resume(); view.Hide(); shell.ResumeResearchGame(); }
-                catch (InvalidOperationException error) { view.SetStatus(error.Message); }
-            }, true);
-            view.Button("FINISH SESSION", () => EndSession(RecordState.Interrupted, 0, true));
-        }
         TrialSample ReadSample(double now)
         {
             var app = shell.experience;
             var sample = new TrialSample { now = now, capturedAt = now, sequence = ++demoSequence,
                 source = "Keyboard demo", shape = "Demo grip", calibrationRevision = "demo-1", unit = InputUnit.Newtons,
-                value = collecting || (liveSession && policy.State == GuidanceState.Warning) ?
+                value = collecting || (liveSession && fatigueSafety?.State == "warning") ?
                     (Input.GetKey(KeyCode.Space) ? app.settings.demoForceNewtons : 0) : app.ForceNewtons,
                 valid = true, synthetic = true };
             bool handValid = app.vision.TryGetHand(app.LeftSelected ? HandSide.Left : HandSide.Right, now, out var hand);
@@ -172,6 +154,14 @@ namespace GripRehab
                 sample.closure = HandKinematics.GripScore(frame);
                 var wrist = hand.Landmarks[0]; var velocity = hadWrist ? (wrist - previousWrist) / .1f : Vector3.zero;
                 sample.speed = velocity.magnitude; sample.jitter = hadWrist ? (velocity - previousVelocity).magnitude : 0;
+                var points = frame.landmarks;
+                float flexion = 0; int joints = 0;
+                foreach (int first in ResearchFingerStarts)
+                    for (int j = first + 1; j <= first + 2; j++) {
+                        var a = points[j-1]-points[j]; var b = points[j+1]-points[j];
+                        if(a.sqrMagnitude>1e-8f && b.sqrMagnitude>1e-8f){flexion += 180-Vector3.Angle(a,b);joints++;}
+                    }
+                sample.romValid=joints==10; sample.romDegrees=joints>0?flexion/joints:0;
                 previousWrist = wrist; previousVelocity = velocity; hadWrist = true;
             }
             else hadWrist = false;
@@ -192,6 +182,6 @@ namespace GripRehab
             return sample;
         }
         void OnApplicationQuit()
-        { if (liveSession) EndSession(RecordState.Interrupted, 0, false); }
+        { RevokeSensing(); if (liveSession) EndSession(RecordState.Interrupted, 0, false); }
     }
 }

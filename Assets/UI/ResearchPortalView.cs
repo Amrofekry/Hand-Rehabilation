@@ -141,7 +141,7 @@ namespace GripRehab.UI
             label.font = size >= 30 ? theme.HeadingFont : theme.BodyFont; label.fontSize = size;
             label.enableAutoSizing = true; label.fontSizeMin = size; label.fontSizeMax = size * theme.fontScale;
             label.alignment = TextAlignmentOptions.MidlineLeft; label.raycastTarget = false;
-            label.textWrappingMode = TextWrappingModes.Normal; label.richText = false;
+            label.enableWordWrapping = true; label.richText = false;
             Paint(label, GripUiRole.TextOnDark); return label;
         }
         public void Chart(float[] values, string caption)
