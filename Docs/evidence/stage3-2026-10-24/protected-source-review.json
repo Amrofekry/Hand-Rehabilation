@@ -10,6 +10,16 @@
       "previousSha256": "ff44df8891a8f340b692e0e2e94b86464ede5d2ce7373ce752f9f24894dedff0",
       "currentSha256": "7066eeda0ebf0ad56138eb6dc10228d5d2d3f313dfedd04f3cc12a5dc7688c91",
       "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.0: validate level 0..10 and up to 32 finite named outcomes (older records may omit them)."
+    },
+    "Assets/ProductIntegration/ResearchSessionRuntime.cs": {
+      "previousSha256": "48cb9e4479ab3a7dd25a9477dac973a25db4fd5767c488b36904469410b6c035",
+      "currentSha256": "a2cb38851b34182db4dd3ea5a3a84111fa4ebe5315fcb601e39c71164065c1dc",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: Module 1 round-based session (level progression, effort reference, rounds stepped per fresh held sample, outcomes and stars on results; Module 2/3 results show time instead of grip)."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
+      "previousSha256": "f4f23bb33f8a7b5defff3af478e684d56d9713ea6a15644c54e5210b5572adfc",
+      "currentSha256": "22437a23ea34c87f395d2cae46c50af4e0760bc7d8c1b628dde64d708db86241",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: HUD shows round number, type, effort and the current instruction."
     }
   }
 }

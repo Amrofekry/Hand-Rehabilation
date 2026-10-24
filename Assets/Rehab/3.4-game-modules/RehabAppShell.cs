@@ -492,6 +492,18 @@ namespace GripRehab
                     "Waiting for a fresh calibrated Phase 2 force sample.") :
                 experience.Held == null ? "Aim at the object and press E. Hold Space or click to squeeze." :
                     "Hold Space or click to squeeze. Press Q to release.";
+            var rounds = research != null ? research.ForceRounds : null;
+            if (rounds != null && !rounds.Complete)
+            {
+                // Stage 3.1 round HUD: what to do, how far along, and effort against the band.
+                var round = rounds.Current;
+                hudProgressFill.fillAmount = Mathf.Clamp01(round.Fraction);
+                hudProgress.text = "ROUND " + (rounds.RoundIndex + 1) + " / " + rounds.RoundCount + "  ·  " + round.Kind.ToString().ToUpperInvariant() +
+                    "  ·  EFFORT " + Mathf.RoundToInt(research.CurrentEffort * 100) + "%";
+                if (experience.Held != null && !experience.player.Paused)
+                    hudPrompt.text = rounds.Instruction + (round.Breaks > 0 ? "  (cracked " + round.Breaks + "x)" : "") + "\n% of " + research.EffortReferenceLabel;
+                return;
+            }
             float progress = experience.CameraMode ? experience.CameraGripScore :
                 Mathf.Clamp01(experience.ProgressSeconds / experience.RequiredHoldSeconds);
             hudProgressFill.fillAmount = progress;

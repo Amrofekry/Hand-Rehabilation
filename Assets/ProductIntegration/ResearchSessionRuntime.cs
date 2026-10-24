@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using GripRehab.Product;
 using UnityEngine;
 
@@ -7,6 +9,29 @@ namespace GripRehab
     public sealed partial class ResearchPortalHost
     {
         static readonly int[] ResearchFingerStarts = {1,5,9,13,17};
+        // Stage 3.1: Module 1 is a round-based game; effort is force or closure over a reference.
+        ForceRoundSession forceRounds; float effortReference = 1;
+        public ForceRoundSession ForceRounds => liveSession && session != null && session.module == 1 ? forceRounds : null;
+        public float CurrentEffort { get; private set; }
+        public string EffortReferenceLabel { get; private set; } = "";
+        /// <summary>Between-session progression from this player's last completed attempt (guests start at 1).</summary>
+        public int LevelFor(int module, int task)
+        {
+            if (guest || !HasAccount) return ExerciseTuning.MinLevel;
+            var last = repository.Sessions(repository.Current.id)
+                .Where(s => s.module == module && s.task == task && s.state == RecordState.Completed)
+                .OrderBy(s => s.startedUtc, StringComparer.Ordinal).LastOrDefault();
+            return last == null ? ExerciseTuning.MinLevel : ExerciseTuning.NextLevel(last.level > 0 ? last.level : 1, last.score);
+        }
+        void BeginForceRounds(int level)
+        {
+            forceRounds = new ForceRoundSession(ExerciseTuning.Force(level)); CurrentEffort = 0;
+            var app = shell.experience;
+            if (app.CameraMode) { effortReference = 1; EffortReferenceLabel = "hand closure"; }
+            else if (capability != null && capability.hasForce && capability.mvcNewtons > 1 && capability.unit == InputUnit.Newtons)
+            { effortReference = capability.mvcNewtons; EffortReferenceLabel = "your baseline " + capability.mvcNewtons.ToString("0") + " N"; }
+            else { effortReference = app.Hardware ? 50 : 40; EffortReferenceLabel = (app.Hardware ? "50" : "40") + " N demo reference"; }
+        }
         public bool ModuleStarted(int module, int task)
         {
             if (!LeavingGame()) return false;
@@ -27,13 +52,16 @@ namespace GripRehab
                 catch (Exception error) { Show("Practice could not start", "Protected storage: " + error.Message, Welcome); view.Button("BACK TO MENU", Welcome, true); return false; }
             }
             else session = new SessionRecord { id = Guid.NewGuid().ToString("N"), module = module, task = task, synthetic = synthetic, startedUtc = DateTime.UtcNow.ToString("O") };
+            session.level = LevelFor(module, task);
+            if (module == 1) BeginForceRounds(session.level); else forceRounds = null;
             liveSession = true; view.Hide();
             return true;
         }
-        public void ExerciseCompleted(int score, float seconds)
+        public void ExerciseCompleted(int score, float seconds, List<OutcomeMetric> outcomes = null)
         {
             if (!liveSession) return;
-            session.durationSeconds = seconds; EndSession(RecordState.Completed, score, true);
+            session.durationSeconds = seconds; if (outcomes != null) session.outcomes = outcomes;
+            EndSession(RecordState.Completed, score, true);
         }
         public bool LeavingGame()
         {
@@ -65,11 +93,20 @@ namespace GripRehab
             if (show)
             {
                 Show(state == RecordState.Completed ? "Practice complete" : "Take a break", "Your game results are a record of practice, not a clinical assessment.", Welcome);
-                view.Text("Module " + session.module + " · " + state + "\nScore: " + session.score + "/100\nActive grip: " + session.activeSeconds.ToString("0.0") + " s · input available: " + session.validSeconds.ToString("0.0") + " s", 112);
+                view.Text("Module " + session.module + " · level " + session.level + " · " + state + "\nScore: " + session.score + "/100" + Stars(session) +
+                    (session.module == 1 ? "\nActive grip: " + session.activeSeconds.ToString("0.0") + " s · input available: " + session.validSeconds.ToString("0.0") + " s" :
+                    "\nTime: " + session.durationSeconds.ToString("0.0") + " s"), 112);
+                if (session.outcomes != null && session.outcomes.Count > 0)
+                    view.Text(string.Join("\n", session.outcomes.Where(o => o.key != "stars").Select(o => o.label + ": " + o.value.ToString("0.##") + (string.IsNullOrEmpty(o.unit) ? "" : " " + o.unit))), 30 + 26 * session.outcomes.Count);
                 view.Text(guest ? "Guest practice was not saved." : savingFailed ? "Saving failed: " + LastSaveProblem + ". Keep this screen open and retry." : "Saved locally in protected storage.");
                 if (savingFailed) view.Button("RETRY SAVE", () => Guard(() => { repository.SaveSession(session); savingFailed = false; Dashboard(); }), true);
                 view.Button("BACK TO MENU", Welcome, !savingFailed);
             }
+        }
+        static string Stars(SessionRecord record)
+        {
+            var stars = record.outcomes?.FirstOrDefault(o => o.key == "stars");
+            return stars == null ? "" : "  ·  " + new string('*', (int)stars.value) + " of 3 stars";
         }
         void Update()
         {
@@ -92,7 +129,7 @@ namespace GripRehab
             if (session == null) return;
             session.durationSeconds = (float)(now - started);
             bool changedSource = hadInput && input.ChangesIdentity(previousInput);
-            if (changedSource) { sourceFault=true; lastModelValid=false; aiWindow.Clear(); features.Clear(); visualHold = 0; hadWrist = false; }
+            if (changedSource) { sourceFault=true; lastModelValid=false; aiWindow.Clear(); features.Clear(); visualHold = 0; hadWrist = false; if (session.module == 1) BeginForceRounds(session.level); }
             bool unique = input.Fresh && (!hadInput || changedSource || input.sequence > previousInput.sequence);
             if (unique) { previousInput = input; hadInput = true; }
             bool practising = shell.CurrentPage == "Activity" || (shell.CurrentPage == "Game" && !shell.experience.player.Paused);
@@ -120,12 +157,13 @@ namespace GripRehab
             ApplyFatigueSafety(now, input, practising, comparable);
             if (!liveSession) return;
             if (guidance && fatigueSafety != null && fatigueSafety.State != "active") practising = false;
-            if (session.module == 1 && practising)
+            if (session.module == 1 && practising && forceRounds != null)
             {
-                if (shell.experience.CameraMode)
-                    visualHold = input.Fresh && shell.experience.Held != null && input.closure >= .6f ? visualHold + (unique ? .1f : 0) : 0;
-                if ((!shell.experience.CameraMode && shell.experience.ProgressSeconds >= shell.experience.RequiredHoldSeconds) || visualHold >= shell.experience.RequiredHoldSeconds)
-                { EndSession(RecordState.Completed, 100, true); return; }
+                // Rounds only advance while an object is held, one step per fresh 10 Hz sample.
+                CurrentEffort = input.Fresh ? input.value / Mathf.Max(1e-3f, effortReference) : 0;
+                if (unique && input.Fresh && shell.experience.Held != null) forceRounds.Step(CurrentEffort, .1f);
+                if (forceRounds.Complete)
+                { session.outcomes = forceRounds.Outcomes(); EndSession(RecordState.Completed, forceRounds.Score, true); return; }
             }
             if (!guest && HasAccount && now >= nextSave)
             {
