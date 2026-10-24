@@ -187,6 +187,40 @@ Commits `ab48c0a`..`108ec59`. Evidence: `Docs/evidence/stage3-2026-10-24/` (logs
 - **No Obi Softbody/Fluid:** in-house deformation plus `SqueezeLiquid`.
 - **The avatar is a 2D stylised hand on the exercise card**, not a 3D character.
 
+### Stage 3 hands-on playtest (24 Oct 2026, camera-free build copy, keyboard/mouse)
+
+All five exercises were played end to end in the Windows build. Your LocalLow data was backed up and restored byte-for-byte (11/11 SHA-256), and the camera stayed off.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S3-01 | **S2** | Module 1 Control round counted a crack on every 10 Hz sample while over the limit ("cracked 13x" from one 1.2 s slip, −15 each) | One crack per crossing; new offline test (product 58/58) |
+| S3-02 | S3 | Memory cue "MEMORISE 3 3 4 3" spelled the answer as numbers over the gesture avatar | Cue reads "MEMORISE THE GESTURES" |
+| S3-03 | S4 | Gesture strip left-aligned for short patterns | Centred on the pattern length (seen in player) |
+| S3-04 | S4 | White glyph on the bright active tile was hard to read | Glyph turns dark on highlighted tiles |
+| S3-05 | S3 | Results showed "*** of 3 stars", "Level" twice and a large gap | "n of 3 stars", level once, tighter spacing (seen in player) |
+| S3-06 | **S2** | Assembly outlines rendered as solid blocks, and placed pieces vanished behind them. Unity's UI `Outline` effect copies the whole image. | Outlines drawn as real frames; placed piece on top (seen in player) |
+| S3-07 | S3 | Assembly, trace and maze boards were invisible: inferred theming painted them the card colour | Boards tagged with the Secondary theme role (seen in player) |
+| S3-08 | S3 | Cue line clipped; boards overlapped it | Taller cue, boards lowered (seen in player) |
+| S3-09 | S3 | Maze corridors were the card colour, so only walls showed; then direction buttons vanished on the new board colour | Corridor colour plus darker button surface (seen in player) |
+| S3-10 | S3 | Results page replaced the board the instant an exercise finished | 1.4 s visible completion hold; EditMode verification checks it |
+| S3-11 | S4 | Module card copy still says "accessible buttons and keys" | **Open**: text lives in the protected saved scene; change with Stage 4 UI work |
+| S3-12 | S4 | Module 1 HUD has no visual target-band gauge, and the force digits still use the slashed-zero font (P-006) | **Open**: Stage 4 presentation |
+| T-002 | process | Computer use warps the pointer and clicks within one frame; Unity sometimes misses the first click on a newly shown page | Hover before clicking in future playtests; real mice are unaffected |
+| T-003 | process | Focus thieves on this machine (ScreenRec, PC Manager) pause the game's focused-only timers; one gallery run stalled and passed on rerun | Noted; not a game defect |
+
+**Played and confirmed:**
+- **Module 1:** three rounds (Hold → Control → Pulse) with HUD instructions, and a results page with all metrics.
+- **Sequence Memory:** avatar demonstration, then button answers, then results.
+- **Assembly:** completed both by dragging and by tapping.
+- **Tracing:** 100% when following the line; a deliberate detour lowers accuracy.
+- **Maze:** moves and wall contacts scored.
+
+**Final build:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74 checks, plus 10 model checks each; UI 60 checks at each of 2 sizes; gallery 87 at each of 3 (on rerun).
+- **Unity test runner:** EditMode 5/5.
+- **Offline C#:** product 58, tracking 177.
+- **Python:** Tools 66, bridges 8, WBS 45, AI 32.
+
 ## 7. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

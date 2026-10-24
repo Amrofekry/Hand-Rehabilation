@@ -10,7 +10,7 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–3 are done (Stage 3 hands-on playtest pending); details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–6. Stage 4 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–3 are done, including the Stage 3 hands-on playtest and its fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–6. Stage 4 needs authorization. |
 
 ## Evidence columns
 

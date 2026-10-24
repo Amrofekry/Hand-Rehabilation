@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "E:\GP\codex\GripRehab-Unity\Tools\run_gallery_checks.py", line 41, in <module>
+    results = [run(w, h) for w, h in ((1280, 720), (1280, 800), (1024, 768))]
+               ^^^^^^^^^
+  File "E:\GP\codex\GripRehab-Unity\Tools\run_gallery_checks.py", line 18, in run
+    code = process.wait(timeout=100)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1593, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['E:\\GP\\codex\\GripRehab-Unity\\Builds\\Windows\\GripRehab.exe', '-apartment-gallery-smoke', '-force-d3d11', '-screen-fullscreen', '0', '-screen-width', '1280', '-screen-height', '800', '-logFile', 'E:\\GP\\codex\\GripRehab-Unity\\Logs\\gallery-1280x800.log']' timed out after 100 seconds

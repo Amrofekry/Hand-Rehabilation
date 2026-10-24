@@ -1,0 +1,16 @@
+smoke exit=0
+{"mode": "smoke", "passed": true, "game_checks": 168, "model_assertions": 10, "onnx_difference": 7.450580596923828e-09}
+replay exit=0
+{"mode": "replay", "passed": true, "game_checks": 169, "model_assertions": 10, "onnx_difference": 7.450580596923828e-09}
+journey exit=0
+{"mode": "journey", "passed": true, "game_checks": 74, "model_assertions": 10, "onnx_difference": 7.450580596923828e-09}
+ui exit=0
+gallery exit=1
+tools: OK
+bridges: OK
+wbs: 45 passed in 0.87s
+ai: 32 passed in 12.33s
+offline exit=0
+RESULT 58 passed, 0 failed; fabricated f
+RESULT 177 passed, 0 failed; production 
+gallery rerun exit=0

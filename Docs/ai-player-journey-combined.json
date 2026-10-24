@@ -81,17 +81,17 @@
       "No logged native runtime errors"
     ],
     "detail": "",
-    "utc": "2026-10-24T10:42:59.0044657Z",
+    "utc": "2026-10-24T12:04:25.0671802Z",
     "scope": "Native uGUI journey; fabricated accounts and input; no live camera/hardware"
   },
   "packaged_model": {
     "passed": true,
     "assertions": 10,
     "unity": "2022.3.20f1",
-    "utc": "2026-10-24T10:41:53.9555998Z",
+    "utc": "2026-10-24T12:03:15.0472510Z",
     "error": "",
     "onnxDifference": 7.450580596923828e-09,
-    "inferenceP50Ms": 0.19310000000000002,
-    "inferenceP95Ms": 0.3183
+    "inferenceP50Ms": 0.36460000000000004,
+    "inferenceP95Ms": 0.6283000000000001
   }
 }
