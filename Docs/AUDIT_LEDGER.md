@@ -161,7 +161,33 @@ New items found during Stage 2:
 | P-026 | S4 | Module 2/3 results show "Active grip 0.0 s", which isn't meaningful for non-grip tasks | Stage 6 |
 | T-001 | process | Computer-use screenshots can land several seconds after an action. Timed UI states (reveals, countdowns) must be checked with logs or a long-lived state, not one screenshot | Noted for Stage 3+ audits |
 
-## 6. Severity summary and Stage 2 entry list (Stage 1)
+## 6. Stage 3 gameplay pass (24 Oct 2026)
+
+Commits `ab48c0a`..`108ec59`. Evidence: `Docs/evidence/stage3-2026-10-24/` (logs, per-file protected-change record and the `update_review.py` recorder). Level 1 of every exercise is the original content, so earlier checks and checkpoints keep their meaning.
+
+| Plan task | Delivered | Verified by |
+|---|---|---|
+| 3.0 Shared contract | `ExerciseTuning`: one 1–10 level per exercise plus between-session progression (≥85 → up, <50 → down). Sessions store `level` and a validated list of named `outcomes`. | 7 offline tests |
+| 3.1 Module 1 | `ForceRoundSession`: Hold, Control (over-squeeze cracks and restarts the round) and Pulse rounds on effort ÷ reference (baseline peak, else labelled 40 N keyboard / 50 N hardware demo, or camera closure); 30 s round timeout; score, stars and the PDF metrics (peak effort, time in band, in-band CV, time to target, over-squeezes). HUD shows round, type, effort and instruction; results show level, stars and metrics. | 5 offline tests; native compile; player suites |
+| 3.2 Module 2 | Sequence Memory: stylised hand avatar demonstrates each gesture (Open/Fist/Point/Pinch); answers by camera gesture (`GestureClassifier` + 0.4 s `GestureStabilizer`), gesture buttons or keys 1–4; length 4–8 by level; fresh seed per attempt (A-015 fixed). Spatial Assembly: drag pieces onto matching outlines or tap piece then outline; placement error, path efficiency and speed. | Offline gesture and assembly tests; EditMode run completes memory by camera gestures and assembly by tapping |
+| 3.3 Module 3 | Maze: tile board, gliding avatar, green goal, red flash on wall contact; seeded generated mazes from level 2 (5×5 to 13×13) scored on route efficiency. Tracing: dashed route, numbered waypoints, green/red trail; routes and tolerance by level; mean deviation recorded. | Offline maze/trace tests; EditMode solves a level-5 maze at 100 |
+| 3.4 Deformation | `SqueezeLiquid`: sponge drips water and tomato drips juice in proportion to compression, and the tomato bursts when broken. In-house stand-in for the Obi Fluid role, visual only. | EditMode guard on the authored URP particle material |
+
+**Results on the Stage 3 build:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74 checks, plus 10 model checks each; UI 60 checks at each of 2 sizes; gallery 87 at each of 3.
+- **Unity test runner:** EditMode 5/5.
+- **Offline C#:** product 57, tracking 177, all 16 offline checks.
+- **Python:** Tools 66, bridges 8, WBS 45, AI 32.
+- **P-026** (Module 2/3 "Active grip 0.0 s") is fixed: those results now show time instead.
+
+**Not yet done:**
+- **Hands-on playtest of the new screens is PENDING.** Computer use was held by another Claude session at the end of Stage 3. Layout, readability and feel of the new Module 1 HUD and the Module 2/3 boards have been checked only by code and automated runs, not by eye. Do this first in the Stage 3 review or at the start of Stage 4.
+- **Grip-shape mapping (Sphere/Cylinder/Pencil → objects)** is not implemented: the apartment has no pencil-like object asset. The six objects remain selectable for every grip.
+- **No YOLO model:** gestures come from the landmark classifier (G06 substitute, documented).
+- **No Obi Softbody/Fluid:** in-house deformation plus `SqueezeLiquid`.
+- **The avatar is a 2D stylised hand on the exercise card**, not a 3D character.
+
+## 7. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
 - **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.

@@ -2,7 +2,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-10-23T19:56:24.6799820Z",
+    "utc": "2026-10-24T10:43:07.8869100Z",
     "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
     "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
     "checks": [
@@ -74,9 +74,9 @@
       {
         "screen": "Home",
         "frames": 300,
-        "averageMs": 3.8549959659576416,
-        "p95Ms": 7.9546003341674805,
-        "averageFps": 259.4036560058594,
+        "averageMs": 2.299999237060547,
+        "p95Ms": 3.25819993019104,
+        "averageFps": 434.7827453613281,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -86,9 +86,9 @@
       {
         "screen": "Appearance",
         "frames": 300,
-        "averageMs": 3.7419233322143555,
-        "p95Ms": 8.758500099182129,
-        "averageFps": 267.24224853515625,
+        "averageMs": 2.442202568054199,
+        "p95Ms": 3.6659998893737793,
+        "averageFps": 409.4664306640625,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -112,7 +112,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-10-23T19:56:35.7919961Z",
+    "utc": "2026-10-24T10:43:17.1399981Z",
     "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
     "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
     "checks": [
@@ -184,9 +184,9 @@
       {
         "screen": "Home",
         "frames": 300,
-        "averageMs": 3.5122554302215576,
-        "p95Ms": 5.247600078582764,
-        "averageFps": 284.71734619140625,
+        "averageMs": 2.794025421142578,
+        "p95Ms": 3.7309999465942383,
+        "averageFps": 357.90655517578125,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -196,9 +196,9 @@
       {
         "screen": "Appearance",
         "frames": 300,
-        "averageMs": 3.6240296363830566,
-        "p95Ms": 5.310200214385986,
-        "averageFps": 275.9359436035156,
+        "averageMs": 2.815772771835327,
+        "p95Ms": 3.738600015640259,
+        "averageFps": 355.1423034667969,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,

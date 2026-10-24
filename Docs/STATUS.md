@@ -10,7 +10,7 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–2 are done; the findings and Stage 2 outcomes are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md). Stage 3 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–3 are done (Stage 3 hands-on playtest pending); details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–6. Stage 4 needs authorization. |
 
 ## Evidence columns
 
@@ -27,9 +27,9 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | 3 | Staged 54 s baseline (4.1) | Implemented | Passed (fixtures) | None; no real force | `../ai-engine/reports/FINAL_REPORT.md` |
 | 4 | Vision metrics and gestures, YOLO (3.2) | Partial | MediaPipe path regression-checked | Live human trial not done (B05) | `HANDS_AND_MEDIAPIPE_AR.md` |
 | 5 | Deformation and grasp profiles (3.3) | Partial (earlier prototype; soft-body withdrawn) | Regression-checked | None | `DEFORMATION_ITEM_5.md` (history) |
-| 6 | Module 1 Force-Object (3.4.1) | Partial | Rounds/results checked | None | `player-checks.json` |
-| 7 | Module 2 Cognitive (3.4.2) | Prototype | Playable | None | `RehabExerciseSuite.cs` |
-| 8 | Module 3 Visuomotor (3.4.3) | Prototype | Playable | None | `RehabExerciseSuite.cs` |
+| 6 | Module 1 Force-Object (3.4.1) | Implemented: rounds (hold/control/pulse), levels, metrics, squeeze liquid | Rounds/results checked | None | `player-checks.json` |
+| 7 | Module 2 Cognitive (3.4.2) | Implemented: avatar gesture memory (camera/buttons/keys), drag assembly, levels | Playable | None | `RehabExerciseSuite.cs` |
+| 8 | Module 3 Visuomotor (3.4.3) | Implemented: generated mazes, guided tracing with green/red trail, levels | Playable | None | `RehabExerciseSuite.cs` |
 | 9 | 10 Hz feature windows and CSV export (4.2) | Implemented | Passed (40/40 synthetic packets) | No device data | FINAL_REPORT |
 | 10 | Seven-class facial model, opt-in (3.2/4.2) | Implemented | Passed (synthetic) | Accuracy not validated | FINAL_REPORT |
 | 11 | rPPG HR/HRV, opt-in (3.2/4.2) | Implemented | Passed (synthetic signals) | No reference-sensor validation | FINAL_REPORT |
