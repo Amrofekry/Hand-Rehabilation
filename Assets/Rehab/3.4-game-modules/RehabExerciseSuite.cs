@@ -155,7 +155,8 @@ namespace GripRehab
             }
             Button("How to play", card, new Vector2(0, -292), new Vector2(190, 52), "HOW TO PLAY", () => ShowTutorial(true));
             tutorial = Rect("How to play card", card, Vector2.zero, new Vector2(1320, 690)).gameObject;
-            tutorial.AddComponent<Image>().color = new Color(Deep.r, Deep.g, Deep.b, .97f);
+            // Fully opaque: in linear colour space a 3% leak shows board text at roughly 20% brightness.
+            tutorial.AddComponent<Image>().color = Deep;
             tutorialTitle = Label("Tutorial title", tutorial.transform, new Vector2(0, 170), new Vector2(1000, 60), 32, White);
             tutorialBody = Label("Tutorial body", tutorial.transform, new Vector2(0, 20), new Vector2(980, 220), 21, Muted);
             Button("Got it", tutorial.transform, new Vector2(0, -170), new Vector2(260, 64), "GOT IT", () => CloseTutorial(true));

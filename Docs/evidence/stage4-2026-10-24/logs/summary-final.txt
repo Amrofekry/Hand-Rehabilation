@@ -1,0 +1,8 @@
+Stage 4 final suite results (24 Oct 2026, after the by-eye review fixes)
+Windows player (Builds/Windows/GripRehab.exe, rebuilt): smoke 168, replay 169, journey 74 game checks, each with 10 model assertions; all passed
+UI checks: passed at 1280x720 and 1600x900
+Gallery checks: 87 checks at each of 3 sizes; passed
+Unity EditMode test runner: 6/6 passed (Logs/editmode-results.xml)
+Offline C# harness: product 58, tracking 177, keyboard 72, grasp 67, deformation 61, hand rig 107; all passed
+Python: Tools 66, bridges 8, WBS 45, AI 32; all passed
+Scope: synthetic or fixture input only. No physical hardware, camera or participant was used.

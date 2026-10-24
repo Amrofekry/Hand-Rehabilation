@@ -1,6 +1,6 @@
 # GripRehab status: single source of truth
 
-Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history.
+Updated 2026-10-24 (Gantt W6). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history.
 
 | Item | Current value |
 |---|---|
@@ -10,7 +10,7 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–3 are done, including the Stage 3 hands-on playtest and its fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–6. Stage 4 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–4 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–7. Stage 5 needs authorization. |
 
 ## Evidence columns
 
@@ -27,7 +27,7 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | 3 | Staged 54 s baseline (4.1) | Implemented | Passed (fixtures) | None; no real force | `../ai-engine/reports/FINAL_REPORT.md` |
 | 4 | Vision metrics and gestures, YOLO (3.2) | Partial | MediaPipe path regression-checked | Live human trial not done (B05) | `HANDS_AND_MEDIAPIPE_AR.md` |
 | 5 | Deformation and grasp profiles (3.3) | Partial (earlier prototype; soft-body withdrawn) | Regression-checked | None | `DEFORMATION_ITEM_5.md` (history) |
-| 6 | Module 1 Force-Object (3.4.1) | Implemented: rounds (hold/control/pulse), levels, metrics, squeeze liquid | Rounds/results checked | None | `player-checks.json` |
+| 6 | Module 1 Force-Object (3.4.1) | Implemented: rounds (hold/control/pulse), levels, metrics, squeeze liquid, effort gauge, synthesised feedback sounds | Rounds/results checked; sounds checked by EditMode synthesis test | None; sounds not listened to | `player-checks.json`, `evidence/stage4-2026-10-24/` |
 | 7 | Module 2 Cognitive (3.4.2) | Implemented: avatar gesture memory (camera/buttons/keys), drag assembly, levels | Playable | None | `RehabExerciseSuite.cs` |
 | 8 | Module 3 Visuomotor (3.4.3) | Implemented: generated mazes, guided tracing with green/red trail, levels | Playable | None | `RehabExerciseSuite.cs` |
 | 9 | 10 Hz feature windows and CSV export (4.2) | Implemented | Passed (40/40 synthetic packets) | No device data | FINAL_REPORT |
@@ -40,7 +40,7 @@ Updated 2026-10-23 (Gantt W6). If another document disagrees with this file, thi
 | 16 | Doctor dashboard (5.2) | Partial | Retained checks | None | `JOURNEY_ITEM_2.md` |
 | 17 | Protected records, recovery, CSV (5.x) | Partial | DPAPI readback fixed and checked | Not a validated medical record system | FINAL_REPORT |
 | 18 | Phase 2 force envelope and BLE bridge (2.4/6.1) | Partial | Synthetic replay passed | **No Nano/HX711 hardware (B02)** | `BLE_INTEGRATION.md` |
-| 19 | English UI, controls, hand pointer (3.4) | Partial | 60 UI checks / 87 gallery checks (6 Oct, Unity 6 build) | Human accessibility not tested | `UI_COMPLETION_CHECKLIST.md` |
+| 19 | English UI, controls, hand pointer (3.4) | Partial: plus first-run tutorials, audio and hand-tone settings (Stage 4) | UI checks pass at 2 sizes / 87 gallery checks at 3 sizes (24 Oct, 2022.3 build) | Human accessibility not tested | `UI_COMPLETION_CHECKLIST.md`, `evidence/stage4-2026-10-24/` |
 | 20 | Automated verification (6.2) | Partial | Windows smoke/replay/rendered/journey passed (22 Oct) | Full-game FPS/GC and camera latency not measured | `evidence/ai-2026-10-22/` |
 | 21 | Documentation and evidence (6.3) | Partial | n/a | n/a | this file |
 | 22 | Voice commands | Future (deferred, D4) | — | — | — |

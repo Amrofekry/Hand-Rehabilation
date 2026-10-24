@@ -221,7 +221,54 @@ All five exercises were played end to end in the Windows build. Your LocalLow da
 - **Offline C#:** product 58, tracking 177.
 - **Python:** Tools 66, bridges 8, WBS 45, AI 32.
 
-## 7. Severity summary and Stage 2 entry list (Stage 1)
+## 7. Stage 4 presentation pass (24 Oct 2026)
+
+Commit `cea20a8` plus the review fixes below. Plan tasks 4.1–4.4.
+
+| Task | Delivered | Evidence |
+|---|---|---|
+| 4.1 Lighting / rendering | Realtime reflection probes at the seats, warm grade on a runtime copy of the post-process profile (white balance, saturation, exposure, bloom threshold) | Seen in player; reflections and grade judged by eye only |
+| 4.2 Hand / object materials | Virtual hand tone setting: GLOVE, LIGHT, MEDIUM (default) or DEEP, tinting a runtime copy of the hand material | DEEP seen in Module 1 |
+| 4.3 Audio | `RehabAudio`: six synthesised effects (success, error, crack, bump, chime, squish), step tick, squeeze creak loop and room tone. Hooked to rounds, answers, waypoints, maze, assembly and breaks. Mute, effects volume and ambience settings are stored per computer. | `RehabAudioVerification` (EditMode): every sound present, audible, unclipped, no NaN, loops start and end silent |
+| 4.4 UI/UX | Module 1 effort gauge with target band and red over-limit marker, readable force digits (closes S3-12 / P-006), new module card copy (closes S3-11), first-run HOW TO PLAY card for each Module 2/3 exercise, larger off-path trace dots, maze snaps under Reduce Motion | Seen in player (screenshots in `evidence/stage4-2026-10-24/play/`) |
+
+### Stage 4 by-eye review (24 Oct 2026, camera-free build copy, keyboard/mouse)
+
+Your LocalLow data was backed up and restored byte-for-byte (11/11 SHA-256, identical file list). Four game preferences created during the review (hand tone and three tutorial flags) were deleted afterwards.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S4-01 | S3 | HOW TO PLAY card let the board text show through at about 20% brightness. The card was 97% opaque, and in linear colour space a 3% leak of white text is clearly visible. | Card made fully opaque. Rebuilt; EditMode and player suites pass. Not re-seen by eye. |
+| S4-02 | S3 | Every Appearance toggle rebuilt the page scrolled to the top, so the new rows at the bottom needed scrolling again after each click | Settings keep their scroll position (`ResearchPortalView.ScrollPosition`, `SettingsAt`). Rebuilt; suites pass. Not re-seen by eye. |
+| S4-03 | S4 | While squeezing, the HUD showed "Silicone ball · 0.0 mm" in one frame: the fist had closed beside the ball, not around it, so no finger contact dented the mesh | **Open** (grip-contact behaviour, not presentation). Apartment acceptance still proves >3 mm dents at demo force. Revisit with Stage 5/7 grip work. |
+
+**Seen and confirmed in the player:**
+- Appearance rows for game sounds, effects volume, room ambience and virtual hand; the hand tone cycles.
+- Module cards show the new copy.
+- Module 1: readable digits, gauge marker inside the green band at 45% effort, DEEP hand tone, three rounds through to results (2 of 3 stars, outcomes listed).
+- The tutorial card appears on first entry to Sequence Memory, Visual Tracing and Maze, pauses the reveal and timers, and GOT IT dismisses it.
+- Tracing: small green on-path dots, larger red off-path dots.
+- Maze: moves and a wall contact counted.
+
+**Not verified by eye or ear:**
+- Sounds were not listened to; only the automated synthesis check covers them.
+- The Spatial Assembly tutorial was not opened.
+- Reflections and grade were judged on one station only.
+
+**Deviations from the plan:**
+- No AudioMixer asset; volumes are set in code.
+- No baked GI, light probes or quality tiers; that work moves to Stage 7 (performance).
+
+**Final build after the fixes:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI passed at 2 sizes; gallery 87 at each of 3 sizes.
+- **Unity test runner:** EditMode 6/6.
+- **Offline C#:** product 58, tracking 177.
+- **Python:** Tools 66, bridges 8, WBS 45, AI 32.
+
+All of these use synthetic or fixture input only. No physical hardware, camera or participant was used.
+
+## 8. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
 - **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.

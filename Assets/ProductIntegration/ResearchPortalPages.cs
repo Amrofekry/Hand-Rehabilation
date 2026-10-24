@@ -95,28 +95,30 @@ namespace GripRehab
         void Exported(string path, Action back)
         { Show("Export saved", "The file was created by your explicit export action.", back); view.Text(path, 110); view.Button("BACK", back, true); }
         static float NextStep(float volume) { float[] steps = { 0, .3f, .5f, .7f, 1 }; foreach (var step in steps) if (step > volume + .01f) return step; return 0; }
-        void Settings()
+        void Settings() => SettingsAt(1);
+        void SettingsAt(float scroll)
         {
             Show("Make it comfortable", "English interface · appearance preferences are separate from patient records.", Welcome);
-            view.Button((theme.SelectedTheme == 0 ? "[Selected]  " : "") + "DARK", () => { theme.UseDark(); accessibility?.Save(); Settings(); });
-            view.Button((theme.SelectedTheme == 1 ? "[Selected]  " : "") + "LIGHT", () => { theme.UseLight(); accessibility?.Save(); Settings(); });
-            view.Button((theme.SelectedTheme == 2 ? "[Selected]  " : "") + "HIGH CONTRAST", () => { theme.UseContrast(); accessibility?.Save(); Settings(); });
+            view.Button((theme.SelectedTheme == 0 ? "[Selected]  " : "") + "DARK", () => { theme.UseDark(); accessibility?.Save(); SettingsAt(view.ScrollPosition); });
+            view.Button((theme.SelectedTheme == 1 ? "[Selected]  " : "") + "LIGHT", () => { theme.UseLight(); accessibility?.Save(); SettingsAt(view.ScrollPosition); });
+            view.Button((theme.SelectedTheme == 2 ? "[Selected]  " : "") + "HIGH CONTRAST", () => { theme.UseContrast(); accessibility?.Save(); SettingsAt(view.ScrollPosition); });
             if (accessibility != null)
             {
-                view.Button(theme.reduceMotion ? "REDUCE MOTION: ON" : "REDUCE MOTION: OFF", () => { accessibility.ToggleMotion(); Settings(); });
-                view.Button(theme.reduceTransparency ? "SOLID PANELS: ON" : "SOLID PANELS: OFF", () => { accessibility.ToggleTransparency(); Settings(); });
-                view.Button("TEXT SIZE: " + Mathf.RoundToInt(theme.fontScale * 100) + "%", () => { accessibility.CycleText(); Settings(); });
+                view.Button(theme.reduceMotion ? "REDUCE MOTION: ON" : "REDUCE MOTION: OFF", () => { accessibility.ToggleMotion(); SettingsAt(view.ScrollPosition); });
+                view.Button(theme.reduceTransparency ? "SOLID PANELS: ON" : "SOLID PANELS: OFF", () => { accessibility.ToggleTransparency(); SettingsAt(view.ScrollPosition); });
+                view.Button("TEXT SIZE: " + Mathf.RoundToInt(theme.fontScale * 100) + "%", () => { accessibility.CycleText(); SettingsAt(view.ScrollPosition); });
                 view.Text("Hand pointer dwell: " + accessibility.dwellSeconds.ToString("0.0") + " seconds", 40);
-                view.Button("SHORTER DWELL", () => { accessibility.ShorterDwell(); Settings(); });
-                view.Button("LONGER DWELL", () => { accessibility.LongerDwell(); Settings(); });
-                view.Button("UI SOUND: " + Mathf.RoundToInt(accessibility.volume * 100) + "% · TOGGLE MUTE", () => { accessibility.ToggleMute(); Settings(); });
+                view.Button("SHORTER DWELL", () => { accessibility.ShorterDwell(); SettingsAt(view.ScrollPosition); });
+                view.Button("LONGER DWELL", () => { accessibility.LongerDwell(); SettingsAt(view.ScrollPosition); });
+                view.Button("UI SOUND: " + Mathf.RoundToInt(accessibility.volume * 100) + "% · TOGGLE MUTE", () => { accessibility.ToggleMute(); SettingsAt(view.ScrollPosition); });
             }
             // Stage 4: game feedback sounds, room ambience and the virtual hand's appearance (per computer).
-            view.Button("GAME SOUNDS: " + (RehabAudio.Muted ? "OFF" : "ON"), () => { RehabAudio.Muted = !RehabAudio.Muted; Settings(); });
-            view.Button("EFFECTS VOLUME: " + Mathf.RoundToInt(RehabAudio.EffectsVolume * 100) + "%", () => { RehabAudio.EffectsVolume = NextStep(RehabAudio.EffectsVolume); Settings(); });
-            view.Button("ROOM AMBIENCE: " + (RehabAudio.AmbienceVolume > 0 ? "ON" : "OFF"), () => { RehabAudio.AmbienceVolume = RehabAudio.AmbienceVolume > 0 ? 0 : .35f; Settings(); });
-            view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; Settings(); });
+            view.Button("GAME SOUNDS: " + (RehabAudio.Muted ? "OFF" : "ON"), () => { RehabAudio.Muted = !RehabAudio.Muted; SettingsAt(view.ScrollPosition); });
+            view.Button("EFFECTS VOLUME: " + Mathf.RoundToInt(RehabAudio.EffectsVolume * 100) + "%", () => { RehabAudio.EffectsVolume = NextStep(RehabAudio.EffectsVolume); SettingsAt(view.ScrollPosition); });
+            view.Button("ROOM AMBIENCE: " + (RehabAudio.AmbienceVolume > 0 ? "ON" : "OFF"), () => { RehabAudio.AmbienceVolume = RehabAudio.AmbienceVolume > 0 ? 0 : .35f; SettingsAt(view.ScrollPosition); });
+            view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; SettingsAt(view.ScrollPosition); });
             view.Button("BACK TO MENU", Welcome, true);
+            view.ScrollPosition = scroll;
         }
     }
 }

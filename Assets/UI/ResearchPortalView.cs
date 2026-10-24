@@ -84,6 +84,12 @@ namespace GripRehab.UI
             fields.Clear(); buttons.Clear(); progress = null; liveStatus = null;
         }
         public void Hide() { if (group != null) { group.alpha = 0; group.interactable = group.blocksRaycasts = false; } }
+        // Lets a page rebuilt by a toggle keep its place instead of jumping back to the top (Stage 4 review).
+        public float ScrollPosition
+        {
+            get => scroll.verticalNormalizedPosition;
+            set { Canvas.ForceUpdateCanvases(); scroll.verticalNormalizedPosition = Mathf.Clamp01(value); }
+        }
         public void Text(string text, int height = 72)
         { Label(content, text, Palette.bodySize, height); }
         public void Status(string text)
