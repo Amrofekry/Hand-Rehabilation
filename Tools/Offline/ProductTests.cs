@@ -151,6 +151,67 @@ static class ProductTests
         Test("No files returns the empty default", () => {
             var dir = recoveryFolder(); Check(ProtectedFileRecovery.Load(Path.Combine(dir, "store.dat"), readText, _ => { }) == null, "Nothing to load"); Directory.Delete(dir, true);
         });
+        // STAGE 3.0: one difficulty scale; level 1 keeps the legacy exercises unchanged.
+        Test("Exercise tuning keeps level 1 legacy values and stays bounded", () => {
+            Check(ExerciseTuning.Clamp(-5) == 1 && ExerciseTuning.Clamp(99) == 10, "Levels clamp to 1..10");
+            Check(ExerciseTuning.MemoryLength(1) == 4 && ExerciseTuning.MemoryLength(10) == 8, "Memory 4..8");
+            Check(ExerciseTuning.AssemblyPieces(1) == 4 && ExerciseTuning.AssemblyPieces(10) == 6, "Assembly 4..6");
+            Check(Math.Abs(ExerciseTuning.TraceTolerance(1) - .12f) < 1e-6 && ExerciseTuning.TraceTolerance(10) < ExerciseTuning.TraceTolerance(1), "Trace tolerance tightens");
+            Check(ExerciseTuning.MazeCells(1) == 0 && ExerciseTuning.MazeCells(2) >= 5 && ExerciseTuning.MazeCells(10) <= 13 && ExerciseTuning.MazeCells(10) % 2 == 1, "Maze 0 = legacy map, then odd sizes");
+            for (int level = 1; level <= 10; level++)
+            {
+                var f = ExerciseTuning.Force(level);
+                Check(f.rounds >= 3 && f.bandLow > 0 && f.bandHigh > f.bandLow && f.breakAt > f.bandHigh && f.breakAt <= 1 && f.holdSeconds >= 2 && f.pulses >= 3, "Force tuning sane at " + level);
+            }
+            Check(ExerciseTuning.NextLevel(3, 90) == 4 && ExerciseTuning.NextLevel(3, 40) == 2 && ExerciseTuning.NextLevel(3, 70) == 3 && ExerciseTuning.NextLevel(10, 100) == 10 && ExerciseTuning.NextLevel(1, 0) == 1, "Progression is bounded");
+        });
+        // STAGE 3.1: Module 1 rounds (hold, control without breaking, pulse rhythm).
+        Func<ForceRoundSession, float, float, int> drive = (session, effort, seconds) => { int steps = (int)Math.Round(seconds / .1f); for (int i = 0; i < steps && !session.Complete; i++) session.Step(effort, .1f); return steps; };
+        Test("Force rounds: steady in-band effort completes every round with three stars", () => {
+            var tuning = ExerciseTuning.Force(1); var s = new ForceRoundSession(tuning);
+            float mid = (tuning.bandLow + tuning.bandHigh) / 2;
+            for (int guard = 0; guard < 3000 && !s.Complete; guard++)
+            {
+                if (s.Current.Kind == ForceRoundKind.Pulse) { drive(s, mid, .5f); drive(s, 0, .4f); }
+                else s.Step(mid, .1f);
+            }
+            Check(s.Complete && s.RoundsCompleted == s.RoundCount && s.Score >= 85 && s.Stars == 3, "Clean session " + s.Score + "/" + s.Stars);
+            Check(s.InBandSeconds > 0 && s.PeakEffort >= mid - 1e-4 && s.MeanReactionSeconds < 1, "Metrics recorded");
+            var keys = s.Outcomes().Select(o => o.key).ToArray();
+            Check(keys.Contains("force.peakEffort") && keys.Contains("force.enduranceSeconds") && keys.Contains("force.stabilityCv") && keys.Contains("force.reactionSeconds") && keys.Contains("force.rounds"), "PDF metrics present: " + string.Join(",", keys));
+        });
+        Test("Force rounds: idle input never completes and times out with a low score", () => {
+            var s = new ForceRoundSession(ExerciseTuning.Force(1));
+            drive(s, 0, 600);
+            Check(s.Complete && s.RoundsCompleted == 0 && s.Score <= 25 && s.Stars <= 1, "Idle session " + s.Score);
+        });
+        Test("Force rounds: squeezing past the break point in a control round restarts it", () => {
+            var tuning = ExerciseTuning.Force(1); var s = new ForceRoundSession(tuning);
+            float mid = (tuning.bandLow + tuning.bandHigh) / 2;
+            while (s.Current.Kind != ForceRoundKind.Control && !s.Complete) s.Step(mid, .1f);
+            Check(!s.Complete, "Reached a control round");
+            drive(s, mid, 1); var before = s.Current.Progress; s.Step(tuning.breakAt + .05f, .1f);
+            Check(s.Breaks == 1 && s.Current.Progress == 0 && before > 0, "Break restarts the hold");
+        });
+        Test("Force rounds: a pulse needs a real release between squeezes", () => {
+            var tuning = ExerciseTuning.Force(1); var s = new ForceRoundSession(tuning);
+            float mid = (tuning.bandLow + tuning.bandHigh) / 2;
+            while (s.Current.Kind != ForceRoundKind.Pulse && !s.Complete) s.Step(mid, .1f);
+            drive(s, mid, 5); Check(s.Current.PulseCount <= 1, "Holding is not pulsing (" + s.Current.PulseCount + ")");
+            drive(s, 0, .4f); drive(s, mid, .5f); drive(s, 0, .4f); Check(s.Current.PulseCount >= 2, "Release then squeeze counts");
+        });
+        Test("Force rounds: invalid samples are ignored", () => {
+            var s = new ForceRoundSession(ExerciseTuning.Force(1)); s.Step(float.NaN, .1f); s.Step(.5f, float.NaN); s.Step(-1, .1f); s.Step(.5f, -1);
+            Check(s.Current.Elapsed == 0 && s.PeakEffort == 0, "Nothing advanced");
+        });
+        Test("Session outcomes are validated and optional for older records", () => {
+            var f = new Fixture(); f.Login(); var session = f.repo.Begin(1, 0, true);
+            session.outcomes = new System.Collections.Generic.List<OutcomeMetric> { new OutcomeMetric { key = "force.rounds", label = "Rounds", unit = "", value = 3 } };
+            session.level = 2; f.repo.SaveSession(session);
+            session.outcomes.Add(new OutcomeMetric { key = "bad", label = "Bad", unit = "", value = float.NaN });
+            Reject<ArgumentException>(() => f.repo.SaveSession(session));
+            session.outcomes = null; session.level = 0; f.repo.SaveSession(session);
+        });
         // AUDIT P-007: idle but fresh input is not active grip time.
         Test("Active grip needs real effort, not just fresh input", () => {
             Check(!SessionRecord.IsActiveGrip(Sample(1, InputUnit.Newtons, 0)), "Idle keyboard demo is not active");

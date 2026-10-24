@@ -1,0 +1,15 @@
+{
+  "scope": "Stage 3 gameplay changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/Product/ProductModels.cs": {
+      "previousSha256": "cc1970fccb907ee0ad6d3de6093abdbe2bc569e5058b4dbbb185a1412be9a3a3",
+      "currentSha256": "1a035cd2e583dd72c0353af29bd303ae4a3ce25ca99142c319078c13b9121b99",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.0: SessionRecord.level and named OutcomeMetric list for per-exercise game metrics."
+    },
+    "Assets/Product/CatalogValidation.cs": {
+      "previousSha256": "ff44df8891a8f340b692e0e2e94b86464ede5d2ce7373ce752f9f24894dedff0",
+      "currentSha256": "7066eeda0ebf0ad56138eb6dc10228d5d2d3f313dfedd04f3cc12a5dc7688c91",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.0: validate level 0..10 and up to 32 finite named outcomes (older records may omit them)."
+    }
+  }
+}

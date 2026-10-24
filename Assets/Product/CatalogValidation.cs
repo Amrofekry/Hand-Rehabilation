@@ -35,8 +35,14 @@ namespace GripRehab.Product
                 !Positive(s.durationSeconds) || !Positive(s.validSeconds) || s.validSeconds > s.durationSeconds + .2 ||
                 !Positive(s.activeSeconds) || s.activeSeconds > s.validSeconds + .2 ||
                 !Positive(s.peakNewtons) || (!s.hasForce && s.peakNewtons != 0) || !Ratio(s.meanClosure) ||
-                s.metrics == null || s.metrics.Count > 1800 || s.policyEvents == null || s.policyEvents.Count > 500)
+                s.metrics == null || s.metrics.Count > 1800 || s.policyEvents == null || s.policyEvents.Count > 500 ||
+                s.level < 0 || s.level > ExerciseTuning.MaxLevel || (s.outcomes != null && s.outcomes.Count > 32))
                 throw new ArgumentException("Invalid or excessive session metrics.");
+            if (s.outcomes != null)
+                foreach (var o in s.outcomes)
+                    if (o == null || string.IsNullOrWhiteSpace(o.key) || o.key.Length > 40 || (o.label ?? "").Length > 60 || (o.unit ?? "").Length > 12 ||
+                        !TrialSample.Finite(o.value) || Math.Abs(o.value) > 1e6)
+                        throw new ArgumentException("Invalid session outcome.");
             double prior = -1;
             foreach (var m in s.metrics)
             {

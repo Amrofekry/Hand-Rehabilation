@@ -41,6 +41,8 @@ namespace GripRehab.Product
         public int emotionClass = -1;
         public string modelProvenance;
     }
+    [Serializable] public sealed class OutcomeMetric
+    { public string key, label, unit; public float value; }
     [Serializable] public sealed class PolicyEvent
     { public double seconds; public string status, reason, settingsVersion; public int level, signs; }
     [Serializable] public sealed class SessionRecord
@@ -53,6 +55,10 @@ namespace GripRehab.Product
         public RecordState state;
         public List<MetricRecord> metrics = new List<MetricRecord>();
         public List<PolicyEvent> policyEvents = new List<PolicyEvent>();
+        // Stage 3: difficulty level played (0 = not recorded by older versions) and named
+        // per-exercise outcomes such as reaction time or accuracy. Game metrics, not clinical ones.
+        public int level = 1;
+        public List<OutcomeMetric> outcomes = new List<OutcomeMetric>();
         public const float ActiveNewtons = 1f, ActiveClosure = .6f;
         public static bool IsActiveGrip(TrialSample input) => input.Fresh &&
             (input.unit == InputUnit.Newtons ? input.value >= ActiveNewtons : input.value >= ActiveClosure);
