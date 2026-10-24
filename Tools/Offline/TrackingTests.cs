@@ -162,6 +162,67 @@ class TrackingTests
         var jump=new TraceTask();jump.Submit(TraceTask.Path[0]);jump.Submit(TraceTask.Path[4]);
         Check(jump.NextWaypoint<=2,"jumping to the last waypoint cannot skip the route ("+jump.NextWaypoint+")");
     }
+    // STAGE 3.2: gesture tokens for Sequence Memory (Open, Fist, Point, Pinch).
+    static LandmarkFrame GestureFrame(bool[] extended,bool pinch)
+    {
+        var f=new LandmarkFrame{schemaVersion=1,confidence=.95f,handedness="Right",source="fabricated gesture",landmarks=new Vector3[21]};
+        f.landmarks[0]=new Vector3(.5f,.8f,0);
+        f.landmarks[1]=new Vector3(.44f,.74f,0);f.landmarks[2]=new Vector3(.40f,.68f,0);f.landmarks[3]=new Vector3(.37f,.63f,0);f.landmarks[4]=new Vector3(.35f,.58f,0);
+        for(int i=0;i<4;i++)
+        {
+            float x=.45f+.035f*i;int b=5+4*i;
+            f.landmarks[b]=new Vector3(x,.62f,0);
+            if(extended[i]){f.landmarks[b+1]=new Vector3(x,.55f,0);f.landmarks[b+2]=new Vector3(x,.50f,0);f.landmarks[b+3]=new Vector3(x,.46f,0);}
+            else{f.landmarks[b+1]=new Vector3(x,.58f,0);f.landmarks[b+2]=new Vector3(x,.64f,0);f.landmarks[b+3]=new Vector3(x,.66f,0);}
+        }
+        if(pinch){f.landmarks[8]=new Vector3(.45f,.55f,0);f.landmarks[4]=new Vector3(.46f,.56f,0);}
+        return f;
+    }
+    static void Gestures()
+    {
+        Check(GestureClassifier.Classify(GestureFrame(new[]{true,true,true,true},false))==HandGesture.Open,"open hand classified");
+        Check(GestureClassifier.Classify(GestureFrame(new[]{false,false,false,false},false))==HandGesture.Fist,"fist classified");
+        Check(GestureClassifier.Classify(GestureFrame(new[]{true,false,false,false},false))==HandGesture.Point,"index point classified");
+        Check(GestureClassifier.Classify(GestureFrame(new[]{false,true,true,true},true))==HandGesture.Pinch,"thumb-index pinch classified");
+        Check(GestureClassifier.Classify(GestureFrame(new[]{true,true,false,false},false))==HandGesture.None,"ambiguous two-finger pose is not guessed");
+        Check(GestureClassifier.Classify(null)==HandGesture.None,"missing frame is None");
+        var s=new GestureStabilizer();int emitted=0;HandGesture last=HandGesture.None;
+        for(int i=0;i<3;i++)if(s.Step(HandGesture.Fist,.1f,out last))emitted++;
+        Check(emitted==0,"a brief gesture is not accepted");
+        HandGesture accepted=HandGesture.None;
+        for(int i=0;i<10;i++)if(s.Step(HandGesture.Fist,.1f,out last)){emitted++;accepted=last;}
+        Check(emitted==1&&accepted==HandGesture.Fist,"a held gesture is accepted once ("+emitted+")");
+        for(int i=0;i<3;i++)s.Step(HandGesture.None,.1f,out last);
+        for(int i=0;i<6;i++)if(s.Step(HandGesture.Fist,.1f,out last))emitted++;
+        Check(emitted==2,"the same gesture again needs a release in between");
+    }
+    // STAGE 3.3: generated mazes and level routes.
+    static void Mazes()
+    {
+        var legacy=new MazeTask();Check(legacy.Columns==7&&legacy.Rows==5&&legacy.ShortestPath==10,"legacy maze unchanged ("+legacy.ShortestPath+")");
+        for(int seed=1;seed<=5;seed++)
+        {
+            var maze=new MazeTask(9,seed);
+            Check(maze.Columns==9&&maze.Rows==9&&!maze.IsWall(0,0)&&!maze.IsWall(8,8)&&maze.ShortestPath>=16,"generated 9x9 maze is solvable (seed "+seed+", path "+maze.ShortestPath+")");
+        }
+        Check(new MazeTask(9,3).Draw()==new MazeTask(9,3).Draw()&&new MazeTask(9,3).Draw()!=new MazeTask(9,4).Draw(),"maze generation is seeded");
+        var solve=new MazeTask(7,2);var path=solve.Solve();
+        for(int i=1;i<path.Count;i++)solve.Move(path[i].x-path[i-1].x,path[i].y-path[i-1].y);
+        Check(solve.Complete&&solve.Moves==solve.ShortestPath&&solve.Score==100,"walking the shortest path scores 100 ("+solve.Score+")");
+        var bump=new MazeTask(7,2);bump.Move(-1,0);bump.Move(0,-1);Check(bump.Collisions==2,"walls cost collisions");
+    }
+    static void TraceLevels()
+    {
+        Check(TraceTask.PathFor(1).Length==TraceTask.Path.Length&&TraceTask.PathFor(1)[2].x==TraceTask.Path[2].x,"level 1 route is the legacy route");
+        for(int level=2;level<=10;level++)
+        {
+            var route=TraceTask.PathFor(level);bool inside=true;foreach(var p in route)inside&=p.x>=.05f&&p.x<=.95f&&p.y>=.1f&&p.y<=.9f;
+            Check(route.Length>=5&&inside,"level "+level+" route has "+route.Length+" points inside the pad");
+        }
+        var hard=new TraceTask(TraceTask.PathFor(6),.07f);var route6=TraceTask.PathFor(6);hard.Submit(route6[0]);
+        for(int i=1;i<route6.Length;i++)for(int k=1;k<=10;k++){float t=k/10f;hard.Submit(new Vector2(route6[i-1].x+(route6[i].x-route6[i-1].x)*t,route6[i-1].y+(route6[i].y-route6[i-1].y)*t));}
+        Check(hard.Complete&&hard.Accuracy>=.95f&&hard.MeanDeviation<.01f,"a careful trace of a harder route stays accurate ("+hard.Accuracy+", "+hard.MeanDeviation+")");
+    }
     static int Main()
     {
         try
@@ -173,6 +234,9 @@ class TrackingTests
             Stability(false);Stability(true);
             StreamOrder();
             Tracing();
+            Gestures();
+            Mazes();
+            TraceLevels();
             Console.WriteLine("RESULT "+passed+" passed, "+failed+" failed; production pose source with managed test math; no Unity/camera/native SDK");return failed==0?0:1;
         }
         catch(Exception e) { Console.Error.WriteLine("FAIL "+e);return 1; }

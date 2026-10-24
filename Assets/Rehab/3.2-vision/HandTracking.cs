@@ -36,6 +36,57 @@ namespace GripRehab
         }
     }
 
+    public enum HandGesture { None = -1, Open = 0, Fist = 1, Point = 2, Pinch = 3 }
+
+    // Stage 3.2: a small geometric classifier on MediaPipe's 21 image landmarks. It is a
+    // game input, not a validated gesture recognizer; ambiguous poses return None.
+    public static class GestureClassifier
+    {
+        static float Distance(Vector3 a, Vector3 b) => Mathf.Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+
+        public static HandGesture Classify(LandmarkFrame frame)
+        {
+            if (frame == null || frame.landmarks == null || frame.landmarks.Length != 21) return HandGesture.None;
+            var p = frame.landmarks; var wrist = p[0];
+            float palm = Distance(wrist, p[9]);
+            if (!(palm > 1e-4f)) return HandGesture.None;
+            if (Distance(p[4], p[8]) < .3f * palm) return HandGesture.Pinch;
+            int extended = 0; bool index = false;
+            for (int finger = 0; finger < 4; finger++)
+            {
+                int pip = 6 + finger * 4, tip = 8 + finger * 4;
+                bool straight = Distance(wrist, p[tip]) > Distance(wrist, p[pip]) * 1.1f;
+                if (straight) { extended++; if (finger == 0) index = true; }
+            }
+            if (extended == 4) return HandGesture.Open;
+            if (extended == 0) return HandGesture.Fist;
+            if (extended == 1 && index) return HandGesture.Point;
+            return HandGesture.None;
+        }
+    }
+
+    // Accepts a gesture after it is held steadily; the same gesture again needs a change first.
+    public sealed class GestureStabilizer
+    {
+        public float HoldSeconds = .4f;
+        HandGesture candidate = HandGesture.None, lastEmitted = HandGesture.None;
+        float held; bool armed = true;
+
+        public void Reset() { candidate = lastEmitted = HandGesture.None; held = 0; armed = true; }
+
+        public bool Step(HandGesture gesture, float deltaSeconds, out HandGesture accepted)
+        {
+            accepted = HandGesture.None;
+            if (gesture != candidate) { candidate = gesture; held = 0; }
+            if (gesture == HandGesture.None || gesture != lastEmitted) armed = true;
+            if (gesture == HandGesture.None || !armed) return false;
+            held += Mathf.Min(Mathf.Max(0, deltaSeconds), .1f);
+            if (held < HoldSeconds) return false;
+            accepted = gesture; lastEmitted = gesture; armed = false; held = 0;
+            return true;
+        }
+    }
+
     public static class HandKinematics
     {
         // MediaPipe image x goes right and y goes down. The imported

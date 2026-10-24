@@ -212,6 +212,22 @@ static class ProductTests
             Reject<ArgumentException>(() => f.repo.SaveSession(session));
             session.outcomes = null; session.level = 0; f.repo.SaveSession(session);
         });
+        // STAGE 3.2: drag-and-drop spatial assembly with placement metrics.
+        Test("Assembly board: matching drops snap, wrong slots count errors and pieces return", () => {
+            var board = new AssemblyBoard(4, 7);
+            Check(board.Pieces.Count == 4 && board.Pieces.All(p => p.TargetX > .5f && p.StartX < .45f), "Pieces start left, slots are right");
+            var a = board.Pieces[0]; var b = board.Pieces[1];
+            board.Move(a.Id, b.TargetX, b.TargetY); Check(!board.Drop(a.Id, b.TargetX, b.TargetY) && board.Errors == 1 && a.X == a.StartX && a.Y == a.StartY, "Wrong slot returns the piece");
+            board.Move(a.Id, .2f, .2f); Check(!board.Drop(a.Id, .2f, .2f) && board.Errors == 1, "Dropping in empty space is not an error");
+            foreach (var piece in board.Pieces) { board.Move(piece.Id, (piece.StartX + piece.TargetX) / 2, piece.StartY); board.Move(piece.Id, piece.TargetX + .01f, piece.TargetY); Check(board.Drop(piece.Id, piece.TargetX + .01f, piece.TargetY), "Correct slot accepted"); }
+            Check(board.Complete && board.MeanPlacementError > 0 && board.MeanPlacementError < .02f && board.PathEfficiency > .5f && board.PathEfficiency <= 1, "Metrics " + board.MeanPlacementError + " / " + board.PathEfficiency);
+        });
+        Test("Assembly board: tap piece then slot is an accessible alternative", () => {
+            var board = new AssemblyBoard(5, 3);
+            Check(!board.PlaceByTap(board.Pieces[0].Id, board.SlotOf(board.Pieces[1].Id)) && board.Errors == 1, "Wrong tap counts");
+            foreach (var piece in board.Pieces) Check(board.PlaceByTap(piece.Id, board.SlotOf(piece.Id)), "Right tap places");
+            Check(board.Complete && new AssemblyBoard(5, 3).Pieces.Select(p => p.StartY).SequenceEqual(new AssemblyBoard(5, 3).Pieces.Select(p => p.StartY)), "Seeded layout");
+        });
         // AUDIT P-007: idle but fresh input is not active grip time.
         Test("Active grip needs real effort, not just fresh input", () => {
             Check(!SessionRecord.IsActiveGrip(Sample(1, InputUnit.Newtons, 0)), "Idle keyboard demo is not active");

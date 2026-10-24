@@ -143,7 +143,7 @@ def main():
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(tests),*reference_flags,
                  *sorted((ROOT/'Assets/Product').glob('*.cs')),'Tools/Offline/ProductTests.cs','Assets/Rehab/3.4-game-modules/WindowsProfileProtection.cs',
                  'Assets/Rehab/3.4-game-modules/RehabDwellGate.cs','Assets/Rehab/3.4.2-cognitive-performance/SequenceMemoryTask.cs',
-                 'Assets/Rehab/3.4.2-cognitive-performance/SpatialAssemblyTask.cs'],OUTPUT/'tests-compile.log')
+                 'Assets/Rehab/3.4.2-cognitive-performance/SpatialAssemblyTask.cs','Assets/Rehab/3.4.2-cognitive-performance/AssemblyBoard.cs'],OUTPUT/'tests-compile.log')
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',tests],OUTPUT/'product-tests.log')
             evidence['checks'].append(dict(name='product-domain-tests',passed=True,result=result.stdout.strip()))
             tracking=OUTPUT/'TrackingTests.exe'

@@ -92,6 +92,9 @@ namespace UnityEngine
         public static float Clamp01(float x) => Clamp(x,0,1);
         public static float Abs(float x) => Math.Abs(x);
         public static float Max(float a,float b) => Math.Max(a,b);
+        public static float Min(float a,float b) => Math.Min(a,b);
+        public static float Sqrt(float x) => (float)Math.Sqrt(x);
+        public static int RoundToInt(float x) => (int)Math.Round(x);
         public static float Exp(float x) => (float)Math.Exp(x);
         public static float Lerp(float a,float b,float t) => a+(b-a)*Clamp01(t);
         public static float SmoothStep(float a,float b,float t) { t=Clamp01(t);return a+(b-a)*t*t*(3-2*t); }

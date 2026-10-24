@@ -20,6 +20,16 @@
       "previousSha256": "f4f23bb33f8a7b5defff3af478e684d56d9713ea6a15644c54e5210b5572adfc",
       "currentSha256": "22437a23ea34c87f395d2cae46c50af4e0760bc7d8c1b628dde64d708db86241",
       "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: HUD shows round number, type, effort and the current instruction."
+    },
+    "Assets/Rehab/3.2-vision/HandTracking.cs": {
+      "previousSha256": "05af84e7f26351b7ca281b47cb4e05deb0768aa44a9230e69ae8b185207ec1ef",
+      "currentSha256": "0a5591241c8b6adaf7afd62d92321551cf02d9cda88081c7e37a1b2ee561913c",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.2: GestureClassifier (Open/Fist/Point/Pinch from image landmarks, ambiguous = None) and GestureStabilizer for Sequence Memory input."
+    },
+    "Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs": {
+      "previousSha256": "421d5b028db9b66a252c2c42bfd1b72ca35ed9fcd8645c7d713047e139bc789a",
+      "currentSha256": "1de57e1852108d7068fdf3c2e1de474d34ead9d907822afdd5218481f79d1180",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.3: seeded generated mazes with BFS shortest path and efficiency score (legacy map/formula unchanged); level trace routes with tolerance, mean deviation and on-path state."
     }
   }
 }
