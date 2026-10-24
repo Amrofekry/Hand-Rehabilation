@@ -23,7 +23,7 @@ namespace GripRehab.Product
         public int Breaks { get; internal set; }
         public int Score { get; internal set; }
         public float Fraction => Kind == ForceRoundKind.Pulse ? PulseCount / (float)PulsesRequired : Progress / HoldSeconds;
-        internal float pulseHeld; internal bool pulseArmed = true;
+        internal float pulseHeld; internal bool pulseArmed = true, overBreak;
     }
 
     /// <summary>
@@ -105,7 +105,10 @@ namespace GripRehab.Product
                     if (r.PulseCount >= r.PulsesRequired) Finish(r, false);
                     break;
                 default:
-                    if (r.Kind == ForceRoundKind.Control && effort > r.BreakAt) { r.Breaks++; Breaks++; r.Progress = 0; break; }
+                    // One crack per crossing of the limit, not one per sample while held over it (playtest fix).
+                    if (r.Kind == ForceRoundKind.Control && effort > r.BreakAt)
+                    { if (!r.overBreak) { r.Breaks++; Breaks++; r.overBreak = true; } r.Progress = 0; break; }
+                    r.overBreak = false;
                     r.Progress = inBand ? Math.Min(r.HoldSeconds, r.Progress + dt) : Math.Max(0, r.Progress - dt * .5f);
                     if (r.Progress >= r.HoldSeconds) Finish(r, false);
                     break;

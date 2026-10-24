@@ -95,9 +95,9 @@ namespace GripRehab
                 Show(state == RecordState.Completed ? "Practice complete" : "Take a break", "Your game results are a record of practice, not a clinical assessment.", Welcome);
                 view.Text("Module " + session.module + " · level " + session.level + " · " + state + "\nScore: " + session.score + "/100" + Stars(session) +
                     (session.module == 1 ? "\nActive grip: " + session.activeSeconds.ToString("0.0") + " s · input available: " + session.validSeconds.ToString("0.0") + " s" :
-                    "\nTime: " + session.durationSeconds.ToString("0.0") + " s"), 112);
+                    "\nTime: " + session.durationSeconds.ToString("0.0") + " s"), 84);
                 if (session.outcomes != null && session.outcomes.Count > 0)
-                    view.Text(string.Join("\n", session.outcomes.Where(o => o.key != "stars").Select(o => o.label + ": " + o.value.ToString("0.##") + (string.IsNullOrEmpty(o.unit) ? "" : " " + o.unit))), 30 + 26 * session.outcomes.Count);
+                    view.Text(string.Join("\n", session.outcomes.Where(o => o.key != "stars" && o.key != "level").Select(o => o.label + ": " + o.value.ToString("0.##") + (string.IsNullOrEmpty(o.unit) ? "" : " " + o.unit))), 30 + 26 * session.outcomes.Count);
                 view.Text(guest ? "Guest practice was not saved." : savingFailed ? "Saving failed: " + LastSaveProblem + ". Keep this screen open and retry." : "Saved locally in protected storage.");
                 if (savingFailed) view.Button("RETRY SAVE", () => Guard(() => { repository.SaveSession(session); savingFailed = false; Dashboard(); }), true);
                 view.Button("BACK TO MENU", Welcome, !savingFailed);
@@ -106,7 +106,7 @@ namespace GripRehab
         static string Stars(SessionRecord record)
         {
             var stars = record.outcomes?.FirstOrDefault(o => o.key == "stars");
-            return stars == null ? "" : "  ·  " + new string('*', (int)stars.value) + " of 3 stars";
+            return stars == null ? "" : "  ·  " + (int)stars.value + " of 3 stars";
         }
         void Update()
         {

@@ -113,6 +113,7 @@ namespace GripRehab
             suite.FrameDelta = () => .1f;
             for (int i = 0; i < 40; i++) { yield return null; suite.Tick(); }
             foreach (var token in tokens) suite.Submit(token);
+            for (int i = 0; i < 20; i++) { yield return null; suite.Tick(); } // completion hold before results
             Check(portal.ScreenTitle == "Practice complete" && !portal.LiveSession, "Completed task opens result page");
             repo = Reload(); repo.SignIn("patient.one", Secret);
             Check(repo.Sessions(repo.Current.id).Any(s => s.module == 2 && s.state == RecordState.Completed && s.synthetic), "Completion is saved with its source: " + portal.LastSaveProblem + " / " + string.Join(",", repo.Sessions(repo.Current.id).Select(s=>s.module+":"+s.state+":"+s.synthetic)));
@@ -121,6 +122,7 @@ namespace GripRehab
             shell.visuomotorLockedButton.onClick.Invoke();
             Check(shell.CurrentPage == "Activity" && portal.LiveSession, "Module 3 starts through the same owned journey");
             foreach (var point in TraceTask.Path) { yield return new WaitForSecondsRealtime(.05f); suite.TracePoint(point); }
+            for (int i = 0; i < 20; i++) { yield return null; suite.Tick(); } // completion hold before results
             Check(portal.ScreenTitle == "Practice complete", "Module 3 result returns to the common result page");
             Click("BACK TO MENU"); Click("SIGN OUT");
             Check(!portal.HasAccount, "Sign out clears the active account");

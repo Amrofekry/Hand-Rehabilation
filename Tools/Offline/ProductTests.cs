@@ -193,6 +193,13 @@ static class ProductTests
             drive(s, mid, 1); var before = s.Current.Progress; s.Step(tuning.breakAt + .05f, .1f);
             Check(s.Breaks == 1 && s.Current.Progress == 0 && before > 0, "Break restarts the hold");
         });
+        Test("Force rounds: one sustained over-squeeze counts as one crack (playtest)", () => {
+            var tuning = ExerciseTuning.Force(1); var s = new ForceRoundSession(tuning);
+            float mid = (tuning.bandLow + tuning.bandHigh) / 2;
+            while (s.Current.Kind != ForceRoundKind.Control && !s.Complete) s.Step(mid, .1f);
+            drive(s, tuning.breakAt + .3f, 1.2f); Check(s.Breaks == 1, "Held over the limit = 1 crack (" + s.Breaks + ")");
+            drive(s, mid, .3f); drive(s, tuning.breakAt + .3f, .3f); Check(s.Breaks == 2, "Dropping back then crossing again = 2 cracks");
+        });
         Test("Force rounds: a pulse needs a real release between squeezes", () => {
             var tuning = ExerciseTuning.Force(1); var s = new ForceRoundSession(tuning);
             float mid = (tuning.bandLow + tuning.bandHigh) / 2;

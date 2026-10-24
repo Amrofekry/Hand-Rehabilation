@@ -46,6 +46,8 @@ namespace GripRehab.Editor
                     shown = (HandGesture)token; for (int i = 0; i < 6; i++) suite.Tick();
                     shown = HandGesture.None; for (int i = 0; i < 3; i++) suite.Tick();
                 }
+                Require(memoryTask.Complete && scored == -1, "the finished board stays visible before results");
+                for (int i = 0; i < 16; i++) suite.Tick();
                 Require(memoryTask.Complete && scored == 100, "camera gestures complete the pattern (score " + scored + ")");
                 Require(Has(suite, "memory.accuracy", 100) && Has(suite, "memory.length", memoryTask.Length), "memory outcomes recorded");
                 suite.GestureSource = null;
@@ -57,6 +59,7 @@ namespace GripRehab.Editor
                 Require(maze.Columns == ExerciseTuning.MazeCells(5) && suite.Level == 5, "level 5 maze is generated (" + maze.Columns + ")");
                 var route = maze.Solve();
                 for (int i = 1; i < route.Count; i++) suite.MoveMaze(route[i].x - route[i - 1].x, route[i].y - route[i - 1].y);
+                for (int i = 0; i < 16; i++) suite.Tick();
                 Require(maze.Complete && scored == 100 && Has(suite, "maze.efficiency", 100), "shortest route scores 100 with full efficiency");
 
                 // Stage 3.2: assembly by tap-piece-then-outline.
@@ -66,6 +69,7 @@ namespace GripRehab.Editor
                 var tapPiece = typeof(RehabExerciseSuite).GetMethod("TapPiece", BindingFlags.NonPublic | BindingFlags.Instance);
                 var tapSlot = typeof(RehabExerciseSuite).GetMethod("TapSlot", BindingFlags.NonPublic | BindingFlags.Instance);
                 foreach (var piece in board.Pieces) { tapPiece.Invoke(suite, new object[] { piece.Id }); tapSlot.Invoke(suite, new object[] { board.SlotOf(piece.Id) }); }
+                for (int i = 0; i < 16; i++) suite.Tick();
                 Require(board.Complete && scored == 100 && Has(suite, "assembly.pieces", board.Pieces.Count), "assembly completes by tapping (score " + scored + ")");
                 Debug.Log("[REHAB_EXERCISE] PASS: memory reveal survives hitches/focus loss, blocks early answers and hides on time; camera gestures, generated maze and tap assembly complete with outcomes");
             }

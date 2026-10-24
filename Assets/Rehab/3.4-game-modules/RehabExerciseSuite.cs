@@ -36,6 +36,7 @@ namespace GripRehab
         readonly List<RectTransform> pieceViews = new List<RectTransform>();
         readonly List<Image> stripTiles = new List<Image>();
         readonly List<GameObject> stripGlyphs = new List<GameObject>();
+        readonly List<Image[]> stripGlyphImages = new List<Image[]>();
         readonly GestureStabilizer gestures = new GestureStabilizer();
         SequenceMemoryTask memory;
         AssemblyBoard assembly;
@@ -49,13 +50,16 @@ namespace GripRehab
         float startedAt, lastTraceAt, revealEndedAt = -1, lastAnswerAt = -1, firstAnswerSeconds = -1, intervalSum, collisionFlash;
         int answers, correctAnswers, intervals, selectedPiece = -1, trailNext;
         bool recorded;
+        // Playtest fix: keep the finished board on screen briefly before the results page.
+        const float CompletionHoldSeconds = 1.4f;
+        float completionHold; int pendingScore; float pendingSeconds;
         RectTransform mazeAvatar;
         HandGesture seenGesture = HandGesture.None;
 
         static readonly Color Deep = Html("1A2230"), Raised = Html("2B415C");
         static readonly Color White = Html("FFFFFF"), Mint = Html("B9F7FF");
         static readonly Color Jade = Html("00F0FF"), Muted = Html("C2D2E6");
-        static readonly Color Green = Html("37D67A"), Red = Html("FF5A6A"), Wall = Html("101722");
+        static readonly Color Green = Html("37D67A"), Red = Html("FF5A6A"), Wall = Html("0B111A"), Corridor = Html("4A6A8F");
         static readonly Color[] PieceColors = { Html("00C2D1"), Html("F2B134"), Html("B07CF2"), Html("37D67A"), Html("FF7A59"), Html("5C9DFF") };
         readonly GripRehab.UI.GripUiThemeController presentation;
 
@@ -88,7 +92,7 @@ namespace GripRehab
             card.gameObject.AddComponent<Image>().color = Deep;
             title = Label("Title", card, new Vector2(0, 276), new Vector2(1190, 55), 35, White);
             instruction = Label("Instruction", card, new Vector2(0, 218), new Vector2(1190, 72), 19, Muted);
-            cue = Label("Task cue", card, new Vector2(0, 118), new Vector2(1100, 40), 24, Mint);
+            cue = Label("Task cue", card, new Vector2(0, 116), new Vector2(1100, 50), 22, Mint);
             metrics = Label("Performance", card, new Vector2(0, -222), new Vector2(1180, 50), 18, White);
             Button("Back to modules", card, new Vector2(-520, -292), new Vector2(190, 52),
                 "MODULES", () => back?.Invoke());
@@ -115,12 +119,12 @@ namespace GripRehab
                 Label("Caption", choices[i].transform, new Vector2(40, 0), new Vector2(130, 100), 18, White).text = (i + 1) + "  " + GestureNames[i];
             }
 
-            assemblyArea = Rect("Assembly board", card, new Vector2(0, -38), new Vector2(1040, 300)).gameObject;
-            assemblyArea.AddComponent<Image>().color = Raised;
+            assemblyArea = Rect("Assembly board", card, new Vector2(0, -52), new Vector2(1040, 276)).gameObject;
+            assemblyArea.AddComponent<Image>().color = Raised; BoardRole(assemblyArea);
             assemblyRect = (RectTransform)assemblyArea.transform;
 
-            traceArea = Rect("Trace pad", card, new Vector2(0, -38), new Vector2(1040, 300)).gameObject;
-            traceArea.AddComponent<Image>().color = Raised;
+            traceArea = Rect("Trace pad", card, new Vector2(0, -52), new Vector2(1040, 276)).gameObject;
+            traceArea.AddComponent<Image>().color = Raised; BoardRole(traceArea);
             traceRect = (RectTransform)traceArea.transform;
             var traceInput = traceArea.AddComponent<RehabTracePad>();
             traceInput.OnPoint = TracePoint;
@@ -130,19 +134,21 @@ namespace GripRehab
                 dot.raycastTarget = false; dot.enabled = false; trailDots.Add(dot);
             }
 
-            mazeArea = Rect("Maze controls", card, new Vector2(0, -38), new Vector2(1040, 300)).gameObject;
-            mazeArea.AddComponent<Image>().color = Raised;
-            mazeBoard = Rect("Maze board", mazeArea.transform, new Vector2(-150, 0), new Vector2(560, 290));
+            mazeArea = Rect("Maze controls", card, new Vector2(0, -52), new Vector2(1040, 276)).gameObject;
+            mazeArea.AddComponent<Image>().color = Raised; BoardRole(mazeArea);
+            mazeBoard = Rect("Maze board", mazeArea.transform, new Vector2(-150, 0), new Vector2(560, 266));
             mazeMap = Label("Maze map", mazeArea.transform, new Vector2(-150, 0), new Vector2(10, 10), 2, White);
             mazeMap.enabled = false; // Kept for older tools; the board is drawn with tiles.
-            Button("Maze up", mazeArea.transform, new Vector2(330, 64), new Vector2(110, 56),
-                "UP", () => MoveMaze(0, -1));
-            Button("Maze left", mazeArea.transform, new Vector2(214, 0), new Vector2(110, 56),
-                "LEFT", () => MoveMaze(-1, 0));
-            Button("Maze right", mazeArea.transform, new Vector2(446, 0), new Vector2(110, 56),
-                "RIGHT", () => MoveMaze(1, 0));
-            Button("Maze down", mazeArea.transform, new Vector2(330, -64), new Vector2(110, 56),
-                "DOWN", () => MoveMaze(0, 1));
+            // Playtest fix: on the Secondary board the default button colour vanished; use the darker surface.
+            foreach (var direction in new[] {
+                Button("Maze up", mazeArea.transform, new Vector2(330, 64), new Vector2(110, 56), "UP", () => MoveMaze(0, -1)),
+                Button("Maze left", mazeArea.transform, new Vector2(214, 0), new Vector2(110, 56), "LEFT", () => MoveMaze(-1, 0)),
+                Button("Maze right", mazeArea.transform, new Vector2(446, 0), new Vector2(110, 56), "RIGHT", () => MoveMaze(1, 0)),
+                Button("Maze down", mazeArea.transform, new Vector2(330, -64), new Vector2(110, 56), "DOWN", () => MoveMaze(0, 1)) })
+            {
+                direction.targetGraphic.color = Deep;
+                direction.gameObject.AddComponent<GripRehab.UI.GripUiRoleTag>().role = GripRehab.UI.GripUiRole.DarkSurface;
+            }
             var canvas = parent.GetComponentInParent<Canvas>();
             presentation = canvas != null ? canvas.GetComponentInChildren<GripRehab.UI.GripUiThemeController>(true) : null;
             if (presentation != null) presentation.RegisterPresentation(page);
@@ -173,7 +179,7 @@ namespace GripRehab
             Level = ExerciseTuning.Clamp(LevelSource != null ? LevelSource(Module, Task) : 1);
             int seed = Environment.TickCount; // A-015: a fresh pattern every attempt.
             startedAt = Time.unscaledTime;
-            recorded = false; LastOutcomes = new List<OutcomeMetric>();
+            recorded = false; completionHold = 0; LastOutcomes = new List<OutcomeMetric>();
             answers = correctAnswers = intervals = 0; intervalSum = 0; firstAnswerSeconds = revealEndedAt = lastAnswerAt = -1;
             selectedPiece = -1; trailNext = 0; collisionFlash = 0; gestures.Reset(); seenGesture = HandGesture.None;
             memory = new SequenceMemoryTask(seed, ExerciseTuning.MemoryLength(Level));
@@ -184,7 +190,7 @@ namespace GripRehab
             revealTotal = Mathf.Max(MinReveal, RevealPerItem * memory.Length);
             revealRemaining = current == Exercise.Memory ? revealTotal : 0;
             foreach (var item in transient) if (item != null) { item.SetActive(false); if (Application.isPlaying) UnityEngine.Object.Destroy(item); else UnityEngine.Object.DestroyImmediate(item); }
-            transient.Clear(); stripTiles.Clear(); stripGlyphs.Clear(); traceMarkers.Clear(); traceNumbers.Clear(); mazeCells.Clear(); pieceViews.Clear(); mazeAvatar = null;
+            transient.Clear(); stripTiles.Clear(); stripGlyphs.Clear(); stripGlyphImages.Clear(); traceMarkers.Clear(); traceNumbers.Clear(); mazeCells.Clear(); pieceViews.Clear(); mazeAvatar = null;
             foreach (var dot in trailDots) dot.enabled = false;
             sequenceStrip.SetActive(current == Exercise.Memory);
             choiceArea.SetActive(current == Exercise.Memory);
@@ -211,6 +217,12 @@ namespace GripRehab
         public void Tick()
         {
             float dt = Mathf.Clamp(FrameDelta(), 0, MaxRevealStep);
+            if (completionHold > 0)
+            {
+                completionHold -= dt;
+                if (completionHold <= 0) completed?.Invoke(Module, Task, pendingScore, pendingSeconds);
+                return;
+            }
             if (Revealing)
             {
                 revealRemaining -= dt;
@@ -343,7 +355,7 @@ namespace GripRehab
             }
             o.Add(Metric("level", "Level", "", Level));
             o.Add(Metric("stars", "Stars", "", score >= 85 ? 3 : score >= 65 ? 2 : score > 0 ? 1 : 0));
-            completed?.Invoke(Module, Task, score, seconds);
+            pendingScore = score; pendingSeconds = seconds; completionHold = CompletionHoldSeconds;
             Refresh();
         }
 
@@ -357,7 +369,7 @@ namespace GripRehab
                 case Exercise.Memory:
                     bool showing = Revealing;
                     cue.text = memory.Complete ? "PATTERN COMPLETE" : showing ?
-                        "MEMORISE   " + memory.SequenceDisplay :
+                        "MEMORISE THE GESTURES" :
                         "ENTER PATTERN   " + memory.Correct + " / " + memory.Length;
                     metrics.text = "Correct steps " + memory.Correct + "/" + memory.Length +
                         "   ·   Retries " + memory.Mistakes + (showing ? "   ·   Pattern hides shortly" :
@@ -408,10 +420,12 @@ namespace GripRehab
             {
                 stripCells[i].gameObject.SetActive(i < memory.Length);
                 if (i >= memory.Length) continue;
+                stripCells[i].anchoredPosition = new Vector2((i - (memory.Length - 1) / 2f) * 135, 0);
                 var tile = Rect("Tile", stripCells[i], Vector2.zero, stripCells[i].sizeDelta).gameObject.AddComponent<Image>();
                 tile.raycastTarget = false; tile.color = Raised; transient.Add(tile.gameObject); stripTiles.Add(tile);
                 var glyph = GestureGlyph(stripCells[i], (HandGesture)memory.Sequence[i], new Vector2(0, 6), 78, White);
                 glyph.name = "Avatar gesture"; transient.Add(glyph.gameObject); stripGlyphs.Add(glyph.gameObject);
+                stripGlyphImages.Add(Array.FindAll(glyph.GetComponentsInChildren<Image>(true), image => image.transform != glyph));
                 var number = Label("Order", stripCells[i], new Vector2(0, -42), new Vector2(110, 22), 15, Muted);
                 number.text = (i + 1).ToString(); transient.Add(number.gameObject);
             }
@@ -428,6 +442,7 @@ namespace GripRehab
             {
                 stripGlyphs[i].SetActive(!demo || i <= active);
                 stripTiles[i].color = demo && i == active ? Accent : Raised;
+                foreach (var bar in stripGlyphImages[i]) bar.color = demo && i == active ? Deep : White;
                 stripCells[i].localScale = demo && i == active ? Vector3.one * 1.08f : Vector3.one;
             }
         }
@@ -438,6 +453,7 @@ namespace GripRehab
             {
                 stripGlyphs[i].SetActive(i < memory.Correct || memory.Complete);
                 stripTiles[i].color = i < memory.Correct || memory.Complete ? Green : i == memory.Correct ? Accent : Raised;
+                foreach (var bar in stripGlyphImages[i]) bar.color = i <= memory.Correct || memory.Complete ? Deep : White;
                 stripCells[i].localScale = Vector3.one;
             }
         }
@@ -475,14 +491,14 @@ namespace GripRehab
 
         void BuildAssembly()
         {
-            var divider = Rect("Divider", assemblyRect, new Vector2(-20, 0), new Vector2(4, 280)).gameObject.AddComponent<Image>();
+            var divider = Rect("Divider", assemblyRect, new Vector2(-20, 0), new Vector2(4, 256)).gameObject.AddComponent<Image>();
             divider.color = Deep; divider.raycastTarget = false; transient.Add(divider.gameObject);
             foreach (var piece in assembly.Pieces)
             {
                 var slot = Rect("Outline " + (piece.Id + 1), assemblyRect, BoardPosition(assemblyRect, piece.TargetX, piece.TargetY), PieceSizes[piece.Shape] + new Vector2(10, 10));
                 if (piece.Shape == 3) slot.localRotation = Quaternion.Euler(0, 0, 45);
                 var fill = slot.gameObject.AddComponent<Image>(); var c = PieceColors[piece.Id % PieceColors.Length]; fill.color = new Color(c.r, c.g, c.b, .18f);
-                var border = slot.gameObject.AddComponent<Outline>(); border.effectColor = c; border.effectDistance = new Vector2(3, -3);
+                Frame(slot, c, 3); // UI Outline copies the whole image, so draw a real frame instead.
                 int slotIndex = assembly.SlotOf(piece.Id);
                 slot.gameObject.AddComponent<RehabBoardTarget>().OnTap = () => TapSlot(slotIndex);
                 transient.Add(slot.gameObject);
@@ -506,8 +522,19 @@ namespace GripRehab
         {
             var piece = assembly.Pieces[id];
             pieceViews[id].anchoredPosition = BoardPosition(assemblyRect, piece.X, piece.Y);
-            if (piece.Placed) { pieceViews[id].GetComponent<RehabDragPiece>().enabled = false; pieceViews[id].SetAsFirstSibling(); }
-            else pieceViews[id].SetAsLastSibling();
+            if (piece.Placed) pieceViews[id].GetComponent<RehabDragPiece>().enabled = false;
+            pieceViews[id].SetAsLastSibling();
+        }
+
+        static void Frame(RectTransform target, Color color, float thickness)
+        {
+            var size = target.sizeDelta;
+            foreach (var edge in new[] { new Vector4(0, size.y / 2, size.x, thickness), new Vector4(0, -size.y / 2, size.x, thickness),
+                                         new Vector4(-size.x / 2, 0, thickness, size.y), new Vector4(size.x / 2, 0, thickness, size.y) })
+            {
+                var image = Rect("Frame", target, new Vector2(edge.x, edge.y), new Vector2(edge.z, edge.w)).gameObject.AddComponent<Image>();
+                image.color = color; image.raycastTarget = false;
+            }
         }
 
         static Vector2 BoardPosition(RectTransform board, float x, float y)
@@ -561,7 +588,7 @@ namespace GripRehab
                 {
                     var tile = Rect("Cell", mazeBoard, MazeCellPosition(x, y), Vector2.one * (cell - 2)).gameObject.AddComponent<Image>();
                     tile.raycastTarget = false;
-                    tile.color = maze.IsWall(x, y) ? Wall : x == maze.Columns - 1 && y == maze.Rows - 1 ? Green : Deep;
+                    tile.color = maze.IsWall(x, y) ? Wall : x == maze.Columns - 1 && y == maze.Rows - 1 ? Green : Corridor;
                     mazeCells.Add(tile); transient.Add(tile.gameObject);
                 }
             mazeAvatar = Rect("Avatar", mazeBoard, MazeCellPosition(maze.X, maze.Y), Vector2.one * (cell * .7f));
@@ -570,6 +597,10 @@ namespace GripRehab
         }
 
         // ---------- Shared UI helpers ----------
+        // Playtest fix: inferred theming painted the boards the same colour as the card.
+        static void BoardRole(GameObject board) =>
+            board.AddComponent<GripRehab.UI.GripUiRoleTag>().role = GripRehab.UI.GripUiRole.Secondary;
+
         static RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)
         {
             var go = new GameObject(name, typeof(RectTransform));
