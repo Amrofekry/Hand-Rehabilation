@@ -87,6 +87,17 @@ namespace GripRehab
             }
             exercises = new RehabExerciseSuite(root.transform, ShowModules,
                                                SaveExerciseStart, SaveExerciseResult);
+            // Stage 3: progression per player and camera gestures from the selected (or only) tracked hand.
+            exercises.LevelSource = (module, task) => research != null ? research.LevelFor(module, task) : 1;
+            exercises.GestureSource = () =>
+            {
+                var vision = experience != null ? experience.vision : null;
+                if (vision == null) return HandGesture.None;
+                var frame = experience.LeftSelected
+                    ? (vision.LeftValid ? vision.LatestLeft : vision.RightValid ? vision.LatestRight : null)
+                    : (vision.RightValid ? vision.LatestRight : vision.LeftValid ? vision.LatestLeft : null);
+                return GestureClassifier.Classify(frame);
+            };
             if (!testing && experience != null && experience.vision != null &&
                 experience.cameraLauncher != null)
             {
@@ -348,7 +359,7 @@ namespace GripRehab
 
         void SaveExerciseResult(int module, int task, int score, float seconds)
         {
-            if (research != null) research.ExerciseCompleted(score, seconds);
+            if (research != null) research.ExerciseCompleted(score, seconds, exercises.LastOutcomes);
             if (guestMode || Store == null || Store.Active == null) return;
             try { Store.SaveExerciseResult(module, task, score, seconds); }
             catch (Exception error) when (error is IOException || error is UnauthorizedAccessException ||

@@ -37,7 +37,7 @@ namespace GripRehab
             if (!LeavingGame()) return false;
             if (!AuthorizeTraining()) return false;
             started = Time.realtimeSinceStartupAsDouble; nextSample = started; nextSave = started + 5;
-            visualHold = 0; hadWrist = false; hadInput = false; features.Clear(); savingFailed = false; LastSaveProblem="";
+            hadWrist = false; hadInput = false; features.Clear(); savingFailed = false; LastSaveProblem="";
             capability = !guest && HasAccount ? repository.LatestBaseline(repository.Current.id) : null;
 
             fatigueSafety = new FatigueSafetyPolicy(guidanceSettings != null ? guidanceSettings.FatigueSnapshot() : new FatigueSafetyConfig { maximumLevel = limits.maximumLevel });
@@ -129,7 +129,7 @@ namespace GripRehab
             if (session == null) return;
             session.durationSeconds = (float)(now - started);
             bool changedSource = hadInput && input.ChangesIdentity(previousInput);
-            if (changedSource) { sourceFault=true; lastModelValid=false; aiWindow.Clear(); features.Clear(); visualHold = 0; hadWrist = false; if (session.module == 1) BeginForceRounds(session.level); }
+            if (changedSource) { sourceFault=true; lastModelValid=false; aiWindow.Clear(); features.Clear(); hadWrist = false; if (session.module == 1) BeginForceRounds(session.level); }
             bool unique = input.Fresh && (!hadInput || changedSource || input.sequence > previousInput.sequence);
             if (unique) { previousInput = input; hadInput = true; }
             bool practising = shell.CurrentPage == "Activity" || (shell.CurrentPage == "Game" && !shell.experience.player.Paused);

@@ -30,7 +30,6 @@ namespace GripRehab
         GuidanceLimits limits = new GuidanceLimits();
         CapabilityProfile capability;
         double nextSample, nextSave, started;
-        float visualHold;
         long demoSequence;
         Vector3 previousWrist, previousVelocity;
         bool hadWrist, collecting, guidance, liveSession, savingFailed, guest;

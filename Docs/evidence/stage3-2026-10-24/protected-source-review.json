@@ -13,13 +13,13 @@
     },
     "Assets/ProductIntegration/ResearchSessionRuntime.cs": {
       "previousSha256": "48cb9e4479ab3a7dd25a9477dac973a25db4fd5767c488b36904469410b6c035",
-      "currentSha256": "a2cb38851b34182db4dd3ea5a3a84111fa4ebe5315fcb601e39c71164065c1dc",
-      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: Module 1 round-based session (level progression, effort reference, rounds stepped per fresh held sample, outcomes and stars on results; Module 2/3 results show time instead of grip)."
+      "currentSha256": "5d859a76ac05dc45e945a19b5ee74b49e950ee53cda29362d2930ab32d9f9a47",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1/3.2: Module 1 rounds, level progression, outcomes on results; visualHold removed."
     },
     "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
       "previousSha256": "f4f23bb33f8a7b5defff3af478e684d56d9713ea6a15644c54e5210b5572adfc",
-      "currentSha256": "22437a23ea34c87f395d2cae46c50af4e0760bc7d8c1b628dde64d708db86241",
-      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: HUD shows round number, type, effort and the current instruction."
+      "currentSha256": "e16182fe04627dcb847bcb8b5ba1af2bbd1d251a5dc0375f27d76b95c90a4bf0",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1-3.3: round HUD; exercise level source, camera gesture source and outcomes passed to the session."
     },
     "Assets/Rehab/3.2-vision/HandTracking.cs": {
       "previousSha256": "05af84e7f26351b7ca281b47cb4e05deb0768aa44a9230e69ae8b185207ec1ef",
@@ -30,6 +30,11 @@
       "previousSha256": "421d5b028db9b66a252c2c42bfd1b72ca35ed9fcd8645c7d713047e139bc789a",
       "currentSha256": "1de57e1852108d7068fdf3c2e1de474d34ead9d907822afdd5218481f79d1180",
       "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.3: seeded generated mazes with BFS shortest path and efficiency score (legacy map/formula unchanged); level trace routes with tolerance, mean deviation and on-path state."
+    },
+    "Assets/ProductIntegration/ResearchPortalHost.cs": {
+      "previousSha256": "49e07226f7d8fcfd9ee6fb3118b8d2514ca2d6cbb7a11bf2547d3aad0b7163e8",
+      "currentSha256": "fcf5d9d71f1a187cd9096a3a8ec0abcd09fe0729c52ae6d8fb0343caaf3d5cce",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: removed the unused visualHold field after Module 1 moved to rounds."
     }
   }
 }
