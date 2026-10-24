@@ -28,8 +28,8 @@ Updated 2026-10-24 (Gantt W6). If another document disagrees with this file, thi
 | 4 | Vision metrics and gestures, YOLO (3.2) | Partial | MediaPipe path regression-checked | Live human trial not done (B05) | `HANDS_AND_MEDIAPIPE_AR.md` |
 | 5 | Deformation and grasp profiles (3.3) | Partial (earlier prototype; soft-body withdrawn) | Regression-checked | None | `DEFORMATION_ITEM_5.md` (history) |
 | 6 | Module 1 Force-Object (3.4.1) | Implemented: rounds (hold/control/pulse), levels, metrics, squeeze liquid, effort gauge, synthesised feedback sounds | Rounds/results checked; sounds checked by EditMode synthesis test | None; sounds not listened to | `player-checks.json`, `evidence/stage4-2026-10-24/` |
-| 7 | Module 2 Cognitive (3.4.2) | Implemented: avatar gesture memory (camera/buttons/keys), drag assembly, levels | Playable | None | `RehabExerciseSuite.cs` |
-| 8 | Module 3 Visuomotor (3.4.3) | Implemented: generated mazes, guided tracing with green/red trail, levels | Playable | None | `RehabExerciseSuite.cs` |
+| 7 | Module 2 Cognitive (3.4.2) | Implemented: avatar gesture memory (camera/buttons/keys), assembly by hand pointer (5 s pick-up, carry, 2 s place) or mouse, levels | Hand play checked in EditMode and in the build with a synthetic hand | No real webcam hand yet | `RehabExerciseSuite.cs`, `evidence/stage4-2026-10-24/hand-play/` |
+| 8 | Module 3 Visuomotor (3.4.3) | Implemented: generated mazes steered by hand pointer (marker follows the hand) or mouse/keys, guided tracing with green/red trail, levels | Hand play checked in EditMode and in the build with a synthetic hand | No real webcam hand yet | `RehabExerciseSuite.cs`, `evidence/stage4-2026-10-24/hand-play/` |
 | 9 | 10 Hz feature windows and CSV export (4.2) | Implemented | Passed (40/40 synthetic packets) | No device data | FINAL_REPORT |
 | 10 | Seven-class facial model, opt-in (3.2/4.2) | Implemented | Passed (synthetic) | Accuracy not validated | FINAL_REPORT |
 | 11 | rPPG HR/HRV, opt-in (3.2/4.2) | Implemented | Passed (synthetic signals) | No reference-sensor validation | FINAL_REPORT |

@@ -268,6 +268,58 @@ Your LocalLow data was backed up and restored byte-for-byte (11/11 SHA-256, iden
 
 All of these use synthetic or fixture input only. No physical hardware, camera or participant was used.
 
+### Hand-only play for Spatial Assembly and Maze (24 Oct 2026, requested after the Stage 4 review)
+
+Both exercises can now be played with the camera hand pointer alone, like the menus and Visual Tracing. Mouse, tap and keyboard stay as alternatives.
+
+- **Spatial Assembly:**
+  - Hold the hand pointer on a piece for the pointer's dwell time (5 s, the same as buttons) and the piece lifts and follows the hand.
+  - Hold it still on an outline for 2 s to place it. The scoring is the same as tapping: a wrong outline counts one error and sends the piece back.
+  - If the hand is lost for 1.5 s, the piece returns to the tray without an error.
+- **Maze Navigation:**
+  - Move the hand onto the blue marker to take hold of it. It then follows the hand one cell at a time along open corridors, one step every 0.16 s.
+  - Pushing into a wall counts one wall contact for each new hand cell, not one per frame.
+  - Losing the hand for 1.5 s lets go of the marker. A mouse drag on the board works the same way.
+- **The pointer ring and status line show what to do:**
+  - "HOLD 4s"
+  - "CARRYING 2"
+  - "HOLD TO PLACE"
+  - "TOUCH THE MARKER"
+- **Code:** `RehabHandSurface` and `HandFeedback` in `RehabExerciseSuite.cs`, `AssemblyHand` / `MazeHand` / `ReleaseHand`, and a captured-surface hook in `RehabDwellPointer`. Instructions and tutorial cards were rewritten for hand play.
+- **Checks:** `RehabExerciseVerification` (EditMode) covers:
+  - no pick-up before 5 s, then pick-up at 5 s;
+  - the piece follows the hand;
+  - a wrong outline gives one error and the piece returns;
+  - a lost hand returns the piece without an error;
+  - all pieces placed by hand (score 90 with the one error);
+  - the maze ignores the hand until the marker is touched;
+  - a lost hand releases the marker;
+  - following the corridors by hand reaches the goal with no contacts (score 100).
+
+**Played in the Windows build with a synthetic hand.** Frames were sent over loopback UDP by `evidence/stage4-2026-10-24/hand_driver.py`, the same 21-landmark format the acceptance runner uses. No camera and no person were involved, so this is not a physical or human test.
+
+| Check | Result |
+|---|---|
+| Assembly, all 4 pieces placed by hand | 100/100, 3 stars, 0 wrong outlines, path efficiency 98.7% |
+| Maze tutorial GOT IT pressed by hand dwell | Pass |
+| Maze, first run | Goal reached by hand, but 12 moves against a shortest route of 10 (96/100). The hand came in diagonally and took hold of the marker from the next square, which stepped the marker. |
+| Maze, after the fix (hand must be on the marker's own square) | 10 moves, 0 contacts, 100/100 |
+| Focus | Once, the hand did nothing because the window had lost focus (T-003); it worked after the window was brought forward |
+
+Screenshots are in `evidence/stage4-2026-10-24/hand-play/`.
+
+**Not tested:**
+- A real webcam hand. Real-hand tremor, tracking loss and comfort of the 5 s pick-up and 2 s placement still need a hands-on session with the camera.
+
+**Final build after the hand-play change:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI passed at 2 sizes; gallery passed.
+- **Unity test runner:** EditMode 6/6, including the hand-play checks.
+- **Offline C#:** all jobs pass (product 58, tracking 177).
+- **Python:** Tools 66, bridges 8, WBS 45, AI 32.
+
+Your LocalLow data matched the backup (11/11 SHA-256) after the session. The review-created tutorial preferences were deleted.
+
 ## 8. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

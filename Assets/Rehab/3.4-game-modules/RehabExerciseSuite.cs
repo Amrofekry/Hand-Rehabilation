@@ -59,6 +59,14 @@ namespace GripRehab
         public bool TutorialOpen => tutorialOpen;
         public bool TutorialsEnabled { get => tutorialsEnabled; set { tutorialsEnabled = value; if (!value) CloseTutorial(false); } }
         HandGesture seenGesture = HandGesture.None;
+        // Hand-pointer play for Spatial Assembly and Maze (no mouse or keyboard needed).
+        // Pick-up uses the pointer's button dwell; placing needs a shorter steady hold.
+        public const float HandDropSeconds = 2f, HandLostSeconds = 1.5f, MazeStepSeconds = .16f;
+        int handHover = -1, handCarry = -1, handDropSlot = -1;
+        float handDwell, handDropDwell, handIdle, mazeStepWait;
+        bool mazeEngaged; Vector2Int mazeBumpCell = new Vector2Int(-1, -1);
+        public bool HandCarrying => handCarry >= 0;
+        public bool MazeEngaged => mazeEngaged;
 
         static readonly Color Deep = Html("1A2230"), Raised = Html("2B415C");
         static readonly Color White = Html("FFFFFF"), Mint = Html("B9F7FF");
@@ -126,6 +134,8 @@ namespace GripRehab
             assemblyArea = Rect("Assembly board", card, new Vector2(0, -52), new Vector2(1040, 276)).gameObject;
             assemblyArea.AddComponent<Image>().color = Raised; BoardRole(assemblyArea);
             assemblyRect = (RectTransform)assemblyArea.transform;
+            var assemblyHand = assemblyArea.AddComponent<RehabHandSurface>();
+            assemblyHand.OnHand = AssemblyHand; assemblyHand.Capturing = () => handCarry >= 0;
 
             traceArea = Rect("Trace pad", card, new Vector2(0, -52), new Vector2(1040, 276)).gameObject;
             traceArea.AddComponent<Image>().color = Raised; BoardRole(traceArea);
@@ -143,6 +153,9 @@ namespace GripRehab
             mazeBoard = Rect("Maze board", mazeArea.transform, new Vector2(-150, 0), new Vector2(560, 266));
             mazeMap = Label("Maze map", mazeArea.transform, new Vector2(-150, 0), new Vector2(10, 10), 2, White);
             mazeMap.enabled = false; // Kept for older tools; the board is drawn with tiles.
+            var mazeHand = mazeArea.AddComponent<RehabHandSurface>();
+            mazeHand.OnHand = MazeHand; mazeHand.Capturing = () => mazeEngaged;
+            mazeHand.MouseDrives = true; mazeHand.OnRelease = ReleaseHand; // the mouse can drag the marker the same way
             // Playtest fix: on the Secondary board the default button colour vanished; use the darker surface.
             foreach (var direction in new[] {
                 Button("Maze up", mazeArea.transform, new Vector2(330, 64), new Vector2(110, 56), "UP", () => MoveMaze(0, -1)),
@@ -194,6 +207,7 @@ namespace GripRehab
             recorded = false; completionHold = 0; LastOutcomes = new List<OutcomeMetric>();
             answers = correctAnswers = intervals = 0; intervalSum = 0; firstAnswerSeconds = revealEndedAt = lastAnswerAt = -1;
             selectedPiece = -1; trailNext = 0; collisionFlash = 0; gestures.Reset(); seenGesture = HandGesture.None;
+            handHover = handCarry = handDropSlot = -1; handDwell = handDropDwell = handIdle = mazeStepWait = 0; mazeEngaged = false;
             memory = new SequenceMemoryTask(seed, ExerciseTuning.MemoryLength(Level));
             assembly = new AssemblyBoard(ExerciseTuning.AssemblyPieces(Level), seed);
             tracing = new TraceTask(TraceTask.PathFor(Level), ExerciseTuning.TraceTolerance(Level));
@@ -220,10 +234,10 @@ namespace GripRehab
             instruction.text = current == Exercise.Memory ?
                 "Watch the hand show " + memory.Length + " gestures, then repeat them: make each gesture to the camera, or use the buttons or keys 1–4." :
                 current == Exercise.Assembly ?
-                "Drag each piece onto the outline of the same shape and colour. Or tap a piece, then tap its outline." :
+                "Hold your hand on a piece for 5 seconds to pick it up, move it onto the outline of the same shape and colour, and hold still to place it. A mouse can drag or tap instead." :
                 current == Exercise.Tracing ?
                 "Follow the dashed line through waypoints 1–" + tracing.Route.Length + " with your hand pointer or mouse. Green = on the line, red = off." :
-                "Guide the marker to the green goal without bumping walls. Use the arrow keys or direction buttons.";
+                "Move your hand onto the blue marker, then guide it along the corridors to the green goal without bumping walls. Mouse drag, arrow keys and buttons also work.";
             Refresh();
         }
 
@@ -237,6 +251,9 @@ namespace GripRehab
                 if (completionHold <= 0) completed?.Invoke(Module, Task, pendingScore, pendingSeconds);
                 return;
             }
+            // A lost hand puts a carried piece back in the tray and lets go of the maze marker.
+            handIdle += dt;
+            if (handIdle > HandLostSeconds && (handCarry >= 0 || handHover >= 0 || mazeEngaged)) ReleaseHand();
             if (Revealing)
             {
                 revealRemaining -= dt;
@@ -335,6 +352,122 @@ namespace GripRehab
             Refresh(); RecordIfComplete();
         }
 
+        // ---------- Hand-pointer play ----------
+        /// <summary>
+        /// Spatial Assembly by hand: hold the pointer on a piece for the dwell time to pick it up,
+        /// carry it, then hold it still on an outline to place it. Uses the same rules as dragging.
+        /// </summary>
+        public HandFeedback AssemblyHand(Vector2 local, bool tracked, float dt, float dwell)
+        {
+            if (current != Exercise.Assembly || assembly == null || assembly.Complete || tutorialOpen || completionHold > 0) return HandFeedback.None;
+            dt = RehabPointerPolicy.SafeDt(dt); dwell = RehabPointerPolicy.Duration(dwell);
+            if (tracked) handIdle = 0;
+            var size = assemblyRect.rect.size == Vector2.zero ? assemblyRect.sizeDelta : assemblyRect.rect.size;
+            var board = new Vector2(Mathf.Clamp01(local.x / size.x + .5f), Mathf.Clamp01(local.y / size.y + .5f));
+            if (handCarry < 0)
+            {
+                int over = PieceAt(local);
+                if (over != handHover) { handHover = over; handDwell = 0; }
+                if (over < 0) return new HandFeedback(0, "POINT AT A PIECE", "HAND PLAY  /  HOLD YOUR HAND ON A PIECE TO PICK IT UP");
+                if (tracked) handDwell += dt;
+                if (handDwell < dwell)
+                    return new HandFeedback(handDwell / dwell, "HOLD " + Mathf.CeilToInt(dwell - handDwell) + "s",
+                        "PICKING UP PIECE " + (over + 1) + "  /  HOLD YOUR HAND STEADY");
+                handCarry = over; handHover = -1; handDwell = 0; handDropSlot = -1; handDropDwell = 0; selectedPiece = over;
+                RehabAudio.Play(RehabSound.Step, 1.2f); Refresh();
+            }
+            if (tracked) DragPiece(handCarry, board);
+            int slot = SlotAt(local);
+            if (slot != handDropSlot) { handDropSlot = slot; handDropDwell = 0; }
+            if (slot < 0) return new HandFeedback(0, "CARRYING " + (handCarry + 1), "CARRYING PIECE " + (handCarry + 1) + "  /  MOVE IT ONTO ITS OUTLINE");
+            if (tracked) handDropDwell += dt;
+            if (handDropDwell < HandDropSeconds)
+                return new HandFeedback(handDropDwell / HandDropSeconds, "HOLD TO PLACE", "PLACING  /  HOLD YOUR HAND STILL ON THE OUTLINE");
+            int carried = handCarry; handCarry = -1; handDropSlot = -1; handDropDwell = 0; selectedPiece = carried;
+            TapSlot(slot); // same scoring as the tap path: a wrong outline counts and the piece returns
+            bool placedHere = assembly.Pieces[carried].Placed;
+            return new HandFeedback(1, placedHere ? "PLACED" : "WRONG OUTLINE", placedHere ? "PLACED  /  POINT AT THE NEXT PIECE" : "WRONG OUTLINE  /  THE PIECE WENT BACK");
+        }
+
+        /// <summary>
+        /// Maze by hand: touch the blue marker to take hold of it, then it follows the hand one cell
+        /// at a time along open corridors. Pushing into a wall counts one contact per new hand cell.
+        /// </summary>
+        public HandFeedback MazeHand(Vector2 local, bool tracked, float dt, float dwell)
+        {
+            if (current != Exercise.Maze || maze == null || maze.Complete || tutorialOpen || completionHold > 0) return HandFeedback.None;
+            dt = RehabPointerPolicy.SafeDt(dt);
+            if (tracked) handIdle = 0;
+            var point = local - mazeBoard.anchoredPosition;
+            float cell = MazeCellSize;
+            bool inside = Mathf.Abs(point.x) <= cell * maze.Columns / 2 && Mathf.Abs(point.y) <= cell * maze.Rows / 2;
+            int cx = Mathf.Clamp(Mathf.RoundToInt(point.x / cell + (maze.Columns - 1) / 2f), 0, maze.Columns - 1);
+            int cy = Mathf.Clamp(Mathf.RoundToInt((maze.Rows - 1) / 2f - point.y / cell), 0, maze.Rows - 1);
+            if (!mazeEngaged)
+            {
+                // The hand must be on the marker's own square, so taking hold never moves it.
+                if (!tracked || !inside || cx != maze.X || cy != maze.Y)
+                    return new HandFeedback(0, "TOUCH THE MARKER", "HAND PLAY  /  MOVE YOUR HAND ONTO THE BLUE MARKER");
+                mazeEngaged = true; mazeStepWait = 0; mazeBumpCell = new Vector2Int(-1, -1);
+                RehabAudio.Play(RehabSound.Step, 1.2f);
+            }
+            if (!tracked) return new HandFeedback(0, "SHOW YOUR HAND", "HAND PAUSED  /  SHOW YOUR HAND TO KEEP MOVING");
+            if (!inside) return new HandFeedback(0, "BACK TO THE MAZE", "MOVE YOUR HAND BACK OVER THE MAZE");
+            mazeStepWait -= dt;
+            if ((cx != maze.X || cy != maze.Y) && mazeStepWait <= 0)
+            {
+                int dx = cx - maze.X, dy = cy - maze.Y;
+                bool horizontal = Mathf.Abs(dx) >= Mathf.Abs(dy);
+                int ax = horizontal ? Math.Sign(dx) : 0, ay = horizontal ? 0 : Math.Sign(dy);
+                int bx = horizontal ? 0 : Math.Sign(dx), by = horizontal ? Math.Sign(dy) : 0;
+                if (!maze.IsWall(maze.X + ax, maze.Y + ay)) MoveMaze(ax, ay);
+                else if ((bx != 0 || by != 0) && !maze.IsWall(maze.X + bx, maze.Y + by)) MoveMaze(bx, by);
+                else if (mazeBumpCell != new Vector2Int(cx, cy)) { mazeBumpCell = new Vector2Int(cx, cy); MoveMaze(ax, ay); }
+                mazeStepWait = MazeStepSeconds;
+            }
+            return new HandFeedback(0, "MOVING", "HAND PLAY  /  THE MARKER FOLLOWS YOUR HAND");
+        }
+
+        /// <summary>Lets go: a carried piece returns to the tray without an error; the marker stays where it is.</summary>
+        public void ReleaseHand()
+        {
+            if (handCarry >= 0 && assembly != null && handCarry < assembly.Pieces.Count && !assembly.Pieces[handCarry].Placed)
+            {
+                int id = handCarry; var piece = assembly.Pieces[id];
+                assembly.Drop(id, piece.StartX, piece.StartY); // the tray is far from every outline, so no error
+                if (id < pieceViews.Count) PlacePieceView(id);
+                selectedPiece = -1;
+            }
+            handHover = handCarry = handDropSlot = -1; handDwell = handDropDwell = 0; mazeEngaged = false;
+            Refresh();
+        }
+
+        int PieceAt(Vector2 local)
+        {
+            int best = -1; float bestDistance = float.MaxValue;
+            for (int i = 0; i < pieceViews.Count && i < assembly.Pieces.Count; i++)
+            {
+                if (assembly.Pieces[i].Placed) continue;
+                var centre = pieceViews[i].anchoredPosition; var half = pieceViews[i].sizeDelta * .6f + new Vector2(12, 12);
+                var offset = local - centre;
+                if (Mathf.Abs(offset.x) <= half.x && Mathf.Abs(offset.y) <= half.y && offset.magnitude < bestDistance) { best = i; bestDistance = offset.magnitude; }
+            }
+            return best;
+        }
+
+        int SlotAt(Vector2 local)
+        {
+            int best = -1; float bestDistance = float.MaxValue;
+            for (int i = 0; i < assembly.Pieces.Count; i++)
+            {
+                var piece = assembly.Pieces[i];
+                var centre = BoardPosition(assemblyRect, piece.TargetX, piece.TargetY); var half = PieceSizes[piece.Shape] * .6f + new Vector2(16, 16);
+                var offset = local - centre;
+                if (Mathf.Abs(offset.x) <= half.x && Mathf.Abs(offset.y) <= half.y && offset.magnitude < bestDistance) { best = assembly.SlotOf(i); bestDistance = offset.magnitude; }
+            }
+            return best;
+        }
+
         void RecordIfComplete()
         {
             if (recorded || !Complete) return;
@@ -401,6 +534,7 @@ namespace GripRehab
                     break;
                 case Exercise.Assembly:
                     cue.text = assembly.Complete ? "ASSEMBLY COMPLETE" :
+                        handCarry >= 0 ? "CARRYING PIECE " + (handCarry + 1) + " — HOLD IT ON ITS OUTLINE" :
                         selectedPiece >= 0 ? "PIECE " + (selectedPiece + 1) + " SELECTED — TAP ITS OUTLINE" : "MATCH EVERY PIECE TO ITS OUTLINE";
                     metrics.text = "Placed " + assembly.PlacedCount + "/" + assembly.Pieces.Count + "   ·   Wrong outlines " + assembly.Errors;
                     for (int i = 0; i < pieceViews.Count; i++)
@@ -444,14 +578,16 @@ namespace GripRehab
                 "3. Show each gesture to the camera and hold it briefly, or press its button or key 1–4.",
                 "A wrong gesture restarts the pattern from the beginning."),
             string.Join("\n", "1. Each coloured piece on the left has a matching outline on the right.",
-                "2. Drag a piece onto its outline, or tap the piece and then tap the outline.",
-                "3. A wrong outline sends the piece back and counts as an error."),
+                "2. Hold your hand on a piece for 5 seconds: it lifts and follows your hand.",
+                "3. Move it onto its outline and hold still for 2 seconds to place it.",
+                "A wrong outline sends the piece back and counts as an error. A mouse can drag or tap instead."),
             string.Join("\n", "1. Start at waypoint 1 and follow the dashed line to the last waypoint.",
                 "2. Use your hand pointer, or hold the mouse button and drag.",
                 "3. Green dots are on the line; larger red dots are off it. Accuracy is your score."),
-            string.Join("\n", "1. Move the marker to the green goal.",
-                "2. Use the arrow keys, W A S D or the direction buttons.",
-                "3. Bumping a wall costs points; the shortest route scores best.")
+            string.Join("\n", "1. Move your hand onto the blue marker to take hold of it.",
+                "2. Move your hand along the corridors: the marker follows to the green goal.",
+                "3. Bumping a wall costs points; the shortest route scores best.",
+                "A mouse drag, the arrow keys, W A S D or the direction buttons also work.")
         };
 
         void ShowTutorial(bool always)
@@ -742,6 +878,42 @@ namespace GripRehab
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(Board, eventData.position, eventData.pressEventCamera, out var point)) return;
             var bounds = Board.rect;
             target(new Vector2(Mathf.InverseLerp(bounds.xMin, bounds.xMax, point.x), Mathf.InverseLerp(bounds.yMin, bounds.yMax, point.y)));
+        }
+    }
+
+    /// <summary>What a board tells the hand pointer to show: ring progress, cursor hint and status line.</summary>
+    public struct HandFeedback
+    {
+        public bool Active; public float Progress; public string Hint, Status;
+        public static HandFeedback None => default;
+        public HandFeedback(float progress, string hint, string status) { Active = true; Progress = progress; Hint = hint; Status = status; }
+    }
+
+    /// <summary>
+    /// A board the camera hand pointer can play directly (assembly pick-up/carry, maze marker).
+    /// The pointer feeds it every tracked frame while the hand is over it, or while it holds a
+    /// capture (a carried piece or an engaged marker). Points are local to this rect, centred.
+    /// </summary>
+    public sealed class RehabHandSurface : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+    {
+        public Func<Vector2, bool, float, float, HandFeedback> OnHand; // local point, hand tracked, dt, dwell seconds
+        public Func<bool> Capturing;
+        public Action OnRelease;
+        /// <summary>When set, a held mouse button drives the board exactly like a tracked hand.</summary>
+        public bool MouseDrives;
+        bool mouseHeld; Vector2 mousePoint; Camera mouseCamera;
+        public bool Captures => Capturing != null && Capturing();
+        public void OnPointerDown(PointerEventData eventData) { if (!MouseDrives || eventData.pointerId < -1) return; mouseHeld = true; Track(eventData); }
+        public void OnDrag(PointerEventData eventData) { if (mouseHeld) Track(eventData); }
+        public void OnPointerUp(PointerEventData eventData) { if (!mouseHeld) return; mouseHeld = false; OnRelease?.Invoke(); }
+        void Track(PointerEventData eventData) { mousePoint = eventData.position; mouseCamera = eventData.pressEventCamera; }
+        void Update() { if (mouseHeld) Submit(mousePoint, mouseCamera, true, Time.unscaledDeltaTime, 5); }
+        void OnDisable() { mouseHeld = false; }
+        public HandFeedback Submit(Vector2 screenPoint, Camera eventCamera, bool tracked, float dt, float dwellSeconds)
+        {
+            if (OnHand == null || !isActiveAndEnabled) return HandFeedback.None;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)transform, screenPoint, eventCamera, out var local)) return HandFeedback.None;
+            return OnHand(local, tracked, dt, dwellSeconds);
         }
     }
 

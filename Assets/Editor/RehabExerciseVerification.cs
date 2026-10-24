@@ -71,7 +71,62 @@ namespace GripRehab.Editor
                 foreach (var piece in board.Pieces) { tapPiece.Invoke(suite, new object[] { piece.Id }); tapSlot.Invoke(suite, new object[] { board.SlotOf(piece.Id) }); }
                 for (int i = 0; i < 16; i++) suite.Tick();
                 Require(board.Complete && scored == 100 && Has(suite, "assembly.pieces", board.Pieces.Count), "assembly completes by tapping (score " + scored + ")");
-                Debug.Log("[REHAB_EXERCISE] PASS: memory reveal survives hitches/focus loss, blocks early answers and hides on time; camera gestures, generated maze and tap assembly complete with outcomes");
+
+                // Hand-pointer assembly: 5 s dwell picks a piece up, it follows the hand, a 2 s hold places it.
+                scored = -1;
+                suite.Open(2, 1);
+                board = (AssemblyBoard)typeof(RehabExerciseSuite).GetField("assembly", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(suite);
+                Vector2 Local(float x, float y) => new Vector2((x - .5f) * 1040, (y - .5f) * 276);
+                var first = board.Pieces[0]; var second = board.Pieces[1];
+                for (int i = 0; i < 48; i++) suite.AssemblyHand(Local(first.X, first.Y), true, .1f, 5);
+                Require(!suite.HandCarrying, "a piece is not picked up before the five-second dwell");
+                for (int i = 0; i < 4; i++) suite.AssemblyHand(Local(first.X, first.Y), true, .1f, 5);
+                Require(suite.HandCarrying, "holding the hand on a piece for five seconds picks it up");
+                suite.AssemblyHand(Local(.45f, .5f), true, .1f, 5);
+                Require(Mathf.Abs(first.X - .45f) < .01f && !first.Placed, "the carried piece follows the hand");
+                for (int i = 0; i < 25 && suite.HandCarrying; i++) suite.AssemblyHand(Local(second.TargetX, second.TargetY), true, .1f, 5);
+                Require(!first.Placed && board.Errors == 1 && Mathf.Abs(first.X - first.StartX) < .001f, "holding a piece on the wrong outline counts one error and returns it");
+                for (int i = 0; i < 52; i++) suite.AssemblyHand(Local(first.X, first.Y), true, .1f, 5);
+                Require(suite.HandCarrying, "the returned piece can be picked up again");
+                for (int i = 0; i < 20; i++) suite.Tick();
+                Require(!suite.HandCarrying && board.Errors == 1 && Mathf.Abs(first.X - first.StartX) < .001f, "losing the hand puts the piece back without an error");
+                foreach (var piece in board.Pieces)
+                {
+                    for (int i = 0; i < 52 && !suite.HandCarrying; i++) suite.AssemblyHand(Local(piece.X, piece.Y), true, .1f, 5);
+                    for (int i = 0; i < 25 && suite.HandCarrying; i++) suite.AssemblyHand(Local(piece.TargetX, piece.TargetY), true, .1f, 5);
+                    Require(piece.Placed, "piece " + (piece.Id + 1) + " is placed by hand");
+                }
+                for (int i = 0; i < 16; i++) suite.Tick();
+                Require(board.Complete && scored == 90, "assembly completes by hand with the one wrong outline counted (score " + scored + ")");
+
+                // Hand-pointer maze: touch the marker, then it follows the hand cell by cell.
+                suite.LevelSource = (m, t) => 5; scored = -1;
+                suite.Open(3, 1);
+                maze = (MazeTask)typeof(RehabExerciseSuite).GetField("maze", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(suite);
+                float cell = Mathf.Min(560f / maze.Columns, 266f / maze.Rows);
+                Vector2 Cell(int x, int y) => new Vector2(-150 + (x - (maze.Columns - 1) / 2f) * cell, ((maze.Rows - 1) / 2f - y) * cell);
+                for (int i = 0; i < 10; i++) suite.MazeHand(Cell(maze.Columns - 1, maze.Rows - 1), true, .1f, 5);
+                Require(maze.X == 0 && maze.Y == 0 && !suite.MazeEngaged, "the marker ignores the hand until the hand touches it");
+                suite.MazeHand(Cell(0, 0), true, .1f, 5);
+                Require(suite.MazeEngaged, "touching the marker takes hold of it");
+                int movesBefore = maze.Moves;
+                var wall = maze.IsWall(1, 0) ? new Vector2Int(1, 0) : maze.IsWall(0, 1) ? new Vector2Int(0, 1) : new Vector2Int(-1, -1);
+                if (wall.x >= 0)
+                {
+                    for (int i = 0; i < 10; i++) suite.MazeHand(Cell(wall.x, wall.y), true, .1f, 5);
+                    Require(maze.Collisions == 1 && maze.X == 0 && maze.Y == 0, "pushing the hand into a wall counts one contact, not one per frame (" + maze.Collisions + ")");
+                    suite.MazeHand(Cell(0, 0), true, .1f, 5);
+                }
+                Require(maze.Moves == movesBefore, "taking hold of the marker never moves it");
+                for (int i = 0; i < 20; i++) suite.Tick();
+                Require(!suite.MazeEngaged, "losing the hand lets go of the marker");
+                route = maze.Solve();
+                suite.MazeHand(Cell(0, 0), true, .1f, 5);
+                foreach (var step in route) for (int i = 0; i < 3; i++) suite.MazeHand(Cell(step.x, step.y), true, .1f, 5);
+                for (int i = 0; i < 16; i++) suite.Tick();
+                Require(maze.Complete && maze.Moves == maze.ShortestPath && maze.Collisions == (wall.x >= 0 ? 1 : 0) && scored == Mathf.RoundToInt(maze.Score),
+                    "following the corridors by hand reaches the goal on the shortest route (score " + scored + ", moves " + maze.Moves + ", contacts " + maze.Collisions + ")");
+                Debug.Log("[REHAB_EXERCISE] PASS: memory reveal survives hitches/focus loss, blocks early answers and hides on time; camera gestures, generated maze and tap assembly complete with outcomes; assembly and maze play fully by hand pointer");
             }
             finally { UnityEngine.Object.DestroyImmediate(canvas); }
         }

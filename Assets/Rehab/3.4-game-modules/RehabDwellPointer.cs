@@ -28,6 +28,7 @@ namespace GripRehab
         Text hint;
         Text status;
         Selectable target;
+        RehabHandSurface captured;
         int targetToken;
         Vector2 position;
         readonly RehabDwellGate dwell = new RehabDwellGate();
@@ -201,6 +202,7 @@ namespace GripRehab
             EventSystem.current.RaycastAll(pointerEvent, hits);
             Selectable next = null;
             RehabTracePad trace = null;
+            RehabHandSurface surface = null;
             bool blockedByControl = false;
             // Respect the frontmost graphic. Never click a control behind a
             // modal/background/disabled control just because it appears later.
@@ -212,6 +214,7 @@ namespace GripRehab
                 if (next != null && (!next.IsActive() || !next.IsInteractable() ||
                     !(next is Button || next is Dropdown || next is Toggle || next is TMPro.TMP_Dropdown || next is InputField || next is TMPro.TMP_InputField))) next = null;
                 trace = hit.GetComponentInParent<RehabTracePad>();
+                surface = hit.GetComponentInParent<RehabHandSurface>();
             }
             if (pointing && trace != null && shell.CurrentPage == "Activity")
                 trace.SubmitScreenPoint(position, null);
@@ -227,6 +230,22 @@ namespace GripRehab
                 (dwell.Latched || rearm.Waiting) ? "SELECTED  /  MOVE YOUR HAND TO SELECT AGAIN" : "SELECTING  /  HOLD YOUR HAND STEADY";
             hint.text = !pointing ? "SHOW YOUR HAND" : target == null ? "POINT AT A BUTTON" :
                 (dwell.Latched || rearm.Waiting) ? "SELECTED" : "HOLD " + Mathf.CeilToInt(Mathf.Max(0, RehabPointerPolicy.Duration(dwellSeconds) - dwell.Elapsed)) + "s";
+            // Hand-played boards (assembly pieces, maze marker). A carried piece or held marker keeps
+            // following the hand even when it leaves the board or passes over a button.
+            if (captured != null && !captured.Captures) captured = null;
+            var board = captured != null ? captured : next == null ? surface : null;
+            if (board != null && shell.CurrentPage == "Activity")
+            {
+                var feedback = board.Submit(position, null, pointing, dt, RehabPointerPolicy.Duration(dwellSeconds));
+                captured = board.Captures ? board : null;
+                if (feedback.Active && (target == null || captured != null))
+                {
+                    if (captured != null) { SetTarget(null); dwell.Reset(); }
+                    progress.fillAmount = Mathf.Clamp01(feedback.Progress);
+                    hint.text = feedback.Hint; status.text = feedback.Status;
+                    return;
+                }
+            }
             if (activate && target != null && target.IsActive() && target.IsInteractable())
             {
                 var selected = target;
@@ -243,7 +262,7 @@ namespace GripRehab
         void Hide()
         {
             if (cursor != null) cursor.gameObject.SetActive(false);
-            SetTarget(null); dwell.Reset(); rearm.Reset(); lastLeft = null; PointingDetected = false;
+            SetTarget(null); dwell.Reset(); rearm.Reset(); lastLeft = null; PointingDetected = false; captured = null;
             gestureInterruption = 0;
             hasPosition = false;
         }
