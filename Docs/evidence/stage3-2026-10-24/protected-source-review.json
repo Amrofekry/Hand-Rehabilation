@@ -35,6 +35,26 @@
       "previousSha256": "49e07226f7d8fcfd9ee6fb3118b8d2514ca2d6cbb7a11bf2547d3aad0b7163e8",
       "currentSha256": "fcf5d9d71f1a187cd9096a3a8ec0abcd09fe0729c52ae6d8fb0343caaf3d5cce",
       "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.1: removed the unused visualHold field after Module 1 moved to rounds."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/PhysicalMaterialProfile.cs": {
+      "previousSha256": "5b564dd17871203937e6624298115b154b73615e3a1d1fc59c9db4d6b92ab928",
+      "currentSha256": "07c40a2fef1c178e5e9cb665f7ac60cc123e1d01fe552d031d6d1d70c98e3e3d",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.4: optional liquid settings (in-house stand-in for the Obi Fluid role)."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "b90307d44034bd73505d1fe2efd782894b43d4ddcd8cdf7fee68aa977140639c",
+      "currentSha256": "545407e7b1c21d4978f0a92617bb861ff4ed4263cb474d494c1a0f2aa9ad053d",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.4: attaches SqueezeLiquid when the profile releases liquid; clears it on reset."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/02_Kitchen_sponge.asset": {
+      "previousSha256": "e4357c9d9331ec5e29d75312bf65d14c84ece009ab441487ca3644edc9022c96",
+      "currentSha256": "b5150dd5d08a99e78580d0934538ed26e41b371a18b994dc7dc065a67bc0597c",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.4: sponge releases clear water above 20% compression (authored by SqueezeLiquidAuthoring)."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/Profiles/06_Ripe_tomato.asset": {
+      "previousSha256": "fea98a67eb345db58a8d89ca418dc71fec28b73235ede251201da5ad30b7171d",
+      "currentSha256": "d0f1dfcf59f7a951ee3510503326e2fb5a5de2745630458747422880c03ca857",
+      "reason": "User-authorized Stage 3 gameplay pass (2026-10-24). Stage 3.4: tomato releases red juice above 35% compression and bursts on breaking."
     }
   }
 }

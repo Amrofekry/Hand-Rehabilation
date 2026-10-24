@@ -27,4 +27,11 @@ MonoBehaviour:
   sustainedForceNewtons: 55
   forceDwellSeconds: 0.4
   damageCapacity: 1
+  releasesLiquid: 1
+  liquidColor: {r: 0.72, g: 0.86, b: 1, a: 0.75}
+  liquidMaterial: {fileID: 2100000, guid: 3b6002cfab8a0b34e9661735e136062c, type: 2}
+  liquidStartCompression: 0.2
+  liquidRate: 80
+  liquidBurst: 0
+  maxVertices: 4096
   showContactGizmos: 0

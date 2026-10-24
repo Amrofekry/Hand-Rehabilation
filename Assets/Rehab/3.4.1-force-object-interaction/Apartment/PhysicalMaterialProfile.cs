@@ -22,6 +22,13 @@ public sealed class PhysicalMaterialProfile : ScriptableObject {
  [Min(1)] public float sustainedForceNewtons=55;
  [Min(.05f)] public float forceDwellSeconds=.4f;
  [Min(.01f)] public float damageCapacity=1;
+ [Header("Liquid (Stage 3.4: in-house stand-in for the Obi Fluid role)")]
+ public bool releasesLiquid;
+ public Color liquidColor=new Color(.75f,.88f,1f,.85f);
+ public Material liquidMaterial;
+ [Range(0,1)] public float liquidStartCompression=.25f;
+ [Min(0)] public float liquidRate=70;
+ [Min(0)] public int liquidBurst=0;
  [Header("Performance")][Min(128)] public int maxVertices=4096;
  [Header("Debug")]
  public bool showContactGizmos;

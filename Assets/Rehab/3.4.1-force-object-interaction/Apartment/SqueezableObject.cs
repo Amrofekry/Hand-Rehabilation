@@ -60,6 +60,7 @@ public sealed class SqueezableObject : MonoBehaviour {
   for(int i=0;i<boundProbes.Length;i++)if(boundProbes[i]!=null)boundCapsules[i]=boundProbes[i].GetComponent<CapsuleCollider>();
  }
  Renderer[] visualRenderers;bool[] rendererEnabled;
+ public SqueezeLiquid Liquid{get;private set;}
  public bool HasLocalizedDeformation=>deformation!=null;
  public int FragmentCount=>shards==null?0:shards.Length;
  public bool FragmentsVisible=>fragments!=null&&fragments.activeInHierarchy;
@@ -96,6 +97,7 @@ public sealed class SqueezableObject : MonoBehaviour {
    mesh=Instantiate(filter.sharedMesh);mesh.name=displayName+" contact mesh";mesh.MarkDynamic();filter.sharedMesh=mesh;
    rest=mesh.vertices;worldRest=new Vector3[rest.Length];deformation=new LocalDeformationState(rest);
   }
+  Liquid=SqueezeLiquid.Attach(this); // Stage 3.4: null unless the profile releases liquid.
  }
  public bool Grab(){
   if(IsBroken||IsHeld)return false;
@@ -221,6 +223,7 @@ public sealed class SqueezableObject : MonoBehaviour {
  }
  public void ResetObject(){
   if(Body==null)return;
+  Liquid?.Clear();
   if(fragments!=null)fragments.SetActive(false);
   if(IsHeld)Release(Vector3.zero);
   IsHeld=false;Damage=DamageState.Intact;DamageValue=dwell=Compression=0;ContactCount=DeformedVertices=0;
