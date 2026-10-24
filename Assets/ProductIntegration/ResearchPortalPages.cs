@@ -94,6 +94,7 @@ namespace GripRehab
         }
         void Exported(string path, Action back)
         { Show("Export saved", "The file was created by your explicit export action.", back); view.Text(path, 110); view.Button("BACK", back, true); }
+        static float NextStep(float volume) { float[] steps = { 0, .3f, .5f, .7f, 1 }; foreach (var step in steps) if (step > volume + .01f) return step; return 0; }
         void Settings()
         {
             Show("Make it comfortable", "English interface · appearance preferences are separate from patient records.", Welcome);
@@ -110,6 +111,11 @@ namespace GripRehab
                 view.Button("LONGER DWELL", () => { accessibility.LongerDwell(); Settings(); });
                 view.Button("UI SOUND: " + Mathf.RoundToInt(accessibility.volume * 100) + "% · TOGGLE MUTE", () => { accessibility.ToggleMute(); Settings(); });
             }
+            // Stage 4: game feedback sounds, room ambience and the virtual hand's appearance (per computer).
+            view.Button("GAME SOUNDS: " + (RehabAudio.Muted ? "OFF" : "ON"), () => { RehabAudio.Muted = !RehabAudio.Muted; Settings(); });
+            view.Button("EFFECTS VOLUME: " + Mathf.RoundToInt(RehabAudio.EffectsVolume * 100) + "%", () => { RehabAudio.EffectsVolume = NextStep(RehabAudio.EffectsVolume); Settings(); });
+            view.Button("ROOM AMBIENCE: " + (RehabAudio.AmbienceVolume > 0 ? "ON" : "OFF"), () => { RehabAudio.AmbienceVolume = RehabAudio.AmbienceVolume > 0 ? 0 : .35f; Settings(); });
+            view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; Settings(); });
             view.Button("BACK TO MENU", Welcome, true);
         }
     }

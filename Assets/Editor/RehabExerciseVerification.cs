@@ -18,7 +18,7 @@ namespace GripRehab.Editor
             try
             {
                 float delta = .1f;
-                var suite = new RehabExerciseSuite(canvas.transform, null, (module, task) => { }, null) { FrameDelta = () => delta };
+                var suite = new RehabExerciseSuite(canvas.transform, null, (module, task) => { }, null) { FrameDelta = () => delta, TutorialsEnabled = false };
                 var cue = (Text)typeof(RehabExerciseSuite).GetField("cue", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(suite);
                 suite.Open(2, 0);
                 Require(cue.text.StartsWith("MEMORISE"), "pattern is shown when Sequence Memory opens: '" + cue.text + "'");

@@ -1,0 +1,15 @@
+{
+  "scope": "Stage 4 presentation changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "97e20e18bb0e1f06a458d656a4d59711add3e0e810af5e18ecef30205204e0f6",
+      "currentSha256": "6015ac48285818703493d021fbc518c6a593dd6609f473cc9600398191e65420",
+      "reason": "User-authorized Stage 4 presentation pass (2026-10-24). Stage 4.3/4.2: Appearance page adds game sounds, effects volume, room ambience and virtual hand tone (per-computer preferences)."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
+      "previousSha256": "e16182fe04627dcb847bcb8b5ba1af2bbd1d251a5dc0375f27d76b95c90a4bf0",
+      "currentSha256": "8a6a163aae9f900b631c33d95226f0e741e69e725b8b3483432646a76a8652c8",
+      "reason": "User-authorized Stage 4 presentation pass (2026-10-24). Stage 4.4: Module 1 effort gauge with target band, readable force digits, refreshed module card copy (runtime only)."
+    }
+  }
+}

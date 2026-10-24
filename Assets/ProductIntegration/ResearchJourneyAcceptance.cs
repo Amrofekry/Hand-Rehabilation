@@ -109,6 +109,7 @@ namespace GripRehab
             var suite = (RehabExerciseSuite)typeof(RehabAppShell).GetField("exercises", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(shell);
             var memory = (SequenceMemoryTask)typeof(RehabExerciseSuite).GetField("memory", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(suite);
             var tokens = memory.Sequence.ToArray();
+            suite.TutorialsEnabled = false; // first-run cards are a player convenience, not part of the journey
             // The reveal counts visible frames only (audit P-012); step it deterministically.
             suite.FrameDelta = () => .1f;
             for (int i = 0; i < 40; i++) { yield return null; suite.Tick(); }

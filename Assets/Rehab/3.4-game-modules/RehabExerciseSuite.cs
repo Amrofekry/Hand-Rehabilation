@@ -54,6 +54,10 @@ namespace GripRehab
         const float CompletionHoldSeconds = 1.4f;
         float completionHold; int pendingScore; float pendingSeconds;
         RectTransform mazeAvatar;
+        // Stage 4.4: first-run "how to play" card per exercise (remembered per computer).
+        GameObject tutorial; Text tutorialTitle, tutorialBody; bool tutorialOpen, tutorialsEnabled = true;
+        public bool TutorialOpen => tutorialOpen;
+        public bool TutorialsEnabled { get => tutorialsEnabled; set { tutorialsEnabled = value; if (!value) CloseTutorial(false); } }
         HandGesture seenGesture = HandGesture.None;
 
         static readonly Color Deep = Html("1A2230"), Raised = Html("2B415C");
@@ -149,6 +153,13 @@ namespace GripRehab
                 direction.targetGraphic.color = Deep;
                 direction.gameObject.AddComponent<GripRehab.UI.GripUiRoleTag>().role = GripRehab.UI.GripUiRole.DarkSurface;
             }
+            Button("How to play", card, new Vector2(0, -292), new Vector2(190, 52), "HOW TO PLAY", () => ShowTutorial(true));
+            tutorial = Rect("How to play card", card, Vector2.zero, new Vector2(1320, 690)).gameObject;
+            tutorial.AddComponent<Image>().color = new Color(Deep.r, Deep.g, Deep.b, .97f);
+            tutorialTitle = Label("Tutorial title", tutorial.transform, new Vector2(0, 170), new Vector2(1000, 60), 32, White);
+            tutorialBody = Label("Tutorial body", tutorial.transform, new Vector2(0, 20), new Vector2(980, 220), 21, Muted);
+            Button("Got it", tutorial.transform, new Vector2(0, -170), new Vector2(260, 64), "GOT IT", () => CloseTutorial(true));
+            tutorial.SetActive(false);
             var canvas = parent.GetComponentInParent<Canvas>();
             presentation = canvas != null ? canvas.GetComponentInChildren<GripRehab.UI.GripUiThemeController>(true) : null;
             if (presentation != null) presentation.RegisterPresentation(page);
@@ -201,6 +212,7 @@ namespace GripRehab
             if (current == Exercise.Assembly) BuildAssembly();
             if (current == Exercise.Tracing) BuildTrace();
             if (current == Exercise.Maze) BuildMaze();
+            ShowTutorial(false);
             title.text = (current == Exercise.Memory ? "02 / SEQUENCE MEMORY" :
                 current == Exercise.Assembly ? "02 / SPATIAL ASSEMBLY" :
                 current == Exercise.Tracing ? "03 / VISUAL TRACING" : "03 / MAZE NAVIGATION") + "   ·   LEVEL " + Level;
@@ -217,6 +229,7 @@ namespace GripRehab
         public void Tick()
         {
             float dt = Mathf.Clamp(FrameDelta(), 0, MaxRevealStep);
+            if (tutorialOpen) return; // the reveal and timers wait until the card is dismissed
             if (completionHold > 0)
             {
                 completionHold -= dt;
@@ -254,31 +267,36 @@ namespace GripRehab
             if (current == Exercise.Maze && mazeAvatar != null)
             {
                 var target = MazeCellPosition(maze.X, maze.Y);
-                mazeAvatar.anchoredPosition = Vector2.Lerp(mazeAvatar.anchoredPosition, target, Mathf.Clamp01(dt * 18));
+                bool reduceMotion = presentation != null && presentation.reduceMotion;
+                mazeAvatar.anchoredPosition = reduceMotion ? target : Vector2.Lerp(mazeAvatar.anchoredPosition, target, Mathf.Clamp01(dt * 18));
                 if (collisionFlash > 0) { collisionFlash -= dt; mazeAvatar.GetComponent<Image>().color = collisionFlash > 0 ? Red : Accent; }
             }
         }
 
         public void Submit(int token)
         {
-            if (token < 0 || token > 3 || Complete || current != Exercise.Memory || Revealing) return;
+            if (token < 0 || token > 3 || Complete || current != Exercise.Memory || Revealing || tutorialOpen) return;
             float now = Time.unscaledTime;
             if (firstAnswerSeconds < 0) firstAnswerSeconds = revealEndedAt >= 0 ? now - revealEndedAt : 0;
             if (lastAnswerAt >= 0) { intervalSum += now - lastAnswerAt; intervals++; }
             lastAnswerAt = now; answers++;
-            if (memory.Submit(token)) correctAnswers++;
+            if (memory.Submit(token)) { correctAnswers++; RehabAudio.Play(RehabSound.Step, 1 + .08f * memory.Correct); }
+            else RehabAudio.Play(RehabSound.Error);
             Refresh();
             RecordIfComplete();
         }
 
         public void TracePoint(Vector2 point)
         {
-            if (current != Exercise.Tracing || tracing.Complete ||
+            if (current != Exercise.Tracing || tracing.Complete || tutorialOpen ||
                 Time.unscaledTime - lastTraceAt < .035f) return;
             lastTraceAt = Time.unscaledTime;
+            int before = tracing.NextWaypoint;
             tracing.Submit(point);
+            if (tracing.NextWaypoint > before) RehabAudio.Play(RehabSound.Step, 1 + .06f * tracing.NextWaypoint);
             var dot = trailDots[trailNext]; trailNext = (trailNext + 1) % trailDots.Count;
             dot.enabled = true; dot.color = tracing.LastOnPath ? Green : Red;
+            dot.rectTransform.sizeDelta = tracing.LastOnPath ? new Vector2(6, 6) : new Vector2(12, 12); // size cue, not colour alone
             dot.rectTransform.anchoredPosition = PadPosition(point);
             Refresh();
             RecordIfComplete();
@@ -286,8 +304,8 @@ namespace GripRehab
 
         public void MoveMaze(int dx, int dy)
         {
-            if (current != Exercise.Maze || maze.Complete) return;
-            if (!maze.Move(dx, dy)) collisionFlash = .3f;
+            if (current != Exercise.Maze || maze.Complete || tutorialOpen) return;
+            if (!maze.Move(dx, dy)) { collisionFlash = .3f; RehabAudio.Play(RehabSound.Bump); } else RehabAudio.Play(RehabSound.Step, .8f);
             Refresh();
             RecordIfComplete();
         }
@@ -301,7 +319,8 @@ namespace GripRehab
         void DropPiece(int id, Vector2 point)
         {
             if (current != Exercise.Assembly || assembly.Complete) return;
-            assembly.Drop(id, point.x, point.y); selectedPiece = -1; PlacePieceView(id);
+            int errors = assembly.Errors; bool placed = assembly.Drop(id, point.x, point.y); selectedPiece = -1; PlacePieceView(id);
+            if (placed) RehabAudio.Play(RehabSound.Chime); else if (assembly.Errors > errors) RehabAudio.Play(RehabSound.Error);
             Refresh(); RecordIfComplete();
         }
 
@@ -310,7 +329,8 @@ namespace GripRehab
         void TapSlot(int slot)
         {
             if (current != Exercise.Assembly || selectedPiece < 0 || assembly.Complete) return;
-            int id = selectedPiece; assembly.PlaceByTap(id, slot); selectedPiece = -1; PlacePieceView(id);
+            int id = selectedPiece, errors = assembly.Errors; bool placed = assembly.PlaceByTap(id, slot); selectedPiece = -1; PlacePieceView(id);
+            if (placed) RehabAudio.Play(RehabSound.Chime); else if (assembly.Errors > errors) RehabAudio.Play(RehabSound.Error);
             Refresh(); RecordIfComplete();
         }
 
@@ -356,6 +376,7 @@ namespace GripRehab
             o.Add(Metric("level", "Level", "", Level));
             o.Add(Metric("stars", "Stars", "", score >= 85 ? 3 : score >= 65 ? 2 : score > 0 ? 1 : 0));
             pendingScore = score; pendingSeconds = seconds; completionHold = CompletionHoldSeconds;
+            RehabAudio.Play(RehabSound.Success);
             Refresh();
         }
 
@@ -412,6 +433,41 @@ namespace GripRehab
 
         Color Accent => presentation != null && presentation.Current != null ? presentation.Current.primary : Jade;
         Color Secondary => presentation != null && presentation.Current != null ? presentation.Current.secondary : Muted;
+
+        // ---------- First-run tutorial ----------
+        static readonly string[] TutorialTitles = { "SEQUENCE MEMORY", "SPATIAL ASSEMBLY", "VISUAL TRACING", "MAZE NAVIGATION" };
+        static readonly string[] TutorialBodies =
+        {
+            string.Join("\n", "1. Watch the hand show each gesture: open hand, fist, point or pinch.",
+                "2. When the pattern hides, repeat it in order.",
+                "3. Show each gesture to the camera and hold it briefly, or press its button or key 1–4.",
+                "A wrong gesture restarts the pattern from the beginning."),
+            string.Join("\n", "1. Each coloured piece on the left has a matching outline on the right.",
+                "2. Drag a piece onto its outline, or tap the piece and then tap the outline.",
+                "3. A wrong outline sends the piece back and counts as an error."),
+            string.Join("\n", "1. Start at waypoint 1 and follow the dashed line to the last waypoint.",
+                "2. Use your hand pointer, or hold the mouse button and drag.",
+                "3. Green dots are on the line; larger red dots are off it. Accuracy is your score."),
+            string.Join("\n", "1. Move the marker to the green goal.",
+                "2. Use the arrow keys, W A S D or the direction buttons.",
+                "3. Bumping a wall costs points; the shortest route scores best.")
+        };
+
+        void ShowTutorial(bool always)
+        {
+            string key = "GripRehab.Tutorial." + current;
+            if (!always && (!tutorialsEnabled || PlayerPrefs.GetInt(key, 0) == 1)) { CloseTutorial(false); return; }
+            tutorialTitle.text = "HOW TO PLAY  ·  " + TutorialTitles[(int)current];
+            tutorialBody.text = TutorialBodies[(int)current];
+            tutorial.SetActive(true); tutorial.transform.SetAsLastSibling(); tutorialOpen = true;
+        }
+
+        void CloseTutorial(bool remember)
+        {
+            if (remember) PlayerPrefs.SetInt("GripRehab.Tutorial." + current, 1);
+            if (tutorial != null) tutorial.SetActive(false);
+            tutorialOpen = false;
+        }
 
         // ---------- Sequence Memory avatar strip ----------
         void BuildStrip()

@@ -327,6 +327,7 @@ namespace GripRehab
                 Store.Active.name + "  /  Choose a training module";
             cognitiveLockedButton.interactable = true;
             visuomotorLockedButton.interactable = true;
+            UpdateModuleCopy();
             Page("Modules");
         }
 
@@ -504,6 +505,8 @@ namespace GripRehab
                 experience.Held == null ? "Aim at the object and press E. Hold Space or click to squeeze." :
                     "Hold Space or click to squeeze. Press Q to release.";
             var rounds = research != null ? research.ForceRounds : null;
+            ReadableDigits();
+            UpdateEffortGauge(rounds);
             if (rounds != null && !rounds.Complete)
             {
                 // Stage 3.1 round HUD: what to do, how far along, and effort against the band.
@@ -520,6 +523,70 @@ namespace GripRehab
             hudProgressFill.fillAmount = progress;
             hudProgress.text = experience.CameraMode ? "VISUAL HAND CLOSURE" :
                 "CONTROLLED HOLD  " + experience.ProgressSeconds.ToString("F1") + " / " + experience.RequiredHoldSeconds.ToString("F1") + " S";
+        }
+
+        // ---------- Stage 4.4 HUD presentation (runtime only; the saved scene is unchanged) ----------
+        RectTransform effortGauge, effortBand, effortMarker;
+        GripRehab.UI.GripUiThemeController uiTheme;
+
+        // The heading font draws zero with a slash ("Ø.Ø"); force digits use the body font.
+        void ReadableDigits()
+        {
+            if (uiTheme == null && root != null) { var owner = root.GetComponentInParent<Canvas>(); if (owner != null) uiTheme = owner.GetComponentInChildren<GripRehab.UI.GripUiThemeController>(true); }
+            var body = uiTheme != null && uiTheme.Current != null ? uiTheme.Current.latinFont : null;
+            if (body != null && hudValue.font != body) hudValue.font = body;
+        }
+
+        // A bar under the round progress: the green target band and a live effort marker.
+        void UpdateEffortGauge(GripRehab.Product.ForceRoundSession rounds)
+        {
+            bool show = rounds != null && !rounds.Complete && hudProgressFill != null;
+            if (!show) { if (effortGauge != null) effortGauge.gameObject.SetActive(false); return; }
+            if (effortGauge == null)
+            {
+                var track = hudProgressFill.rectTransform.parent as RectTransform;
+                if (track == null) return;
+                effortGauge = GaugeRect("Effort gauge", track.parent, new Color(.06f, .09f, .13f, .9f));
+                effortGauge.anchorMin = track.anchorMin; effortGauge.anchorMax = track.anchorMax; effortGauge.pivot = track.pivot;
+                effortGauge.sizeDelta = new Vector2(track.sizeDelta.x, Mathf.Max(10, track.sizeDelta.y));
+                effortGauge.anchoredPosition = track.anchoredPosition - new Vector2(0, Mathf.Max(10, track.rect.height) + 8);
+                effortBand = GaugeRect("Target band", effortGauge, new Color(.22f, .84f, .48f, .65f));
+                effortMarker = GaugeRect("Effort marker", effortGauge, Color.white);
+                effortMarker.sizeDelta = new Vector2(4, 6);
+            }
+            effortGauge.gameObject.SetActive(true);
+            const float scale = 1.2f; // the bar spans 0..120% of the reference
+            var round = rounds.Current;
+            effortBand.anchorMin = new Vector2(round.BandLow / scale, 0); effortBand.anchorMax = new Vector2(round.BandHigh / scale, 1);
+            effortBand.offsetMin = effortBand.offsetMax = Vector2.zero;
+            float x = Mathf.Clamp01(research.CurrentEffort / scale);
+            effortMarker.anchorMin = new Vector2(x, 0); effortMarker.anchorMax = new Vector2(x, 1);
+            effortMarker.offsetMin = new Vector2(-2, -3); effortMarker.offsetMax = new Vector2(2, 3);
+            effortMarker.GetComponent<Image>().color = research.CurrentEffort > round.BreakAt && round.Kind == GripRehab.Product.ForceRoundKind.Control
+                ? new Color(1, .35f, .4f) : Color.white;
+        }
+
+        static RectTransform GaugeRect(string name, Transform parent, Color color)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+            var rect = (RectTransform)go.transform; rect.SetParent(parent, false);
+            rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero;
+            var image = go.GetComponent<Image>(); image.color = color; image.raycastTarget = false;
+            return rect;
+        }
+
+        // Module card copy lives in the protected scene; refresh it to describe the Stage 3 games.
+        bool moduleCopyUpdated;
+        void UpdateModuleCopy()
+        {
+            if (moduleCopyUpdated || modulePanel == null) return;
+            moduleCopyUpdated = true;
+            foreach (var text in modulePanel.GetComponentsInChildren<Text>(true))
+            {
+                if (text.text.StartsWith("Grip an everyday object")) text.text = "Squeeze an everyday object through hold, control and pulse rounds with live effort feedback.";
+                else if (text.text.StartsWith("Sequence memory and spatial")) text.text = "Repeat a hand avatar's gestures, then drag shapes onto matching outlines.";
+                else if (text.text.StartsWith("Visual tracing and maze")) text.text = "Trace a guided line with green/red feedback and steer through generated mazes.";
+            }
         }
 
         void Quit()
