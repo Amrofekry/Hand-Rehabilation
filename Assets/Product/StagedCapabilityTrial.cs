@@ -19,12 +19,31 @@ namespace GripRehab.Product
         public int StageNumber => Math.Min(stage + 1, durations.Length);
         public int StageCount => durations.Length;
         public float StageSecondsLeft => Complete ? 0 : Math.Max(0, durations[stage] - elapsed);
+        // Stage 5.1 coach: wall time spent in the current stage, fresh or not, so a weak signal shows.
+        float stageWall;
+        /// <summary>Share of this stage's time that had fresh, usable input (1 = every sample arrived).</summary>
+        public float StageQuality => Complete || stageWall < .3f ? 1 : Math.Min(1, elapsed / stageWall);
+        public static string QualityLabel(float quality) => quality >= .85f ? "GOOD" : quality >= .5f ? "FAIR" : "POOR · check the camera or sensor";
+        /// <summary>Short coach word for the current stage; opening/closing alternates every second.</summary>
+        public string Cue(double seconds)
+        {
+            if (Complete) return "DONE";
+            switch (stage)
+            {
+                case 0: case 2: case 4: return "SQUEEZE";
+                case 1: case 3: case 5: return "RELEASE";
+                case 6: return ((long)Math.Floor(seconds)) % 2 == 0 ? "OPEN" : "CLOSE";
+                case 7: return "HOLD";
+                default: return "STAY STILL";
+            }
+        }
         public float Progress { get { float total = elapsed; for (int i = 0; i < stage; i++) total += durations[i]; return Math.Min(1, total / 54); } }
         public StagedCapabilityTrial(string account, string profile, bool consent)
         { summary = new CapabilityTrial(account, profile, consent, 120); }
-        public void Step(TrialSample input, float ignoredDelta)
+        public void Step(TrialSample input, float wallDelta)
         {
             if (Complete || Problem != null) return;
+            if (TrialSample.Finite(wallDelta) && wallDelta > 0) stageWall += Math.Min(wallDelta, .5f);
             if (!input.Fresh || input.sequence <= sequence) return;
             if (hasIdentity && (identity.source != input.source || identity.shape != input.shape || identity.unit != input.unit || identity.calibrationRevision != input.calibrationRevision || identity.synthetic != input.synthetic))
             { Problem = "Source, hand, shape or calibration changed; restart the baseline."; return; }
@@ -48,7 +67,7 @@ namespace GripRehab.Product
             }
             if(stage==8 && input.MotionValid)
             {quietCount++;quietSum+=input.closure;quietSquares+=input.closure*input.closure;quietJitter+=input.jitter;}
-            if (elapsed >= durations[stage]) { stage++; elapsed = 0; }
+            if (elapsed >= durations[stage]) { stage++; elapsed = 0; stageWall = 0; }
         }
         public CapabilityProfile Finish()
         {

@@ -209,7 +209,15 @@ namespace GripRehab
             view.Text("Guidance uses unvalidated research thresholds. The public EMG model is a development proxy, never a device-force model. Camera closure is not force in Newtons.");
             view.Button("OPTIONAL FACE / PULSE SENSING", SensingConsent);
             view.Button(proxyDemo ? "SYNTHETIC MODEL DEMO: ON" : "SYNTHETIC MODEL DEMO: OFF",()=>{proxyDemo=!proxyDemo;Prepare(guest);});
-            if (!guest) view.Button("COLLECT BASELINE", BaselineConsent);
+            if (!guest)
+            {
+                // Stage 5.1: guidance compares you with a baseline taken with the same input.
+                var saved = repository.LatestBaseline(repository.Current.id);
+                if (saved == null) view.Text("No baseline yet. Guidance can still pause for safety, but it cannot adapt difficulty until you collect one.", 80);
+                else if (!BaselineMatch.ForInputMode(saved, InputMode))
+                    view.Text("Your saved baseline was taken with " + saved.source + ". Collect a new baseline for this input so guidance can compare like with like.", 80);
+                view.Button("COLLECT BASELINE", BaselineConsent);
+            }
             view.Button("CHOOSE A MODULE", () => Guard(() => {
                 shell.SetResearchIdentity(guest ? null : ProfileId); view.Hide(); shell.ShowModules();
             }), true);
@@ -231,7 +239,7 @@ namespace GripRehab
             if (profile != null) shell.experience.SelectHand(profile.affectedHand.StartsWith("Left", StringComparison.OrdinalIgnoreCase));
             ApplyInput(); baseline = new StagedCapabilityTrial(repository.Current.id, ProfileId, true); collecting = true;
             Show("Research baseline", "Step 2 of 3 · follow your usual comfortable hand movement. Camera data is a visual estimate. Keyboard data is synthetic. Stop if uncomfortable.", () => { collecting = false; Dashboard(); });
-            view.Progress(); view.Status("Waiting for valid input. Keyboard: hold Space to simulate a squeeze.");
+            view.Coach("GET READY"); view.Progress(); view.Status("Waiting for valid input. Keyboard: hold Space to simulate a squeeze.");
             view.Button("CANCEL BASELINE", () => { collecting = false; Dashboard(); });
         });
         void BaselineSummary()

@@ -36,7 +36,7 @@ namespace GripRehab.Product
                 !Positive(s.activeSeconds) || s.activeSeconds > s.validSeconds + .2 ||
                 !Positive(s.peakNewtons) || (!s.hasForce && s.peakNewtons != 0) || !Ratio(s.meanClosure) ||
                 s.metrics == null || s.metrics.Count > 1800 || s.policyEvents == null || s.policyEvents.Count > 500 ||
-                s.level < 0 || s.level > ExerciseTuning.MaxLevel || (s.outcomes != null && s.outcomes.Count > 32))
+                s.level < 0 || s.level > ExerciseTuning.MaxLevel || s.adaptedLevel < 0 || s.adaptedLevel > ExerciseTuning.MaxLevel || (s.outcomes != null && s.outcomes.Count > 32))
                 throw new ArgumentException("Invalid or excessive session metrics.");
             if (s.outcomes != null)
                 foreach (var o in s.outcomes)

@@ -45,5 +45,21 @@ namespace GripRehab.Product
         /// <summary>Between sessions: up after a strong result, down after a weak one.</summary>
         public static int NextLevel(int current, int lastScore) =>
             Clamp(lastScore >= 85 ? current + 1 : lastScore < 50 ? current - 1 : current);
+
+        /// <summary>
+        /// Stage 5.2: the next attempt starts from the level the adaptive loop ended on (when it
+        /// moved), then follows the score. A safety stop always starts one level lower; an
+        /// interrupted attempt keeps its level. Records older than levels count as level 1.
+        /// </summary>
+        public static int NextSessionLevel(int playedLevel, int adaptedLevel, int score, RecordState state)
+        {
+            int start = Clamp(adaptedLevel > 0 ? adaptedLevel : playedLevel > 0 ? playedLevel : MinLevel);
+            switch (state)
+            {
+                case RecordState.SafetyStopped: return Clamp(start - 1);
+                case RecordState.Completed: return NextLevel(start, score);
+                default: return start;
+            }
+        }
     }
 }

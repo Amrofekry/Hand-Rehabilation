@@ -1,0 +1,25 @@
+{
+  "scope": "Stage 5 adaptive-loop and safety changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalHost.cs": {
+      "previousSha256": "fcf5d9d71f1a187cd9096a3a8ec0abcd09fe0729c52ae6d8fb0343caaf3d5cce",
+      "currentSha256": "46fceaa1d7799f527a061b9a74491574a76db8102deececa81e7f801ac102da3",
+      "reason": "User-authorized Stage 5 closed adaptive loop (2026-10-24). Task 5.1: Prepare page explains a missing or mismatched baseline; the baseline screen gets a coach line."
+    },
+    "Assets/ProductIntegration/ResearchSessionRuntime.cs": {
+      "previousSha256": "4c9e9951e42a38f79009d61834563f6624424dff04e4648d12dfb0ed3ac95339",
+      "currentSha256": "375423fbc967f3bba2665006200d33118e16fcf914fe96df6c0d48ec2ecf50b0",
+      "reason": "User-authorized Stage 5 closed adaptive loop (2026-10-24). Task 5.1/5.2: baseline coach cue, countdown and signal quality; adaptive level per session; next level follows adapted level and safety stops; results show the adapted level. Coach and results text kept to glyphs the heading font has (journey fix)."
+    },
+    "Assets/Product/ProductModels.cs": {
+      "previousSha256": "1a035cd2e583dd72c0353af29bd303ae4a3ce25ca99142c319078c13b9121b99",
+      "currentSha256": "efe23f52b47fdd7d37de6e6303863a13dceb4d8ac3d57bb6e23b619301243f4b",
+      "reason": "User-authorized Stage 5 closed adaptive loop (2026-10-24). Task 5.2: SessionRecord.adaptedLevel (0 = the adaptive loop never moved) so the next attempt starts from the adapted level."
+    },
+    "Assets/Product/CatalogValidation.cs": {
+      "previousSha256": "7066eeda0ebf0ad56138eb6dc10228d5d2d3f313dfedd04f3cc12a5dc7688c91",
+      "currentSha256": "2807166524d111b03cb995703b05a38dee44fe5f2fe24b116d7f8b06bc8e2b9e",
+      "reason": "User-authorized Stage 5 closed adaptive loop (2026-10-24). Task 5.2: validates adaptedLevel within 0..10."
+    }
+  }
+}

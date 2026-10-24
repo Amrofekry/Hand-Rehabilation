@@ -14,7 +14,7 @@ namespace GripRehab.UI
         GripUiAccessibility accessibility;
         CanvasGroup group;
         RectTransform content;
-        TMP_Text heading, description, liveStatus;
+        TMP_Text heading, description, liveStatus, coach;
         UnityEngine.UI.Image progress;
         UnityEngine.UI.ScrollRect scroll;
         UnityEngine.UI.Button backButton;
@@ -81,7 +81,7 @@ namespace GripRehab.UI
         {
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
             for (int i = content.childCount - 1; i >= 0; i--) { var child = content.GetChild(i).gameObject; child.SetActive(false); Destroy(child); }
-            fields.Clear(); buttons.Clear(); progress = null; liveStatus = null;
+            fields.Clear(); buttons.Clear(); progress = null; liveStatus = null; coach = null;
         }
         public void Hide() { if (group != null) { group.alpha = 0; group.interactable = group.blocksRaycasts = false; } }
         // Lets a page rebuilt by a toggle keep its place instead of jumping back to the top (Stage 4 review).
@@ -95,6 +95,22 @@ namespace GripRehab.UI
         public void Status(string text)
         { liveStatus = Label(content, text, Palette.bodySize, 88); }
         public void SetStatus(string text) { if (liveStatus != null && liveStatus.text != text) liveStatus.text = text; }
+        /// <summary>Stage 5.1: a large, centred coach line (for example "SQUEEZE  ·  3").</summary>
+        public void Coach(string text)
+        {
+            var rect = Rect("Coach", content); Height(rect.gameObject, 84);
+            coach = rect.gameObject.AddComponent<TextMeshProUGUI>(); coach.text = text;
+            coach.font = theme.HeadingFont; coach.fontSize = 44; coach.enableAutoSizing = true; coach.fontSizeMin = 24; coach.fontSizeMax = 44 * theme.fontScale;
+            coach.alignment = TextAlignmentOptions.Center; coach.raycastTarget = false; coach.richText = false;
+            Paint(coach, GripUiRole.Accent); // painted once: the theme keeps the first role it registers
+        }
+        /// <param name="pulse">0..1 gentle breathing scale; pass 0 when Reduce Motion is on.</param>
+        public void SetCoach(string text, float pulse = 0)
+        {
+            if (coach == null) return;
+            if (coach.text != text) coach.text = text;
+            coach.rectTransform.localScale = Vector3.one * (1 + .06f * Mathf.Clamp01(pulse));
+        }
         public void SetProgress(float value) { if (progress != null) progress.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(value), 1); }
         public void Progress()
         {

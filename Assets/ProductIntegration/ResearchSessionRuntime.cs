@@ -18,11 +18,15 @@ namespace GripRehab
         public int LevelFor(int module, int task)
         {
             if (guest || !HasAccount) return ExerciseTuning.MinLevel;
+            // Stage 5.2: the latest finished attempt of any outcome decides, so a safety stop eases the next one.
             var last = repository.Sessions(repository.Current.id)
-                .Where(s => s.module == module && s.task == task && s.state == RecordState.Completed)
+                .Where(s => s.module == module && s.task == task && s.state != RecordState.InProgress)
                 .OrderBy(s => s.startedUtc, StringComparer.Ordinal).LastOrDefault();
-            return last == null ? ExerciseTuning.MinLevel : ExerciseTuning.NextLevel(last.level > 0 ? last.level : 1, last.score);
+            return last == null ? ExerciseTuning.MinLevel : ExerciseTuning.NextSessionLevel(last.level, last.adaptedLevel, last.score, last.state);
         }
+        // Stage 5.2: the research policy's in-session level, carried onto this session's exercise.
+        AdaptiveDifficulty adaptive;
+        public AdaptiveDifficulty Adaptive => liveSession ? adaptive : null;
         void BeginForceRounds(int level)
         {
             forceRounds = new ForceRoundSession(ExerciseTuning.Force(level)); CurrentEffort = 0;
@@ -54,6 +58,7 @@ namespace GripRehab
             else session = new SessionRecord { id = Guid.NewGuid().ToString("N"), module = module, task = task, synthetic = synthetic, startedUtc = DateTime.UtcNow.ToString("O") };
             session.level = LevelFor(module, task);
             if (module == 1) BeginForceRounds(session.level); else forceRounds = null;
+            adaptive = new AdaptiveDifficulty(session.level, fatigueSafety.Level); safetyShown = false; safetyMessage = default;
             liveSession = true; view.Hide();
             return true;
         }
@@ -93,7 +98,8 @@ namespace GripRehab
             if (show)
             {
                 Show(state == RecordState.Completed ? "Practice complete" : "Take a break", "Your game results are a record of practice, not a clinical assessment.", Welcome);
-                view.Text("Module " + session.module + " · level " + session.level + " · " + state + "\nScore: " + session.score + "/100" + Stars(session) +
+                view.Text("Module " + session.module + " · level " + session.level +
+                    (session.adaptedLevel > 0 && session.adaptedLevel != session.level ? " to " + session.adaptedLevel + " (adapted during play)" : "") + " · " + state + "\nScore: " + session.score + "/100" + Stars(session) +
                     (session.module == 1 ? "\nActive grip: " + session.activeSeconds.ToString("0.0") + " s · input available: " + session.validSeconds.ToString("0.0") + " s" :
                     "\nTime: " + session.durationSeconds.ToString("0.0") + " s"), 84);
                 if (session.outcomes != null && session.outcomes.Count > 0)
@@ -118,7 +124,11 @@ namespace GripRehab
             if (collecting)
             {
                 baseline.Step(input, .1f); view.SetProgress(baseline.Progress);
-                view.SetStatus(baseline.Problem ?? (input.Fresh ? "Stage " + baseline.StageNumber + " of " + baseline.StageCount + " · " + baseline.Instruction + " · " + Mathf.CeilToInt(baseline.StageSecondsLeft) + " s left. Move comfortably; stop if uncomfortable." : "Waiting for fresh input. Keyboard demo: hold Space. Hardware: check calibration/bridge."));
+                // Stage 5.1 coach: a big cue with a countdown, plus a per-stage signal-quality indicator.
+                view.SetCoach(baseline.Problem != null ? "STOPPED" : baseline.Cue(now) + "   " + Mathf.CeilToInt(baseline.StageSecondsLeft) + " s",
+                    theme != null && theme.reduceMotion ? 0 : .5f + .5f * Mathf.Sin((float)now * Mathf.PI));
+                view.SetStatus(baseline.Problem ?? ((input.Fresh ? "Stage " + baseline.StageNumber + " of " + baseline.StageCount + " · " + baseline.Instruction + ". Move comfortably; stop if uncomfortable." : "Waiting for fresh input. Keyboard demo: hold Space. Hardware: check calibration/bridge.") +
+                    "\nSignal quality: " + StagedCapabilityTrial.QualityLabel(baseline.StageQuality) + " (" + Mathf.RoundToInt(baseline.StageQuality * 100) + "%)"));
                 if (baseline.Complete)
                 {
                     collecting = false;

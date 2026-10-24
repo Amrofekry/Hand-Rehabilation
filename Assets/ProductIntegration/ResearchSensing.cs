@@ -61,12 +61,19 @@ namespace GripRehab
                 m.heartRateBpm=m.pulseValid?p.hr:0;m.pulseQuality=m.pulseValid?p.quality:0;m.hrvRmssdMs=m.hrvValid?p.rmssd:0;
             }
         }
+        // Stage 5.3: one calm screen per pause; its wording comes from SafetyMessages.
+        bool safetyShown; SafetyMessage safetyMessage;
+        /// <summary>True while a research pause or stop holds the exercise (timers and input wait).</summary>
+        public bool SafetyPaused => liveSession && guidance && fatigueSafety != null && fatigueSafety.State != "active";
         void ApplyFatigueSafety(double now,TrialSample input,bool practising,bool comparable)
         {
-            if(fatigueSafety==null || !guidance || session.module!=1 || now<nextAiWindow)return;
+            if(fatigueSafety==null || !guidance || now<nextAiWindow)return;
             nextAiWindow=now+1;
+            // Module 1 is a grip task, so force and the proxy model apply there only. Modules 2 and 3
+            // use hand motion (and opt-in face/pulse); a keyboard or mouse alone never adapts them.
+            bool grip=session.module==1;
             var stats=features.Read(now,5);var signs=comparable?StatisticalPredictor.Evaluate(stats,capability,limits):ResearchSigns.None;
-            float? force=input.unit==InputUnit.Newtons && comparable && capability.hasForce && capability.meanNewtons>0 && stats.forceValid ? ((signs&ResearchSigns.Force)!=0?.9f:.1f) : (float?)null;
+            float? force=grip && input.unit==InputUnit.Newtons && comparable && capability.hasForce && capability.meanNewtons>0 && stats.forceValid ? ((signs&ResearchSigns.Force)!=0?.9f:.1f) : (float?)null;
             float? motion=input.MotionValid && comparable && stats.motionValid ? ((signs&ResearchSigns.Motion)!=0?.9f:.1f) : (float?)null;
             float? face=null,pulse=null;
             if(auxiliary!=null && auxiliary.Fresh(now))
@@ -80,7 +87,7 @@ namespace GripRehab
                 }
             }
             bool modelValid=true; lastModelValid=false;
-            if(proxyDemo && input.synthetic && input.unit==InputUnit.Newtons)
+            if(grip && ProxyModelGuard.Applies(proxyDemo,input))
             {
                 if(aiWindow.CopyTo(aiFeatures,now))
                 {
@@ -92,20 +99,53 @@ namespace GripRehab
                 else comparable=false;
             }
             bool requiredValid=input.Fresh && !savingFailed && modelValid && !sourceFault;
-            var decision=fatigueSafety.Step(now,requiredValid,force,motion,face,pulse,practising&&comparable&&(force.HasValue||motion.HasValue)&&shell.experience.Held!=null);
+            bool steady=grip ? shell.experience.Held!=null : motion.HasValue;
+            var decision=fatigueSafety.Step(now,requiredValid,force,motion,face,pulse,practising&&comparable&&(force.HasValue||motion.HasValue)&&steady);
             if(session.policyEvents.Count<500)session.policyEvents.Add(new PolicyEvent {seconds=now-started,status=decision.state,reason=decision.reason+(lastModelValid?" / PROTOTYPE-PROXY / SYNTHETIC demo / ":" / statistical fallback / ")+AuxStatus(),settingsVersion="research-ai-1",level=decision.level,signs=decision.signs});
-            shell.experience.SetResearchDifficulty(decision.level,limits.maximumLevel,guidanceSettings!=null?guidanceSettings.maximumHoldSeconds:5);
-            if(decision.state=="stopped"){EndSession(RecordState.SafetyStopped,0,true);return;}
-            if(decision.state=="warning" && ScreenTitle!="Research safety pause")
+            // Stage 5.2: the policy level moves this session's exercise one bounded step at a time.
+            if(adaptive!=null && adaptive.Apply(decision.level))
             {
-                shell.experience.Release();
-                Show("Research safety pause",(sourceFault?"Input source, shape or calibration changed. Finish this attempt and collect a matching baseline":decision.reason)+". Unvalidated research estimates. The session is paused; it will not resume automatically.",()=>EndSession(RecordState.Interrupted,0,true));
-                view.Status(AuxStatus());view.Button("RESUME AFTER SIGNALS CLEAR",()=>{
-                    try{fatigueSafety.Resume();view.Hide();shell.ResumeResearchGame();}
-                    catch(InvalidOperationException e){view.SetStatus(e.Message);}
-                },true,enabled:!sourceFault);
-                view.Button("FINISH SESSION",()=>EndSession(RecordState.Interrupted,0,true));
+                session.adaptedLevel=adaptive.Level;
+                if(grip && forceRounds!=null)forceRounds.Retune(ExerciseTuning.Force(adaptive.Level));
             }
+            if(grip)shell.experience.SetResearchDifficulty(decision.level,limits.maximumLevel,guidanceSettings!=null?guidanceSettings.maximumHoldSeconds:5);
+            if(decision.state=="stopped"){ShowSafetyStop(decision,false);return;}
+            if(decision.state=="warning")
+            {
+                if(!safetyShown)ShowSafetyPause(decision);
+                else if(ScreenTitle==safetyMessage.title)view.SetStatus(SafetyMessages.ResumeStatus(fatigueSafety.CanResume)+"\n"+AuxStatus());
+            }
+        }
+        void ShowSafetyPause(FatigueSafetyDecision decision)
+        {
+            safetyShown=true; safetyMessage=SafetyMessages.Describe(decision,sourceFault);
+            shell.experience.Release();
+            Show(safetyMessage.title,SafetyMessages.Indicator,()=>FinishFromPause());
+            view.Text(safetyMessage.body,120);
+            view.Status(SafetyMessages.ResumeStatus(fatigueSafety.CanResume)+"\n"+AuxStatus());
+            view.Button("RESUME",()=>{
+                try{fatigueSafety.Resume();safetyShown=false;view.Hide();shell.ResumeResearchGame();}
+                catch(InvalidOperationException){view.SetStatus(SafetyMessages.ResumeStatus(false)+"\n"+AuxStatus());}
+            },true,enabled:safetyMessage.canResume);
+            view.Button("FINISH SESSION",FinishFromPause);
+        }
+        void FinishFromPause()
+        {
+            if(fatigueSafety==null||!liveSession)return;
+            var decision=fatigueSafety.Quit();
+            if(session.policyEvents.Count<500)session.policyEvents.Add(new PolicyEvent {seconds=Time.realtimeSinceStartupAsDouble-started,status=decision.state,reason="finished by the player during a research pause",settingsVersion="research-ai-1",level=decision.level,signs=decision.signs});
+            ShowSafetyStop(decision,true);
+        }
+        void ShowSafetyStop(FatigueSafetyDecision decision,bool byPlayer)
+        {
+            var message=SafetyMessages.Describe(decision,false,byPlayer);
+            // Saved as a stop (not auto-restarted); the next attempt starts one level lower.
+            EndSession(byPlayer?RecordState.Interrupted:RecordState.SafetyStopped,0,false);
+            safetyShown=false;
+            Show(message.title,SafetyMessages.Indicator,Welcome);
+            view.Text(message.body,120);
+            view.Text(guest?"Guest practice was not saved.":savingFailed?"Saving failed: "+LastSaveProblem+". Retry from the menu before starting again.":"This session has been saved.");
+            view.Button("BACK TO MENU",Welcome,true);
         }
     }
 }

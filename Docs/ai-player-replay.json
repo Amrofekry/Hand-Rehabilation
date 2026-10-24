@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-10-24T16:41:15.7923812Z",
+  "utc": "2026-10-24T17:07:23.1324755Z",
   "error": "",
   "checks": [
     "Serialized scene bindings survive reload",
@@ -126,7 +126,7 @@
     "Summoned object is positioned at the right hand without requiring camera depth alignment",
     "Summoned object drops if the tracked hand stays open beyond the grace period",
     "Stale camera landmarks clear visual pressure and cannot keep holding",
-    "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=31.63 next=31.71889",
+    "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=31.59 next=31.6808",
     "G cannot summon an object without a fresh tracked hand",
     "Right camera data automatically switches the selected hand from left to right",
     "Left camera data automatically selects and drives the left vendor mesh",
@@ -173,8 +173,8 @@
     "Lost managed pointer event is rebuilt when the cached EventSystem survives reload",
     "Production five-second left palm dwell survives finger bending beside a low-confidence right hand; hover="
   ],
-  "contactMeanMs": 0.5727738274844221,
-  "contactMaxMs": 5.5319,
+  "contactMeanMs": 0.5758625450967536,
+  "contactMaxMs": 5.5157,
   "name": "ai-player-replay",
   "exit": 0,
   "rendered": false

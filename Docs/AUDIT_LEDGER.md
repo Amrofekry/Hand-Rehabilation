@@ -320,7 +320,59 @@ Screenshots are in `evidence/stage4-2026-10-24/hand-play/`.
 
 Your LocalLow data matched the backup (11/11 SHA-256) after the session. The review-created tutorial preferences were deleted.
 
-## 8. Severity summary and Stage 2 entry list (Stage 1)
+## 8. Stage 5 closed adaptive loop and safety UX (24 Oct 2026)
+
+Plan tasks 5.1–5.4. Everything here is software, checked with synthetic or fixture input only. No device, live person or validated fatigue measure is involved, and all thresholds remain unvalidated research settings.
+
+| Task | Delivered | Checked by |
+|---|---|---|
+| 5.1 Baseline flow | Big coach cue for each stage (SQUEEZE, RELEASE, OPEN/CLOSE alternating, HOLD, STAY STILL) with a countdown and a gentle pulse that is off under Reduce Motion. A per-stage signal-quality line (GOOD / FAIR / POOR) measures fresh-sample time against wall time. Prepare page says when there is no baseline yet, or when the saved baseline came from a different input, and asks for a new one. A mid-session source, shape or calibration change still stops comparison (existing guard) and now says so in plain language. | Product tests (quality and cues, baseline match); the player journey runs the full baseline with the coach |
+| 5.2 Adaptation in every module | `AdaptiveDifficulty` carries the policy's in-session level onto the 1–10 exercise scale: one step per decision, at most 3 levels from the session's start, inside 1–10. Module 1 retunes the band, hold and pulses of rounds not yet started (a round in progress keeps its target, and the round count never changes). The policy now runs in Modules 2 and 3 on hand motion (and opt-in face or pulse). Keyboard or mouse alone never adapts them, and force and the proxy model stay Module 1 only. The next attempt starts from the adapted level and then follows the score. A safety stop starts the next attempt one level lower; an interrupted attempt keeps its level. Results show "level 3 to 4 (adapted during play)". | Product tests (bounded steps, retune, next-session rule, 120 s policy replay across all module settings); EditMode `ClosedAdaptiveLoop` |
+| 5.3 Warning and stop UX | Plain-language pause and stop screens, each labelled "RESEARCH INDICATOR · unvalidated estimate, not a medical assessment". Signal loss shows "Paused: signal lost … not counted as tiredness". One sign shows "Time for a short rest" naming the sign in everyday words. Two signs show "Session stopped for today", saved as a safety stop with no automatic restart. Resume is accepted only after fresh, settled windows, and the screen says so. Finish Session latches the stop (`FatigueSafetyPolicy.Quit`). Pauses cover Modules 2 and 3 too; their timers wait because the shell leaves the exercise page. | Product tests (simultaneous signs, stale/NaN prediction, bad-input hold, quit during warning, wording); seen in the player |
+| 5.4 Model runtime | Kept the Sentis CNN. `ProxyModelGuard`: the public-EMG proxy reads only synthetic Newton input, never real device force or camera closure. | Product test; packaged-player model guards unchanged (10 checks per run) |
+
+**Gate 5 (SYNTHETIC closed loop):** `ClosedLoopVerification` replays all 5 cases of `Resources/ResearchAi/SYNTHETIC_policy-fixture.json` through the policy, the adaptive level and every module's settings.
+- **Steady play:** raises difficulty by two bounded steps.
+- **One sign:** pauses.
+- **Signal dropout:** pauses without counting a sign.
+- **Two signs:** stop and latch without raising difficulty.
+
+Every pause shows plain wording, never policy codes.
+
+**Seen in the Windows build** (camera-free copy, guest, Camera input, guidance on):
+- Module 1 opened on "Paused: signal lost" with the research-indicator label.
+- Resume was refused while no signal arrived.
+- Finish Session ended on "Session finished" with no restart.
+
+Screenshots are in `evidence/stage5-2026-10-24/play/`.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S5-01 | S2 | First Stage 5 build failed the player journey: TextMeshPro threw during layout because the new coach line ("·") and results line ("→") used glyphs missing from the heading font | Coach, results and pause titles use plain characters. Journey 74/74 on rebuild. |
+| S5-02 | process | One gallery run timed out on the first build (T-003 pattern) | Passed on the rebuild |
+
+**Not done or not verified:**
+- No real webcam, device or person.
+- The face and pulse signs were exercised only through the fixture.
+- The baseline coach's pulse animation was not watched by eye.
+- Adaptation in Modules 2 and 3 needs camera hand motion and a matching baseline, so it was checked by test only.
+
+**Final suites:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI passed at 2 sizes; gallery passed.
+- **Unity test runner:** EditMode 7/7.
+- **Offline C#:** product 68 (was 58), tracking 177.
+- **Python:** Tools 66, bridges 8, WBS 45, AI 32.
+
+Protected changes, each with a reason, are in `evidence/stage5-2026-10-24/protected-source-review.json`:
+- `ResearchPortalHost`
+- `ResearchSessionRuntime`
+- `ProductModels`
+- `CatalogValidation`
+
+Your LocalLow data was restored and verified (11/11 SHA-256).
+
+## 9. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
 - **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.

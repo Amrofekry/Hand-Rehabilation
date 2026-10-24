@@ -61,6 +61,10 @@ namespace GripRehab.Product
         bool Clear(float? p) => !p.HasValue || p <= config.low;
         void Count(int i, float? p)
         { if (!p.HasValue || p <= config.low) counts[i] = 0; else if (p >= config.high) counts[i] = Math.Min(config.consecutive, counts[i] + 1); else if(counts[i]<config.consecutive) counts[i]=0; }
+        /// <summary>True when an explicit Resume would be accepted right now.</summary>
+        public bool CanResume => State == "warning" && valid && Signs == 0 && clear >= config.clearWindows;
+        /// <summary>The player ends the session from a warning; the stop latches like a safety stop.</summary>
+        public FatigueSafetyDecision Quit() { State = "stopped"; stable = double.NaN; return Result("finished by the player"); }
         public FatigueSafetyDecision Resume()
         {
             if (State != "warning" || !valid || Signs != 0 || clear < config.clearWindows) throw new InvalidOperationException("Wait for fresh, cleared windows before resuming.");

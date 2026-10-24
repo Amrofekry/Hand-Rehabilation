@@ -63,7 +63,7 @@ namespace GripRehab.Product
         {
             if (tuning.rounds < 1 || !(tuning.bandLow > 0) || !(tuning.bandHigh > tuning.bandLow) || !(tuning.breakAt > tuning.bandHigh) || !(tuning.holdSeconds > 0) || tuning.pulses < 1)
                 throw new ArgumentOutOfRangeException(nameof(tuning));
-            Tuning = tuning;
+            Tuning = tuning; CurrentTuning = tuning;
             for (int i = 0; i < tuning.rounds; i++)
                 rounds.Add(new ForceRound { Kind = (ForceRoundKind)(i % 3), BandLow = tuning.bandLow, BandHigh = tuning.bandHigh,
                     BreakAt = tuning.breakAt, HoldSeconds = tuning.holdSeconds, PulsesRequired = tuning.pulses });
@@ -114,6 +114,30 @@ namespace GripRehab.Product
                     break;
             }
             if (!r.Completed && r.Elapsed >= RoundTimeoutSeconds) Finish(r, true);
+        }
+
+        /// <summary>The tuning rounds use from now on (changes when the adaptive loop retunes).</summary>
+        public ForceTuning CurrentTuning { get; private set; }
+
+        /// <summary>
+        /// Stage 5.2: applies new band, hold and pulse settings to rounds that have not started.
+        /// A round already in progress keeps its target; the round count never changes mid-session.
+        /// </summary>
+        /// <returns>The number of rounds retuned.</returns>
+        public int Retune(ForceTuning tuning)
+        {
+            if (!(tuning.bandLow > 0) || !(tuning.bandHigh > tuning.bandLow) || !(tuning.breakAt > tuning.bandHigh) || !(tuning.holdSeconds > 0) || tuning.pulses < 1)
+                throw new ArgumentOutOfRangeException(nameof(tuning));
+            int changed = 0;
+            for (int i = index; i < rounds.Count; i++)
+            {
+                var r = rounds[i];
+                if (i == index && (r.Elapsed > 0 || r.Progress > 0 || r.PulseCount > 0)) continue;
+                r.BandLow = tuning.bandLow; r.BandHigh = tuning.bandHigh; r.BreakAt = tuning.breakAt;
+                r.HoldSeconds = tuning.holdSeconds; r.PulsesRequired = tuning.pulses; changed++;
+            }
+            CurrentTuning = tuning;
+            return changed;
         }
 
         void Finish(ForceRound r, bool timedOut)

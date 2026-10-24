@@ -254,6 +254,109 @@ static class ProductTests
             var result = trial.Finish();
             Check(Math.Abs(result.mvcNewtons - 18) < .01f, "Peak from grip trials"); Check(result.enduranceSeconds > 9 && result.enduranceSeconds <= 10.1f, "Endurance ~10 s, got " + result.enduranceSeconds);
         });
+        // ---------- Stage 5: closed adaptive loop and safety UX ----------
+        Test("Adaptive difficulty moves one bounded step per decision", () => {
+            var a = new AdaptiveDifficulty(5, 1);
+            Check(!a.Apply(1) && a.Level == 5, "Same policy level holds");
+            Check(a.Apply(3) && a.Level == 6, "A two-level jump moves one step"); Check(a.Apply(3) && a.Level == 7, "Then the next step");
+            Check(!a.Apply(3) && a.Level == 7 && a.Changes == 2, "Holds at the target");
+            for (int i = 0; i < 20; i++) a.Apply(50); Check(a.Level == 8, "At most three above the start, got " + a.Level);
+            for (int i = 0; i < 20; i++) a.Apply(-50); Check(a.Level == 2, "At most three below the start, got " + a.Level);
+            var low = new AdaptiveDifficulty(1, 1); for (int i = 0; i < 5; i++) low.Apply(-5); Check(low.Level == 1, "Never below level 1");
+            var high = new AdaptiveDifficulty(10, 1); for (int i = 0; i < 5; i++) high.Apply(9); Check(high.Level == 10, "Never above level 10");
+        });
+        Test("Adaptive loop: a policy replay keeps every module inside its bounds", () => {
+            var policy = new FatigueSafetyPolicy(new FatigueSafetyConfig { maximumLevel = 3 }); var adaptive = new AdaptiveDifficulty(3, policy.Level);
+            var rounds = new ForceRoundSession(ExerciseTuning.Force(3)); int previous = adaptive.Level, ups = 0, downs = 0;
+            for (int t = 0; t < 120; t++)
+            {
+                // SYNTHETIC replay: 60 s steady and clear, then a persistent force sign, then clear again.
+                float force = t >= 60 && t < 64 ? .9f : .1f;
+                var d = policy.Step(t, true, force, null, null, null, true);
+                if (d.state == "warning" && policy.CanResume) policy.Resume();
+                if (adaptive.Apply(d.level)) { rounds.Retune(ExerciseTuning.Force(adaptive.Level)); if (adaptive.Level > previous) ups++; else downs++; }
+                int level = adaptive.Level;
+                Check(Math.Abs(level - previous) <= 1 && Math.Abs(level - 3) <= AdaptiveDifficulty.MaxOffset && level >= 1 && level <= 10, "Bounded level at " + t);
+                var f = ExerciseTuning.Force(level);
+                Check(f.bandLow > 0 && f.bandHigh > f.bandLow && f.breakAt <= 1 && f.holdSeconds >= 2.5f && f.holdSeconds <= 6, "Module 1 band at " + t);
+                Check(rounds.Rounds.All(r => r.BandLow > 0 && r.BandHigh > r.BandLow && r.BreakAt > r.BandHigh) && rounds.RoundCount == ExerciseTuning.Force(3).rounds, "Module 1 rounds at " + t);
+                int memory = ExerciseTuning.MemoryLength(level), pieces = ExerciseTuning.AssemblyPieces(level), cells = ExerciseTuning.MazeCells(level);
+                float tolerance = ExerciseTuning.TraceTolerance(level);
+                Check(memory >= 4 && memory <= 8 && pieces >= 4 && pieces <= 6 && (cells == 0 || (cells % 2 == 1 && cells >= 5 && cells <= 13)) && tolerance >= .07f && tolerance <= .12f, "Module 2/3 settings at " + t);
+                previous = level;
+            }
+            Check(ups >= 2 && downs >= 1, "The replay both raised and eased difficulty (" + ups + " up, " + downs + " down)");
+        });
+        Test("Force rounds: retune changes only rounds not yet started", () => {
+            var start = ExerciseTuning.Force(1); var s = new ForceRoundSession(start); s.Step(.4f, .1f);
+            var harder = ExerciseTuning.Force(4); int changed = s.Retune(harder);
+            Check(changed == s.RoundCount - 1 && s.RoundCount == start.rounds, "Round in progress keeps its target; count unchanged");
+            Check(s.Rounds[0].BandLow == start.bandLow && s.Rounds[1].BandLow == harder.bandLow && s.Rounds[2].HoldSeconds == harder.holdSeconds && s.CurrentTuning.bandLow == harder.bandLow, "Later rounds retuned");
+            Reject<ArgumentOutOfRangeException>(() => s.Retune(new ForceTuning()));
+        });
+        Test("Next session level follows adaptation, score and safety stops", () => {
+            Check(ExerciseTuning.NextSessionLevel(3, 0, 90, RecordState.Completed) == 4, "Strong result raises");
+            Check(ExerciseTuning.NextSessionLevel(3, 5, 70, RecordState.Completed) == 5, "Adapted level is the new start");
+            Check(ExerciseTuning.NextSessionLevel(3, 5, 90, RecordState.Completed) == 6, "Adapted level then follows the score");
+            Check(ExerciseTuning.NextSessionLevel(3, 0, 0, RecordState.SafetyStopped) == 2, "Safety stop eases the next attempt");
+            Check(ExerciseTuning.NextSessionLevel(1, 0, 0, RecordState.SafetyStopped) == 1, "Never below level 1");
+            Check(ExerciseTuning.NextSessionLevel(4, 0, 0, RecordState.Interrupted) == 4, "Interrupted attempt keeps its level");
+            Check(ExerciseTuning.NextSessionLevel(0, 0, 90, RecordState.Completed) == 2, "Older records count as level 1");
+        });
+        Test("Safety: simultaneous signs stop, latch and are explained", () => {
+            var p = new FatigueSafetyPolicy(); FatigueSafetyDecision d = default;
+            for (int i = 0; i < 3; i++) d = p.Step(i, true, .9f, .9f, null, null, false);
+            Check(d.state == "stopped" && d.signs == 3, "Two categories stop");
+            Check(p.Step(3, true, .1f, .1f, null, null, true).state == "stopped", "Stop latches"); Reject<InvalidOperationException>(() => p.Resume());
+            var m = SafetyMessages.Describe(d, false);
+            Check(m.stopped && !m.canResume && m.body.Contains("grip force") && m.body.Contains("movement") && m.body.Contains("will not restart"), "Plain-language stop: " + m.body);
+            Check(SafetyMessages.Indicator.Contains("RESEARCH INDICATOR") && SafetyMessages.Indicator.Contains("not a medical"), "Labelled as a research indicator");
+        });
+        Test("Safety: stale or invalid predictions pause without a sign and never raise difficulty", () => {
+            var p = new FatigueSafetyPolicy(); for (int i = 0; i < 20; i++) p.Step(i, true, .1f, null, null, null, true);
+            int level = p.Level; Check(level >= 2, "Steady play raised difficulty first");
+            var d = p.Step(20, true, float.NaN, null, null, null, true);
+            Check(d.state == "warning" && d.signs == 0 && d.level <= level, "NaN prediction pauses with no sign");
+            var m = SafetyMessages.Describe(d, false);
+            Check(m.title.Contains("signal lost") && m.body.Contains("not counted as tiredness") && m.canResume, "Signal-lost wording: " + m.title);
+            for (int i = 21; i < 40; i++) p.Step(i, false, null, null, null, null, true);
+            Check(p.State == "warning" && p.Level <= level && !p.CanResume, "Bad input holds the pause and never raises difficulty");
+            Reject<InvalidOperationException>(() => p.Resume());
+            for (int i = 40; i < 43; i++) p.Step(i, true, .1f, null, null, null, true);
+            Check(p.CanResume && p.Resume().state == "active", "Fresh settled windows allow an explicit resume");
+        });
+        Test("Safety: one sign warns, and the player can finish during the warning", () => {
+            var p = new FatigueSafetyPolicy(); FatigueSafetyDecision d = default;
+            for (int i = 0; i < 3; i++) d = p.Step(i, true, .9f, null, null, null, false);
+            var m = SafetyMessages.Describe(d, false);
+            Check(d.state == "warning" && d.signs == 1 && m.title == "Time for a short rest" && m.body.Contains("grip force") && m.canResume, "One sign warns: " + m.body);
+            var q = p.Quit(); Check(q.state == "stopped" && p.Step(3, true, .1f, null, null, null, true).state == "stopped", "Quit latches");
+            Reject<InvalidOperationException>(() => p.Resume());
+            Check(SafetyMessages.Describe(q, false, true).title == "Session finished", "Player finish wording");
+            var changed = SafetyMessages.Describe(d, true); Check(changed.title == "Input changed" && !changed.canResume, "Input change cannot resume");
+        });
+        Test("Proxy model never reads real or camera input", () => {
+            Check(ProxyModelGuard.Applies(true, Sample(1)), "Synthetic Newtons with opt-in");
+            var real = Sample(1); real.synthetic = false; Check(!ProxyModelGuard.Applies(true, real), "Real device force");
+            Check(!ProxyModelGuard.Applies(true, Sample(1, InputUnit.ClosureRatio, .5f)), "Camera closure"); Check(!ProxyModelGuard.Applies(false, Sample(1)), "Opt-in required");
+        });
+        Test("Baseline match per Prepare input", () => {
+            var b = Baseline(); b.source = "Keyboard demo";
+            Check(BaselineMatch.ForInputMode(b, 1) && !BaselineMatch.ForInputMode(b, 0) && !BaselineMatch.ForInputMode(b, 2), "Keyboard baseline");
+            b.source = "Phase 2"; Check(BaselineMatch.ForInputMode(b, 2), "Device baseline");
+            var camera = Baseline(InputUnit.ClosureRatio); camera.source = "Camera / right";
+            Check(BaselineMatch.ForInputMode(camera, 0) && !BaselineMatch.ForInputMode(camera, 1), "Camera baseline"); Check(!BaselineMatch.ForInputMode(null, 1), "No baseline");
+        });
+        Test("Baseline coach: stage quality and cues", () => {
+            var trial = new StagedCapabilityTrial("patient.one", "profile-patient.one", true);
+            for (int i = 1; i <= 20; i++) trial.Step(Sample(i, InputUnit.Newtons, 18), .1f);
+            Check(trial.StageQuality > .85f && trial.Cue(0) == "SQUEEZE", "Steady signal is good quality");
+            var gap = new StagedCapabilityTrial("patient.one", "profile-patient.one", true);
+            for (int i = 1; i <= 10; i++) gap.Step(Sample(i, InputUnit.Newtons, 18), .1f);
+            var repeat = Sample(10, InputUnit.Newtons, 18); for (int i = 0; i < 10; i++) gap.Step(repeat, .1f);
+            Check(gap.StageQuality < .6f, "Missing samples lower quality, got " + gap.StageQuality);
+            Check(StagedCapabilityTrial.QualityLabel(.9f) == "GOOD" && StagedCapabilityTrial.QualityLabel(.6f) == "FAIR" && StagedCapabilityTrial.QualityLabel(.2f).StartsWith("POOR"), "Quality labels");
+        });
         Console.WriteLine("RESULT " + passed + " passed, " + failed + " failed; fabricated fixtures only");
         return failed == 0 ? 0 : 1;
     }

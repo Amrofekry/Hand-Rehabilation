@@ -58,6 +58,8 @@ namespace GripRehab.Product
         // Stage 3: difficulty level played (0 = not recorded by older versions) and named
         // per-exercise outcomes such as reaction time or accuracy. Game metrics, not clinical ones.
         public int level = 1;
+        /// <summary>Stage 5.2: level the adaptive loop ended on (0 = it never moved).</summary>
+        public int adaptedLevel;
         public List<OutcomeMetric> outcomes = new List<OutcomeMetric>();
         public const float ActiveNewtons = 1f, ActiveClosure = .6f;
         public static bool IsActiveGrip(TrialSample input) => input.Fresh &&
