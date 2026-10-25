@@ -1,0 +1,70 @@
+{
+ "passed": true,
+ "size": "1920x1080",
+ "quality": "PC",
+ "phases": [
+  {
+   "name": "menu",
+   "fpsMean": 309.3033142089844,
+   "frameP95Ms": 4.153000354766846,
+   "fpsP95Floor": 240.78976440429688,
+   "gcBytesMean": 220.38584899902344,
+   "gcBytesP95": 0.0,
+   "managedGrowthPercent": 4.15008544921875,
+   "totalGrowthPercent": 0.5094699859619141,
+   "gen0Collections": 1,
+   "errors": 0,
+   "iterations": 0
+  },
+  {
+   "name": "module1-force",
+   "fpsMean": 233.5626220703125,
+   "frameP95Ms": 7.7972002029418945,
+   "fpsP95Floor": 128.25115966796875,
+   "gcBytesMean": 283.23870849609375,
+   "gcBytesP95": 4096.0,
+   "managedGrowthPercent": 4.985994338989258,
+   "totalGrowthPercent": -0.0009145817020907998,
+   "gen0Collections": 1,
+   "errors": 0,
+   "iterations": 1
+  },
+  {
+   "name": "module2-memory-assembly",
+   "fpsMean": 310.5224914550781,
+   "frameP95Ms": 4.254700183868408,
+   "fpsP95Floor": 235.03419494628906,
+   "gcBytesMean": 340.8388977050781,
+   "gcBytesP95": 4096.0,
+   "managedGrowthPercent": 10.531914710998535,
+   "totalGrowthPercent": -0.0039156898856163025,
+   "gen0Collections": 2,
+   "errors": 0,
+   "iterations": 3
+  },
+  {
+   "name": "module3-trace-maze",
+   "fpsMean": 304.01995849609375,
+   "frameP95Ms": 4.228600025177002,
+   "fpsP95Floor": 236.48489379882812,
+   "gcBytesMean": 514.190185546875,
+   "gcBytesP95": 4096.0,
+   "managedGrowthPercent": 17.54658317565918,
+   "totalGrowthPercent": 0.43448951840400696,
+   "gen0Collections": 4,
+   "errors": 0,
+   "iterations": 40
+  }
+ ],
+ "handLatencyP50Ms": 2.512399911880493,
+ "handLatencyP95Ms": 4.237500190734863,
+ "malformed": [
+  30,
+  9,
+  0
+ ],
+ "ports": [
+  "",
+  ""
+ ]
+}

@@ -10,7 +10,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–6 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–9. Stage 7 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–7 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10. Stage 8 needs authorization. |
 
 ## Evidence columns
 
@@ -41,7 +41,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | 17 | Protected records, recovery, CSV (5.x) | Partial | DPAPI readback fixed and checked | Not a validated medical record system | FINAL_REPORT |
 | 18 | Phase 2 force envelope and BLE bridge (2.4/6.1) | Partial | Synthetic replay passed | **No Nano/HX711 hardware (B02)** | `BLE_INTEGRATION.md` |
 | 19 | English UI, controls, hand pointer (3.4) | Partial: plus first-run tutorials, audio and hand-tone settings (Stage 4) | UI checks pass at 2 sizes / 87 gallery checks at 3 sizes (24 Oct, 2022.3 build) | Human accessibility not tested | `UI_COMPLETION_CHECKLIST.md`, `evidence/stage4-2026-10-24/` |
-| 20 | Automated verification (6.2) | Partial | Windows smoke/replay/rendered/journey passed (22 Oct) | Full-game FPS/GC and camera latency not measured | `evidence/ai-2026-10-22/` |
+| 20 | Automated verification (6.2) | Implemented: player suites plus Stage 7 perf/soak/fault probe, rolling diagnostics log and copy-diagnostics page | Reference laptop, 1920×1080, SYNTHETIC input: ≥128 FPS at p95, ≤514 B/frame managed alloc, 2-hour soak with flat memory and 0 errors, loopback hand latency p95 4.2 ms; malformed UDP and busy ports handled (25 Oct) | FPS with the camera worker and camera-to-hand latency not measured (needs the webcam) | `evidence/stage7-2026-10-25/` |
 | 21 | Documentation and evidence (6.3) | Partial | n/a | n/a | this file |
 | 22 | Voice commands | Future (deferred, D4) | — | — | — |
 | 23 | Eye/head pointer | Future (deferred, D4) | — | — | — |

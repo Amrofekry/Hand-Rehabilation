@@ -1,0 +1,12 @@
+[
+  {
+    "size": "1280x720",
+    "checks": 60,
+    "passed": true
+  },
+  {
+    "size": "1600x900",
+    "checks": 60,
+    "passed": true
+  }
+]

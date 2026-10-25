@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.5677445">
+  <test-suite type="TestSuite" id="1016" name="Grip Rehab Unity" fullname="Grip Rehab Unity" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.567745" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1026" name="Assembly-CSharp-Editor.dll" fullname="E:/GP/codex/GripRehab-Unity/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.548781" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16556" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1027" name="GripRehab" fullname="GripRehab" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.547052" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1028" name="Editor" fullname="GripRehab.Editor" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.543308" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1029" name="Tests" fullname="GripRehab.Editor.Tests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.539512" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1017" name="RehabEditModeTests" fullname="GripRehab.Editor.Tests.RehabEditModeTests" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:46Z" duration="9.533845" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1024" name="ClosedAdaptiveLoop" fullname="GripRehab.Editor.Tests.RehabEditModeTests.ClosedAdaptiveLoop" methodname="ClosedAdaptiveLoop" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="443126478" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:36Z" duration="0.023034" asserts="0">
+                <properties />
+                <output><![CDATA[[REHAB_CLOSED_LOOP] PASS: SYNTHETIC replay drives bounded difficulty in Modules 1-3, plain-language pauses and a latched stop (5 cases)
+]]></output>
+              </test-case>
+              <test-case id="1025" name="DashboardFixturesOnDisk" fullname="GripRehab.Editor.Tests.RehabEditModeTests.DashboardFixturesOnDisk" methodname="DashboardFixturesOnDisk" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="839901379" result="Passed" start-time="2026-10-25 16:09:36Z" end-time="2026-10-25 16:09:45Z" duration="8.133471" asserts="0">
+                <properties />
+                <output><![CDATA[[REHAB_DASHBOARD] PASS: fabricated fixtures seed, encrypt, reload and summarise with exact numbers in an isolated folder
+]]></output>
+              </test-case>
+              <test-case id="1018" name="ExerciseDisplay" fullname="GripRehab.Editor.Tests.RehabEditModeTests.ExerciseDisplay" methodname="ExerciseDisplay" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="865821752" result="Passed" start-time="2026-10-25 16:09:45Z" end-time="2026-10-25 16:09:45Z" duration="0.181494" asserts="0">
+                <properties />
+                <output><![CDATA[[REHAB_EXERCISE] PASS: memory reveal survives hitches/focus loss, blocks early answers and hides on time; camera gestures, generated maze and tap assembly complete with outcomes; assembly and maze play fully by hand pointer
+]]></output>
+              </test-case>
+              <test-case id="1021" name="FatigueAiAndSentisParity" fullname="GripRehab.Editor.Tests.RehabEditModeTests.FatigueAiAndSentisParity" methodname="FatigueAiAndSentisParity" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="181027454" result="Passed" start-time="2026-10-25 16:09:45Z" end-time="2026-10-25 16:09:45Z" duration="0.501595" asserts="0">
+                <properties />
+                <output><![CDATA[[REHAB_AI] PASS 186 checks including native Sentis inference and replay parity
+]]></output>
+              </test-case>
+              <test-case id="1020" name="SceneComposition" fullname="GripRehab.Editor.Tests.RehabEditModeTests.SceneComposition" methodname="SceneComposition" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="791620337" result="Passed" start-time="2026-10-25 16:09:45Z" end-time="2026-10-25 16:09:46Z" duration="0.612820" asserts="0">
+                <properties />
+                <output><![CDATA[[APARTMENT_VERIFY] PASS: furnished apartment, scene references/materials/scripts, first-person rig, six selectable objects, seated station, camera default
+]]></output>
+              </test-case>
+              <test-case id="1022" name="SqueezeLiquidAuthored" fullname="GripRehab.Editor.Tests.RehabEditModeTests.SqueezeLiquidAuthored" methodname="SqueezeLiquidAuthored" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="1850342114" result="Passed" start-time="2026-10-25 16:09:46Z" end-time="2026-10-25 16:09:46Z" duration="0.001124" asserts="0">
+                <properties />
+                <output><![CDATA[[SQUEEZE_LIQUID] PASS: sponge and tomato release liquid with a URP particle material
+]]></output>
+              </test-case>
+              <test-case id="1023" name="SynthesisedAudio" fullname="GripRehab.Editor.Tests.RehabEditModeTests.SynthesisedAudio" methodname="SynthesisedAudio" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="601261735" result="Passed" start-time="2026-10-25 16:09:46Z" end-time="2026-10-25 16:09:46Z" duration="0.060502" asserts="0">
+                <properties />
+                <output><![CDATA[[REHAB_AUDIO] PASS: 7 effects and 2 seamless loops synthesised, audible and unclipped
+]]></output>
+              </test-case>
+              <test-case id="1019" name="WholeHandPointer" fullname="GripRehab.Editor.Tests.RehabEditModeTests.WholeHandPointer" methodname="WholeHandPointer" classname="GripRehab.Editor.Tests.RehabEditModeTests" runstate="Runnable" seed="1070409926" result="Passed" start-time="2026-10-25 16:09:46Z" end-time="2026-10-25 16:09:46Z" duration="0.003370" asserts="0">
+                <properties />
+                <output><![CDATA[[REHAB_DWELL] PASS: whole-hand scale, both hands, freshness, dwell pause/reset/latch and screen direction
+Executing cleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

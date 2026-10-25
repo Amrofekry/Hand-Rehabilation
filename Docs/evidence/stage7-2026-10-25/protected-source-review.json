@@ -1,0 +1,15 @@
+{
+  "scope": "Stage 7 robustness changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "993b53a0d187a14ce7fa3b1820c3f47877e7c74646867e825e45093fe145ce9e",
+      "currentSha256": "76abf93766d9389654d07228dae8499bf7b5fec04e9f2207ddafede8cf51c37f",
+      "reason": "User-authorized Stage 7 performance and robustness (2026-10-25). Task 7.3: Diagnostics for support page that shows, then copies, device facts, health counters and recent scrubbed log lines."
+    },
+    "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs": {
+      "previousSha256": "d40b84f62bdc8b0c0a54f13221257012cb58378a2b42a49730e9ac7bdf160aaf",
+      "currentSha256": "ea2faf1c7d6e8e89e5f1887bfd524dbc2fd5a39c7bf5965548bd88014eadb5de",
+      "reason": "User-authorized Stage 7 performance and robustness (2026-10-25). Task 7.2: PortProblem explains a busy or unavailable hand-tracking port instead of only logging a warning."
+    }
+  }
+}

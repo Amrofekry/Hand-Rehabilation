@@ -416,6 +416,40 @@ static class ProductTests
             Check(reopened.SignIn(DashboardFixtures.Doctor, DashboardFixtures.Password) && reopened.MyAccess().Length == 1, "Audit restarts empty on an older catalog");
             Reject<InvalidOperationException>(() => DashboardFixtures.Seed(reopened));
         });
+        // ---------- Stage 7: robustness ----------
+        Test("Diagnostics log rotates, caps its size and scrubs secrets", () => {
+            var folder = Path.Combine("Logs", "offline", "diag-" + Guid.NewGuid().ToString("N"));
+            try
+            {
+                for (int i = 0; i < 7; i++) using (var old = new DiagnosticsLog(folder, new DateTime(2026, 10, 20 + i % 5, 10, i, 0, DateTimeKind.Utc))) old.Write(DateTime.UtcNow, "Info", "run " + i);
+                Check(Directory.GetFiles(folder, "griprehab-*.log").Length <= DiagnosticsLog.KeepFiles, "Only the newest logs are kept");
+                using (var log = new DiagnosticsLog(folder, new DateTime(2026, 10, 30, 0, 0, 0, DateTimeKind.Utc)))
+                {
+                    log.Write(DateTime.UtcNow, "Info", "Sign-in with password Fabricated-password-2026 typed");
+                    log.Write(DateTime.UtcNow, "Error", "Save failed at " + Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\secret.dat", "stack line");
+                    log.Write(DateTime.UtcNow, "Exception", "boom");
+                    for (int i = 0; i < 5; i++) log.Write(DateTime.UtcNow, "Error", "[VISION_CAMERA] retry failed");
+                    log.Write(DateTime.UtcNow, "Info", "something else");
+                    Check(log.Errors == 6 && log.Recent().Count(l => l.Contains("retry failed")) == 1 && log.Recent().Any(l => l.Contains("repeated 4 more times")), "Repeated lines are written once, counted every time");
+                    for (int i = 0; i < 400; i++) log.Write(DateTime.UtcNow, "Info", i + new string('x', 4000));
+                    Check(log.Errors == 6 && log.Exceptions == 1 && log.Recent().Length == DiagnosticsLog.RecentLines, "Counters and recent lines");
+                    log.Dispose();
+                    var text = File.ReadAllText(log.FilePath);
+                    Check(!text.Contains("Fabricated-password-2026") && text.Contains("password [removed]"), "Password-like text removed");
+                    Check(text.Contains("%USERPROFILE%") && !text.Contains(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)), "Profile path removed");
+                    Check(new FileInfo(log.FilePath).Length <= DiagnosticsLog.MaxBytes + 200 && text.Contains("size limit reached"), "File capped at 1 MB");
+                }
+            }
+            finally { if (Directory.Exists(folder)) Directory.Delete(folder, true); }
+        });
+        Test("Disk full during a session save keeps the last saved copy", () => {
+            var f = new Fixture(); f.Login(); var s = f.repo.Begin(1, 0, true); s.score = 10; s.durationSeconds = 5; s.validSeconds = 5; f.repo.SaveSession(s);
+            f.store.fail = true; s.score = 99; s.durationSeconds = 9; s.validSeconds = 9;
+            Reject<IOException>(() => f.repo.SaveSession(s));
+            f.store.fail = false;
+            Check(f.repo.Sessions("patient.one").Single(x => x.id == s.id).score == 10, "Previous saved copy retained after a failed save");
+            f.repo.SaveSession(s); Check(f.repo.Sessions("patient.one").Single(x => x.id == s.id).score == 99, "Retry succeeds once space is available");
+        });
         Console.WriteLine("RESULT " + passed + " passed, " + failed + " failed; fabricated fixtures only");
         return failed == 0 ? 0 : 1;
     }

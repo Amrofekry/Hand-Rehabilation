@@ -26,6 +26,8 @@ namespace GripRehab
         public int AcceptedPackets { get; private set; }
         public int RejectedPackets { get; private set; }
         public string LastRejection { get; private set; } = "";
+        /// <summary>Stage 7.2: why the loopback port could not open (empty when it is listening).</summary>
+        public string PortProblem { get; private set; } = "";
         void Reject(string reason) { RejectedPackets++; LastRejection = reason; }
 
         private readonly ConcurrentQueue<ReceivedDatagram> _pending = new ConcurrentQueue<ReceivedDatagram>();
@@ -62,12 +64,15 @@ namespace GripRehab
             {
                 _socket = new UdpClient(new IPEndPoint(IPAddress.Loopback, port));
                 _socket.Client.ReceiveTimeout = 200;
-                _running = true;
+                _running = true; PortProblem = "";
                 _thread = new Thread(ReceiveLoop) { IsBackground = true, Name = "Rehab bimanual vision loopback" };
                 _thread.Start();
             }
             catch (SocketException error)
             {
+                PortProblem = error.SocketErrorCode == SocketError.AddressAlreadyInUse ?
+                    "Hand-tracking port " + port + " is already in use. Close any other GripRehab window and restart." :
+                    "Hand-tracking port " + port + " could not open (" + error.SocketErrorCode + ").";
                 Debug.LogWarning("Vision loopback unavailable: " + error.Message);
                 _running = false;
                 _socket?.Close();

@@ -159,6 +159,17 @@ namespace GripRehab
         void Exported(string path, Action back)
         { Show("Export saved", "The file was created by your explicit export action.", back); view.Text(path, 110); view.Button("BACK", back, true); }
         static float NextStep(float volume) { float[] steps = { 0, .3f, .5f, .7f, 1 }; foreach (var step in steps) if (step > volume + .01f) return step; return 0; }
+        // Stage 7.3: shows exactly what "copy diagnostics" puts on the clipboard before it does.
+        void Diagnostics()
+        {
+            Show("Diagnostics for support", "Device facts, health counters and recent log lines. No names, records, passwords or images are included.", Settings);
+            var lines = RehabDiagnostics.Summary().Split('\n');
+            view.Text(string.Join("\n", lines, 0, Math.Min(lines.Length, 14)), 300);
+            view.Status("Nothing has been copied yet.");
+            view.Button("COPY DIAGNOSTICS", () => view.SetStatus(RehabDiagnostics.CopyToClipboard() ?
+                "Copied to the clipboard. Paste it into a support message if you choose to share it." : "Copying failed. The log file folder is shown below."), true);
+            view.Text("Log folder: " + Product.DiagnosticsLog.Scrub(RehabDiagnostics.LogFolder), 60);
+        }
         void Settings() => SettingsAt(1);
         void SettingsAt(float scroll)
         {
@@ -181,6 +192,7 @@ namespace GripRehab
             view.Button("EFFECTS VOLUME: " + Mathf.RoundToInt(RehabAudio.EffectsVolume * 100) + "%", () => { RehabAudio.EffectsVolume = NextStep(RehabAudio.EffectsVolume); SettingsAt(view.ScrollPosition); });
             view.Button("ROOM AMBIENCE: " + (RehabAudio.AmbienceVolume > 0 ? "ON" : "OFF"), () => { RehabAudio.AmbienceVolume = RehabAudio.AmbienceVolume > 0 ? 0 : .35f; SettingsAt(view.ScrollPosition); });
             view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; SettingsAt(view.ScrollPosition); });
+            view.Button("DIAGNOSTICS FOR SUPPORT", Diagnostics);
             view.Button("BACK TO MENU", Welcome, true);
             view.ScrollPosition = scroll;
         }

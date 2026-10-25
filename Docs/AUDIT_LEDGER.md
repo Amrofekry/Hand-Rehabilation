@@ -419,7 +419,77 @@ Protected changes, each with a reason, are in `evidence/stage6-2026-10-24/protec
 
 Your LocalLow data was restored (11/11 SHA-256).
 
-## 10. Severity summary and Stage 2 entry list (Stage 1)
+## 10. Stage 7 performance, stability and robustness (25 Oct 2026)
+
+Plan tasks 7.1–7.3 (WBS 6.2). Everything was measured in the rendered Windows player on the reference laptop: i7-11800H, RTX 3060 Laptop GPU, 16 GB, 1920×1080 windowed, "PC" quality. Input was SYNTHETIC only, through the new `-apartment-perf-probe` (isolated acceptance storage, no camera, device or player records), run by `Tools/run_perf_probe.py`.
+
+### 7.1 Budgets
+
+| Phase (20 s each) | Mean FPS | Frame p95 | FPS at p95 (budget 60) | Managed alloc / frame (budget < 1 KB) | Errors |
+|---|---|---|---|---|---|
+| Menu | 334 | 3.9 ms | 257 | 209 B | 0 |
+| Module 1 (held ball, synthetic squeeze) | 256 | 6.8 ms | 146 | 255 B | 0 |
+| Module 2 (memory, then hand-played assembly) | 335 | 3.9 ms | 257 | 307 B | 0 |
+| Module 3 (tracing, then maze) | 324 | 4.0 ms | 250 | 458 B | 0 |
+
+- **Loopback hand-packet latency** (send to the frame that sees it): p50 2.3 ms, p95 4.2 ms. This excludes camera capture and MediaPipe inference.
+- **Final rebuild re-run** (after the S7-01 log fix): FPS at p95 was 241 / 128 / 235 / 236 and allocation 220 / 283 / 341 / 514 B per frame, with 0 errors. Run-to-run variation on the same laptop; still inside both budgets.
+- **Budgets met** for the synthetic, camera-off case.
+- **Allocation method:** release players have no per-frame GC counter, so allocation is managed-heap growth per frame. The heap grows in 4 KB blocks, so the mean is the fair figure. The probe was changed to cache its own reflection and maze solve, so its garbage isn't counted.
+
+**Not measured:**
+- **FPS with the camera worker running, and camera-to-hand latency.** Both need your webcam and consent.
+- **Profiler or Memory Profiler captures from a development build.** Because every budget is met, no hotspot fixes were needed this stage.
+
+### 7.2 Soak and fault injection
+
+| Fault | Result |
+|---|---|
+| Malformed UDP (10 kinds: empty, truncated, wrong schema, NaN, 60 kB, wrong handedness and others) sent to ports 27817, 27818 and 27820 | 30 sent, 9 rejected and counted by the hand receiver, **0 errors**, game kept running |
+| Ports 27817/27818 already in use (review focus 2) | Runner holds both ports before launch. The game says "Hand-tracking port 27817 is already in use. Close any other GripRehab window and restart." and "Force bridge port unavailable: AddressAlreadyInUse", keeps running at 340 FPS, no hang, 0 errors. **New:** the hand-pointer status line shows this message (it was only a log warning before). |
+| Disk full during a session save | New product test: the last saved copy is kept, and a retry succeeds once space returns. The game's "Saving needs attention" path was already present. |
+| Corrupt profile or catalog | Existing tests: corrupt primary is preserved before backup recovery; both copies unreadable fails closed; missing primary is restored from backup; older catalogs load (Stage 6). |
+| Camera worker killed | **Not run.** It needs the webcam worker running. Camera loss mid-grip pauses safely (Stage 5). |
+
+**30-minute soak per phase** (2 hours in one run, SYNTHETIC input; `evidence/stage7-2026-10-25/logs/perf-soak.json`):
+
+| Phase (1800 s) | Mean FPS | Frame p95 | Alloc / frame | Total Unity memory start → end | Managed heap at end | Iterations | Errors |
+|---|---|---|---|---|---|---|---|
+| Menu | 330 | 4.5 ms | 188 B | 99 → 100 MB (−0.0 %) | 17.5 MB | — | 0 |
+| Module 1 | 220 | 7.4 ms | 240 B | 100 → 100 MB (+0.2 %) | 15.0 MB | ball held throughout | 0 |
+| Module 2 | 315 | 4.4 ms | 243 B | 101 → 101 MB (+0.5 %) | 16.4 MB | 125 restarts | 0 |
+| Module 3 | 316 | 4.4 ms | 452 B | 101 → 101 MB (+0.0 %) | 15.8 MB | 3,956 restarts | 0 |
+
+- **Pass:** no leak growth over 10 %, 0 errors and 0 exceptions in 2 hours.
+- **How to read the managed-heap column:** single readings sit on the garbage collector's normal saw-tooth, so start-to-end percentages swing either way (for example +144 % in the menu, −37 % in Module 1). The ending values (15–17.5 MB) and the flat total show nothing accumulates.
+- **After the soak:** hand latency was p50 2.7 ms and p95 4.3 ms; the malformed-packet test passed again.
+
+### 7.3 Crash and log capture
+
+- **Rolling log:** `%LOCALAPPDATA%/GripRehab/logs/griprehab-<time>.log`, newest 5 kept, 1 MB cap each. Every Unity log line is written with level and time, plus unhandled and unobserved-task exceptions.
+- **No personal data:** password-like text and user-profile paths are scrubbed. No names, records or the computer's name are written. A sample is in `evidence/stage7-2026-10-25/logs/`.
+- **Diagnostics for support:** a new Settings page that shows device facts, health counters and recent log lines, then copies them on request.
+- **Tests:** product tests cover rotation, size cap, scrubbing and counters.
+
+**Seen in the build:** the Diagnostics page shows device facts, counters and recent lines, with every path as `%USERPROFILE%\…`. Screenshot: `evidence/stage7-2026-10-25/play/`.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S7-01 | S3 | The page counted 7 errors in 36 s: the camera launcher logs the same "Tools/Vision not found" error every 5 s (expected in the camera-free copy, which has no camera tools) and would fill the 1 MB log in a few hours | The log writes a repeated line once and then "previous line repeated N more times"; counters still count every occurrence. Product test added. |
+| S7-02 | process | First probe build reported 0 B/frame (the per-frame GC counter does not exist in release players), working set 0 (not reported by Mono) and Module 1 never grabbing (camera mode, and a teleport moved the player out of reach) | Heap-growth fallback, Unity memory totals, keyboard mode from the seated start; the probe fails loudly if Module 1 never holds the ball |
+
+**Suites:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI and gallery passed; busy-ports probe passed.
+- **Unity test runner:** EditMode 8/8.
+- **Offline C#:** product 76 (was 74), tracking 177.
+- **Python:** Tools, bridges 8, WBS 45, AI 32.
+
+Protected changes, each with a reason, are in `evidence/stage7-2026-10-25/protected-source-review.json`:
+- `ResearchPortalPages`
+- `VisionUdpReceiver`
+
+## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
 - **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.

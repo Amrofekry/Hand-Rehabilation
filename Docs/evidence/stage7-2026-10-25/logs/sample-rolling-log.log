@@ -1,0 +1,7 @@
+03:14:26.292 INFO GripRehab 0.5.0 · Unity 2022.3.20f1 · OS Windows 11  (10.0.26300) 64bit · CPU 11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz (16 threads) · RAM 16151 MB · GPU NVIDIA GeForce RTX 3060 Laptop GPU · Direct3D11 · VRAM 5996 MB · Screen 1024x768 · quality PC
+03:14:26.694 INFO Initialized VirtualGrasp SDK (version 1.7.0-free).
+03:14:26.786 INFO [VirtualGrasp] Registered avatar (#1) with id: 18428.
+03:14:26.789 WARNING No baked grasps found. Set your grasp db in MyVirtualGrasp
+03:14:27.416 INFO [REHAB_VG] Native registration and both 15-joint contact bindings available
+03:14:30.309 INFO [UI_GALLERY] PASS: 87 
+03:14:30.313 INFO quit after 4 s

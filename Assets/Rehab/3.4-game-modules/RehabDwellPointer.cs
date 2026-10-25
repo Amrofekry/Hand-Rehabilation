@@ -174,7 +174,8 @@ namespace GripRehab
                                               vision.LatestLeft, vision.LeftValid, lastLeft);
             if (frame == null)
             {
-                status.text = cameraLauncher.State == "FAILED" || cameraLauncher.State == "camera_error" ?
+                status.text = !string.IsNullOrEmpty(vision.PortProblem) ? vision.PortProblem.ToUpperInvariant() + "  /  MOUSE AND KEYBOARD STILL WORK" :
+                    cameraLauncher.State == "FAILED" || cameraLauncher.State == "camera_error" ?
                     "CAMERA UNAVAILABLE  /  USE MOUSE OR KEYBOARD" : cameraLauncher.IsRunning ?
                     "CAMERA READY  /  SHOW YOUR HAND TO SELECT" :
                     "CAMERA STARTING  /  MOUSE AND KEYBOARD ALSO WORK";

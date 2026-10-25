@@ -3,7 +3,7 @@
   "passed": true,
   "game": {
     "passed": true,
-    "utc": "2026-10-25T02:28:29.8010647Z",
+    "utc": "2026-10-25T16:05:44.5495921Z",
     "error": "",
     "checks": [
       "Serialized scene bindings survive reload",
@@ -58,7 +58,7 @@
       "Object menu appears when input is paused",
       "Living room chair can be used from the approach position",
       "Therapy ball can be reached and grabbed from the chair",
-      "Held ball is kinematic and deforms under grip force; held=True kinematic=True compression=0.5142856 contacts=14 ball=(2.47, 0.93, -4.48) anchor=(2.39, 0.67, -4.53) hand=(2.45, 1.04, -4.54) eye=(1.97, 1.11, -4.41) probes=0:0=True@0.052;0:1=True@0.031;0:2=True@0.034;1:0=True@0.067;1:1=True@0.046;1:2=True@0.042;2:0=True@0.079;2:1=True@0.061;2:2=True@0.054;3:0=False@0.088;3:1=True@0.073;3:2=True@0.065;4:0=True@0.061;4:1=True@0.048;4:2=True@0.070",
+      "Held ball is kinematic and deforms under grip force; held=True kinematic=True compression=0.5142855 contacts=14 ball=(2.47, 0.93, -4.48) anchor=(2.39, 0.67, -4.53) hand=(2.45, 1.04, -4.54) eye=(1.97, 1.11, -4.41) probes=0:0=True@0.052;0:1=True@0.031;0:2=True@0.034;1:0=True@0.067;1:1=True@0.046;1:2=True@0.042;2:0=True@0.079;2:1=True@0.061;2:2=True@0.054;3:0=False@0.088;3:1=True@0.073;3:2=True@0.065;4:0=True@0.061;4:1=True@0.048;4:2=True@0.070",
       "Independent finger capsules contribute only when touching the ball (14/15); ball=(2.47, 0.93, -4.48) colliderRadius=0.07 probes=0:0=0.052;0:1=0.031;0:2=0.034;1:0=0.067;1:1=0.046;1:2=0.042;2:0=0.079;2:1=0.061;2:2=0.054;3:0=0.088;3:1=0.073;3:2=0.065;4:0=0.061;4:1=0.048;4:2=0.070",
       "Noncontacting fingers resolve exactly zero force",
       "Mesh vertices deform near finger contacts while distant regions remain stable (250 moved, 112 distant, 0 distant moved)",
@@ -129,12 +129,12 @@
       "Summoned object is positioned at the right hand without requiring camera depth alignment",
       "Summoned object drops if the tracked hand stays open beyond the grace period",
       "Stale camera landmarks clear visual pressure and cannot keep holding",
-      "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=31.96 next=32.04563",
+      "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=32.09 next=32.17462",
       "G cannot summon an object without a fresh tracked hand",
       "Right camera data automatically switches the selected hand from left to right",
       "Left camera data automatically selects and drives the left vendor mesh",
       "Seeing both hands briefly does not switch away from the actively tracked left hand",
-      "Selected left camera fist can pick up the kitchen sponge without E; nearest=0.001 hand=(0.46, 1.03, -1.57) sponge=(0.48, 1.09, -1.64) score=0.76",
+      "Selected left camera fist can pick up the kitchen sponge without E; nearest=0.000 hand=(0.46, 1.03, -1.57) sponge=(0.48, 1.09, -1.64) score=0.76",
       "Opening the left camera hand drops the sponge",
       "G brings the selected kitchen object into the tracked left hand without changing camera mode",
       "Summoned kitchen object is positioned at the left hand",
@@ -176,8 +176,8 @@
       "Lost managed pointer event is rebuilt when the cached EventSystem survives reload",
       "Production five-second left palm dwell survives finger bending beside a low-confidence right hand; hover="
     ],
-    "contactMeanMs": 0.8548574509803915,
-    "contactMaxMs": 8.2636,
+    "contactMeanMs": 0.8149822817914331,
+    "contactMaxMs": 8.392,
     "name": "ai-player-replay",
     "exit": 0,
     "rendered": false
@@ -186,10 +186,10 @@
     "passed": true,
     "assertions": 10,
     "unity": "2022.3.20f1",
-    "utc": "2026-10-25T02:27:49.0313232Z",
+    "utc": "2026-10-25T16:05:03.7909080Z",
     "error": "",
     "onnxDifference": 7.450580596923828e-09,
-    "inferenceP50Ms": 0.2761,
-    "inferenceP95Ms": 0.42250000000000004
+    "inferenceP50Ms": 0.23720000000000002,
+    "inferenceP95Ms": 0.44670000000000004
   }
 }
