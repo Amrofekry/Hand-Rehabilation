@@ -372,7 +372,54 @@ Protected changes, each with a reason, are in `evidence/stage5-2026-10-24/protec
 
 Your LocalLow data was restored and verified (11/11 SHA-256).
 
-## 9. Severity summary and Stage 2 entry list (Stage 1)
+## 9. Stage 6 dashboards (24–25 Oct 2026)
+
+Plan tasks 6.1 and 6.2 (WBS 5.1, 5.2). All numbers below come from fabricated, clearly labelled fixtures. No real patient or clinician used these screens.
+
+| Task | Delivered | Checked by |
+|---|---|---|
+| 6.1 Patient dashboard | **My Progress** has five summary cards (force, endurance, stability, reaction time, accuracy) from the latest completed attempts. Each card names its measure and shows "—" when not measured, never 0. A baseline comparison appears only for measured force from the same input, otherwise "—" with the reason. Per-module statistics, plus score trends from completed attempts only. Session history marks "STOPPED · research safety" and "INCOMPLETE" with no score, and its chart leaves unfinished attempts out instead of drawing 0. | Product tests (exact fixture numbers, dash rules); walked in the build |
+| 6.2 Doctor dashboard | **D1** sign-in and **D2** search and sort were kept. **D3** Progress by Module shows the same statistics plus research pause/stop events in plain words. **D4** notes show "written by <doctor>" and offer five editable templated recommendations. **D5** audit trail: doctor sign-in and sign-out, record views, notes and every export, each with author and time and no record content copied. A doctor's own sign-in log is available, with Sign Out on the workspace. Exports: CSV (existing), the full PDF report (unfinished attempts now show "--" instead of 0) and a new one-session PDF with outcomes and research events. | Product tests (exact numbers, no cross-patient mixing, role checks, audit contents); EditMode `DashboardFixturesOnDisk`; walked in the build |
+
+**Gate 6 walkthrough** (Windows build with `-dashboard-fixtures`, which uses a throwaway folder seeded with fabricated accounts patient.alpha, patient.beta and doctor.demo, behind a visible "FABRICATED DEMO DATA" banner):
+- **Patient:** My Progress showed exactly the tested values (55 % ref, 22.7 s, 0.041 CV, 1.80 s, 83 %, and "22.0 N today vs 20.0 N baseline (110%) · SYNTHETIC"). Module 1–3 statistics and the completed-only trends matched. History showed "INCOMPLETE · —".
+- **Doctor:**
+  - D1/D2 listed both patients.
+  - D3 showed the PAUSE at 30 s and STOP at 40 s in plain words.
+  - D4 saved a templated note with its author.
+  - D5 listed every view and note.
+
+The fixture folders were deleted afterwards. Screenshots are in `evidence/stage6-2026-10-24/play/`.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S6-01 | **S2** (pre-existing) | Unity's JSON stores a null id as "", so `SaveSession` saw a changed `baselineId` and refused to save **any session for a patient without a baseline**. The journey test missed it because its patient always collects a baseline first. Found when the fixture seeding failed in the real encrypted store. | `ProductRepository` compares null and "" as equal. The new EditMode test seeds through the real encrypted store and reloads. |
+| S6-02 | S3 | The doctor's sign-in log filtered on a null subject, which the same JSON round-trip turns into "" | Filter accepts empty; covered by the same EditMode test |
+| S6-03 | process | Fixture seeding errors were swallowed, leaving a half-seeded demo | Fixture banner now shows any seeding problem and signs out |
+
+**Not done:**
+- No real clinician review of wording or layout.
+- The cards and statistics are game measures, not clinical scores.
+- Exported PDFs were checked by test (structure and labels), not opened by eye.
+
+**Final suites:**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI passed; gallery passed.
+- **Unity test runner:** EditMode 8/8.
+- **Offline C#:** product 74 (was 68), tracking 177.
+- **Python:** Tools 66, bridges 8, WBS 45, AI 32.
+
+Protected changes, each with a reason, are in `evidence/stage6-2026-10-24/protected-source-review.json`:
+- `ResearchPortalHost`
+- `ResearchPortalPages`
+- `RehabAppShell`
+- `ProductRepository`
+- `ProductModels`
+- `ResearchExport`
+
+Your LocalLow data was restored (11/11 SHA-256).
+
+## 10. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.
 - **S2 (12):** A-001, A-003 (my Stage 0 regression), A-004, A-005, A-006, A-019, P-004, P-007, P-015 (with A-018), P-018, P-019, P-023. A-020 (S3) is fixed together with A-002.

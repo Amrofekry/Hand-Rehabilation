@@ -1,11 +1,11 @@
 {
-  "utc": "2026-10-24T17:05:39.689124+00:00",
+  "utc": "2026-10-25T02:24:09.406605+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 862
+      "count": 865
     },
     {
       "name": "assembly-graph",
@@ -16,27 +16,27 @@
       "name": "compile-editor",
       "passed": true,
       "assemblies": {
-        "GripRehab.Product.dll": "0430c70a4ee353c23f133e80ca29f0d807a5461fc1775e5f7c8d2c8731295c5c",
+        "GripRehab.Product.dll": "380a71ce270f8a5e1cded9858a7c5dbffd10b1bf68717fa15b032bf697e61d26",
         "GripRehab.Core.dll": "a2422ad3ef422c60c8166e3659b6a203c098f3eb760287b67701db1cc6d1267d",
-        "GripRehab.UI.dll": "68622a06d2aff2d70d80ff0521a940e558be078124573064e74598ff29032f48",
-        "Assembly-CSharp.dll": "bea49b8268b2bd6b6c58301bb7ec353278205a36b2ad37b903a86b96037dcbe5",
-        "Assembly-CSharp-Editor.dll": "5e5aa1be05f6d924210580cac802e3bdb328ec22e7e3ecbd325325c2c75efc6a"
+        "GripRehab.UI.dll": "930dae14dc0affd7cd63a5cee70b3099cfa9e78f3c373e29d6aad61c511623f5",
+        "Assembly-CSharp.dll": "741141b6b03ec43e20eb62e5a0a5b20ad75f68727ebd055c0c4aa44008401cd1",
+        "Assembly-CSharp-Editor.dll": "ca0776f7e4e597e407dadf4310b25d9f1b21858bf150de0e825be4539be7b040"
       }
     },
     {
       "name": "compile-player",
       "passed": true,
       "assemblies": {
-        "GripRehab.Product.dll": "f99d8d3928a2e7081379723c26c047e520275a91c07c14aeb4a5a76403e15d09",
+        "GripRehab.Product.dll": "408762127d04ccca2cd20a72e070d6138b1094622a8c2fd67d09dcd59753f82a",
         "GripRehab.Core.dll": "68a9fac4b3954cf08ffae49b0a3a45d56489b5b9f71242005a9c02f34f65bed7",
-        "GripRehab.UI.dll": "28780a89e0a4570beb52dac9f86672975dc3fb2c6f227f53b0c984540631c349",
-        "Assembly-CSharp.dll": "feecc8f9da88e9ab65fbc797d1bf6180aca9f18ef6c5768e97b7de0ba40fce93"
+        "GripRehab.UI.dll": "8a719c6e2e96b87c83d8f36451bdf7eb0da5b537b3d5abe0b0e3ba63f5cdf844",
+        "Assembly-CSharp.dll": "75b24cce5f13bac6a1054d5a668e1937958f74391ed2106d12f40abfc578697a"
       }
     },
     {
       "name": "product-domain-tests",
       "passed": true,
-      "result": "PASS PBKDF2 password verification\nPASS Verifier corruption and iteration bounds\nPASS Patient cannot read another patient's results\nPASS Returned account cannot grant doctor privileges\nPASS Doctor can read patients and author audited notes\nPASS Patient cannot create an additional doctor\nPASS First doctor setup is explicit and persisted\nPASS Sign-in throttle and sign-out\nPASS Duplicate profile assignment rejected\nPASS Failed save does not change in-memory account\nPASS Session snapshot prevents alias mutation\nPASS Session identity and terminal state immutable\nPASS Invalid and excessive metrics rejected\nPASS Baseline source and ownership preserved\nPASS Camera baseline never stores inferred force\nPASS Catalog corruption fails closed\nPASS 500 ms freshness and invalid sample bounds\nPASS Baseline rejects duplicates and stale samples\nPASS Baseline calibration change requires restart\nPASS Baseline frame hitch cannot fake elapsed time\nPASS Window ignores duplicated sensor samples\nPASS Window resets across source/calibration changes\nPASS Bad hand kinematics cannot poison the window\nPASS Force and motion are independent sign categories\nPASS One persistent sign pauses until explicit resume\nPASS Two persistent signs stop and remain latched\nPASS Invalid inputs cannot increase difficulty\nPASS Difficulty cooldown and upper bound\nPASS Bad policy clock and threshold settings rejected\nPASS CSV formula escaping and numeric culture\nPASS PDF pagination and xref offsets\nPASS Windows DPAPI roundtrip and corruption rejection\nPASS Pointer fires exactly once after five qualified seconds\nPASS Pointer gesture flicker pauses qualified dwell\nPASS Pointer target changes and frame hitches cannot click early\nPASS Memory task repeatability, errors and completion\nPASS Spatial assembly rejects wrong piece and completes ordered set\nPASS Crash recovery is owner-scoped and terminal-state preserving\nPASS Crash recovery failure preserves the saved checkpoint\nPASS Patient session cannot start without a linked profile\nPASS Transient primary lock never restores the older backup\nPASS Primary lock released during retry loads the newest copy\nPASS Corrupt primary is preserved before backup recovery\nPASS Missing primary is restored from its backup\nPASS Both copies unreadable fails closed without replacing the primary\nPASS No files returns the empty default\nPASS Exercise tuning keeps level 1 legacy values and stays bounded\nPASS Force rounds: steady in-band effort completes every round with three stars\nPASS Force rounds: idle input never completes and times out with a low score\nPASS Force rounds: squeezing past the break point in a control round restarts it\nPASS Force rounds: one sustained over-squeeze counts as one crack (playtest)\nPASS Force rounds: a pulse needs a real release between squeezes\nPASS Force rounds: invalid samples are ignored\nPASS Session outcomes are validated and optional for older records\nPASS Assembly board: matching drops snap, wrong slots count errors and pieces return\nPASS Assembly board: tap piece then slot is an accessible alternative\nPASS Active grip needs real effort, not just fresh input\nPASS Staged baseline counts a sustained grip during the endurance stage\nPASS Adaptive difficulty moves one bounded step per decision\nPASS Adaptive loop: a policy replay keeps every module inside its bounds\nPASS Force rounds: retune changes only rounds not yet started\nPASS Next session level follows adaptation, score and safety stops\nPASS Safety: simultaneous signs stop, latch and are explained\nPASS Safety: stale or invalid predictions pause without a sign and never raise difficulty\nPASS Safety: one sign warns, and the player can finish during the warning\nPASS Proxy model never reads real or camera input\nPASS Baseline match per Prepare input\nPASS Baseline coach: stage quality and cues\nRESULT 68 passed, 0 failed; fabricated fixtures only"
+      "result": "PASS PBKDF2 password verification\nPASS Verifier corruption and iteration bounds\nPASS Patient cannot read another patient's results\nPASS Returned account cannot grant doctor privileges\nPASS Doctor can read patients and author audited notes\nPASS Patient cannot create an additional doctor\nPASS First doctor setup is explicit and persisted\nPASS Sign-in throttle and sign-out\nPASS Duplicate profile assignment rejected\nPASS Failed save does not change in-memory account\nPASS Session snapshot prevents alias mutation\nPASS Session identity and terminal state immutable\nPASS Invalid and excessive metrics rejected\nPASS Baseline source and ownership preserved\nPASS Camera baseline never stores inferred force\nPASS Catalog corruption fails closed\nPASS 500 ms freshness and invalid sample bounds\nPASS Baseline rejects duplicates and stale samples\nPASS Baseline calibration change requires restart\nPASS Baseline frame hitch cannot fake elapsed time\nPASS Window ignores duplicated sensor samples\nPASS Window resets across source/calibration changes\nPASS Bad hand kinematics cannot poison the window\nPASS Force and motion are independent sign categories\nPASS One persistent sign pauses until explicit resume\nPASS Two persistent signs stop and remain latched\nPASS Invalid inputs cannot increase difficulty\nPASS Difficulty cooldown and upper bound\nPASS Bad policy clock and threshold settings rejected\nPASS CSV formula escaping and numeric culture\nPASS PDF pagination and xref offsets\nPASS Windows DPAPI roundtrip and corruption rejection\nPASS Pointer fires exactly once after five qualified seconds\nPASS Pointer gesture flicker pauses qualified dwell\nPASS Pointer target changes and frame hitches cannot click early\nPASS Memory task repeatability, errors and completion\nPASS Spatial assembly rejects wrong piece and completes ordered set\nPASS Crash recovery is owner-scoped and terminal-state preserving\nPASS Crash recovery failure preserves the saved checkpoint\nPASS Patient session cannot start without a linked profile\nPASS Transient primary lock never restores the older backup\nPASS Primary lock released during retry loads the newest copy\nPASS Corrupt primary is preserved before backup recovery\nPASS Missing primary is restored from its backup\nPASS Both copies unreadable fails closed without replacing the primary\nPASS No files returns the empty default\nPASS Exercise tuning keeps level 1 legacy values and stays bounded\nPASS Force rounds: steady in-band effort completes every round with three stars\nPASS Force rounds: idle input never completes and times out with a low score\nPASS Force rounds: squeezing past the break point in a control round restarts it\nPASS Force rounds: one sustained over-squeeze counts as one crack (playtest)\nPASS Force rounds: a pulse needs a real release between squeezes\nPASS Force rounds: invalid samples are ignored\nPASS Session outcomes are validated and optional for older records\nPASS Assembly board: matching drops snap, wrong slots count errors and pieces return\nPASS Assembly board: tap piece then slot is an accessible alternative\nPASS Active grip needs real effort, not just fresh input\nPASS Staged baseline counts a sustained grip during the endurance stage\nPASS Adaptive difficulty moves one bounded step per decision\nPASS Adaptive loop: a policy replay keeps every module inside its bounds\nPASS Force rounds: retune changes only rounds not yet started\nPASS Next session level follows adaptation, score and safety stops\nPASS Safety: simultaneous signs stop, latch and are explained\nPASS Safety: stale or invalid predictions pause without a sign and never raise difficulty\nPASS Safety: one sign warns, and the player can finish during the warning\nPASS Proxy model never reads real or camera input\nPASS Baseline match per Prepare input\nPASS Baseline coach: stage quality and cues\nPASS Dashboard fixtures reproduce exact patient card numbers\nPASS Dashboard fixtures reproduce exact module statistics and safety events\nPASS Dashboards show missing data as a dash, never 0\nPASS Dashboards never mix patients and enforce roles\nPASS Doctor audit trail records views, notes, exports and sign-in\nPASS Older catalogs without an audit trail still load, and fixtures need an empty store\nRESULT 74 passed, 0 failed; fabricated fixtures only"
     },
     {
       "name": "tracking-source-tests",
@@ -71,7 +71,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.230s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.134s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -83,7 +83,7 @@
     {
       "name": "pointer-static-bindings",
       "passed": true,
-      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.015s\n\nOK",
+      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.006s\n\nOK",
       "scope": "Static runtime integration contracts; no native uGUI"
     },
     {
@@ -95,13 +95,13 @@
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.015s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.006s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.016s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.005s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],

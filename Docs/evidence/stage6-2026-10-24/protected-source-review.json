@@ -1,0 +1,35 @@
+{
+  "scope": "Stage 6 dashboard changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalHost.cs": {
+      "previousSha256": "46fceaa1d7799f527a061b9a74491574a76db8102deececa81e7f801ac102da3",
+      "currentSha256": "24417f1e98561f8a712612927459e9a44b53ef7b613d895d78f3bd5d45e7d469",
+      "reason": "User-authorized Stage 6 dashboards (2026-10-24). Task 6.1: MY PROGRESS on the patient dashboard; -dashboard-fixtures seeds fabricated demo records into isolated storage with a visible banner that shows any seeding problem."
+    },
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "2064c7f08a28d728e1e974cbe867f348a9b8aeba151aeabae0633da8d5eb9f0c",
+      "currentSha256": "993b53a0d187a14ce7fa3b1820c3f47877e7c74646867e825e45093fe145ce9e",
+      "reason": "User-authorized Stage 6 dashboards (2026-10-24). Task 6.1/6.2: progress cards and per-module statistics, completed-only charts, stopped/incomplete labels with no score, D3 safety events, D4 note templates with author names, D5 audit trail and sign-in log, session PDF export, audited exports."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
+      "previousSha256": "8a6a163aae9f900b631c33d95226f0e741e69e725b8b3483432646a76a8652c8",
+      "currentSha256": "abed53ef48324287e007b412398a33791b9b5d187ca6e78023d068c6459e3058",
+      "reason": "User-authorized Stage 6 dashboards (2026-10-24). Task 6 gate: -dashboard-fixtures uses a throwaway storage folder, never the player's records."
+    },
+    "Assets/Product/ProductRepository.cs": {
+      "previousSha256": "1dfe9649f3359877ffa1641a5a33a9a1e4a42d95fb9c3ef2137b143e532593bf",
+      "currentSha256": "a8e42939679288c096fba0bddee33b821f1affb661fe00eb50734d2739630fbd",
+      "reason": "User-authorized Stage 6 dashboards (2026-10-24). Task 6.2 D5: audit trail (doctor sign-in/out, notes, record views, exports), patient-scoped reads, older catalogs load with an empty trail. Fix S6-01: null and empty ids compare equal, so a patient with no baseline can save sessions after Unity JSON round-trips."
+    },
+    "Assets/Product/ProductModels.cs": {
+      "previousSha256": "efe23f52b47fdd7d37de6e6303863a13dceb4d8ac3d57bb6e23b619301243f4b",
+      "currentSha256": "9c48680b837d3ec2320d75d2e9df6dbf2a81287f09a3d83dc6355e4f421b5d23",
+      "reason": "User-authorized Stage 6 dashboards (2026-10-24). Task 6.2 D5: AuditEntry and LocalProductCatalog.audit."
+    },
+    "Assets/Product/ResearchExport.cs": {
+      "previousSha256": "d8644c80822a2a8619a126e55921dd2e733dc7deb9cf2fa6fef6d13557d590de",
+      "currentSha256": "373c4c101668311d02185bf069527020d936811c7bedefb04f7e4d090653ba62",
+      "reason": "User-authorized Stage 6 dashboards (2026-10-24). Task 6.2: one-session PDF report; unfinished attempts show no score instead of 0."
+    }
+  }
+}

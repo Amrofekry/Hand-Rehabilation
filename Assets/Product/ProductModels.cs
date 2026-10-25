@@ -67,6 +67,9 @@ namespace GripRehab.Product
     }
     [Serializable] public sealed class ClinicalNote
     { public string id, doctorId, patientId, createdUtc, text, supersedesId; }
+    /// <summary>D5 audit trail: who did what to which record, and when. No record content is copied.</summary>
+    [Serializable] public sealed class AuditEntry
+    { public string utc, actorId, action, subjectId; }
     [Serializable] public sealed class LocalProductCatalog
     {
         public int schemaVersion = 1;
@@ -74,6 +77,7 @@ namespace GripRehab.Product
         public List<CapabilityProfile> baselines = new List<CapabilityProfile>();
         public List<SessionRecord> sessions = new List<SessionRecord>();
         public List<ClinicalNote> notes = new List<ClinicalNote>();
+        public List<AuditEntry> audit = new List<AuditEntry>();
     }
     /// <summary>Encrypted serialization is supplied by an adapter, never by UI.</summary>
     public interface IProductPersistence

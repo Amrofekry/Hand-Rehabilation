@@ -357,6 +357,65 @@ static class ProductTests
             Check(gap.StageQuality < .6f, "Missing samples lower quality, got " + gap.StageQuality);
             Check(StagedCapabilityTrial.QualityLabel(.9f) == "GOOD" && StagedCapabilityTrial.QualityLabel(.6f) == "FAIR" && StagedCapabilityTrial.QualityLabel(.2f).StartsWith("POOR"), "Quality labels");
         });
+        // ---------- Stage 6: dashboards ----------
+        Func<ProductRepository> Seeded = () => { var r = new ProductRepository(new MemoryStore(), new Clock()); DashboardFixtures.Seed(r); return r; };
+        Func<ProductRepository, string, string> IdOf = (r, user) => { r.SignIn(DashboardFixtures.Doctor, DashboardFixtures.Password); var id = r.Patients().Single(p => p.username == user).id; r.SignOut(); return id; };
+        Test("Dashboard fixtures reproduce exact patient card numbers", () => {
+            var r = Seeded(); r.SignIn(DashboardFixtures.Alpha, DashboardFixtures.Password);
+            var sessions = r.Sessions(r.Current.id); var cards = ProgressSummary.Cards(sessions);
+            string Card(string label) => cards.Single(c => c.label == label).value;
+            Check(Card("Force") == "55 % ref" && Card("Endurance") == "22.7 s" && Card("Stability") == "0.041 CV", "Module 1 cards: " + string.Join(", ", cards.Select(c => c.value)));
+            Check(Card("Reaction time") == "1.80 s" && Card("Accuracy") == "83 %", "Latest reaction and accuracy: " + Card("Reaction time") + " / " + Card("Accuracy"));
+            Check(ProgressSummary.BaselineComparison(sessions, r.LatestBaseline(r.Current.id)) == "22.0 N today vs 20.0 N baseline (110%) · SYNTHETIC", "Baseline comparison: " + ProgressSummary.BaselineComparison(sessions, r.LatestBaseline(r.Current.id)));
+        });
+        Test("Dashboard fixtures reproduce exact module statistics and safety events", () => {
+            var r = Seeded(); r.SignIn(DashboardFixtures.Alpha, DashboardFixtures.Password);
+            var sessions = r.Sessions(r.Current.id); var m = ProgressSummary.ByModule(sessions);
+            Check(m[0].attempts == 4 && m[0].completed == 3 && m[0].safetyStops == 1 && m[0].sessionsWithPauses == 1 && m[0].latestScore == 88 && m[0].bestScore == 88 && m[0].latestLevel == 2, "Module 1 statistics");
+            Check(m[0].scoreTrend.SequenceEqual(new[] { .62f, .74f, .88f }), "Module 1 trend uses completed scores only");
+            Check(m[1].attempts == 2 && m[1].completed == 1 && m[1].incomplete == 1 && m[2].completed == 1 && m[2].latestScore == 83, "Modules 2 and 3");
+            var events = ProgressSummary.SafetyEvents(sessions);
+            Check(events.Count == 2 && events[0].Contains("PAUSE at 30 s") && events[0].Contains("grip force") && events[1].Contains("STOP at 40 s") && events[1].Contains("movement"), "Plain safety events: " + string.Join(" | ", events));
+        });
+        Test("Dashboards show missing data as a dash, never 0", () => {
+            var r = Seeded(); r.SignIn(DashboardFixtures.Alpha, DashboardFixtures.Password);
+            Check(ProgressSummary.Cards(new SessionRecord[0]).All(c => c.missing && c.value == ProgressSummary.Missing), "No sessions: every card is a dash");
+            var stopped = r.Sessions(r.Current.id).Single(s => s.state == RecordState.SafetyStopped);
+            Check(ProgressSummary.ScoreText(stopped) == ProgressSummary.Missing && ProgressSummary.StateLabel(stopped).StartsWith("STOPPED"), "Stopped attempt has no score and is marked");
+            Check(ProgressSummary.BaselineComparison(new SessionRecord[0], null).StartsWith(ProgressSummary.Missing), "No baseline is a dash");
+            var empty = ProgressSummary.ByModule(new SessionRecord[0]); Check(!empty[0].latestScore.HasValue && !empty[0].latestLevel.HasValue && empty[0].scoreTrend.Length == 0, "Empty module statistics stay empty");
+            var pdf = Encoding.ASCII.GetString(ResearchExport.SessionPdf("fabricated", stopped));
+            Check(pdf.Contains("not finished") && pdf.Contains("STOP") && pdf.Contains("startxref"), "Session PDF marks the stop and shows no score");
+            Check(Encoding.ASCII.GetString(ResearchExport.Pdf("fabricated", new[] { stopped })).Contains("not finished"), "Report PDF shows no score for a stopped attempt");
+        });
+        Test("Dashboards never mix patients and enforce roles", () => {
+            var r = Seeded(); string alpha = IdOf(r, DashboardFixtures.Alpha), beta = IdOf(r, DashboardFixtures.Beta);
+            r.SignIn(DashboardFixtures.Beta, DashboardFixtures.Password);
+            var cards = ProgressSummary.Cards(r.Sessions(beta));
+            Check(cards.Single(c => c.label == "Force").value == "30 % ref" && cards.Single(c => c.label == "Accuracy").missing, "Beta sees only Beta's numbers");
+            Reject<UnauthorizedAccessException>(() => r.Sessions(alpha)); Reject<UnauthorizedAccessException>(() => r.AuditTrail(beta)); Reject<UnauthorizedAccessException>(() => r.RecordAudit("viewed patient record", beta));
+            r.SignOut(); r.SignIn(DashboardFixtures.Doctor, DashboardFixtures.Password);
+            Check(r.Sessions(alpha).All(s => s.accountId == alpha) && r.Sessions(beta).All(s => s.accountId == beta) && r.Sessions(beta).Length == 1, "Doctor reads each record separately");
+        });
+        Test("Doctor audit trail records views, notes, exports and sign-in", () => {
+            var r = Seeded(); string alpha = IdOf(r, DashboardFixtures.Alpha), beta = IdOf(r, DashboardFixtures.Beta);
+            r.SignIn(DashboardFixtures.Doctor, DashboardFixtures.Password);
+            r.RecordAudit("viewed patient record", alpha); r.RecordAudit("exported PDF report", alpha);
+            var trail = r.AuditTrail(alpha);
+            Check(trail.Select(e => e.action).SequenceEqual(new[] { "added a note", "viewed patient record", "exported PDF report" }) && trail.All(e => !string.IsNullOrEmpty(e.utc)), "Alpha trail: " + string.Join(", ", trail.Select(e => e.action)));
+            Check(r.AuditTrail(beta).Length == 0, "Beta's trail has none of Alpha's entries");
+            r.SignOut(); r.SignIn(DashboardFixtures.Doctor, DashboardFixtures.Password);
+            var access = r.MyAccess().Select(e => e.action).ToArray();
+            Check(access.Count(a => a == "signed in") >= 3 && access.Count(a => a == "signed out") >= 2, "Sign-in and sign-out recorded: " + string.Join(",", access));
+            Reject<ArgumentException>(() => r.RecordAudit("", alpha));
+        });
+        Test("Older catalogs without an audit trail still load, and fixtures need an empty store", () => {
+            var store = new MemoryStore(); var r = new ProductRepository(store, new Clock()); DashboardFixtures.Seed(r);
+            store.data.audit = null;
+            var reopened = new ProductRepository(store, new Clock());
+            Check(reopened.SignIn(DashboardFixtures.Doctor, DashboardFixtures.Password) && reopened.MyAccess().Length == 1, "Audit restarts empty on an older catalog");
+            Reject<InvalidOperationException>(() => DashboardFixtures.Seed(reopened));
+        });
         Console.WriteLine("RESULT " + passed + " passed, " + failed + " failed; fabricated fixtures only");
         return failed == 0 ? 0 : 1;
     }

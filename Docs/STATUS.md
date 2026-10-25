@@ -1,6 +1,6 @@
 # GripRehab status: single source of truth
 
-Updated 2026-10-24 (Gantt W6). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history.
+Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history.
 
 | Item | Current value |
 |---|---|
@@ -10,7 +10,7 @@ Updated 2026-10-24 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–5 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–8. Stage 6 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–6 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–9. Stage 7 needs authorization. |
 
 ## Evidence columns
 
@@ -36,8 +36,8 @@ Updated 2026-10-24 (Gantt W6). If another document disagrees with this file, thi
 | 12 | GRU/LSTM/CNN training (4.3) | Implemented on EMG proxy | 32 Python tests pass | Recall 0.49–0.52 vs 0.85 target. **Not fatigue validation.** | FINAL_REPORT |
 | 13 | ONNX export and Sentis (4.4) | Implemented (CNN) | Sentis/ORT parity 7.45e-09 | n/a | FINAL_REPORT |
 | 14 | Decision policy: adapt / warn / stop (4.5) | Implemented: bounded in-session adaptation in all three modules, plain-language research-labelled pause/stop screens (Stage 5) | 186 native assertions; SYNTHETIC closed-loop replay (EditMode); 10 new product tests | Thresholds experimental; no validated fatigue detection | FINAL_REPORT, `evidence/stage5-2026-10-24/` |
-| 15 | Patient dashboard (5.1) | Partial | Retained checks | None | `JOURNEY_ITEM_2.md` |
-| 16 | Doctor dashboard (5.2) | Partial | Retained checks | None | `JOURNEY_ITEM_2.md` |
+| 15 | Patient dashboard (5.1) | Implemented: My Progress cards (missing = “—”), baseline comparison, per-module statistics and trends, stopped/incomplete marked (Stage 6) | Product tests with exact fixture numbers; walked in the build on fabricated fixtures | No real patient use | `evidence/stage6-2026-10-24/` |
+| 16 | Doctor dashboard (5.2) | Implemented: D1–D5 incl. D3 progress with safety events, D4 note templates with author, D5 audit trail and sign-in log, CSV + report PDF + session PDF (Stage 6) | Product tests (no cross-patient mixing, roles, audit); encrypted-store EditMode test; walked in the build | No clinician review | `evidence/stage6-2026-10-24/` |
 | 17 | Protected records, recovery, CSV (5.x) | Partial | DPAPI readback fixed and checked | Not a validated medical record system | FINAL_REPORT |
 | 18 | Phase 2 force envelope and BLE bridge (2.4/6.1) | Partial | Synthetic replay passed | **No Nano/HX711 hardware (B02)** | `BLE_INTEGRATION.md` |
 | 19 | English UI, controls, hand pointer (3.4) | Partial: plus first-run tutorials, audio and hand-tone settings (Stage 4) | UI checks pass at 2 sizes / 87 gallery checks at 3 sizes (24 Oct, 2022.3 build) | Human accessibility not tested | `UI_COMPLETION_CHECKLIST.md`, `evidence/stage4-2026-10-24/` |

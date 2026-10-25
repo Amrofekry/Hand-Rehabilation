@@ -13,5 +13,6 @@ namespace GripRehab.Editor.Tests
         [Test] public void SqueezeLiquidAuthored() => SqueezeLiquidAuthoring.Verify();
         [Test] public void SynthesisedAudio() => RehabAudioVerification.Run();
         [Test] public void ClosedAdaptiveLoop() => ClosedLoopVerification.Run();
+        [Test] public void DashboardFixturesOnDisk() => DashboardVerification.Run();
     }
 }

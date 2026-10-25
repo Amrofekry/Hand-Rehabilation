@@ -80,6 +80,8 @@ namespace GripRehab
                 Path.Combine(Application.temporaryCachePath, "GripRehab-Acceptance") :
                 Path.Combine(Application.persistentDataPath, "GripRehab");
             if (JourneyAcceptance) profileDirectory = Path.Combine(Application.temporaryCachePath, "GripRehab-Journey-" + Guid.NewGuid().ToString("N"));
+            // Stage 6 gate: fabricated dashboard demo runs in its own throwaway folder, never the player's records.
+            if (ResearchPortalHost.DashboardFixtureMode) profileDirectory = Path.Combine(Application.temporaryCachePath, "GripRehab-Dashboards-" + Guid.NewGuid().ToString("N"));
             try { Store = new RehabProfileStore(profileDirectory); }
             catch (Exception error)
             {

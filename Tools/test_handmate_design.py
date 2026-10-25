@@ -77,6 +77,8 @@ class HandMateDesignTests(unittest.TestCase):
         stage4_review = json.loads(stage4_path.read_text(encoding='utf-8'))['changes'] if stage4_path.exists() else {}
         stage5_path = ROOT/'Docs/evidence/stage5-2026-10-24/protected-source-review.json'
         stage5_review = json.loads(stage5_path.read_text(encoding='utf-8'))['changes'] if stage5_path.exists() else {}
+        stage6_path = ROOT/'Docs/evidence/stage6-2026-10-24/protected-source-review.json'
+        stage6_review = json.loads(stage6_path.read_text(encoding='utf-8'))['changes'] if stage6_path.exists() else {}
         for path, expected in before.items():
             with self.subTest(path=path):
                 if path in changes:
@@ -119,6 +121,10 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(stage5_review[path]['previousSha256'], expected)
                     self.assertTrue(stage5_review[path]['reason'])
                     expected = stage5_review[path]['currentSha256']
+                if path in stage6_review:
+                    self.assertEqual(stage6_review[path]['previousSha256'], expected)
+                    self.assertTrue(stage6_review[path]['reason'])
+                    expected = stage6_review[path]['currentSha256']
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()

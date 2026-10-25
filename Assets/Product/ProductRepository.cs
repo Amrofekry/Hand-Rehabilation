@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GripRehab.Product
 {
@@ -18,7 +19,7 @@ namespace GripRehab.Product
         {
             this.persistence = persistence ?? throw new ArgumentNullException(nameof(persistence));
             this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
-            catalog = persistence.Clone(persistence.Load() ?? new LocalProductCatalog()); Validate(catalog);
+            catalog = WithAudit(persistence.Clone(persistence.Load() ?? new LocalProductCatalog())); Validate(catalog);
         }
         public static void Validate(LocalProductCatalog data)
         {
@@ -56,6 +57,48 @@ namespace GripRehab.Product
                     data.accounts.Find(a => a.id == note.patientId).role != LocalRole.Patient ||
                     string.IsNullOrEmpty(note.id) || string.IsNullOrWhiteSpace(note.text) || note.text.Length > 2000)
                     throw new ArgumentException("Invalid note ownership.");
+            if (data.audit != null)
+            {
+                if (data.audit.Count > MaxAudit) throw new ArgumentException("Audit trail is too long.");
+                foreach (var entry in data.audit)
+                    if (entry == null || string.IsNullOrEmpty(entry.utc) || string.IsNullOrEmpty(entry.action) || entry.action.Length > 80 || !ids.Contains(entry.actorId))
+                        throw new ArgumentException("Invalid audit entry.");
+            }
+        }
+        // Stage 6 (D5): catalogs written before the audit trail existed load with an empty one.
+        public const int MaxAudit = 5000;
+        static LocalProductCatalog WithAudit(LocalProductCatalog c) { if (c != null && c.audit == null) c.audit = new List<AuditEntry>(); return c; }
+        static void Append(LocalProductCatalog next, string actor, string action, string subject, string utc)
+        {
+            next.audit.Add(new AuditEntry { utc = utc, actorId = actor, action = action, subjectId = subject });
+            if (next.audit.Count > MaxAudit) next.audit.RemoveRange(0, next.audit.Count - MaxAudit);
+        }
+        /// <summary>D5: records a doctor's action on a patient record (view, export).</summary>
+        public void RecordAudit(string action, string patientId)
+        {
+            RequireDoctor(); RequireRead(patientId);
+            if (string.IsNullOrWhiteSpace(action) || action.Length > 80) throw new ArgumentException("Invalid audit action.");
+            string actor = Current.id, stamp = clock.Utc;
+            Commit(next => Append(next, actor, action, patientId, stamp));
+        }
+        /// <summary>D5: the audit trail for one patient record (doctor only), oldest first.</summary>
+        public AuditEntry[] AuditTrail(string patientId)
+        {
+            RequireDoctor(); RequireRead(patientId);
+            return persistence.Clone(catalog).audit?.FindAll(e => e.subjectId == patientId).ToArray() ?? new AuditEntry[0];
+        }
+        /// <summary>D5: this doctor's own sign-in and sign-out entries, oldest first.</summary>
+        public AuditEntry[] MyAccess()
+        {
+            RequireDoctor(); string me = Current.id;
+            return persistence.Clone(catalog).audit?.FindAll(e => e.actorId == me && string.IsNullOrEmpty(e.subjectId)).ToArray() ?? new AuditEntry[0];
+        }
+        void TryAudit(string actor, string action, string subject)
+        {
+            // Sign-in and sign-out are recorded when storage is writable; a full disk must not lock a doctor out.
+            string stamp = clock.Utc;
+            try { Commit(next => Append(next, actor, action, subject, stamp)); }
+            catch (IOException) { }
         }
         static string Normalize(string name)
         {
@@ -69,7 +112,7 @@ namespace GripRehab.Product
             id = a.id, username = a.username, displayName = a.displayName, profileId = a.profileId,
             role = a.role, createdUtc = a.createdUtc };
         void Commit(Action<LocalProductCatalog> mutation)
-        { var next = persistence.Clone(catalog); mutation(next); Validate(next); persistence.Save(next); catalog = persistence.Clone(next); }
+        { var next = WithAudit(persistence.Clone(catalog)); mutation(next); Validate(next); persistence.Save(next); catalog = WithAudit(persistence.Clone(next)); }
         public LocalAccount Register(string username, string displayName, string password, LocalRole role)
         {
             username = Normalize(username); displayName = (displayName ?? "").Trim();
@@ -92,9 +135,15 @@ namespace GripRehab.Product
                 if (count >= 5) { lockedUntil[username] = clock.Seconds + 30; attempts[username] = 0; }
                 return false;
             }
-            attempts.Remove(username); lockedUntil.Remove(username); signedIn = account.id; return true;
+            attempts.Remove(username); lockedUntil.Remove(username); signedIn = account.id;
+            if (account.role == LocalRole.Doctor) TryAudit(account.id, "signed in", null);
+            return true;
         }
-        public void SignOut() { signedIn = null; }
+        public void SignOut()
+        {
+            if (Current != null && Current.role == LocalRole.Doctor) TryAudit(Current.id, "signed out", null);
+            signedIn = null;
+        }
         // A saved in-progress record from a previous process is an interrupted
         // attempt. Continue starts a new attempt from the profile checkpoint.
         public int RecoverInterruptedSessions()
@@ -160,8 +209,9 @@ namespace GripRehab.Product
             RequireOwner(session.accountId);
             var original = catalog.sessions.Find(s => s.id == session.id && s.accountId == session.accountId);
             if (original == null) throw new ArgumentException("Begin the session first.");
-            if (session.module != original.module || session.task != original.task || session.profileId != original.profileId ||
-                session.baselineId != original.baselineId || session.startedUtc != original.startedUtc ||
+            // Unity's JSON stores a null string as "", so a patient with no baseline must still match (Stage 6 finding S6-01).
+            if (session.module != original.module || session.task != original.task || !Same(session.profileId, original.profileId) ||
+                !Same(session.baselineId, original.baselineId) || !Same(session.startedUtc, original.startedUtc) ||
                 (original.state != RecordState.InProgress && session.state != original.state))
                 throw new ArgumentException("Session identity and completed state cannot change.");
             CatalogValidation.Session(session);
@@ -171,6 +221,7 @@ namespace GripRehab.Product
             if (session.state != RecordState.InProgress) session.endedUtc = clock.Utc;
             Commit(next => next.sessions[next.sessions.FindIndex(s => s.id == session.id)] = session);
         }
+        static bool Same(string a, string b) => (a ?? "") == (b ?? "");
         public SessionRecord[] Sessions(string id) { RequireRead(id); return persistence.Clone(catalog).sessions.FindAll(s => s.accountId == id).ToArray(); }
         public ClinicalNote[] Notes(string id) { RequireRead(id); return persistence.Clone(catalog).notes.FindAll(n => n.patientId == id).ToArray(); }
         public ClinicalNote AddNote(string patientId, string text, string supersedes = null)
@@ -181,7 +232,7 @@ namespace GripRehab.Product
             if (!string.IsNullOrEmpty(supersedes) && !catalog.notes.Exists(n => n.id == supersedes && n.patientId == patientId)) throw new ArgumentException("The original note was not found.");
             var note = new ClinicalNote { id = Guid.NewGuid().ToString("N"), doctorId = Current.id,
                 patientId = patientId, text = text, createdUtc = clock.Utc, supersedesId = supersedes };
-            Commit(next => next.notes.Add(note)); return note;
+            Commit(next => { next.notes.Add(note); Append(next, note.doctorId, "added a note", patientId, note.createdUtc); }); return note;
         }
     }
 }

@@ -47,6 +47,8 @@ namespace GripRehab
         string storageProblem;
         string pendingProfileId;
         public string StorageDirectory { get; private set; }
+        /// <summary>Stage 6 gate: -dashboard-fixtures runs on an isolated store seeded with fabricated demo records.</summary>
+        public static bool DashboardFixtureMode => Array.IndexOf(Environment.GetCommandLineArgs(), "-dashboard-fixtures") >= 0;
 
         public void Initialize(RehabAppShell owner, string storageDirectory)
         {
@@ -64,6 +66,11 @@ namespace GripRehab
             view.Initialize(shell.root.transform, theme, accessibility);
             try { repository = new ProductRepository(new WindowsProductStore(storageDirectory), new SystemProductClock()); }
             catch (Exception error) { storageProblem = error.Message; }
+            if (DashboardFixtureMode && repository != null && repository.NeedsDoctorSetup)
+            {
+                try { DashboardFixtures.Seed(repository); }
+                catch (Exception error) { storageProblem = "Fabricated demo records could not be created: " + error.Message; Debug.LogWarning("[DASHBOARD_FIXTURES] " + error); repository.SignOut(); }
+            }
         }
         void Show(string title, string detail, Action back)
         { ScreenTitle = title; shell.ShowResearchPortal(); view.Show(title, detail, back); }
@@ -84,6 +91,7 @@ namespace GripRehab
             guest = false; shell.SetResearchIdentity(null);
             shell.experience.Release();
             Show("GRIP / REHAB", "Your space to practise, at your pace. Research software; game metrics are not a clinical assessment.", null);
+            if (DashboardFixtureMode) view.Text("FABRICATED DEMO DATA · isolated test storage · demo accounts doctor.demo, patient.alpha and patient.beta" + (storageProblem != null ? "\n" + storageProblem : ""), storageProblem != null ? 110 : 60);
             if (repository == null) view.Text("Protected account storage is unavailable. Existing records have been kept. Guest practice is available. " + storageProblem, 120);
             else if (HasAccount)
             {
@@ -190,6 +198,7 @@ namespace GripRehab
             Show("Hello, " + repository.Current.displayName, "Choose a comfortable starting point. You can pause or leave at any time.", Welcome);
             view.Button("PREPARE TO TRAIN", () => Prepare(false), true);
             view.Button("CONTINUE PRACTICE", ContinuePractice, enabled: LinkedCheckpoint() != null);
+            view.Button("MY PROGRESS", () => Progress(repository.Current.id));
             view.Button("SESSION HISTORY", () => History(repository.Current.id));
             view.Button("BASELINE SUMMARY", BaselineSummary);
             view.Button("APPEARANCE & ACCESSIBILITY", Settings);
