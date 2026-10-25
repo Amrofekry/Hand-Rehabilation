@@ -30,6 +30,16 @@ public sealed class ApartmentExperience:MonoBehaviour {
   float hold = Mathf.Lerp(3, Mathf.Clamp(maximumHoldSeconds,3,5), maximumLevel > 1 ? Mathf.Clamp01((level-1f)/(maximumLevel-1f)) : 0);
   if(Mathf.Abs(hold-_task.HoldSeconds)>.001f)_task=new ForceHoldTask(18,3,hold);
  }
+ // Stage 8: last hand-object contact measurement and the hand-relative hold correction.
+ public ContactReport LastContact{get;private set;}
+
+ Vector3 _holdCorrectionLocal;float _palmExtra;const float HeldFollowSpeed=3.5f;
+ // Chart grips: the held object's rotation from its grip, and the second hand's approach for two-handed grips.
+ Quaternion _gripRotation;bool _hasGripRotation;float _secondHand;
+ // Keyboard/demo presentation: the holding hand moves so the held object sits in the middle of the view, at a
+ // distance that suits its size (like the grip chart photographs). Independent of the arrow-key hand offset.
+ Vector3 _presentRight,_presentLeft;Vector3 _requestedGrip;bool _hasRequestedGrip;
+ public GripDefinition HeldGrip=>Held!=null&&GraspContactSolver.Enabled?GraspContactSolver.PropOf(Held)?.Definition:null;
  public float TestForce=-1; // Used only when an explicit acceptance-test command-line flag is present.
  public string Status{get;private set;}="Ready";
  private readonly Collider[] _clearanceOverlaps=new Collider[64];
@@ -111,11 +121,66 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var leftTracked=CameraMode?cameraTracked&&LeftSelected:Hardware&&vision!=null&&vision.LeftValid;
   float closure=Held!=null?Mathf.Lerp(.45f,.95f,Mathf.Clamp01(ForceNewtons/45)):Mathf.Clamp01(ForceNewtons/55);
   float handLift=player.IsSeated?settings.seatedHandsLiftMeters:0;
-  rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,LeftSelected?0:closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
-  float leftDemo=LeftSelected?closure:0;
-  leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
+  // Stage 8 grip chart: shape the hand into the object's grip and present it like the chart photograph.
+  var grip=HeldGrip;bool twoHands=grip!=null&&grip.twoHands;var otherHand=LeftSelected?rightHand:leftHand;
+  ActiveHand.DemoGrip=grip;otherHand.DemoGrip=twoHands?grip:null;
+  Quaternion presented=Quaternion.identity,otherPresented=Quaternion.identity;
+  ActiveHand.HasDemoRotation=grip!=null&&GraspContactSolver.TryViewRotation(ActiveHand,player.view.transform,grip.view,LeftSelected,out presented);
+  ActiveHand.DemoRotation=presented;
+  otherHand.HasDemoRotation=twoHands&&GraspContactSolver.TryViewRotation(otherHand,player.view.transform,grip.view,!LeftSelected,out otherPresented);
+  otherHand.DemoRotation=otherPresented;
+  UpdatePresentation(grip!=null&&!(LeftSelected?leftTracked:rightTracked),handLift);
+  rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,LeftSelected?(twoHands?closure:0):closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+_presentRight+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
+  float leftDemo=LeftSelected||twoHands?closure:0;
+  leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+_presentLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
+  // Stage 8: fingers stop at the held object's surface; the object settles into the pads, out of the palm.
+  bool otherTracked=LeftSelected?rightTracked:leftTracked;
+  if(virtualGrasp!=null)virtualGrasp.ShowBoth(twoHands);
+  if(twoHands&&!otherTracked&&GraspContactSolver.TrySecondHandPosition(otherHand,Held,out var secondWrist)){
+   // The second hand comes in over a third of a second, then rests on the far side of the object.
+   _secondHand=Mathf.MoveTowards(_secondHand,1,Time.deltaTime*3);
+   otherHand.transform.position=Vector3.Lerp(otherHand.transform.position,secondWrist,_secondHand);
+   GraspContactSolver.Solve(otherHand,Held,contactRig!=null?contactRig.radiusMeters:.009f,true);
+  } else _secondHand=0;
+  if(Held!=null){
+   LastContact=GraspContactSolver.Solve(ActiveHand,Held,contactRig!=null?contactRig.radiusMeters:.009f,GraspContactSolver.Enabled);
+   // Palm grips: a one-way extra offset grows only while a segment still overlaps, so it settles without hunting.
+   if(GraspContactSolver.Enabled&&LastContact.valid&&LastContact.shape!=HandGrip.Pinch){
+    if(LastContact.maxPenetration>.001f)_palmExtra=Mathf.Min(.04f,_palmExtra+Mathf.Min(LastContact.maxPenetration-.001f,.06f*Time.deltaTime));
+    // Clear of the hand but not reaching the pads (the hand has finished turning, say): settle back slowly.
+    else if(LastContact.maxPenetration<=0&&LastContact.padGap>.003f)_palmExtra=Mathf.Max(0,_palmExtra-.02f*Time.deltaTime);
+   }
+   // Pinches (shape and chart grips alike) ease the object toward pads that have not reached it, bounded and rate-limited.
+   if(GraspContactSolver.Enabled&&LastContact.valid&&LastContact.shape==HandGrip.Pinch&&(!LastContact.hasGrip||grip!=null&&grip.PinchPair)){
+    var correction=ContactGeometry.HoldCorrection(ActiveHand.transform.TransformVector(_holdCorrectionLocal),LastContact.padGap,LastContact.towardPads,LastContact.palmDepth,LastContact.outOfPalm,Time.deltaTime);
+    _holdCorrectionLocal=ActiveHand.transform.InverseTransformVector(correction);
+   }
+  } else {LastContact=default;_holdCorrectionLocal=Vector3.zero;_palmExtra=0;}
   if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&Held==null)TryCameraGrab();
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
+ }
+ void UpdatePresentation(bool present,float handLift){
+  ref Vector3 offset=ref (LeftSelected?ref _presentLeft:ref _presentRight);
+  ref Vector3 idle=ref (LeftSelected?ref _presentRight:ref _presentLeft);
+  idle=Vector3.MoveTowards(idle,Vector3.zero,.8f*Time.deltaTime);
+  var parent=ActiveHand.transform.parent;
+  if(!present||Held==null||parent==null||!_hasRequestedGrip){offset=Vector3.MoveTowards(offset,Vector3.zero,.8f*Time.deltaTime);return;}
+  var renderer=Held.visual!=null?Held.visual.GetComponentInChildren<Renderer>():null;
+  var bounds=renderer!=null?renderer.bounds:new Bounds(Held.transform.position,Vector3.one*Held.radius);
+  float distance=Mathf.Clamp(.3f+bounds.extents.magnitude*2.2f,.32f,.7f);
+  var wantedWorld=player.view.transform.TransformPoint(new Vector3(0,-.03f,distance));
+  // Middle of the view, but never down into the table or counter under it (seated or standing).
+  if(Physics.Raycast(wantedWorld+Vector3.up*.6f,Vector3.down,out var support,1.2f,~((1<<8)|(1<<9)),QueryTriggerInteraction.Ignore))
+   wantedWorld.y=Mathf.Max(wantedWorld.y,support.point.y+bounds.extents.y+.05f);
+  var wanted=parent.InverseTransformPoint(wantedWorld);
+  // Where the grip would put the object with the hand at rest: the requested pose (not the safety-clamped
+  // object, so a blocked placement can never push the hand further away) minus the hand's actual displacement
+  // from rest (exact even while the smoothed hand is still moving).
+  var rest=(LeftSelected?_leftRest+Vector3.back*settings.leftWristSetbackMeters:_rightRest)+Vector3.up*handLift;
+  var unpresented=parent.InverseTransformPoint(_requestedGrip+(bounds.center-Held.transform.position))-(ActiveHand.transform.localPosition-rest);
+  var target=Vector3.ClampMagnitude(wanted-unpresented,.35f);
+  // A small dead band: the hand settles instead of hunting by a millimetre or two.
+  if((target-offset).sqrMagnitude>.003f*.003f)offset=Vector3.MoveTowards(offset,target,.8f*Time.deltaTime);
  }
  // Follow the only actively observed physical hand. When both are visible,
  // retain the selected side until its stream has stopped refreshing.
@@ -156,11 +221,23 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;_velocity=Vector3.zero;_task.Reset();return;}
 
   if(!TrySafeGripTarget(Held,out var requested)){_velocity=Vector3.zero;return;}
+  // Stage 8: a fast hand cannot make the held object jump, snap or tunnel.
+  if(GraspContactSolver.Enabled)requested=ContactGeometry.Follow(_lastHeld,requested,HeldFollowSpeed,Time.fixedDeltaTime);
   _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
   _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
-  Held.MoveHeld(requested,GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
+  Held.MoveHeld(requested,_hasGripRotation?_gripRotation:GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
  }
  private Vector3 GripTarget(SqueezableObject item){
+  // Stage 8 grip chart: the object's grip point sits at the grip's anchor (palm, finger tips, thumb and
+  // index side, or hooked fingers), turned into the hand.
+  _hasGripRotation=false;
+  if(GraspContactSolver.Enabled&&GraspContactSolver.TryGripPose(ActiveHand,item,item==Held?_palmExtra:0,out var gripPosition,out var gripRotation)){
+   _gripRotation=gripRotation;_hasGripRotation=true;
+   if(item==Held){gripPosition+=ActiveHand.transform.TransformVector(_holdCorrectionLocal);_requestedGrip=gripPosition;_hasRequestedGrip=true;}
+   return gripPosition;
+  }
+  // Power and cylindrical grips rest on the palm; only pinch-sized objects use the fingertip placement below.
+  if(GraspContactSolver.Enabled&&GraspContactSolver.TryPalmHold(ActiveHand,item,out var palmHold,item==Held?_palmExtra:0))return palmHold;
   var lift=player.IsSeated?settings.seatedHandsLiftMeters:0;
   var handOffset=ActiveHand.transform.localPosition-(LeftSelected?_leftRest:_rightRest)-Vector3.up*lift;
   var anchor=holdAnchor.localPosition;if(LeftSelected)anchor.x=-Mathf.Abs(anchor.x);
@@ -182,6 +259,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
    }
   }
   if(item!=null){var toward=ActiveHand.transform.position-target;float correction=Mathf.Clamp(.12f-item.radius,0,.05f);if(toward.sqrMagnitude>.0001f)target+=toward.normalized*correction;}
+  if(item!=null&&item==Held)target+=ActiveHand.transform.TransformVector(_holdCorrectionLocal);
   return target;
  }
  // Asset pivots need not lie on their usable surface; include child colliders.
@@ -196,24 +274,47 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var origin=player.view.transform.position;target=GripTarget(item);
   if(!GraspMotionPolicy.Finite(target))return false;
   float clearance=item.ClearanceRadius+.01f;int mask=~((1<<8)|(1<<9));var delta=target-origin;
+  // Stage 8: the path is swept with at most 5 cm (enough to stop tunnelling through walls); the full object
+  // size is checked where it lands. A full-size sweep from the eye grazed the table and held large objects short.
+  bool stage8=GraspContactSolver.Enabled; // -contact-solver-off keeps the pre-Stage-8 checks for the audit baseline
+  float sweep=stage8?Mathf.Min(clearance,.05f):clearance;
   if(delta.sqrMagnitude>.000001f){
-   int count=Physics.SphereCastNonAlloc(origin,clearance,delta.normalized,_clearanceHits,delta.magnitude,mask,QueryTriggerInteraction.Ignore);
+   int count=Physics.SphereCastNonAlloc(origin,sweep,delta.normalized,_clearanceHits,delta.magnitude,mask,QueryTriggerInteraction.Ignore);
    if(count==_clearanceHits.Length)return false; // saturated query: no unsafe placement
    float distance=delta.magnitude;
    for(int i=0;i<count;i++)if(IsClearanceObstacle(_clearanceHits[i].collider))distance=Mathf.Min(distance,Mathf.Max(0,_clearanceHits[i].distance-.01f));
    target=origin+delta.normalized*distance;
   }
-  if(!GripTargetBlocked(target,clearance,mask))return true;
-  if(GripTargetBlocked(origin,clearance,mask))return false;
+  // Stage 8: test the object's own colliders where they would land (a bounding sphere around a long hammer or a
+  // kettlebell is several times larger than the object and pulled it back toward the eye).
+  var landing=_hasGripRotation?_gripRotation:item.Body.rotation;
+  if(!Blocked(item,target,landing,clearance,mask,stage8))return true;
+  if(Blocked(item,origin,landing,clearance,mask,stage8))return false;
   Vector3 blocked=target,safe=origin;
-  for(int i=0;i<10;i++){var middle=(safe+blocked)*.5f;if(GripTargetBlocked(middle,clearance,mask))blocked=middle;else safe=middle;}
+  for(int i=0;i<10;i++){var middle=(safe+blocked)*.5f;if(Blocked(item,middle,landing,clearance,mask,stage8))blocked=middle;else safe=middle;}
   target=safe;return true;
  }
  private bool IsClearanceObstacle(Collider collider)=>collider!=null&&!collider.transform.IsChildOf(player.transform)&&collider.GetComponentInParent<SqueezableObject>()==null;
- private bool GripTargetBlocked(Vector3 point,float clearance,int mask){
+ private bool Blocked(SqueezableObject item,Vector3 point,Quaternion rotation,float clearance,int mask,bool exact)=>exact?ObjectBlockedAt(item,point,rotation,mask):SphereBlocked(point,clearance,mask);
+ private bool SphereBlocked(Vector3 point,float clearance,int mask){
   int count=Physics.OverlapSphereNonAlloc(point,clearance,_clearanceOverlaps,mask,QueryTriggerInteraction.Ignore);
   if(count==_clearanceOverlaps.Length)return true;
   for(int i=0;i<count;i++)if(IsClearanceObstacle(_clearanceOverlaps[i]))return true;
+  return false;
+ }
+ private bool ObjectBlockedAt(SqueezableObject item,Vector3 position,Quaternion rotation,int mask){
+  var body=item.transform;var inverse=Quaternion.Inverse(body.rotation);
+  foreach(var c in GraspContactSolver.SolidColliders(item)){
+   if(c==null||!c.enabled)continue;
+   var p=position+rotation*(inverse*(c.transform.position-body.position));var r=rotation*inverse*c.transform.rotation;
+   float reach=Vector3.Distance(c.transform.position,c.bounds.center)+c.bounds.extents.magnitude+.01f;
+   int count=Physics.OverlapSphereNonAlloc(p,reach,_clearanceOverlaps,mask,QueryTriggerInteraction.Ignore);
+   if(count==_clearanceOverlaps.Length)return true;
+   for(int i=0;i<count;i++){
+    var other=_clearanceOverlaps[i];if(!IsClearanceObstacle(other))continue;
+    if(Physics.ComputePenetration(c,p,r,other,other.transform.position,other.transform.rotation,out _,out float depth)&&depth>.002f)return true;
+   }
+  }
   return false;
  }
  private bool BeginGrab(SqueezableObject item,bool summon){
@@ -222,10 +323,11 @@ public sealed class ApartmentExperience:MonoBehaviour {
   Held=item;
   if(_playerColliders==null)_playerColliders=player.GetComponentsInChildren<Collider>(true);
   item.ProtectFromPlayer(_playerColliders);
-  Quaternion initial=summon?holdAnchor.rotation:item.Body.rotation;
+  Quaternion initial=_hasGripRotation?_gripRotation:summon?holdAnchor.rotation:item.Body.rotation;_secondHand=0;
+  _requestedGrip=target;_hasRequestedGrip=_hasGripRotation;
   _heldRotationOffset=GraspMotionPolicy.RelativeRotation(ActiveHand.transform.rotation,initial);
   // Pickup is explicit relocation, never a source of release momentum.
-  item.Body.position=target;item.Body.rotation=initial;Physics.SyncTransforms();
+  item.Body.position=target;item.Body.rotation=initial;Physics.SyncTransforms();_holdCorrectionLocal=Vector3.zero;_palmExtra=0;
   _lastHeld=target;_lastMotionTime=Time.unscaledTime;_velocity=Vector3.zero;_task.Reset();
   _lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;
   return true;
@@ -296,7 +398,8 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public bool TryGrab(SqueezableObject item){
   if(item==null||Held!=null||item.IsBroken||player.Paused||Hardware&&!forceReceiver.Latest.Valid||CameraMode&&!ForceValid)return false;
   if(!CanReach(item)||!BeginGrab(item,false))return false;
-  Status="Holding "+item.displayName;return true;
+  var grip=HeldGrip;
+  Status="Holding "+item.displayName+(grip!=null?"  -  "+grip.number+". "+grip.name+" ("+grip.fingers+")":"");return true;
  }
  public void Release(){
   if(Held!=null){

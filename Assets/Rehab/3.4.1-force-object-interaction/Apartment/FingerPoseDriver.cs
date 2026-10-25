@@ -36,6 +36,11 @@ namespace GripRehab
         public bool TrackingUsed { get; private set; }
         public float Closure { get; private set; }
         public bool UsingWorldLandmarks { get; private set; }
+        // Stage 8 grip chart: keyboard/demo input shapes the hand into the held object's grip and turns it to
+        // the chart's viewing angle. A tracked camera hand ignores both and keeps its measured pose.
+        public GripDefinition DemoGrip;
+        public bool HasDemoRotation;
+        public Quaternion DemoRotation = Quaternion.identity;
         public long LastPoseSequence { get; private set; }
 
         private readonly Quaternion[] _rest = new Quaternion[15];
@@ -118,6 +123,7 @@ namespace GripRehab
             var liveCurlAxis=HandRigRules.Axis(curlAxis,_safeCurlAxis);
             var liveSpreadAxis=HandRigRules.Axis(spreadAxis,_safeSpreadAxis);
             float liveCurlSign=float.IsFinite(curlSign)?Mathf.Clamp(curlSign,-1,1):_safeCurlSign;
+            _liveCurlAxis=liveCurlAxis;_liveSpreadAxis=liveSpreadAxis;_liveCurlSign=liveCurlSign;
             var palmUp = Vector3.up;
             var palmSide = Vector3.right;
             Vector3[] points = null;
@@ -173,7 +179,10 @@ namespace GripRehab
                 _anchored = false;
                 if (_everTracked && holdLastTrackedPoseOnLoss) return;
                 transform.localPosition = Vector3.Lerp(transform.localPosition, restingPosition, alpha);
-                transform.localRotation = Quaternion.Slerp(transform.localRotation, _rootRest, alpha);
+                var restRotation = _rootRest;
+                if (HasDemoRotation && HandRigRules.TryRotation(DemoRotation, out var presented))
+                    restRotation = transform.parent != null ? Quaternion.Inverse(transform.parent.rotation) * presented : presented;
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, restRotation, alpha);
             }
 
             var total = 0f;
@@ -196,11 +205,13 @@ namespace GripRehab
                 {
                     var closure = Mathf.Max(HandRigRules.Unit(demoClosure), independentKeyboard ? HandRigRules.Unit(ManualCurl[finger]) : 0);
                     closure=Mathf.SmoothStep(0,1,Mathf.Clamp01((closure-finger*.025f)/(1-finger*.025f)));
+                    var grip = DemoGrip;
                     for(int joint=0;joint<3;joint++){
                         int n=finger*3+joint;float limit=HandRigRules.DemoLimit(finger,joint);
-                        _angles[n]=Mathf.Max(closure*limit,independentKeyboard?HandRigRules.Unit(ManualJoint[n])*limit:0);
+                        float shaped=grip!=null?grip.CurlAt(n,closure):closure*limit;
+                        _angles[n]=Mathf.Max(shaped,independentKeyboard?HandRigRules.Unit(ManualJoint[n])*limit:0);
                     }
-                    _spread[finger] = 0;
+                    _spread[finger] = grip!=null?grip.spread[finger]:0;
                 }
                 _spreadSmoothed[finger] = Mathf.Lerp(float.IsFinite(_spreadSmoothed[finger])?_spreadSmoothed[finger]:0, _spread[finger], alpha);
                 for (int joint = 0; joint < 3; joint++)
@@ -220,6 +231,22 @@ namespace GripRehab
             }
             Closure = total / 15f;
             LastPoseSequence = TrackingUsed ? frame.sequence : 0;
+        }
+
+        // Stage 8 contact solver: read a joint's applied curl and re-apply a limited value.
+        // Writing back into the smoothed angle means the next frame starts from the contact
+        // pose, so a finger resting on an object does not flicker between open and closed.
+        private Vector3 _liveCurlAxis = Vector3.right, _liveSpreadAxis = Vector3.up;
+        private float _liveCurlSign = 1;
+        public float JointCurl(int joint) => RigReady && joint >= 0 && joint < 15 && float.IsFinite(_smoothed[joint]) ? _smoothed[joint] : 0;
+        public void SetJointCurl(int joint, float degrees)
+        {
+            if (!RigReady || joint < 0 || joint >= 15 || joints[joint] == null || !float.IsFinite(degrees)) return;
+            _smoothed[joint] = degrees;
+            int finger = joint / 3;
+            var curl = Quaternion.AngleAxis(degrees * _liveCurlSign, _liveCurlAxis);
+            var splay = joint % 3 == 0 ? Quaternion.AngleAxis(_spreadSmoothed[finger] * (finger == 4 ? .6f : 1f), _liveSpreadAxis) : Quaternion.identity;
+            joints[joint].localRotation = _rest[joint] * splay * curl;
         }
     }
 }

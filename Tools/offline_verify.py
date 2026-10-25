@@ -152,7 +152,7 @@ def main():
                  'Tools/Offline/TrackingMathShim.cs','Tools/Offline/TrackingTests.cs',
                  'Assets/Rehab/3.4.3-visuomotor-coordination/VisuomotorTasks.cs',
                  'Assets/Rehab/3.2-vision/HandTracking.cs',
-                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs',
+                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/GripCatalog.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs'],OUTPUT/'tracking-tests-compile.log')
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',tracking],OUTPUT/'tracking-tests.log')
             evidence['checks'].append(dict(name='tracking-source-tests',passed=True,result=result.stdout.strip(),
@@ -169,7 +169,8 @@ def main():
                  *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),
                  'Tools/Offline/TrackingMathShim.cs','Tools/Offline/GraspPhysicsShim.cs','Tools/Offline/GraspTests.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspMotionPolicy.cs',
-                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspCollisionShield.cs'],OUTPUT/'grasp-tests-compile.log')
+                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspCollisionShield.cs',
+                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ContactGeometry.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/GripCatalog.cs'],OUTPUT/'grasp-tests-compile.log')
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',grasp],OUTPUT/'grasp-tests.log')
             evidence['checks'].append(dict(name='grasp-source-tests',passed=True,result=result.stdout.strip(),
                 scope='Production motion policy and pair lifecycle with managed math/bounds/pair recorder; no native PhysX or scene'))
@@ -189,7 +190,7 @@ def main():
                  'Tools/Offline/TrackingMathShim.cs','Tools/Offline/HandRigSdkShim.cs','Tools/Offline/HandRigTests.cs',
                  'Assets/Rehab/3.2-vision/HandTracking.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs',
-                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs',
+                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/GripCatalog.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVGController.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs'],OUTPUT/'hand-rig-tests-compile.log')
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',rig],OUTPUT/'hand-rig-tests.log')

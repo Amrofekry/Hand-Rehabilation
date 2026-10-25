@@ -30,18 +30,19 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| C-01 | Audit and fix all existing interaction and collision problems | Not Started | | Includes S4-03 |
-| C-02 | Hand never passes through an object; object never penetrates the hand | Not Started | | |
-| C-03 | No hold gap (holding without touching) | Not Started | | |
-| C-04 | Plausible contact between the outer hand surface and the outer object surface | Not Started | | |
-| C-05 | Robust collision detection and contact resolution (stable points, normals, response) | Not Started | | |
-| C-06 | No floating away, sinking into the palm or wrong positioning while gripping or moving | Not Started | | |
-| C-07 | Stable grasp across object sizes, shapes, orientations and grip types | Not Started | | |
-| C-08 | Hand deforms an object only through contact forces consistent with its material | Not Started | | |
-| C-09 | No tunnelling, jitter, unstable collisions or sudden snapping | Not Started | | |
-| C-10 | Stable during fast hand motion and large deformation | Not Started | | |
-| C-11 | Mouse, keyboard, hand pointer and other working inputs preserved | Not Started | | |
-| C-12 | Tested from multiple angles with different geometries | Not Started | | |
+| C-01 | Audit and fix all existing interaction and collision problems | Tested | [stage8](evidence/stage8-2026-10-25/) | Baseline: 19–70 mm finger/palm penetration on every station object. S4-03 fixed for held objects: pads touch, 7.7–12.4 mm dent at 18 N |
+| C-02 | Hand never passes through an object; object never penetrates the hand | Tested | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json), [contact-probe-grips.json](evidence/stage8-2026-10-25/contact-probe-grips.json) | Station objects ≤ 5.7 mm (sponge palm) while holding, 18 chart grips ≤ 1.0 mm; ≤ 6 mm at ~1.1 m/s. Limit at ~2.8 m/s shake: see C-10 |
+| C-03 | No hold gap (holding without touching) | Tested | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json), [contact-probe-grips.json](evidence/stage8-2026-10-25/contact-probe-grips.json) | Mean pad gap 0–1.4 mm on station objects; chart grips 0–5.2 mm (pen, coin, USB and wrap grips leave some pads 2–7 mm short) |
+| C-04 | Plausible contact between the outer hand surface and the outer object surface | Implemented | [stage8](evidence/stage8-2026-10-25/)/play/ | 9 mm finger capsules against the real colliders plus the visible dent; screenshots judged by eye by me, your by-eye check pending |
+| C-05 | Robust collision detection and contact resolution (stable points, normals, response) | Tested | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json) | Exact sphere/box/capsule signed distance, PhysX for mesh colliders; proximal-to-distal curl limit |
+| C-06 | No floating away, sinking into the palm or wrong positioning while gripping or moving | Tested | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json), [contact-probe-grips.json](evidence/stage8-2026-10-25/contact-probe-grips.json) | No drops, no furniture overlap > 2 mm (book: 3 frames while lifting); palm overlap ≤ 5.7 mm |
+| C-07 | Stable grasp across object sizes, shapes, orientations and grip types | Tested | [contact-probe-grips.json](evidence/stage8-2026-10-25/contact-probe-grips.json) | 18 grip types from your chart on 18 code-built objects plus the 6 station objects; all held |
+| C-08 | Hand deforms an object only through contact forces consistent with its material | Tested | Apartment acceptance (smoke/replay) | Only touching probes resolve force; non-touching probes resolve exactly 0 N |
+| C-09 | No tunnelling, jitter, unstable collisions or sudden snapping | Tested | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json), offline grasp checks | Hold jitter ≤ 0.1 mm after a 1 s settle; follow capped at 3.5 m/s; continuous speculative collision |
+| C-10 | Stable during fast hand motion and large deformation | In Progress | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json) | Large dents (12 mm) stay contact-correct. Fast shake (~2.8 m/s) still 13–45 mm transient overlap (S8-05) |
+| C-11 | Mouse, keyboard, hand pointer and other working inputs preserved | Tested | smoke, replay, journey, UI, gallery suites | Inputs unchanged; the chart pose and presentation apply to keyboard/demo input only, a tracked camera hand keeps its pose |
+| C-12 | Tested from multiple angles with different geometries | Tested | [contact-probe.json](evidence/stage8-2026-10-25/contact-probe.json) | Upright, turned 90° and tilted 45° for all six station objects |
+| C-13 | Grip chart (added 2026-10-26): the 18 grips of your picture, each with its object, playable in the game | Tested | [contact-probe-grips.json](evidence/stage8-2026-10-25/contact-probe-grips.json), [stage8](evidence/stage8-2026-10-25/)/play/ | Grip Lab station; SYNTHETIC numbers in AUDIT_LEDGER §10a; your by-eye review pending |
 
 ## 3. Six multi-step environmental activities → Stage 10 (WBS 3.1, 3.4.1)
 

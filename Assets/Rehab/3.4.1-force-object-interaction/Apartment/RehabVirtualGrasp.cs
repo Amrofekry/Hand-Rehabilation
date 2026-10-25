@@ -58,6 +58,12 @@ public sealed class RehabVirtualGrasp : VG_MainScript {
  public void BindContacts(FingerContactRig rig,bool left){
   if(rig!=null)rig.contactBones=Ready?(left?leftContacts:rightContacts):unavailableContacts;
  }
- public void ShowLeft(bool left){selectedLeft=left;if(outputMesh!=null)outputMesh.sharedMesh=left?leftOnlyMesh:rightOnlyMesh;}
+ public void ShowLeft(bool left){selectedLeft=left;showingBoth=false;if(outputMesh!=null)outputMesh.sharedMesh=left?leftOnlyMesh:rightOnlyMesh;}
+ bool showingBoth;
+ /// <summary>Stage 8 two-handed grips: draw both hands (the registration mesh carries both) while one is held.</summary>
+ public void ShowBoth(bool both){
+  if(both==showingBoth||outputMesh==null)return;showingBoth=both;
+  outputMesh.sharedMesh=both?registrationMesh:selectedLeft?leftOnlyMesh:rightOnlyMesh;
+ }
 }
 }

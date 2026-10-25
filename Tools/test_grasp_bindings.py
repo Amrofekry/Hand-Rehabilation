@@ -41,7 +41,10 @@ class GraspBindings(unittest.TestCase):
         self.assertIn('collider.GetComponentInParent<SqueezableObject>()==null',self.app)
         self.assertIn('if(count==_clearanceHits.Length)return false',self.app)
         self.assertIn('Physics.SphereCastNonAlloc(',self.app)
-        self.assertIn('GripTargetBlocked(target,clearance',self.app)
+        # Stage 8: the landing check tests the object's own colliders at the target pose (was a bounding sphere).
+        self.assertIn('Blocked(item,target,landing,clearance,mask,stage8)',self.app)
+        self.assertIn('exact?ObjectBlockedAt(item,point,rotation,mask):SphereBlocked(point,clearance,mask)',self.app)
+        self.assertIn('Physics.ComputePenetration(c,p,r,other',self.app)
         self.assertIn('Body.isKinematic=false;Body.useGravity=true',self.obj)
         self.assertIn('Body.collisionDetectionMode=freeCollisionMode;Body.interpolation=freeInterpolation',self.obj)
         self.assertIn('collisionShield.Clear()',self.obj)

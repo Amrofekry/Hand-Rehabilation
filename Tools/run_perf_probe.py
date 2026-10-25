@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXE = ROOT / 'Builds/Windows/GripRehab.exe'
 
 
-def run(seconds, ports_busy, width=1920, height=1080):
+def run(seconds, ports_busy, width=1920, height=1080, solver_off=False):
     started = time.time()
     name = 'perf-probe-ports' if ports_busy else ('perf-soak' if seconds >= 300 else 'perf-probe')
     log = ROOT / f'Logs/{name}.log'
@@ -26,6 +26,8 @@ def run(seconds, ports_busy, width=1920, height=1080):
                '-perf-seconds', str(seconds), '-logFile', str(log)]
     if ports_busy:
         command.append('-perf-ports-busy')
+    if solver_off:
+        command.append('-contact-solver-off')  # Stage 8 A/B: the contact solver's own cost
     held = []
     try:
         if ports_busy:
@@ -57,8 +59,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--seconds', type=int, default=20)
     parser.add_argument('--ports-busy', action='store_true')
+    parser.add_argument('--solver-off', action='store_true')
     args = parser.parse_args()
-    result = run(args.seconds, args.ports_busy)
+    result = run(args.seconds, args.ports_busy, solver_off=args.solver_off)
     summary = {'passed': result['passed'], 'size': f"{result['width']}x{result['height']}", 'quality': result['quality'],
                'phases': [{k: p[k] for k in ('name', 'fpsMean', 'frameP95Ms', 'fpsP95Floor', 'gcBytesMean', 'gcBytesP95',
                                              'managedGrowthPercent', 'totalGrowthPercent', 'gen0Collections', 'errors', 'iterations')}

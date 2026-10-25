@@ -19,6 +19,10 @@ namespace UnityEngine
     {
         public Vector3 localPosition;
         public Quaternion localRotation = Quaternion.identity;
+        public Transform parent;
+#if !HAND_RIG_TESTS
+        public Quaternion rotation { get => localRotation; set => localRotation=value; }
+#endif
 #if HAND_RIG_TESTS
         public string name;
         public Vector3 position { get => localPosition; set => localPosition=value; }
@@ -47,6 +51,7 @@ namespace UnityEngine
         public static Vector3 up => new Vector3(0,1,0);
         public static Vector3 forward => new Vector3(0,0,1);
         public static Vector3 one => new Vector3(1,1,1);
+        public static Vector3 zero => new Vector3();
         public float sqrMagnitude => x*x+y*y+z*z;
         public Vector3 normalized => sqrMagnitude < 1e-20f ? new Vector3() : this/(float)Math.Sqrt(sqrMagnitude);
         public static Vector3 operator +(Vector3 a,Vector3 b) => new Vector3(a.x+b.x,a.y+b.y,a.z+b.z);
@@ -57,6 +62,9 @@ namespace UnityEngine
         public static Vector3 Cross(Vector3 a,Vector3 b) => new Vector3(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x);
         public static Vector3 ProjectOnPlane(Vector3 a,Vector3 n) => n.sqrMagnitude < 1e-20f ? a : a-n*(Dot(a,n)/n.sqrMagnitude);
         public static float Distance(Vector3 a,Vector3 b) => (float)Math.Sqrt((a-b).sqrMagnitude);
+        public float magnitude => (float)Math.Sqrt(sqrMagnitude);
+        public static Vector3 ClampMagnitude(Vector3 v,float max) => v.sqrMagnitude > max*max ? v.normalized*max : v;
+        public static Vector3 MoveTowards(Vector3 a,Vector3 b,float step) { var d=b-a; float m=d.magnitude; return m<=step||m<1e-12f ? b : a+d/m*step; }
         public static float Angle(Vector3 a,Vector3 b) => a.sqrMagnitude*b.sqrMagnitude < 1e-20f ? 0 : (float)(Math.Acos(Mathf.Clamp(Dot(a,b)/(float)Math.Sqrt(a.sqrMagnitude*b.sqrMagnitude),-1,1))*180/Math.PI);
         public static float SignedAngle(Vector3 a,Vector3 b,Vector3 n) => Angle(a,b)*(Dot(n,Cross(a,b))<0?-1:1);
         public static Vector3 Lerp(Vector3 a,Vector3 b,float t) => a+(b-a)*Mathf.Clamp01(t);

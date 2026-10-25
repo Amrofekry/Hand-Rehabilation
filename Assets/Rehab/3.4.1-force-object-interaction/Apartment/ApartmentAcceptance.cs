@@ -145,7 +145,8 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   }
   Check(changed>0&&changed<moved.Length&&far>0&&farMoved==0&&ball.MaxDisplacementMeters>.003f,"Mesh vertices deform near finger contacts while distant regions remain stable ("+changed+" moved, "+far+" distant, "+farMoved+" distant moved)");
   Check(app.ProgressSeconds>=3,"A valid 18 N hold completes the three-second exercise; progress="+app.ProgressSeconds.ToString("F2"));
-  Check(app.rightHand.Closure>.4f,"Rigged fingers close around a held object");
+  // Stage 8: fingers now stop at the surface, so a large ball is closed onto (pads touching) rather than fisted through.
+  Check(app.rightHand.Closure>.1f&&(!GraspContactSolver.Enabled||app.LastContact.touchingPads>=3),"Rigged fingers close onto a held object (closure="+app.rightHand.Closure.ToString("F2")+", pads touching="+app.LastContact.touchingPads+", finger penetration="+(app.LastContact.maxPenetration*1000).ToString("F1")+" mm)");
   var beforeHandMove=ball.transform.position;app.SetDemoHandOffset(false,new Vector3(.07f,0,0));yield return new WaitForSeconds(.35f);
   Check(Vector3.Dot(ball.transform.position-beforeHandMove,player.view.transform.right)>.025f,"Held object follows right hand workspace movement");
   app.SetDemoHandOffset(false,Vector3.zero);yield return new WaitForSeconds(.25f);

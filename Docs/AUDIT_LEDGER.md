@@ -240,7 +240,7 @@ Your LocalLow data was backed up and restored byte-for-byte (11/11 SHA-256, iden
 |---|---|---|---|
 | S4-01 | S3 | HOW TO PLAY card let the board text show through at about 20% brightness. The card was 97% opaque, and in linear colour space a 3% leak of white text is clearly visible. | Card made fully opaque. Rebuilt; EditMode and player suites pass. Not re-seen by eye. |
 | S4-02 | S3 | Every Appearance toggle rebuilt the page scrolled to the top, so the new rows at the bottom needed scrolling again after each click | Settings keep their scroll position (`ResearchPortalView.ScrollPosition`, `SettingsAt`). Rebuilt; suites pass. Not re-seen by eye. |
-| S4-03 | S4 | While squeezing, the HUD showed "Silicone ball · 0.0 mm" in one frame: the fist had closed beside the ball, not around it, so no finger contact dented the mesh | **Open** (grip-contact behaviour, not presentation). Apartment acceptance still proves >3 mm dents at demo force. Revisit with Stage 5/7 grip work. |
+| S4-03 | S4 | While squeezing, the HUD showed "Silicone ball · 0.0 mm" in one frame: the fist had closed beside the ball, not around it, so no finger contact dented the mesh | **Fixed in Stage 8** (§10a): fingers close onto the held ball, 5 pads touch, 7.7 mm dent at 18 N (SYNTHETIC). |
 
 **Seen and confirmed in the player:**
 - Appearance rows for game sounds, effects volume, room ambience and virtual hand; the hand tone cycles.
@@ -488,6 +488,107 @@ Plan tasks 7.1–7.3 (WBS 6.2). Everything was measured in the rendered Windows 
 Protected changes, each with a reason, are in `evidence/stage7-2026-10-25/protected-source-review.json`:
 - `ResearchPortalPages`
 - `VisionUdpReceiver`
+
+## 10a. Stage 8 hand–object contact and the grip chart (25–26 Oct 2026)
+
+Plan tasks 8.1–8.5 (WBS 3.4.1, 3.3). All numbers below are **SYNTHETIC**: rendered Windows player on the reference laptop, keyboard-demo force (0 / 18 / 35 N), scripted hand motion, isolated acceptance storage, no camera, device or person. Probe: `-apartment-contact-probe` (`Tools/run_contact_probe.py`); `-contact-solver-off` runs the same build with the pre-Stage-8 behaviour as the baseline. Data: `evidence/stage8-2026-10-25/contact-probe*.json`.
+
+**What changed:**
+- **Contact solver** (`GraspContactSolver`, `ContactGeometry`): after the hand pose is set, each finger joint curls only as far as the object surface plus 2 mm skin and the visible dent (binary search per joint, proximal to distal). Depth is exact for sphere, box and capsule colliders.
+- **Hold placement:** the object rests on the palm, at the fingertips or in the hooked fingers, per grip, with a bounded back-off while anything overlaps. Thumb-against-one-finger pinches ease the object toward a finger that has not reached it. Held-object follow is capped at 3.5 m/s.
+- **Grip chart** (your 2026-10-26 picture): `GripCatalog` holds the 18 grips as data (hand shape per joint, spread, touching segments, anchor, viewing angle). `GripLab` builds one prop per grip in code (D7). A new **GRIP LAB** station has `[` / `]` or the options buttons to step through the chart. The six station objects also use chart grips: ball and sponge power, mug and silicone cup cupped, cracker precision, tomato spherical.
+- **Presentation (keyboard/demo input only):** the hand takes the grip's shape and turns to the chart's viewing angle. The held object is brought to the middle of the view, raised only to clear the surface under it. The interlocking grip brings in and draws the second hand. A tracked camera hand keeps its own measured pose.
+- **Placement safety (solver on):** the path from the eye is swept with at most 5 cm. The landing check tests the object's own colliders (> 2 mm overlap). The old full-size bounding sphere grazed the table and held large objects short.
+- **Allocation fix:** the solver first cost 16 KB/frame (Module 1 over budget). The cause was a lambda capturing a parameter, which allocates its closure on every call (about 500 calls a frame). The fix moved the lookup out and replaced delegates with struct callbacks.
+
+### Station objects, before → after (6 objects × upright / turned 90° / tilted 45°)
+
+| Object | Finger/palm penetration while holding (0–35 N) | Mean pad gap | Hold jitter (RMS) | Reach move ~1.1 m/s | Fast shake ~2.8 m/s |
+|---|---|---|---|---|---|
+| Silicone ball (14 cm) | 69.8 → **0** mm (palm 5.7) | 0 → 0 mm | 0.0 → 0.0 mm | 62.5 → **0** mm | 72.6 → 17.7 mm |
+| Porcelain mug | 49.7 → **1.0** | 4.0 → 1.0 | 0.0 → 0.0 | 51.8 → 2.1 | 51.9 → 27.8 |
+| Brittle cracker | 19.0 (palm 27.2) → **0** | 0.2 → 0.0 | 0.0 → 0.0 | 19.8 → 1.2 | 19.8 → 13.3 |
+| Kitchen sponge | 35.6 → **5.7** | 8.7 → 1.4 | 0.0 → 0.0 | 28.0 → 0 | 33.4 → 32.2 |
+| Silicone cup | 47.7 → **1.0** | 3.1 → 0.0 | 0.0 → 0.0 | 46.6 → 6.1 | 47.6 → 44.6 |
+| Ripe tomato | 26.3 → **0** | 8.8 → 0.3 | 0.0 → 0.1 | 23.8 → 0.9 | 24.5 → 32.6 |
+
+- **No drops, no furniture overlap (> 2 mm) in any case.** The dent at 18 N is 7.7–12.4 mm on soft objects, so S4-03 (the fist closing beside the ball, 0 mm dent) is fixed for held objects.
+- **Settling:** after pickup the hand takes about 1 s to turn and come into view. Hold measurements start after a 1 s settle; during that settle, the first run measured 4.5–7.4 mm of movement.
+- **Known limit (C-10):** a fast shake at about 2.8 m/s peak (far faster than rehab movement) still shows 13–45 mm transient overlap. The held body follows one physics step behind the hand. Reach-speed motion (~1.1 m/s) stays within 6 mm.
+
+### Grip chart: 18 grips (Grip Lab), solver on
+
+| # | Grip | Object | Penetration hold / reach | Pads touching at 18 N | Mean pad gap | Jitter |
+|---|---|---|---|---|---|---|
+| 1 | Power | Blue rubber ball | 0 / 0 mm (palm 3.6) | 5 of 5 | 0.0 mm | 0.0 mm |
+| 2 | Precision | Small red cube | 0 / 0 | 2 of 2 | 0.0 | 0.0 |
+| 3 | Three-finger | Ballpoint pen | 0 / 0 | 0 of 3 | 2.7 | 0.0 |
+| 4 | Lateral pinch | Plastic card | 0 / 0 | 2 of 2 | 0.0 | 0.0 |
+| 5 | Hook | Kettlebell | 0 / 0 | 4 of 4 | 0.0 | 0.0 |
+| 6 | Claw | Basketball | 1.0 / 0 | 5 of 5 | 0.4 | 0.0 |
+| 7 | Palm | Water bottle | 1.0 / 2.4 | 4 of 7 | 5.2 | 0.1 |
+| 8 | Spherical | Stress ball | 0 / 0 (palm 2.7) | 5 of 5 | 0.0 | 0.0 |
+| 9 | Finger tip | Coin | 0 / 0 | 1 of 2 | 3.5 | 0.0 |
+| 10 | Cupped | Porcelain cup | 0 / 2.3 | 4 of 7 | 2.7 | 0.0 |
+| 11 | Two-finger | USB flash drive | 0 / 0 | 1 of 2 | 2.5 | 0.0 |
+| 12 | Lateral/thumb | Smartphone | 0 / 1.4 | 2 of 4 | 1.1 | 0.0 |
+| 13 | Precision 3-finger | Screw | 0 / 0 | 3 of 3 | 0.0 | 0.0 |
+| 14 | Fist | Grip strength tool | 0.2 / 2.2 | 6 of 9 | 3.9 | 0.0 |
+| 15 | Side | Hardcover book | 0 / 0 | 4 of 4 | 0.0 | 0.0 |
+| 16 | Interlocking (2 hands) | Large rubber ball | 1.0 / 1.2 | 5 of 5 | 0.0 | 0.0 |
+| 17 | Folded | Cleaning cloth | 0 / 0 (palm 4.7) | 7 of 7 | 2.1 | 0.0 |
+| 18 | Dynamic | Claw hammer | 0.2 / 2.5 | 5 of 9 | 3.3 | 0.0 |
+
+- **Across all 18:** finger penetration ≤ 1.0 mm while holding and ≤ 2.5 mm at reach speed; palm overlap ≤ 4.7 mm; hand-relative jitter ≤ 0.1 mm; no drops.
+- **"Touching" means within 2 mm.** The open gaps are small: the pen's three pads sit 2–3 mm off it, and one pad stays 3–7 mm off the coin and USB drive. Larger wrap grips (bottle, cup, fist, hammer) also leave 2–5 pads short.
+- **Book:** 3 frames of furniture overlap while it was being lifted into view.
+- **Screenshots, judged by eye by me:**
+  - `evidence/stage8-2026-10-25/play/grip-chart-01-09.jpg`
+  - `grip-chart-10-18.jpg`
+  - `station-objects-before-after.jpg`
+
+  Your own look in the game is the real check.
+
+**Not measured:** a real hand through the camera holding each grip, and any clinical or physical validity of the grip shapes. The shapes are modelled on your chart, not measured from a person.
+
+### Performance after Stage 8 (reference laptop, 1920×1080, SYNTHETIC)
+
+| Phase | FPS at p95 (budget 60) | Alloc / frame (budget < 1 KB) | Errors |
+|---|---|---|---|
+| Menu | 241 | 221 B | 0 |
+| Module 1 (held ball, solver on) | 170 | 246 B | 0 |
+| Module 2 | 258 | 289 B | 0 |
+| Module 3 | 252 | 482 B | 0 |
+
+- **Hand-packet latency:** p50 2.5 ms, p95 4.2 ms. The malformed-packet test passed: 30 sent, 9 rejected, 0 errors.
+- **Run-to-run variation:** another run on the same build gave Module 1 at 87 FPS (p95) and 368 B/frame, still inside budget.
+- **Solver off (A/B on an earlier Stage 8 build):** Module 1 at 257 FPS (p95) and 187 B/frame.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S8-01 | S2 | Solver allocated 16 KB/frame (lambda closure in the collider lookup) | Lookup split out, struct callbacks; Module 1 back to 246–368 B/frame |
+| S8-02 | S3 | Large objects held short of the hand: a full-size bounding-sphere sweep from the eye grazed the table | 5 cm path sweep, exact landing check (solver on); baseline keeps the old checks |
+| S8-03 | S3 | A one-way palm back-off ratcheted to 4 cm while the hand turned, leaving the hammer 5 cm off the fist | Back-off settles back when clear and not touching |
+| S8-04 | S4 | Second hand of the interlocking grip invisible (only the selected hand's mesh drawn) | `RehabVirtualGrasp.ShowBoth` while a two-handed grip is held |
+| S8-05 | S4 | C-10: transient 13–45 mm overlap at about 2.8 m/s shake | **Open**, documented; reach speed is clean |
+
+**Suites (final build):**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI passed; gallery 87 checks.
+- **Unity test runner:** EditMode 8/8.
+- **Offline C#:** product 76, tracking 177, grasp 235 (was 67; contact geometry and grip chart checks added), deformation 61, hand rig 107, pointer 120.
+- **Python:** Tools unit tests, bridges, WBS 45, AI 32.
+
+**One acceptance check was revised:**
+- "Rigged fingers close onto a held object" now requires closure > 0.1 and at least 3 pads touching. Measured: closure 0.14, 5 pads, 0.0 mm.
+- The old check (mean curl > 0.4) could only pass with the fist inside the 14 cm ball.
+- Two binding-test assertions were updated for the new landing check.
+
+**Protected changes, each with a reason**, are in `evidence/stage8-2026-10-25/protected-source-review.json`:
+- `FingerPoseDriver`
+- `ApartmentExperience`
+- `ApartmentAcceptance`
+- `RehabVirtualGrasp`
 
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 

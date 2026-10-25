@@ -1,0 +1,25 @@
+{
+  "scope": "Stage 8 hand-object contact changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
+      "previousSha256": "c652e4c9e7dc85a649677ab067507ca10646dc3ea12bffdb39d961ebf6afa8a5",
+      "currentSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
+      "reason": "User-authorized Stage 8 hand-object contact (2026-10-25). Adds JointCurl/SetJointCurl so the contact solver can read and set one joint's curl after the pose is driven. Grip chart (user request 2026-10-26): keyboard/demo input can shape the hand into the held object's grip (DemoGrip: per-joint curl and spread from GripCatalog) and turn it to the chart's viewing angle (DemoRotation). A tracked camera hand ignores both; smoothing, tracking and limits are unchanged."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "202aefe7e9d14dd518eb1c19e95bd375d6e56dc12f73a9a6a68fc689667e7953",
+      "currentSha256": "c879d33831ef91bf9cfa732125240ed3c8e62489ee031034dad75fee68821866",
+      "reason": "User-authorized Stage 8 hand-object contact (2026-10-25). Runs GraspContactSolver after the hand pose while holding (finger curl stops at the surface), palm hold with a bounded back-off that also settles back, pinch easing for thumb-against-one-finger grips, 3.5 m/s speed-limited follow, LastContact. Grip chart: hold pose and rotation from the object's GripProp, hand shaped and presented like the chart (keyboard/demo only), held object brought to the middle of the view (raised only to clear the surface below it), second hand for the interlocking grip, grip named in the status line. With the solver on, the safety sweep uses at most 5 cm and the landing check tests the object's own colliders (> 2 mm overlap); -contact-solver-off keeps the previous sphere checks for the audit baseline. Mouse, keyboard, hand pointer, camera and device inputs are unchanged."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "2352b3fa63b01588a4af70ccb64703eae7b74e6c63c6984e8186ede8db9ab788",
+      "currentSha256": "5b62eae2d1c1389a0637b87aa62cd5ea1284cd38b7b084247190e355e9dba56d",
+      "reason": "User-authorized Stage 8 hand-object contact (2026-10-25). The 'fingers close around a held object' check required mean curl > 0.4, which only a fist passing through the ball could reach. With fingers stopping at the 14 cm ball's surface (and, since the grip chart, shaped as the power grip) it requires closure > 0.1 (not open) and at least 3 finger pads touching, and reports closure, pads and penetration (measured: 0.14, 5 pads, 0.0 mm)."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/RehabVirtualGrasp.cs": {
+      "previousSha256": "58336d8d88103f91a34abc7af530433d1de7c9d369d46418a3c2180d6ef3ead7",
+      "currentSha256": "fd06b1437f29ba253f718fd0fe0230f9d3a0737a4b399b5970fede377bf83f51",
+      "reason": "User-authorized Stage 8 hand-object contact (2026-10-25). Adds ShowBoth: while a two-handed chart grip is held, the output mesh shows both hands (the registration mesh already carries both); ShowLeft behaviour is unchanged."
+    }
+  }
+}

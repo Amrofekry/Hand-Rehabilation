@@ -315,7 +315,7 @@ Each stage starts only when you authorize it ("Start Stage N, then stop for revi
 - `ApartmentExperience.TryGrab / CanReach / BeginGrab`
 
 ### Task 8.1: Contact audit (C-01)
-- [ ] Reproduce and measure every current defect per object and angle:
+- [x] Reproduce and measure every current defect per object and angle:
   - **S4-03:** the fist closes beside the ball and the dent reads 0 mm
   - hand passing through objects
   - an object penetrating the palm
@@ -324,23 +324,33 @@ Each stage starts only when you authorize it ("Start Stage N, then stop for revi
   - tunnelling at speed
   - jitter
   - sudden snapping
-- [ ] Record the numbers as the baseline.
+- [x] Record the numbers as the baseline.
 
 ### Task 8.2: Contact solver (C-02 to C-05)
-- [ ] Closest-surface contact points and normals per probe.
-- [ ] Finger curl stops at first surface contact, so there is no hand-through-object and no object-in-palm.
-- [ ] Palm-anchored hold keeps the measured contact offset, so there is no floating gap and no sinking.
+- [x] Closest-surface contact points and normals per probe.
+- [x] Finger curl stops at first surface contact, so there is no hand-through-object and no object-in-palm.
+- [x] Palm-anchored hold keeps the measured contact offset, so there is no floating gap and no sinking.
 
 ### Task 8.3: Stability (C-06 to C-10)
-- [ ] Grip-shape presets per object: power, pinch, cylindrical.
-- [ ] Stable grasp across sizes, shapes and orientations.
-- [ ] Continuous collision for the held object, with speed-limited follow: no tunnelling, jitter or snapping during fast hand motion or large deformation.
-- [ ] Only probes that are in contact can drive deformation pressure, consistent with the material.
+- [x] Grip-shape presets per object: power, pinch, cylindrical (superseded by Task 8.5).
+- [x] Stable grasp across sizes, shapes and orientations.
+- [ ] Continuous collision for the held object, with speed-limited follow: no tunnelling, jitter or snapping during fast hand motion or large deformation. *Partly:* holds and ~1 m/s reach are clean; a ~2.7 m/s shake still shows transient overlap (C-10).
+- [x] Only probes that are in contact can drive deformation pressure, consistent with the material.
 
 ### Task 8.4: Preserve inputs and test (C-11, C-12)
-- [ ] Mouse, keyboard and hand pointer still work.
-- [ ] Offline contact-maths tests: penetration ≤ tolerance, gap ≤ tolerance, no tunnelling at a stated hand speed.
-- [ ] An apartment acceptance case per object and approach angle.
+- [x] Mouse, keyboard and hand pointer still work.
+- [x] Offline contact-maths tests: penetration ≤ tolerance, gap ≤ tolerance, no tunnelling at a stated hand speed.
+- [x] An apartment acceptance case per object and approach angle.
+
+### Task 8.5: Grip chart (added 2026-10-26 at your request, before Stage 9)
+Your chart of 18 grips ("Hand Grips & Object Examples": power, precision, three-finger, lateral pinch, hook, claw,
+palm, spherical, finger tip, cupped, two-finger, lateral/thumb, precision 3-finger, fist, side, interlocking, folded,
+dynamic). Interactions and the game should look like it.
+- [x] `GripCatalog`: the 18 grips as data (hand shape per joint, spread, touching segments, anchor, viewing angle; interlocking uses both hands).
+- [x] `GripLab`: one code-built prop per grip (D7), including ball, cube, pen, card, kettlebell, basketball, bottle, coin, cup, USB drive, phone, screw, grip tool, book, large ball, cloth and hammer.
+- [x] **Grip Lab** station (third station button; `[` / `]` or the options buttons step through the chart).
+- [x] Every object, the six station objects included, is held in its chart grip: hand shaped, object placed at the grip anchor, contact solver closes the touching fingers, hand turned and brought into view like the photograph (keyboard/demo; a tracked camera hand keeps its own pose).
+- [x] Grip Lab probe (`run_contact_probe.py --grip-lab`): penetration, pad gap, touching segments, palm overlap, jitter and dent per grip, plus a screenshot per grip.
 
 **Gate 8:** a penetration / gap / jitter table per object and angle, before and after, plus screenshots. Stop.
 

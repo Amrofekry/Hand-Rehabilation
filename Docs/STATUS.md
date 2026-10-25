@@ -10,7 +10,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–7 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10. Next come the new Stages 8–17 you added on 2026-10-25 (dependency order; checklist in [REQUIREMENTS_CHECKLIST.md](REQUIREMENTS_CHECKLIST.md)), then hardware (Stage 18) and release (Stage 19). **Stage 8 (hand–object contact) needs authorization.** |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–8 are done (Stage 8 includes the 18-grip chart you added on 2026-10-26), including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes, and the Stage 8 SYNTHETIC contact audit (before/after); details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10a. The rest of the new Stages 9–17 you added on 2026-10-25 follow (dependency order; checklist in [REQUIREMENTS_CHECKLIST.md](REQUIREMENTS_CHECKLIST.md)), then hardware (Stage 18) and release (Stage 19). **Stage 9 (deformation rebuild) needs authorization.** |
 
 ## Evidence columns
 
@@ -45,7 +45,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | 21 | Documentation and evidence (6.3) | Partial | n/a | n/a | this file |
 | 22 | Voice commands | Planned: Stage 13 (D4 revised, D9 Windows offline speech) | — | — | `REQUIREMENTS_CHECKLIST.md` §5 |
 | 23 | Eye/head pointer | Planned: Stage 14 (D4 revised, D8 webcam gaze estimate) | — | — | `REQUIREMENTS_CHECKLIST.md` §4 |
-| 24 | Hand–object contact rebuild (3.4.1, 3.3) | Not started: Stage 8 | — | — | `REQUIREMENTS_CHECKLIST.md` §2 |
+| 24 | Hand–object contact rebuild (3.4.1, 3.3) | Implemented: contact solver (curl stops at the surface), grip-anchored holds, 18-grip chart with code-built objects and a Grip Lab station, chart-like hand presentation (Stage 8); C-01–C-03, C-05–C-09, C-11–C-13 tested, C-04 by eye pending, C-10 in progress | SYNTHETIC rendered-player probes: station objects 19–70 mm → 0–5.7 mm penetration; 18 grips ≤ 1 mm, jitter ≤ 0.1 mm | Fast shake (~2.8 m/s) 13–45 mm transient; no real-hand camera session yet | `AUDIT_LEDGER.md` §10a |
 | 25 | Object deformation system rebuild (3.3) | Not started: Stage 9 | — | — | `REQUIREMENTS_CHECKLIST.md` §1 |
 | 26 | Six multi-step activities, living room and kitchen (3.1, 3.4.1) | Not started: Stage 10 | — | — | `REQUIREMENTS_CHECKLIST.md` §3 |
 | 27 | UI modernization and design system (3.4, 5.x) | Not started: Stage 11 | — | — | `REQUIREMENTS_CHECKLIST.md` §7 |
