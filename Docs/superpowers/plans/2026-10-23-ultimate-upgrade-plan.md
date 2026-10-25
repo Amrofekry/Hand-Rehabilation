@@ -59,6 +59,11 @@
 | D4 | Extras: voice commands (task 22) and eye/head pointer (task 23)? | Defer to post-GP1. Keep them out of this plan's critical path. |
 | D5 | Arabic in-game UI? | Defer. Use Unity Localization tables only if you want it. |
 | D6 | Git remote (private GitHub) for off-machine backup? | Yes. A private repo with LFS for large binaries. |
+| D4 (revised 2026-10-25) | Voice commands and eye tracking | **In scope** as Stages 13 and 14 (your 2026-10-25 request). This supersedes the earlier deferral. |
+| D7 (2026-10-25) | Props for the new activities | **Built in code:** procedural meshes and materials (books, shelf slots, plates, cups, tray, box, knife, board, vegetables). No downloads or licences. |
+| D8 (2026-10-25) | Eye tracking without hardware | **Webcam gaze estimate** from MediaPipe face/iris landmarks. Coarse, optional, off by default, with stated accuracy limits. |
+| D9 (2026-10-25) | Speech engine | **Windows built-in, offline:** Unity keyword and dictation recognizers plus Windows text-to-speech. |
+| D10 (2026-10-25) | Order of the new stages | **Dependency order:** contact, deformation, activities, UI, audio, voice, eye, assistant, audit, research. |
 
 ---
 
@@ -247,37 +252,425 @@ If an equivalent already exists, adopt it instead of adding a parallel one (deci
 
 ---
 
-## Stage 8: Hardware readiness (WBS 2.3, 2.4, 6.1)
+## Stages 8–17: requested upgrades (added 2026-10-25, run before Stages 18–19)
 
-### Task 8.1: Calibration wizard in-game
-- [ ] Tare → known-weight steps → fit → save calibration metadata (`calibration_id`) → verify-load step. Works against synthetic replay now. It is marked as physically unverified until real hardware is used.
+You added ten requirements after Stage 7. They run first, in **dependency order** (decision D10), and the original hardware and release stages follow as Stages 18–19.
 
-### Task 8.2: Device connection UX
-- [ ] Device status panel: BLE bridge state, packet rate, loss %, battery, last sample age. Reconnect handling.
+Each stage starts only when you authorize it ("Start Stage N, then stop for review") and ends at its Gate. Every checkbox has a row in [REQUIREMENTS_CHECKLIST.md](../../REQUIREMENTS_CHECKLIST.md) with one of these statuses:
+- Not Started
+- In Progress
+- Implemented
+- Tested
+- Blocked
 
-### Task 8.3: Physical test protocol (executed only when hardware exists)
-- [ ] `Docs/PHYSICAL_TEST_PROTOCOL.md`: known loads for each grip, BLE rate/latency, closed loop. Results go to a **separate** `Docs/evidence/physical/` record.
+| Stage | Requirement (your list) | WBS | Why this position |
+|---|---|---|---|
+| 8 | 2. Hand–object interaction and contact | 3.4.1, 3.3 | Deformation needs stable contact points and forces first |
+| 9 | 1. Object deformation system | 3.3 | Builds on Stage 8 contacts |
+| 10 | 3. Six multi-step activities | 3.1, 3.4.1 | Needs good contact and deformation (packing, cutting) |
+| 11 | 7. UI modernization and design system | 3.4, 5.1, 5.2 | One design system before the voice, gaze and assistant screens |
+| 12 | 6. Audio and sound design | 3.1, 3.4 | Material sounds need the Stage 9 materials and Stage 10 objects |
+| 13 | 5. Voice commands and speech-to-text | 3.4 | Uses Stage 11 indicators; feeds Stage 15 |
+| 14 | 4. Optional eye tracking | 3.2 | Shares the dwell/focus pipeline and Stage 11 focus states |
+| 15 | 8. Optional voice assistant | 3.4 | Needs Stage 13 speech and the Stage 10 activity state |
+| 16 | 9. Pipeline, block diagram and Gantt audit | 1.1, 6.3 | Audits everything above |
+| 17 | 10. Next-stage research proposal | 1.1 | Follows the Stage 16 gap analysis; recommendations only |
 
-**Gate 8:** software readiness reviewed. Physical items stay OPEN until real tests are done.
+### Global rules for Stages 8–17
+
+- **Preserve what works:** the project, source, assets, scenes, working systems and **every current input method** (mouse, keyboard, hand pointer). These are additions and upgrades, not a replacement game.
+- **Inspect first:** read the repository and verify the engine version, APIs and hardware before editing. Reuse sound components; rebuild only what genuinely needs it. No duplicated systems, incompatible dependencies or unrelated changes.
+- **No placeholders or overclaiming:**
+  - Nothing is called complete when it is partial.
+  - "AAA" quality is never promised without measured feasibility.
+  - Physical and human tests are recorded separately from simulations, compilation and design checks.
+- **Blockers are documented:** hardware, engine, assets, licensing or services, each with the most practical alternative.
+- **Robustness:** error handling, configuration options and performance safeguards (the Stage 7 budget is ≥ 60 FPS at p95 and < 1 KB/frame GC) are part of every feature.
+- **Tests:** add or update tests for each major feature. After significant changes, re-run every suite:
+  - smoke, replay and journey
+  - UI and gallery
+  - perf probe
+  - EditMode
+  - offline C#
+  - Python (Tools, bridges, WBS, AI)
+- **Keep the project runnable throughout.** Document new dependencies, setup, configuration, known limits and test results.
+- **Research:** use official documentation and credible sources, give links, and separate verified facts from assumptions.
+- **Process:**
+  - Keep the requirements checklist statuses current.
+  - Add a protected-file review link per stage.
+  - Start commit subjects with existing WBS IDs.
+  - Stop for review after every stage.
+- **Final acceptance:** the existing game still works, each requirement is verified against explicit criteria, all blockers are documented, and the final report separates tested functionality from remaining work.
 
 ---
 
-## Stage 9: Release and graduation package (WBS 6.3)
+## Stage 8: Hand–object interaction and contact (WBS 3.4.1, 3.3)
 
-### Task 9.1: Installer and first run
+**Reuse and extend** (in `Assets/Rehab/3.4.1-force-object-interaction/Apartment/`):
+- `FingerContactRig` / `FingerContactProbe` (per-phalanx probes)
+- `GraspCollisionShield`
+- `GraspMotionPolicy` (pickup orientation, damped release, speed caps)
+- `RehabVGController`
+- `HandRigRules`
+- `ApartmentExperience.TryGrab / CanReach / BeginGrab`
+
+### Task 8.1: Contact audit (C-01)
+- [ ] Reproduce and measure every current defect per object and angle:
+  - **S4-03:** the fist closes beside the ball and the dent reads 0 mm
+  - hand passing through objects
+  - an object penetrating the palm
+  - a floating hold gap
+  - sinking
+  - tunnelling at speed
+  - jitter
+  - sudden snapping
+- [ ] Record the numbers as the baseline.
+
+### Task 8.2: Contact solver (C-02 to C-05)
+- [ ] Closest-surface contact points and normals per probe.
+- [ ] Finger curl stops at first surface contact, so there is no hand-through-object and no object-in-palm.
+- [ ] Palm-anchored hold keeps the measured contact offset, so there is no floating gap and no sinking.
+
+### Task 8.3: Stability (C-06 to C-10)
+- [ ] Grip-shape presets per object: power, pinch, cylindrical.
+- [ ] Stable grasp across sizes, shapes and orientations.
+- [ ] Continuous collision for the held object, with speed-limited follow: no tunnelling, jitter or snapping during fast hand motion or large deformation.
+- [ ] Only probes that are in contact can drive deformation pressure, consistent with the material.
+
+### Task 8.4: Preserve inputs and test (C-11, C-12)
+- [ ] Mouse, keyboard and hand pointer still work.
+- [ ] Offline contact-maths tests: penetration ≤ tolerance, gap ≤ tolerance, no tunnelling at a stated hand speed.
+- [ ] An apartment acceptance case per object and approach angle.
+
+**Gate 8:** a penetration / gap / jitter table per object and angle, before and after, plus screenshots. Stop.
+
+---
+
+## Stage 9: Object deformation system (WBS 3.3)
+
+**Reuse:**
+- `ContactDeformation` (bounded local dents, rotation-following, recovery, plasticity)
+- `SqueezableObject`
+- `PhysicalMaterialProfile` and its presets
+- `FracturePartitioner` / `ObjectFractureVisuals`
+- `SqueezeLiquid`
+- the offline deformation and fracture tests (61)
+
+### Task 9.1: Audit (D-01)
+- [ ] Audit the existing deformer and decide part by part what to keep or rebuild. Record the reasoning.
+
+### Task 9.2: Physical model (D-02, D-05, D-06)
+- [ ] A per-vertex spring–damper driven continuously by contact force, not by animations or scaling.
+- [ ] Neighbour (Laplacian) smoothing for surface continuity.
+- [ ] An approximate volume-preservation bulge.
+- [ ] Collision stays stable while deformed.
+
+### Task 9.3: Material behaviours and presets (D-03, D-04, D-09)
+- [ ] Elastic: deforms and recovers.
+- [ ] Plastic: keeps some or all of the dent.
+- [ ] Rigid: resists normal forces.
+- [ ] Breakable: cracks, then fractures and splits past thresholds.
+- [ ] Configurable stiffness, elasticity, plasticity, damping, fracture threshold and recovery speed.
+- [ ] Reusable components and presets, so new objects need no rebuild.
+
+### Task 9.4: Integration and performance (D-07, D-08)
+- [ ] Driven by hand tracking, grip and force sensing through Stage 8 contacts.
+- [ ] Job/Burst-friendly with no per-frame GC; the perf probe stays within the Stage 7 budget.
+
+### Task 9.5: Tests (D-10)
+- [ ] Squeeze, release, recovery, repeated squeeze and fracture across ball, cylinder and box shapes for each material.
+
+**Gate 9:** a material matrix of measured dent, recovery time, fracture threshold and frame time. No "AAA" claim without these numbers. Stop.
+
+---
+
+## Stage 10: Six multi-step environmental activities (WBS 3.1, 3.4.1)
+
+**Shared framework:**
+- An `ActivityDefinition`: steps, target layout, tolerances, scoring, and difficulty on `ExerciseTuning`.
+- Snap targets that report position and orientation error.
+- Outcomes go into `SessionRecord.outcomes`, so they appear in the Stage 6 dashboards automatically.
+
+**Props are built in code (decision D7):** a `PropFactory` makes books of several heights, shelf slots, cups, plates, a tray, a storage box, a knife, a cutting board and vegetables.
+
+### Task 10.1: Living room (A-01 to A-03)
+- [ ] **Bookshelf:** pick up, rotate and place books in order by height or category; wrong placements are detected and correct organisation is rewarded.
+- [ ] **Coffee table:** arrange cups, plates, a tray and other items to a target layout, scored on position, orientation and spacing.
+- [ ] **Storage box:** choose items, grip them suitably, and fit them inside the volume without excessive overlap or instability.
+
+### Task 10.2: Kitchen (A-04 to A-06)
+- [ ] **Simple meal:** ingredients to the preparation area, utensils, and a sequence of safe, simulated cooking steps.
+- [ ] **Cutting:** a knife stroke cuts compatible vegetables into pieces. It uses a plane cut through the existing partitioner, a technically feasible approximation that is labelled as such.
+- [ ] **Prepare and serve:** collect ingredients and utensils, prepare in several steps, plate the food and serve it at the right place.
+
+### Task 10.3: Requirements for every activity (A-07 to A-13)
+- [ ] Every missing prop and environment element is added.
+- [ ] Instructions, objectives, a progress indicator, success conditions and completion feedback.
+- [ ] Realistic manipulation and placement constraints.
+- [ ] Difficulty levels and optional precision requirements.
+- [ ] Scoring on accuracy, completion, handling and task-specific measures.
+- [ ] Integrated into the existing environment and UI without breaking current features.
+- [ ] Replayable, and completable with every supported input method.
+
+### Task 10.4: Tests
+- [ ] An EditMode completion test per activity using synthetic input.
+- [ ] A by-eye playtest.
+- [ ] Results visible on the patient and doctor dashboards.
+
+**Gate 10:** all six activities playable start to finish, with outcomes saved. Stop.
+
+---
+
+## Stage 11: UI modernization and design system (WBS 3.4, 5.1, 5.2)
+
+**Extend:**
+- `GripUiTheme` (Dark / Light / HighContrast)
+- `GripUiThemeController`
+- `GripUiAccessibility`
+- `ResearchPortalView`
+
+### Task 11.1: Research (U-01 to U-04)
+- [ ] Audit the current UI.
+- [ ] Research 2024–2026 AAA and accessibility-focused interfaces (clean hierarchies, restrained effects, readable type, consistent spacing, clear focus, subtle motion, strong feedback). Cite sources.
+- [ ] Use the findings as inspiration only; no proprietary assets or exact interfaces are copied.
+
+### Task 11.2: Design system (U-05 to U-07, U-11)
+- [ ] Tokens for colour, type scale, spacing, panels, icons and transitions.
+- [ ] Distinct hover, focus, pressed, disabled, selected and error states.
+- [ ] Better readability, contrast, text scaling and hierarchy.
+- [ ] No clutter, heavy gradients or distracting animation.
+- [ ] Reduce Motion respected.
+
+### Task 11.3: Screens and indicators (U-08 to U-10)
+- [ ] A modern main menu, pause menu, settings, activity selection, progress display and onboarding.
+- [ ] Every screen works with mouse, keyboard, hand pointer, gaze and voice.
+- [ ] Indicators for the active input mode, gaze focus, voice listening and assistant status.
+
+### Task 11.4: Tests (U-12)
+- [ ] UI and gallery suites extended to the new screens at 1024×768, 1280×720, 1280×800 and 1600×900.
+- [ ] Contrast checks.
+
+**Gate 11:** before/after gallery. Stop.
+
+---
+
+## Stage 12: Audio and sound design (WBS 3.1, 3.4)
+
+**Start from:**
+- `RehabAudio` (synthesised effects, creak and room loops, mute, effects and ambience volumes)
+- `GripUiAccessibility.PlayCue`
+
+### Task 12.1: Audit (S-01)
+- [ ] List missing, low-quality, repetitive, badly timed or wrongly triggered sounds.
+
+### Task 12.2: Sound families and events (S-02 to S-05)
+- [ ] Ambience, UI, grab, release, collision, deformation, fracture and activity-completion sounds.
+- [ ] Material families: wood, metal, glass, plastic, fabric and soft.
+- [ ] Variant pools and pitch variation.
+- [ ] Triggered by real contact force, deformation rate and fracture events from Stages 8–9.
+
+### Task 12.3: Space and mix (S-06 to S-09)
+- [ ] 3D spatial sources with distance attenuation.
+- [ ] An AudioMixer asset with Master, SFX, Ambience and Voice groups, replacing the code-only volumes from Stage 4.
+- [ ] Balanced menu-to-gameplay transitions.
+- [ ] Separate settings for each group.
+- [ ] Nothing loud, distracting or misleading.
+
+### Task 12.4: Licensing (S-10)
+- [ ] Original, synthesised audio or documented-licence assets only, recorded in the credits.
+
+**Tests:** EditMode audio checks (levels, no clipping, no NaN, seamless loops). Your own listening session is recorded as human-verified only when you do it.
+
+**Gate 12:** event-to-sound map and loudness table. Stop.
+
+---
+
+## Stage 13: Voice commands and speech-to-text (WBS 3.4)
+
+**Engine (decision D9):** Windows built-in, offline. Unity's Windows keyword and dictation recognizers, plus Windows text-to-speech for feedback.
+
+### Task 13.1: Investigate (V-01)
+- [ ] Check speech-service availability, the Windows privacy setting and microphone permission on this machine.
+- [ ] If speech is unavailable, the stage is marked **Blocked** with the reason; it is never faked.
+
+### Task 13.2: Commands (V-02 to V-04, V-08, V-09)
+- [ ] A `VoiceCommandRouter` (keyword grammar) mapping commands to existing UI and game actions:
+  - **UI:** navigate, select, open settings, back, confirm, cancel, launch activity
+  - **In-game:** move forward, back, left and right; stop; look at, select and release the object; open inventory
+  - **Session:** restart, pause/resume, instructions, main menu
+- [ ] State-aware: commands that are invalid in the current state are rejected.
+- [ ] Recognized, rejected and unavailable feedback, visual and audio.
+- [ ] Ambiguity and background-noise handling.
+
+### Task 13.3: Speech-to-text (V-05 to V-07)
+- [ ] Dictation into text fields (names, profile).
+- [ ] **Letter-by-letter spelling** becomes editable text.
+- [ ] The recognized text is shown for review and correction before submit.
+- [ ] **Password fields are excluded.**
+
+### Task 13.4: Control (V-10, V-11)
+- [ ] Activation toggle and push-to-talk.
+- [ ] Microphone-permission handling.
+- [ ] All existing inputs unchanged.
+
+**Tests:**
+- Router unit tests from transcripts (no microphone needed).
+- A microphone run with you, recorded as human-verified.
+
+**Gate 13:** command coverage table. Stop.
+
+---
+
+## Stage 14: Optional eye tracking (WBS 3.2)
+
+**Approach (decision D8):** a webcam gaze estimate. No eye-tracking hardware is present, and a standard webcam is **not** hardware-level eye tracking.
+
+### Task 14.1: Investigate (E-01)
+- [ ] Confirm the engine, camera and API options.
+- [ ] Measure what MediaPipe face/iris landmarks from the existing vision worker can achieve.
+
+### Task 14.2: Gaze pipeline (E-02, E-08, E-09, E-10)
+- [ ] The vision worker sends gaze packets with confidence on a new loopback port.
+- [ ] A `GazeReceiver` with 5-point calibration and recalibration.
+- [ ] Sensitivity, dead zones, smoothing and activation thresholds, to suppress involuntary movement and jitter.
+- [ ] Fall back to other inputs when confidence is low.
+
+### Task 14.3: UI gaze (E-03 to E-05)
+- [ ] Look at menus and buttons to move focus.
+- [ ] Select by dwell (reusing `RehabDwellGate` / `RehabPointerPolicy`) or a supported gesture.
+- [ ] Clear focus feedback.
+- [ ] Accessible confirm and cancel to avoid accidental selections.
+
+### Task 14.4: In-game gaze (E-06, E-07)
+- [ ] Optional camera turn left/right and up/down, with a dead zone and rate limit.
+- [ ] Look at an object to highlight, inspect or select it.
+
+### Task 14.5: Optional (E-11)
+- [ ] A settings toggle, off by default.
+- [ ] Measured accuracy (degrees and screen regions) reported plainly.
+
+**Tests:**
+- Synthetic gaze-packet replay.
+- A camera session only with your consent, recorded separately.
+
+**Gate 14:** accuracy and stability table. Stop.
+
+---
+
+## Stage 15: Optional in-game voice assistant (WBS 3.4)
+
+### Task 15.1: Engine (G-01, G-11, G-12)
+- [ ] Offline by default (decision D9): an intent layer over the Stage 13 recognition, with Windows text-to-speech for output.
+- [ ] Compare any online option for latency, cost and privacy, and only adopt one if you approve it.
+- [ ] Handle microphone, network, service and assistant errors cleanly.
+
+### Task 15.2: Guidance (G-02 to G-05)
+- [ ] Onboarding for first-time users.
+- [ ] Explains buttons, menus, settings, objectives and how to complete tasks.
+- [ ] Contextual help from the live state (page, activity step, Module 1 rounds, exercise suite, safety pause).
+- [ ] Answers "What should I do next?", "How do I grab this object?", "Repeat the instructions" and "How do I complete this task?".
+
+### Task 15.3: Behaviour (G-06 to G-10, G-13)
+- [ ] Step-by-step help without taking control.
+- [ ] Navigation only after confirmation.
+- [ ] Clear voice with volume and speed settings.
+- [ ] No needless interruptions: repeat, pause, dismiss and disable are available.
+- [ ] State-aware: never claims an action succeeded unless the game state confirms it.
+- [ ] The game stays fully playable with the assistant off.
+
+**Tests:** intent tests from transcripts against fixture game states.
+
+**Gate 15:** answer table by game state. Stop.
+
+---
+
+## Stage 16: Pipeline, block diagram and Gantt audit (WBS 1.1, 6.3)
+
+### Task 16.1: Plan versus code (P-01 to P-04)
+- [ ] Review the pipeline, architecture, block diagram, Gantt, requirements, status and source.
+- [ ] Find missing components, incomplete features, inconsistencies and integration gaps.
+- [ ] Verify end-to-end data flow: hand tracking → input → grasp → force → physics and deformation → collision → activity logic → feedback → logging.
+- [ ] Check that the architecture supports the new eye, voice, assistant, audio, UI and activity systems.
+
+### Task 16.2: Updated documents (P-05 to P-08)
+- [ ] An as-built block diagram.
+- [ ] An updated pipeline: implementation, integration, testing, optimisation and validation stages.
+- [ ] An updated Gantt: remaining tasks, dependencies, milestones, priorities, realistic durations and critical-path risks.
+- [ ] Requirements and acceptance-criteria review.
+
+### Task 16.3: Whole-product audit (P-09 to P-11)
+- [ ] Stability, error handling, configuration, assets, performance and hardware compatibility.
+- [ ] A full run from start-up and onboarding through activity selection, play, completion and settings to shutdown.
+- [ ] A regression check of all existing features.
+
+### Task 16.4: Report (P-12, P-13)
+- [ ] A prioritised gap analysis: critical blockers, important improvements, optional features and future ideas.
+- [ ] Architecture documentation, revised block diagram, revised Gantt, test checklist and a final completion report.
+- [ ] Never "100 % complete" on code alone; every requirement is verified by test against acceptance criteria.
+
+**Gate 16:** you review the audit and the re-planned Gantt. Stop.
+
+---
+
+## Stage 17: Next-stage research proposal (WBS 1.1). Recommendations only.
+
+### Task 17.1: Research (R-01 to R-08)
+- [ ] After the Stage 16 audit, brainstorm and research improvements across:
+  - gameplay, physical realism and UI/UX
+  - object models, computer vision and AI
+  - rehabilitation assessment and data processing
+  - accessibility, performance and maintainability
+- [ ] Digital twin and real-time synchronisation, simulation fidelity, material modelling and sensor-to-virtual mapping.
+- [ ] AI-assisted adaptation and personalised difficulty, only where scientifically justified.
+- [ ] Hand tracking, grasp classification, force estimation, deformation, collision robustness and latency.
+- [ ] Rehabilitation metrics: completion time, grip force, force steadiness, ROM where measurable, smoothness and repeatability.
+- [ ] Datasets, models, sensors and libraries with measurable benefit.
+- [ ] Recent papers, official engine documentation and credible demonstrations, with links that separate facts from assumptions.
+
+### Task 17.2: Ranked proposal (R-09 to R-13)
+- [ ] Each idea scored on impact, complexity, cost, hardware, risk, scientific validity and compatibility.
+- [ ] Essential fixes, optional enhancements and ambitious research kept separate.
+- [ ] A ranked list with description, justification, benefit, effort, dependencies and order.
+- [ ] Ideas that are possible now marked apart from those that need hardware, data, funding or architecture changes.
+- [ ] **Nothing is implemented automatically.** The proposal is presented for your review and prioritisation.
+
+**Gate 17:** you prioritise the next development stage. Stop.
+
+---
+
+## Stage 18: Hardware readiness (formerly Stage 8) (WBS 2.3, 2.4, 6.1)
+
+### Task 18.1: Calibration wizard in-game
+- [ ] Tare → known-weight steps → fit → save calibration metadata (`calibration_id`) → verify-load step. Works against synthetic replay now. It is marked as physically unverified until real hardware is used.
+
+### Task 18.2: Device connection UX
+- [ ] Device status panel: BLE bridge state, packet rate, loss %, battery, last sample age. Reconnect handling.
+
+### Task 18.3: Physical test protocol (executed only when hardware exists)
+- [ ] `Docs/PHYSICAL_TEST_PROTOCOL.md`: known loads for each grip, BLE rate/latency, closed loop. Results go to a **separate** `Docs/evidence/physical/` record.
+
+**Gate 18:** software readiness reviewed. Physical items stay OPEN until real tests are done.
+
+---
+
+## Stage 19: Release and graduation package (formerly Stage 9) (WBS 6.3)
+
+### Task 19.1: Installer and first run
 - [ ] IL2CPP Release build (if Sentis/VG are compatible, otherwise Mono). Inno Setup installer bundling the Python workers' venv or an embedded runtime. A first-run check covers camera, ports and model files.
 
-### Task 9.2: Clean-machine verification
+### Task 19.2: Clean-machine verification
 - [ ] Install on a clean Windows user account and run the full Stage 1 suite plus a playthrough from the installed build.
 
-### Task 9.3: Graduation evidence
+### Task 19.3: Graduation evidence
 - [ ] Final WBS evidence matrix (software / native / physical / human columns), model and data cards, limitations, credits/licences, a 3-minute demo video, and presentation slides.
 
-**Gate 9:** final review. GP1 Done (W22, 2027-02-06).
+**Gate 19:** final review. GP1 Done (W22, 2027-02-06).
 
 ---
 
 ## Suggested calendar (respects Gantt blocked weeks)
+
+> **2026-10-25 update:** Stages 8–17 add many weeks of work before hardware (18) and release (19). The table below is the original 23 Oct estimate. Stage 16 re-plans the Gantt with realistic durations, dependencies and the critical path.
 
 | Weeks | Dates | Stages |
 |---|---|---|

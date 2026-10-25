@@ -10,7 +10,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–7 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10. Stage 8 needs authorization. |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–7 are done, including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10. Next come the new Stages 8–17 you added on 2026-10-25 (dependency order; checklist in [REQUIREMENTS_CHECKLIST.md](REQUIREMENTS_CHECKLIST.md)), then hardware (Stage 18) and release (Stage 19). **Stage 8 (hand–object contact) needs authorization.** |
 
 ## Evidence columns
 
@@ -18,7 +18,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 - **Native test:** automated Unity Editor / Windows player checks. Synthetic or fixture input only.
 - **Physical / human:** real hardware, a live person or participant data. Recorded separately and never inferred from the other two columns.
 
-## The 23 software tasks
+## The software tasks (23 original + 10 added 2026-10-25)
 
 | No. | Task (WBS) | Software | Native test | Physical / human | Evidence |
 |---|---|---|---|---|---|
@@ -43,8 +43,18 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | 19 | English UI, controls, hand pointer (3.4) | Partial: plus first-run tutorials, audio and hand-tone settings (Stage 4) | UI checks pass at 2 sizes / 87 gallery checks at 3 sizes (24 Oct, 2022.3 build) | Human accessibility not tested | `UI_COMPLETION_CHECKLIST.md`, `evidence/stage4-2026-10-24/` |
 | 20 | Automated verification (6.2) | Implemented: player suites plus Stage 7 perf/soak/fault probe, rolling diagnostics log and copy-diagnostics page | Reference laptop, 1920×1080, SYNTHETIC input: ≥128 FPS at p95, ≤514 B/frame managed alloc, 2-hour soak with flat memory and 0 errors, loopback hand latency p95 4.2 ms; malformed UDP and busy ports handled (25 Oct) | FPS with the camera worker and camera-to-hand latency not measured (needs the webcam) | `evidence/stage7-2026-10-25/` |
 | 21 | Documentation and evidence (6.3) | Partial | n/a | n/a | this file |
-| 22 | Voice commands | Future (deferred, D4) | — | — | — |
-| 23 | Eye/head pointer | Future (deferred, D4) | — | — | — |
+| 22 | Voice commands | Planned: Stage 13 (D4 revised, D9 Windows offline speech) | — | — | `REQUIREMENTS_CHECKLIST.md` §5 |
+| 23 | Eye/head pointer | Planned: Stage 14 (D4 revised, D8 webcam gaze estimate) | — | — | `REQUIREMENTS_CHECKLIST.md` §4 |
+| 24 | Hand–object contact rebuild (3.4.1, 3.3) | Not started: Stage 8 | — | — | `REQUIREMENTS_CHECKLIST.md` §2 |
+| 25 | Object deformation system rebuild (3.3) | Not started: Stage 9 | — | — | `REQUIREMENTS_CHECKLIST.md` §1 |
+| 26 | Six multi-step activities, living room and kitchen (3.1, 3.4.1) | Not started: Stage 10 | — | — | `REQUIREMENTS_CHECKLIST.md` §3 |
+| 27 | UI modernization and design system (3.4, 5.x) | Not started: Stage 11 | — | — | `REQUIREMENTS_CHECKLIST.md` §7 |
+| 28 | Audio and sound design upgrade (3.1, 3.4) | Not started: Stage 12 | — | — | `REQUIREMENTS_CHECKLIST.md` §6 |
+| 29 | Speech-to-text and spelling input (3.4) | Not started: Stage 13 | — | — | `REQUIREMENTS_CHECKLIST.md` §5 |
+| 30 | Gaze-driven UI and in-game control (3.2) | Not started: Stage 14 | — | — | `REQUIREMENTS_CHECKLIST.md` §4 |
+| 31 | Optional in-game voice assistant (3.4) | Not started: Stage 15 | — | — | `REQUIREMENTS_CHECKLIST.md` §8 |
+| 32 | Pipeline, block diagram and Gantt audit (1.1, 6.3) | Not started: Stage 16 | — | — | `REQUIREMENTS_CHECKLIST.md` §9 |
+| 33 | Next-stage research proposal (1.1) | Not started: Stage 17 (recommendations only) | — | — | `REQUIREMENTS_CHECKLIST.md` §10 |
 
 ## Open blockers
 
