@@ -87,6 +87,20 @@ public static class GripLab {
   public string name;public GripType grip;public Solid solid;public float mass,deformRadius,fullNewtons,maxDepth;
   public Vector3 gripLocal,axisY=new Vector3(0,1,0),axisZ=new Vector3(0,0,1);
   public Func<Material[],Mesh> mesh;public Action<GameObject> colliders;public Color[] colors;public float smooth=.4f,metal;
+  /// <summary>Stage 9 chart material; when absent it is derived from the solid kind.</summary>
+  public Func<DeformationMaterial> material;
+ }
+ /// <summary>Stage 9: the chart material of a Grip Lab prop built before materials existed.</summary>
+ static DeformationMaterial FromSolid(Spec s){
+  DeformationMaterial m;
+  switch(s.solid){
+   case Solid.Rubber:m=DeformationMaterial.Rubber();m.stiffnessNewtons=s.fullNewtons;m.maxDepthMeters=s.maxDepth;break;
+   case Solid.Soft:m=DeformationMaterial.Rubber();m.name="Soft rubber foam";m.stiffnessNewtons=s.fullNewtons;m.maxDepthMeters=s.maxDepth;m.dampingRatio=.6f;break;
+   case Solid.Foam:m=DeformationMaterial.Fabric();m.maxDepthMeters=s.maxDepth;break;
+   case Solid.Porcelain:m=DeformationMaterial.Porcelain();break;
+   default:m=DeformationMaterial.RigidSolid(s.name.Contains("Coin")||s.name.Contains("Screw")||s.name.Contains("hammer")||s.name.Contains("Kettlebell")?"Steel":"Rigid plastic");break;
+  }
+  return m;
  }
  static GameObject Child(GameObject root,string name,Vector3 position,Vector3 euler=default){
   var go=new GameObject(name){layer=root.layer};go.transform.SetParent(root.transform,false);go.transform.localPosition=position;go.transform.localRotation=Quaternion.Euler(euler);return go;
@@ -159,6 +173,58 @@ public static class GripLab {
    colliders=g=>{CapsuleC(g,new Vector3(0,-.01f,0),.014f,.27f);BoxC(g,new Vector3(.01f,.14f,0),new Vector3(.12f,.028f,.028f));}},
  };
 
+ // Stage 9 Material Lab: the twelve chart materials (rigid, semi-rigid, flexible, soft) then the forms the
+ // chart lists that the twelve do not already show (torsion, shear, buckling). Each is held in a chart grip.
+ static Spec[] MaterialSpecs()=>new[]{
+  new Spec{name="Steel block",grip=GripType.Power,solid=Solid.Rigid,mass=.7f,colors=new[]{new Color(.55f,.57f,.6f)},smooth=.6f,metal=.9f,material=DeformationMaterial.Steel,
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),Vector3.one*.045f,3).Build("Steel block"),colliders=g=>BoxC(g,Vector3.zero,Vector3.one*.045f)},
+  new Spec{name="Glass tumbler",grip=GripType.Cupped,solid=Solid.Porcelain,mass=.25f,colors=new[]{new Color(.78f,.88f,.92f)},smooth=.95f,material=DeformationMaterial.Glass,
+   axisY=new Vector3(1,0,0),axisZ=new Vector3(0,0,1),
+   mesh=_=>new MeshKit().Lathe(0,MeshKit.At(Vector3.zero),new[]{new Vector2(0,-.045f),new Vector2(.03f,-.045f),new Vector2(.036f,.045f),new Vector2(.033f,.045f),new Vector2(.027f,-.038f),new Vector2(0,-.038f)},32).Build("Glass"),
+   colliders=g=>OctagonC(g,Vector3.zero,.035f,.09f)},
+  new Spec{name="Concrete block",grip=GripType.Power,solid=Solid.Rigid,mass=.25f,colors=new[]{new Color(.6f,.6f,.58f)},smooth=.08f,material=DeformationMaterial.Concrete,
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.05f,.045f,.05f),3).Build("Concrete"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.05f,.045f,.05f))},
+  new Spec{name="Wooden plank (bending)",grip=GripType.Dynamic,solid=Solid.Rigid,mass=.15f,colors=new[]{new Color(.72f,.5f,.28f)},smooth=.3f,material=DeformationMaterial.Wood,
+   gripLocal=new Vector3(0,-.095f,0),axisY=new Vector3(1,0,0),axisZ=new Vector3(0,1,0),
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.035f,.26f,.012f),14).Build("Plank"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.035f,.26f,.012f))},
+  new Spec{name="ABS plastic box",grip=GripType.Power,solid=Solid.Rubber,mass=.06f,deformRadius=.02f,colors=new[]{new Color(.92f,.93f,.95f)},smooth=.5f,material=DeformationMaterial.AbsPlastic,
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.085f,.055f,.06f),8).Build("ABS box"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.085f,.055f,.06f))},
+  new Spec{name="Dense foam block",grip=GripType.Power,solid=Solid.Rubber,mass=.03f,deformRadius=.02f,colors=new[]{new Color(.95f,.95f,.9f)},smooth=.1f,material=DeformationMaterial.DenseFoam,
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.08f,.05f,.05f),8).Build("Foam"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.08f,.05f,.05f))},
+  new Spec{name="Rubber ball",grip=GripType.Spherical,solid=Solid.Rubber,mass=.1f,deformRadius=.016f,colors=new[]{new Color(.1f,.45f,.85f)},smooth=.55f,material=DeformationMaterial.Rubber,
+   mesh=_=>new MeshKit().Sphere(0,Vector3.zero,Vector3.one*.035f).Build("Rubber ball"),colliders=g=>SphereC(g,Vector3.zero,.035f)},
+  new Spec{name="Silicone band (tension)",grip=GripType.Precision,solid=Solid.Rubber,mass=.01f,deformRadius=.008f,colors=new[]{new Color(.92f,.55f,.15f)},smooth=.4f,material=DeformationMaterial.Silicone,
+   gripLocal=new Vector3(0,-.055f,0),axisY=new Vector3(0,0,1),axisZ=new Vector3(0,1,0),
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.012f,.12f,.004f),12).Build("Band"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.012f,.12f,.004f))},
+  new Spec{name="Fabric",grip=GripType.Folded,solid=Solid.Foam,mass=.04f,deformRadius=.02f,colors=new[]{new Color(.45f,.5f,.58f)},smooth=.08f,material=DeformationMaterial.Fabric,
+   mesh=_=>new MeshKit().Sphere(0,Vector3.zero,new Vector3(.045f,.034f,.04f),22,34,n=>1+.1f*Mathf.Sin(n.x*11+n.y*9)*Mathf.Cos(n.z*13-n.y*4)+.04f*Mathf.Sin(n.y*21)).Build("Fabric"),
+   colliders=g=>SphereC(g,Vector3.zero,.037f)},
+  new Spec{name="Gel blob",grip=GripType.Spherical,solid=Solid.Soft,mass=.08f,deformRadius=.018f,colors=new[]{new Color(.2f,.75f,.85f)},smooth=.9f,material=DeformationMaterial.Gel,
+   mesh=_=>new MeshKit().Sphere(0,Vector3.zero,new Vector3(.04f,.03f,.04f),22,34).Build("Gel"),colliders=g=>SphereC(g,Vector3.zero,.034f)},
+  new Spec{name="Sponge (compression)",grip=GripType.Power,solid=Solid.Soft,mass=.02f,deformRadius=.025f,colors=new[]{new Color(.98f,.8f,.2f)},smooth=.1f,material=DeformationMaterial.Sponge,
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.1f,.065f,.04f),10).Build("Sponge"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.1f,.065f,.04f))},
+  new Spec{name="Clay",grip=GripType.Spherical,solid=Solid.Soft,mass=.15f,deformRadius=.016f,colors=new[]{new Color(.45f,.33f,.25f)},smooth=.15f,material=DeformationMaterial.Clay,
+   mesh=_=>new MeshKit().Sphere(0,Vector3.zero,Vector3.one*.033f,22,34,n=>1+.04f*Mathf.Sin(n.x*9+n.z*7)).Build("Clay"),colliders=g=>SphereC(g,Vector3.zero,.033f)},
+  // A flat strip, as in the chart's torsion photo: a twist on a round wire would not be visible.
+  new Spec{name="Steel strip (torsion)",grip=GripType.Dynamic,solid=Solid.Rigid,mass=.03f,colors=new[]{new Color(.62f,.63f,.66f)},smooth=.6f,metal=.9f,material=DeformationMaterial.SteelWire,
+   gripLocal=new Vector3(0,-.09f,0),axisY=new Vector3(1,0,0),axisZ=new Vector3(0,1,0),
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.016f,.22f,.003f),12).Build("Strip"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.016f,.22f,.003f))},
+  new Spec{name="Paper stack (shear)",grip=GripType.Side,solid=Solid.Rigid,mass=.25f,colors=new[]{new Color(.96f,.96f,.93f)},smooth=.2f,material=DeformationMaterial.PaperStack,
+   gripLocal=new Vector3(.045f,-.03f,0),axisY=new Vector3(-1,0,0),axisZ=new Vector3(0,1,0),
+   mesh=_=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),new Vector3(.12f,.16f,.03f),10).Build("Paper"),colliders=g=>BoxC(g,Vector3.zero,new Vector3(.12f,.16f,.03f))},
+  new Spec{name="Plastic straw (buckling)",grip=GripType.Dynamic,solid=Solid.Rigid,mass=.005f,colors=new[]{new Color(.85f,.2f,.25f)},smooth=.5f,material=DeformationMaterial.PlasticStraw,
+   gripLocal=new Vector3(0,-.085f,0),axisY=new Vector3(1,0,0),axisZ=new Vector3(0,0,1),
+   mesh=_=>new MeshKit().Cylinder(0,MeshKit.At(Vector3.zero),.0045f,.2f,12,30).Build("Straw"),colliders=g=>CapsuleC(g,Vector3.zero,.0045f,.2f)},
+ };
+
+ static PhysicalMaterialProfile Profile(Spec s,DeformationMaterial m){
+  var p=Profile(s);
+  // The chart material decides deformability and breaking; the profile keeps mass, friction and bounce.
+  p.deformable=!m.Rigid;
+  if(p.deformable){p.fullCompressionNewtons=Mathf.Max(1,m.stiffnessNewtons);p.maxDepthMeters=Mathf.Clamp(m.maxDepthMeters,.0001f,.5f);if(s.deformRadius<=0)p.deformationRadiusMeters=.03f;}
+  if(m.result==MaterialResult.Brittle&&m.fractureNewtons>0){p.breakable=true;p.sustainedForceNewtons=m.fractureNewtons;}
+  return p;
+ }
  static PhysicalMaterialProfile Profile(Spec s){
   var p=ScriptableObject.CreateInstance<PhysicalMaterialProfile>();p.name=s.name+" profile";p.massKg=Mathf.Max(.01f,s.mass);
   switch(s.solid){
@@ -180,9 +246,12 @@ public static class GripLab {
   return m;
  }
 
- /// <summary>Builds the lab props (inactive) on the table at the given surface point, and returns them in chart order.</summary>
- public static SqueezableObject[] Build(Transform parent,Vector3 tableTop,Material source){
-  var specs=Specs();var result=new SqueezableObject[specs.Length];
+ /// <summary>Builds the Grip Lab props (inactive) on the table at the given surface point, in chart order.</summary>
+ public static SqueezableObject[] Build(Transform parent,Vector3 tableTop,Material source)=>BuildSet(Specs(),parent,tableTop,source);
+ /// <summary>Stage 9 Material Lab: the deformation chart's materials and forms, in chart order.</summary>
+ public static SqueezableObject[] BuildMaterials(Transform parent,Vector3 tableTop,Material source)=>BuildSet(MaterialSpecs(),parent,tableTop,source);
+ static SqueezableObject[] BuildSet(Spec[] specs,Transform parent,Vector3 tableTop,Material source){
+  var result=new SqueezableObject[specs.Length];
   for(int i=0;i<specs.Length;i++){
    var s=specs[i];
    var root=new GameObject(s.name){layer=9};root.SetActive(false);root.transform.SetParent(parent,true);
@@ -191,7 +260,9 @@ public static class GripLab {
    visual.AddComponent<MeshFilter>().sharedMesh=s.mesh(mats);visual.AddComponent<MeshRenderer>().sharedMaterials=mats;
    s.colliders(root);
    var body=root.AddComponent<Rigidbody>();body.mass=Mathf.Max(.01f,s.mass);body.interpolation=RigidbodyInterpolation.Interpolate;body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
-   var item=root.AddComponent<SqueezableObject>();item.displayName=s.name;item.profile=Profile(s);item.visual=visual.transform;
+   var chartMaterial=s.material!=null?s.material():FromSolid(s);
+   var item=root.AddComponent<SqueezableObject>();item.displayName=s.name;item.profile=Profile(s,chartMaterial);item.visual=visual.transform;
+   item.SetMaterialOnAwake(chartMaterial);
    var bounds=visual.GetComponent<MeshFilter>().sharedMesh.bounds;item.radius=Mathf.Max(.012f,bounds.extents.magnitude);
    var prop=root.AddComponent<GripProp>();prop.grip=s.grip;prop.gripLocal=s.gripLocal;prop.axisY=s.axisY;prop.axisZ=s.axisZ;prop.lab=true;
    // Rest on the table, lowest point down, without overlapping it.
@@ -214,6 +285,22 @@ public static class GripLab {
     case "Silicone cup":prop.grip=GripType.Cupped;prop.axisY=new Vector3(1,0,0);prop.axisZ=new Vector3(0,0,1);break;
     case "Ripe tomato":prop.grip=GripType.Spherical;break;
     default:prop.grip=GripType.Power;break;
+   }
+   // Stage 9: chart material class and behaviour; the authored profile keeps its force and depth calibration.
+   DeformationMaterial m;
+   switch(item.displayName){
+    case "Silicone ball":m=DeformationMaterial.Rubber();m.name="Silicone rubber";break;
+    case "Kitchen sponge":m=DeformationMaterial.Sponge();break;
+    case "Brittle cracker":m=DeformationMaterial.DryCracker();break;
+    case "Porcelain mug":m=DeformationMaterial.Porcelain();break;
+    case "Silicone cup":m=DeformationMaterial.Silicone();m.formMax=0;break;
+    case "Ripe tomato":m=DeformationMaterial.Food();break;
+    default:m=null;break;
+   }
+   if(m!=null&&item.profile!=null){
+    m.stiffnessNewtons=Mathf.Max(1,item.profile.fullCompressionNewtons);m.maxDepthMeters=item.profile.maxDepthMeters;
+    if(m.result==MaterialResult.Brittle)m.fractureNewtons=item.profile.sustainedForceNewtons;
+    if(item.profile.deformable)item.SetMaterialOnAwake(m);
    }
    // Hold the collider centre (asset pivots need not be centred).
    // Inactive objects report empty bounds, so use the collider's own centre.

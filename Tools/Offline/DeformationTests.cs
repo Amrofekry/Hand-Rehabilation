@@ -111,6 +111,122 @@ class DeformationTests {
   Invalid(()=>FracturePartitioner.Split(input,new[]{0,1,999},12),"Invalid index rejected");
   Invalid(()=>FracturePartitioner.Split(new[]{new Vector3(float.NaN,0,0)},new[]{0,0,0},1),"Nonfinite geometry rejected");
   Invalid(()=>new LocalDeformationState(new[]{new Vector3(float.PositiveInfinity,0,0)}),"Nonfinite rest vertices rejected");
+  MaterialChartChecks();
   Console.WriteLine("Deformation/fracture checks passed: "+passed);
+ }
+
+ // ---- Stage 9: the deformation chart (materials, dynamics, volume, forms) on production code.
+ static void Sphere(float r,int rings,int slices,out Vector3[] v,out int[] t){
+  var vs=new System.Collections.Generic.List<Vector3>();var ts=new System.Collections.Generic.List<int>();
+  for(int a=0;a<=rings;a++)for(int b=0;b<=slices;b++){double p=Math.PI*a/rings,q=2*Math.PI*b/slices;vs.Add(new Vector3((float)(Math.Sin(p)*Math.Cos(q))*r,(float)Math.Cos(p)*r,(float)(Math.Sin(p)*Math.Sin(q))*r));}
+  for(int a=0;a<rings;a++)for(int b=0;b<slices;b++){int i=a*(slices+1)+b,j=i+slices+1;ts.AddRange(new[]{i,i+1,j,i+1,j+1,j});}
+  v=vs.ToArray();t=ts.ToArray();
+ }
+ static float Volume(LocalDeformationState s,int[] t)=>Math.Abs(DeformationDynamics.Volume(s.Vertices,t));
+ static LocalDeformationState Squeezed(DeformationMaterial m,Vector3[] v,int[] t,float depth,int steps){
+  var s=new LocalDeformationState(v);s.SetTopology(t);float restVolume=Math.Abs(DeformationDynamics.Volume(v,t));
+  for(int k=0;k<steps;k++){
+   s.BeginStep();
+   for(int i=0;i<v.Length;i++){var d=ContactDeformation.Indentation(v[i],new Vector3(0,.035f,0),Vector3.up,depth,.025f,v[i],0);if(d.sqrMagnitude>0)s.SetTarget(i,d);}
+   s.StepDynamic(.02f,m,restVolume);
+  }
+  return s;
+ }
+ static void Release(LocalDeformationState s,DeformationMaterial m,int[] t,int steps){float rv=Math.Abs(DeformationDynamics.Volume(s.Rest,t));for(int k=0;k<steps;k++){s.BeginStep();s.StepDynamic(.02f,m,rv);}}
+ static void MaterialChartChecks(){
+  var chart=DeformationMaterial.ChartMaterials();
+  string[] names={"Steel","Glass","Concrete","Wood","ABS plastic","Dense foam","Rubber","Silicone","Fabric","Gel","Sponge","Clay"};
+  MaterialClass[] classes={MaterialClass.Rigid,MaterialClass.Rigid,MaterialClass.Rigid,MaterialClass.SemiRigid,MaterialClass.SemiRigid,MaterialClass.SemiRigid,MaterialClass.Flexible,MaterialClass.Flexible,MaterialClass.Flexible,MaterialClass.Soft,MaterialClass.Soft,MaterialClass.Soft};
+  bool order=chart.Length==12;for(int i=0;i<chart.Length&&order;i++)order&=chart[i].name==names[i]&&chart[i].materialClass==classes[i];
+  Check(order,"Chart: twelve example materials in chart order with their class (rigid, semi-rigid, flexible, soft)");
+  Check(DeformationMaterial.Glass().result==MaterialResult.Brittle&&DeformationMaterial.Glass().fractureNewtons>0&&DeformationMaterial.Clay().result==MaterialResult.Plastic&&DeformationMaterial.Rubber().result==MaterialResult.Elastic,"Chart results: glass fractures, clay stays deformed, rubber returns");
+  Check(DeformationMaterial.Steel().Rigid&&!DeformationMaterial.Rubber().Rigid&&!DeformationMaterial.Wood().Rigid,"Rigid materials do not dent; wood bends as a whole");
+  bool soft=true;foreach(var m in chart)if(m.materialClass==MaterialClass.Soft)soft&=m.maxDepthMeters>DeformationMaterial.Steel().maxDepthMeters*100;
+  Check(soft&&DeformationMaterial.Gel().maxDepthMeters>DeformationMaterial.AbsPlastic().maxDepthMeters,"Soft materials dent far more than rigid or semi-rigid ones");
+  var forms=new[]{DeformationMaterial.Sponge().form,DeformationMaterial.Silicone().form,DeformationMaterial.Wood().form,DeformationMaterial.PaperStack().form,DeformationMaterial.SteelWire().form,DeformationMaterial.PlasticStraw().form};
+  Check(forms[0]==DeformationForm.Compression&&forms[1]==DeformationForm.Tension&&forms[2]==DeformationForm.Bending&&forms[3]==DeformationForm.Shear&&forms[4]==DeformationForm.Torsion&&forms[5]==DeformationForm.Buckling,"Chart forms 1-6 each have an example object (compression to buckling)");
+
+  // Spring-damper: under-damped gel overshoots, over-damped foam creeps, stiff steel stays stable at a long step.
+  float x=0,v=0,peak=0;for(int i=0;i<150;i++){DeformationDynamics.Spring(ref x,ref v,1,4,.12f,.02f);peak=Math.Max(peak,x);}
+  Check(peak>1.4f&&Math.Abs(x-1)<.05f,"Gel-like spring wobbles past its goal and settles ("+peak+")");
+  x=v=peak=0;for(int i=0;i<150;i++){DeformationDynamics.Spring(ref x,ref v,1,2.5f,1.3f,.02f);peak=Math.Max(peak,x);}
+  Check(peak<=1.0001f&&x>.9f,"Over-damped foam creeps back without overshoot");
+  x=v=0;bool stable=true;for(int i=0;i<200;i++){DeformationDynamics.Spring(ref x,ref v,1,30,1,.05f);stable&=float.IsFinite(x)&&Math.Abs(x)<2;}
+  Check(stable&&Math.Abs(x-1)<.01f,"Stiff spring stays stable at a 50 ms frame hitch");
+  x=float.NaN;v=float.NaN;DeformationDynamics.Spring(ref x,ref v,1,8,.5f,.02f);Check(float.IsFinite(x)&&float.IsFinite(v),"Bad spring state is reset, never propagated");
+  x=.3f;v=0;DeformationDynamics.Spring(ref x,ref v,float.NaN,8,.5f,.02f);Check(x==.3f,"Bad spring goal is ignored");
+
+  // Yield and permanent set.
+  Check(DeformationDynamics.PlasticSet(0,.5f,.6f,.9f)==0,"Below yield: no permanent set");
+  Check(Math.Abs(DeformationDynamics.PlasticSet(0,1,.6f,.5f)-.2f)<1e-5f,"Past yield: plasticity of the excess stays");
+  Check(DeformationDynamics.PlasticSet(.3f,.1f,0,1)==.3f&&DeformationDynamics.PlasticSet(.3f,float.NaN,0,1)==.3f,"Permanent set never shrinks and ignores bad input");
+
+  // Seams: duplicated positions are welded, so they share neighbours.
+  Sphere(.035f,16,24,out var sv,out var st);
+  var weld=DeformationDynamics.WeldGroups(sv);
+  Check(weld[24]==weld[0]&&weld[1]==weld[0],"Seam column and pole duplicates are welded");
+  DeformationDynamics.Neighbours(st,sv.Length,out var start,out var list,weld);
+  bool same=start[25+24+1]-start[25+24]==start[25+1]-start[25];Check(same,"Welded seam vertices share one neighbour set");
+  Invalid(()=>DeformationDynamics.Neighbours(new[]{0,1},3,out _,out _),"Incomplete triangle list rejected");
+  Invalid(()=>DeformationDynamics.Neighbours(new[]{0,1,9},3,out _,out _),"Out-of-range neighbour index rejected");
+  float restVolume=Math.Abs(DeformationDynamics.Volume(sv,st));float exact=(float)(4/3.0*Math.PI*Math.Pow(.035,3));
+  Check(Math.Abs(restVolume-exact)/exact<.03f,"Mesh volume matches the sphere ("+restVolume+" vs "+exact+")");
+
+  // Volume: rubber keeps it (bulge beside the dent), sponge loses it; far side and seams stay intact.
+  var rubber=Squeezed(DeformationMaterial.Rubber(),sv,st,.012f,120);var sponge=Squeezed(DeformationMaterial.Sponge(),sv,st,.012f,120);
+  float rubberChange=(Volume(rubber,st)-restVolume)/restVolume,spongeChange=(Volume(sponge,st)-restVolume)/restVolume;
+  Check(rubber.Vertices[0].y<sv[0].y-.008f,"Rubber dents under the finger");
+  Check(Math.Abs(rubberChange)<.02f,"Rubber keeps its volume when squeezed ("+rubberChange*100+" %)");
+  Check(spongeChange<-.03f&&spongeChange<rubberChange-.02f,"Sponge loses volume when squeezed ("+spongeChange*100+" %)");
+  int south=16*25;Check((rubber.Vertices[south]-sv[south]).magnitude<.00005f,"The far side does not move");
+  // A whole hand: five fingertip dents of 10 mm (1.6 cm radius) around the ball, as in the game.
+  var hand=new LocalDeformationState(sv);hand.SetTopology(st);
+  var tips=new[]{new Vector3(.035f,0,0),new Vector3(.025f,.025f,0),new Vector3(.025f,-.025f,0),new Vector3(0,0,.035f),new Vector3(-.03f,0,.018f)};
+  for(int k=0;k<150;k++){
+   hand.BeginStep();
+   foreach(var tipPoint in tips){var n=tipPoint.normalized;var surface=n*.035f;for(int i=0;i<sv.Length;i++){var d=ContactDeformation.Indentation(sv[i],surface,n,.01f,.016f,sv[i],0);if(d.sqrMagnitude>0)hand.SetTarget(i,d);}}
+   hand.StepDynamic(.02f,DeformationMaterial.Rubber(),restVolume);
+  }
+  float handChange=(Volume(hand,st)-restVolume)/restVolume;
+  Check(Math.Abs(handChange)<.03f,"Rubber keeps its volume under five fingers ("+handChange*100+" %)");
+  // Unity meshes may be wound the other way: the same squeeze must still keep the volume.
+  var flipped=(int[])st.Clone();for(int i=0;i<flipped.Length;i+=3){int a=flipped[i+1];flipped[i+1]=flipped[i+2];flipped[i+2]=a;}
+  var other=Squeezed(DeformationMaterial.Rubber(),sv,flipped,.012f,120);float otherChange=(Volume(other,flipped)-restVolume)/restVolume;
+  Check(Math.Abs(otherChange)<.02f&&other.Vertices[0].y<sv[0].y-.008f,"Either triangle winding: dents go in and the volume is kept ("+otherChange*100+" %)");
+  bool seams=true;for(int i=0;i<sv.Length;i++)seams&=(rubber.Vertices[i]-rubber.Vertices[weld[i]]).magnitude<1e-6f;
+  Check(seams,"Seam and pole vertices stay together (no tearing)");
+  bool smooth=true;for(int i=0;i<sv.Length;i++)for(int k=start[i];k<start[i+1];k++)smooth&=(rubber.Vertices[i]-sv[i]-(rubber.Vertices[list[k]]-sv[list[k]])).magnitude<.008f;
+  Check(smooth,"Neighbouring vertices move together (continuous surface)");
+  Release(rubber,DeformationMaterial.Rubber(),st,150);
+  float residual=0;for(int i=0;i<sv.Length;i++)residual=Math.Max(residual,(rubber.Vertices[i]-sv[i]).magnitude);
+  Check(residual<.0002f,"Elastic rubber returns to its original shape ("+residual*1000+" mm)");
+  var clay=Squeezed(DeformationMaterial.Clay(),sv,st,.012f,120);Release(clay,DeformationMaterial.Clay(),st,150);
+  Check(clay.Vertices[0].y<sv[0].y-.005f,"Plastic clay keeps the dent after release");
+  var again=Squeezed(DeformationMaterial.Clay(),sv,st,.012f,120);again.Reset();
+  Check((again.Vertices[0]-sv[0]).magnitude<1e-6f,"Reset clears the permanent set");
+  var bad=new LocalDeformationState(sv);Check(!bad.StepDynamic(.02f,DeformationMaterial.Rubber(),restVolume),"Dynamics without topology does nothing");
+  Check(!rubber.StepDynamic(float.NaN,DeformationMaterial.Rubber(),restVolume),"Bad time cannot poison the surface");
+
+  // Forms: exact geometry of the chart's six forms on a 0.2 m bar along +Y held at the origin.
+  var o=new Vector3();var up=Vector3.up;var side=Vector3.right;var tip=new Vector3(0,.2f,0);
+  var bend=tip+DeformationDynamics.Form(tip,DeformationForm.Bending,.5f,o,up,side,.2f,.3f);float r=.2f/.5f;
+  Check((bend-new Vector3(r*(1-(float)Math.Cos(.5)),r*(float)Math.Sin(.5),0)).magnitude<1e-4f,"Bending puts the free end on the arc");
+  Check(DeformationDynamics.Form(o,DeformationForm.Bending,.5f,o,up,side,.2f,.3f).magnitude<1e-6f,"Bending keeps the held end still");
+  Check(Math.Abs(DeformationDynamics.Form(tip,DeformationForm.Tension,.5f,o,up,side,.2f,.3f).y-.1f)<1e-5f,"Tension stretches the free end by the strain");
+  Check(DeformationDynamics.Form(new Vector3(.01f,.1f,0),DeformationForm.Tension,.5f,o,up,side,.2f,.4f).x<0,"Tension thins the bar (Poisson)");
+  float thin=.01f+DeformationDynamics.Form(new Vector3(.01f,.1f,0),DeformationForm.Tension,.69f,o,up,side,.2f,.5f).x;
+  Check(Math.Abs(thin*thin*1.69f-.0001f)<1e-7f,"Stretching with Poisson 0.5 keeps the volume (radius² × length constant)");
+  float fat=.01f+DeformationDynamics.Form(new Vector3(.01f,.15f,0),DeformationForm.Compression,.36f,o,up,side,.2f,.5f).x;
+  Check(Math.Abs(fat*fat*.64f-.0001f)<1e-7f,"Squashing with Poisson 0.5 keeps the volume");
+  var rim=new Vector3(.01f,.2f,0);var twisted=rim+DeformationDynamics.Form(rim,DeformationForm.Torsion,(float)Math.PI/2,o,up,side,.2f,.3f);
+  Check(Math.Abs(new Vector3(twisted.x,0,twisted.z).magnitude-.01f)<1e-5f&&Math.Abs(twisted.x)<1e-4f,"Torsion turns the free section by the angle, keeping its radius");
+  Check(Math.Abs(DeformationDynamics.Form(tip,DeformationForm.Shear,.02f,o,up,side,.2f,.3f).x-.02f)<1e-6f&&DeformationDynamics.Form(o,DeformationForm.Shear,.02f,o,up,side,.2f,.3f).magnitude<1e-6f,"Shear slides the top layer, not the bottom");
+  Check(Math.Abs(DeformationDynamics.Form(new Vector3(0,.1f,0),DeformationForm.Buckling,.03f,o,up,side,.2f,.3f).x-.03f)<1e-5f&&DeformationDynamics.Form(o,DeformationForm.Buckling,.03f,o,up,side,.2f,.3f).magnitude<1e-6f,"Buckling bows the middle while the ends stay on the line");
+  Check(DeformationDynamics.Form(new Vector3(0,.1f,0),DeformationForm.Compression,.3f,o,up,side,.2f,.3f).magnitude<1e-6f&&DeformationDynamics.Form(tip,DeformationForm.Compression,.3f,o,up,side,.2f,.3f).y<0,"Compression squashes toward the middle");
+  Check(DeformationDynamics.Form(tip,DeformationForm.Bending,float.NaN,o,up,side,.2f,.3f).magnitude==0&&DeformationDynamics.Form(tip,DeformationForm.Bending,.5f,o,up,side,0,.3f).magnitude==0,"Bad form input does nothing");
+  var straw=DeformationMaterial.PlasticStraw();
+  Check(DeformationDynamics.FormTarget(straw,straw.formNewtons*.4f)==0&&DeformationDynamics.FormTarget(straw,straw.formNewtons*.8f)>0,"A column does not buckle below its critical load, then gives way");
+  var wood=DeformationMaterial.Wood();
+  Check(DeformationDynamics.FormTarget(wood,wood.formNewtons*.5f)<DeformationDynamics.FormTarget(wood,wood.formNewtons)&&DeformationDynamics.FormTarget(wood,float.NaN)==0&&DeformationDynamics.FormTarget(null,10)==0,"Form grows with grip force and rejects bad input");
  }
 }

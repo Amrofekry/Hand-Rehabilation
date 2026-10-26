@@ -1,0 +1,20 @@
+{
+  "scope": "Stage 9 deformation changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ContactDeformation.cs": {
+      "previousSha256": "c1876771eb44e3f1214c26bb8a08e258917612470beb5d3db56baf1300820d05",
+      "currentSha256": "92d715fefe034829e09b8a48664da892d8b41831b1c04376e28bb31d018e0455",
+      "reason": "User-authorized Stage 9 deformation (2026-10-26). Adds StepDynamic beside the unchanged Step: per-vertex spring-damper (material natural frequency and damping), neighbour (Laplacian) smoothing over welded seams, yield-based permanent set, and an exact-volume bulge within a set surface distance of each dent, scaled by the material Poisson ratio, with normals oriented for either triangle winding. Allocation-free per step. The older Step and all existing contact, damage and impact functions are unchanged."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/SqueezableObject.cs": {
+      "previousSha256": "545407e7b1c21d4978f0a92617bb861ff4ed4263cb474d494c1a0f2aa9ad053d",
+      "currentSha256": "4b66f7a34c1a79d6cf35752ce32e6faa6a6d886ca1749f53c21c1d7fdeb71e0d",
+      "reason": "User-authorized Stage 9 deformation (2026-10-26). Optional chart DeformationMaterial: material stiffness and depth for contact dents, StepDynamic surface (bulge kept within half a dent radius), whole-object forms (compression, tension, bending, shear, torsion, buckling) driven by grip force with elastic and plastic parts, and brittle fracture from the material's force threshold through the existing damage and fragment path. Objects without a material behave exactly as before."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "c879d33831ef91bf9cfa732125240ed3c8e62489ee031034dad75fee68821866",
+      "currentSha256": "e54324166d35c3a0c222756b53d81110ec8d50536cdc1b689f367d6c43231c90",
+      "reason": "User-authorized Stage 9 deformation (2026-10-26). Status line names the held object's chart material, class and behaviour (for example: Rubber, flexible, elastic). Nothing else changed."
+    }
+  }
+}

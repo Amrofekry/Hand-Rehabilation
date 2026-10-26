@@ -15,16 +15,19 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| D-01 | Audit the existing deformation; rebuild or refactor where necessary | Not Started | | |
-| D-02 | Realistic, physically plausible, visually convincing deformation | Not Started | | Measured quality only; no unvalidated "AAA" claim |
-| D-03 | Elastic, plastic, rigid and breakable behaviour types | Not Started | | |
-| D-04 | Configurable stiffness, elasticity, plasticity, damping, fracture thresholds, recovery speed | Not Started | | |
-| D-05 | Deformation responds continuously to interaction forces (no canned animation or scaling) | Not Started | | |
-| D-06 | Preserve volume, surface continuity, collision stability and material behaviour | Not Started | | |
-| D-07 | Integrate with hand tracking, grip, force sensing and interaction | Not Started | | Depends on Stage 8 |
-| D-08 | Real-time performance optimisation | Not Started | | Stage 7 budget |
-| D-09 | Reusable components and material presets | Not Started | | |
-| D-10 | Test deformation, release, recovery, repeated squeezing and fracture across shapes and materials | Not Started | | |
+| D-01 | Audit the existing deformation; rebuild or refactor where necessary | Tested | [stage9](evidence/stage9-2026-10-26/) | Audit table in AUDIT_LEDGER §10b: contact dents, damage and fracture kept; first-order recovery kept only for objects without a material; bulge and compression-only response replaced/extended |
+| D-02 | Realistic, physically plausible, visually convincing deformation | Implemented | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json), [stage9](evidence/stage9-2026-10-26/)/play/ | Game-scale visual model, not FEM; the bend, stretch, squash, buckle and twist are visible, shear hard to see; your by-eye review pending |
+| D-03 | Elastic, plastic, rigid and breakable behaviour types | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json) | Elastic (rubber 0 mm set), plastic (clay 18–19 mm set), rigid (steel 0 mm), breakable (glass breaks at 45 N) |
+| D-04 | Configurable stiffness, elasticity, plasticity, damping, fracture thresholds, recovery speed | Tested | DeformationMaterial presets | Stiffness, max dent, spring frequency and damping, yield, plasticity, Poisson ratio, smoothing, fracture force, form size and force |
+| D-05 | Deformation responds continuously to interaction forces (no canned animation or scaling) | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json) | Dents and forms follow grip force continuously through the spring-damper; no animation or scaling |
+| D-06 | Preserve volume, surface continuity, collision stability and material behaviour | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json), offline deformation checks | Volume kept (rubber −0.3 %, gel −0.7 %, clay −2.2 %), seams welded, smooth surface; colliders stay at rest shape for stable contact |
+| D-07 | Integrate with hand tracking, grip, force sensing and interaction | Tested | smoke/replay acceptance, contact probes | Driven by Stage 8 finger contacts and grip force (keyboard demo, Phase 2 force, camera grip score) |
+| D-08 | Real-time performance optimisation | Tested | perf probe | Allocation-free step; Module 1 217 FPS at p95, 249 B/frame; worst Material Lab frame 11.1 ms; Burst not needed |
+| D-09 | Reusable components and material presets | Tested | DeformationMaterial, GripLab | Presets reused by 15 lab props, 18 grip props and 6 station objects; new objects need one line |
+| D-10 | Test deformation, release, recovery, repeated squeezing and fracture across shapes and materials | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json), offline deformation checks | Squeeze, release, recovery time, 3 repeated squeezes, overload fracture on ball, box, cylinder, strip and flat shapes |
+| D-11 | Chart material classes: rigid, semi-rigid, flexible, soft/very soft, with presets (steel, glass, concrete, wood, ABS, dense foam, rubber, silicone, fabric, gel, sponge, clay) | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json) | All 12 chart materials in the Material Lab with their class |
+| D-12 | Chart forms: compression, tension, bending, shear, torsion, buckling (volume change is thermal: documented, squeeze volume measured) | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json), offline form checks | Compression, tension, bending, shear, torsion, buckling; thermal volume change documented as out of scope |
+| D-13 | Chart results: elastic, plastic, fracture (crack then break); a Material Lab to play them | Tested | [material-probe.json](evidence/stage9-2026-10-26/material-probe.json), [stage9](evidence/stage9-2026-10-26/)/play/ | Elastic, plastic and crack-then-break; Material Lab station; your by-eye review pending |
 
 ## 2. Hand–object interaction and contact → Stage 8 (WBS 3.4.1, 3.3)
 
@@ -179,3 +182,12 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 | R-11 | Ranked list with description, justification, benefit, effort, dependencies and order | Not Started | | |
 | R-12 | Mark what is possible now versus what needs hardware, data, funding or architecture changes | Not Started | | |
 | R-13 | Present for review; implement nothing automatically | Not Started | | |
+
+## 11. Environment upgrade (kitchen and living room) → Stage 15A (WBS 3.1), added 2026-10-26
+
+| ID | Requirement | Status | Evidence | Notes |
+|---|---|---|---|---|
+| E-01 | Audit both rooms (lighting, materials, props, clutter, readability) | Not Started | | Scheduled later, at your request |
+| E-02 | Upgrade lighting, materials and props of the kitchen and living room | Not Started | | |
+| E-03 | Stations, colliders, teleports and all inputs still work | Not Started | | |
+| E-04 | Stays inside the Stage 7 performance budget | Not Started | | |

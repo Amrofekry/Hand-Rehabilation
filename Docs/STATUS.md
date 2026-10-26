@@ -10,7 +10,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | Main scene | `Assets/Scenes/GripRehab.unity` |
 | Branch / tag | `3.4-upgrade-baseline`, tag `v0.9-prototype-2026-10-23` |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
-| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–8 are done (Stage 8 includes the 18-grip chart you added on 2026-10-26), including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes, and the Stage 8 SYNTHETIC contact audit (before/after); details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10a. The rest of the new Stages 9–17 you added on 2026-10-25 follow (dependency order; checklist in [REQUIREMENTS_CHECKLIST.md](REQUIREMENTS_CHECKLIST.md)), then hardware (Stage 18) and release (Stage 19). **Stage 9 (deformation rebuild) needs authorization.** |
+| Active plan | [Ultimate upgrade plan](superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Stages 0–9 are done (Stage 8 includes the 18-grip chart and Stage 9 the deformation chart you added on 2026-10-26), including the Stage 3 hands-on playtest, the Stage 4 by-eye review, the Stage 5 SYNTHETIC closed-loop gate, the Stage 6 fabricated-fixture dashboard walkthrough, the Stage 7 performance and soak runs and their fixes, the Stage 8 SYNTHETIC contact audit (before/after) and the Stage 9 material matrix; details are in [AUDIT_LEDGER.md](AUDIT_LEDGER.md) §5–10b. The rest of the new Stages 9–17 you added on 2026-10-25 follow (dependency order; checklist in [REQUIREMENTS_CHECKLIST.md](REQUIREMENTS_CHECKLIST.md)), then hardware (Stage 18) and release (Stage 19). **Stage 10 (six multi-step activities) needs authorization.** |
 
 ## Evidence columns
 
@@ -18,7 +18,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 - **Native test:** automated Unity Editor / Windows player checks. Synthetic or fixture input only.
 - **Physical / human:** real hardware, a live person or participant data. Recorded separately and never inferred from the other two columns.
 
-## The software tasks (23 original + 10 added 2026-10-25)
+## The software tasks (23 original + 10 added 2026-10-25 + 1 added 2026-10-26)
 
 | No. | Task (WBS) | Software | Native test | Physical / human | Evidence |
 |---|---|---|---|---|---|
@@ -46,7 +46,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | 22 | Voice commands | Planned: Stage 13 (D4 revised, D9 Windows offline speech) | — | — | `REQUIREMENTS_CHECKLIST.md` §5 |
 | 23 | Eye/head pointer | Planned: Stage 14 (D4 revised, D8 webcam gaze estimate) | — | — | `REQUIREMENTS_CHECKLIST.md` §4 |
 | 24 | Hand–object contact rebuild (3.4.1, 3.3) | Implemented: contact solver (curl stops at the surface), grip-anchored holds, 18-grip chart with code-built objects and a Grip Lab station, chart-like hand presentation (Stage 8); C-01–C-03, C-05–C-09, C-11–C-13 tested, C-04 by eye pending, C-10 in progress | SYNTHETIC rendered-player probes: station objects 19–70 mm → 0–5.7 mm penetration; 18 grips ≤ 1 mm, jitter ≤ 0.1 mm | Fast shake (~2.8 m/s) 13–45 mm transient; no real-hand camera session yet | `AUDIT_LEDGER.md` §10a |
-| 25 | Object deformation system rebuild (3.3) | Not started: Stage 9 | — | — | `REQUIREMENTS_CHECKLIST.md` §1 |
+| 25 | Object deformation system rebuild (3.3) | Implemented: chart materials (rigid to soft), spring-damper surface with smoothing and volume preservation, six forms, elastic/plastic/brittle results, Material Lab (Stage 9); D-01, D-03–D-13 tested, D-02 by eye pending | SYNTHETIC material matrix of 15 objects: dent, form, volume, recovery, set, fracture, frame time | Game-scale model, not FEM or measured constants; paper-stack shear hard to see | `AUDIT_LEDGER.md` §10b |
 | 26 | Six multi-step activities, living room and kitchen (3.1, 3.4.1) | Not started: Stage 10 | — | — | `REQUIREMENTS_CHECKLIST.md` §3 |
 | 27 | UI modernization and design system (3.4, 5.x) | Not started: Stage 11 | — | — | `REQUIREMENTS_CHECKLIST.md` §7 |
 | 28 | Audio and sound design upgrade (3.1, 3.4) | Not started: Stage 12 | — | — | `REQUIREMENTS_CHECKLIST.md` §6 |
@@ -55,6 +55,7 @@ Updated 2026-10-25 (Gantt W6). If another document disagrees with this file, thi
 | 31 | Optional in-game voice assistant (3.4) | Not started: Stage 15 | — | — | `REQUIREMENTS_CHECKLIST.md` §8 |
 | 32 | Pipeline, block diagram and Gantt audit (1.1, 6.3) | Not started: Stage 16 | — | — | `REQUIREMENTS_CHECKLIST.md` §9 |
 | 33 | Next-stage research proposal (1.1) | Not started: Stage 17 (recommendations only) | — | — | `REQUIREMENTS_CHECKLIST.md` §10 |
+| 34 | Environment upgrade, kitchen and living room (3.1) | Planned: Stage 15A (added 2026-10-26) | — | — | `REQUIREMENTS_CHECKLIST.md` §11 |
 
 ## Open blockers
 

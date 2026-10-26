@@ -18,7 +18,28 @@ public sealed class SqueezableObject : MonoBehaviour {
  public int ContactCount{get;private set;}
  public int DeformedVertices{get;private set;}
  public float MaxDisplacementMeters{get;private set;}
- public float BreakThresholdNewtons=>profile!=null&&profile.breakable?profile.sustainedForceNewtons:0;
+ public float BreakThresholdNewtons=>material!=null&&material.result==MaterialResult.Brittle&&material.fractureNewtons>0?material.fractureNewtons:profile!=null&&profile.breakable?profile.sustainedForceNewtons:0;
+ // ---- Stage 9: chart material (optional). Without one, the older profile-only deformation is used.
+ DeformationMaterial material;float restVolume,formAmount,formVelocity,formSet;Vector3[] shaped;
+ Vector3 formOrigin,formAxis,formSide;float formLength;bool formFrame;
+ public DeformationMaterial Material=>material;
+ /// <summary>Current whole-object form (strain, radians or metres per the material's form) and its permanent part.</summary>
+ public float FormAmount=>formAmount;public float FormSet=>formSet;
+ /// <summary>Gives the object a chart material. Safe before or after Awake; allocates its buffers once.</summary>
+ public void SetMaterial(DeformationMaterial value){
+  material=value;formAmount=formVelocity=formSet=0;formFrame=false;
+  if(material!=null&&deformation!=null&&!deformation.HasTopology){
+   var tris=mesh.triangles;deformation.SetTopology(tris);restVolume=Mathf.Abs(DeformationDynamics.Volume(rest,tris));shaped=new Vector3[rest.Length];
+   // The bulge stays within half a dent radius of each dent (mesh units), so distant surface does not move.
+   float dentRadius=profile!=null?profile.deformationRadiusMeters:Mathf.Max(.015f,radius*.55f);
+   deformation.BulgeReach=dentRadius*.5f/Mathf.Max(1e-4f,Mathf.Abs(visual.lossyScale.x));
+  }
+ }
+ /// <summary>Volume change of the visible mesh against its rest shape (fraction; diagnostic, allocates).</summary>
+ public float MeasureVolumeChange(){
+  if(mesh==null||restVolume<=1e-12f)return 0;
+  return (Mathf.Abs(DeformationDynamics.Volume(mesh.vertices,mesh.triangles))-restVolume)/restVolume;
+ }
  public Rigidbody Body{get;private set;}
  Vector3 origin,restScale;Quaternion rotation;
  Collider[] objectColliders,playerColliders;
@@ -98,7 +119,11 @@ public sealed class SqueezableObject : MonoBehaviour {
    rest=mesh.vertices;worldRest=new Vector3[rest.Length];deformation=new LocalDeformationState(rest);
   }
   Liquid=SqueezeLiquid.Attach(this); // Stage 3.4: null unless the profile releases liquid.
+  if(pendingMaterial!=null){var m=pendingMaterial;pendingMaterial=null;SetMaterial(m);}
  }
+ DeformationMaterial pendingMaterial;
+ /// <summary>For objects built in code: the material is applied when the object first wakes.</summary>
+ public void SetMaterialOnAwake(DeformationMaterial value){if(Body!=null)SetMaterial(value);else pendingMaterial=value;}
  public bool Grab(){
   if(IsBroken||IsHeld)return false;
   hasFreeBodySettings=true;freeCollisionMode=Body.collisionDetectionMode;freeInterpolation=Body.interpolation;
@@ -122,8 +147,8 @@ public sealed class SqueezableObject : MonoBehaviour {
   float force=float.IsFinite(newtons)?Mathf.Max(0,newtons):0;
   ContactCount=0;deformation?.BeginStep();
   float radiusWorld=profile!=null?profile.deformationRadiusMeters:Mathf.Max(.015f,radius*.55f);
-  float full=profile!=null?profile.fullCompressionNewtons:fullCompressionNewtons;
-  float maximum=profile!=null?profile.maxDepthMeters:maximumCompression*radius;
+  float full=material!=null?material.stiffnessNewtons:profile!=null?profile.fullCompressionNewtons:fullCompressionNewtons;
+  float maximum=material!=null?material.maxDepthMeters:profile!=null?profile.maxDepthMeters:maximumCompression*radius;
   if(IsHeld&&rig!=null&&rig.probes!=null){
    BindContactRig(rig);
    foreach(var probe in boundProbes)probe?.SetForce(0);
@@ -142,6 +167,12 @@ public sealed class SqueezableObject : MonoBehaviour {
    }
   }
   Compression=deformation!=null&&ContactCount>0&&force>0&&dt>0?Mathf.Clamp01(force/Mathf.Max(1,full)):0;
+  if(material!=null&&material.formMax>0&&dt>0){
+   // Whole-object form from the grip force while held and touched; part of it stays past yield (plastic).
+   float wanted=IsHeld&&ContactCount>0?DeformationDynamics.FormTarget(material,force):0;
+   formSet=DeformationDynamics.PlasticSet(formSet,wanted,material.yieldFraction*material.formMax,material.plasticity);
+   DeformationDynamics.Spring(ref formAmount,ref formVelocity,Mathf.Max(wanted,formSet),material.naturalHz,material.dampingRatio,dt);
+  }
   if(deformation!=null)UpdateMesh(dt);
   GripDamage(ContactCount>0?force:0,dt);
  }
@@ -155,26 +186,52 @@ public sealed class SqueezableObject : MonoBehaviour {
   if(normal.sqrMagnitude<.000001f)normal=surface-visual.TransformPoint(mesh.bounds.center);
   // Resolve occasional interior/ambiguous penetration directions inward.
   if(Vector3.Dot(-normal,visual.TransformPoint(mesh.bounds.center)-surface)<0)normal=-normal;
-  float bulge=profile!=null&&profile.kind==MaterialKind.Rubber?.18f:profile!=null&&profile.kind==MaterialKind.Foam?.03f:0;
+  // With a chart material the volume bulge is solved over the whole surface (StepDynamic), not per dent.
+  float bulge=material!=null?0:profile!=null&&profile.kind==MaterialKind.Rubber?.18f:profile!=null&&profile.kind==MaterialKind.Foam?.03f:0;
   for(int i=0;i<rest.Length;i++){
    var delta=ContactDeformation.Indentation(worldRest[i],surface,normal,depth,worldRadius,rest[i],bulge);
    deformation.SetTarget(i,visual.InverseTransformVector(delta));
   }
  }
  void UpdateMesh(float dt){
-  bool changed=deformation.Step(dt,profile!=null?profile.recoveryPerSecond:12,profile!=null?profile.plasticity:0);
+  bool dynamic=material!=null&&deformation.HasTopology;
+  bool changed=dynamic?deformation.StepDynamic(dt,material,restVolume):deformation.Step(dt,profile!=null?profile.recoveryPerSecond:12,profile!=null?profile.plasticity:0);
+  var output=deformation.Vertices;
+  if(dynamic&&material.formMax>0&&(Mathf.Abs(formAmount)>1e-6f||formWasShaped)){
+   if(!formFrame)BuildFormFrame();
+   for(int i=0;i<rest.Length;i++)shaped[i]=deformation.Vertices[i]+DeformationDynamics.Form(rest[i],material.form,formAmount,formOrigin,formAxis,formSide,formLength,material.poisson);
+   output=shaped;changed=true;formWasShaped=Mathf.Abs(formAmount)>1e-6f;
+  }
   DeformedVertices=0;MaxDisplacementMeters=0;
   for(int i=0;i<rest.Length;i++){
-   float distance=visual.TransformVector(deformation.Vertices[i]-rest[i]).magnitude;
+   float distance=visual.TransformVector(output[i]-rest[i]).magnitude;
    MaxDisplacementMeters=Mathf.Max(MaxDisplacementMeters,distance);
    if(distance>.00001f)DeformedVertices++;
   }
-  if(changed){mesh.SetVertices(deformation.Vertices);mesh.RecalculateNormals();mesh.RecalculateBounds();}
+  if(changed){mesh.SetVertices(output);mesh.RecalculateNormals();mesh.RecalculateBounds();}
+ }
+ bool formWasShaped;
+ // Form axes in mesh space: long objects bend, twist, stretch and buckle along their length about the thin side;
+ // squashing and shear act across the thin side. The held end (nearest the grip point) stays put.
+ void BuildFormFrame(){
+  formFrame=true;var b=new Bounds(rest[0],Vector3.zero);foreach(var v in rest)b.Encapsulate(v);
+  var size=b.size;Vector3[] axes={Vector3.right,Vector3.up,Vector3.forward};float[] extent={size.x,size.y,size.z};
+  int longest=0,thinnest=0;for(int i=1;i<3;i++){if(extent[i]>extent[longest])longest=i;if(extent[i]<extent[thinnest])thinnest=i;}
+  if(longest==thinnest)thinnest=(longest+1)%3;
+  bool across=material.form==DeformationForm.Compression||material.form==DeformationForm.Shear;
+  int axis=across?thinnest:longest,side=across?longest:thinnest;
+  formAxis=axes[axis];formSide=axes[side];formLength=Mathf.Max(.001f,extent[axis]);
+  var lo=b.center-formAxis*(formLength*.5f);var hi=b.center+formAxis*(formLength*.5f);
+  var prop=GetComponent<GripProp>();
+  var held=prop!=null?visual.InverseTransformPoint(transform.TransformPoint(prop.gripLocal)):b.center;
+  bool fromHigh=(held-hi).sqrMagnitude<(held-lo).sqrMagnitude&&material.form!=DeformationForm.Compression&&material.form!=DeformationForm.Buckling;
+  formOrigin=fromHigh?hi:lo;if(fromHigh)formAxis=-formAxis;
  }
  void GripDamage(float force,float dt){
-  bool eligible=(profile!=null?profile.breakable:breakable)&&IsHeld;
+  bool brittle=material!=null&&material.result==MaterialResult.Brittle&&material.fractureNewtons>0;
+  bool eligible=(brittle||(profile!=null?profile.breakable:breakable))&&IsHeld;
   float increment=ContactDeformation.GripDamage(ref dwell,eligible,force,dt,
-   profile!=null?profile.sustainedForceNewtons:fractureNewtons,profile!=null?profile.forceDwellSeconds:.35f,profile!=null?profile.damageCapacity:1);
+   brittle?material.fractureNewtons:profile!=null?profile.sustainedForceNewtons:fractureNewtons,profile!=null?profile.forceDwellSeconds:.35f,profile!=null?profile.damageCapacity:1);
   if(increment>0)AddDamage(increment);
  }
  void OnCollisionEnter(Collision collision){
@@ -182,7 +239,8 @@ public sealed class SqueezableObject : MonoBehaviour {
   AddDamage(ContactDeformation.ImpactDamage(Body.mass,collision.relativeVelocity.sqrMagnitude,profile!=null?profile.impactEnergyJoules:.4f));
  }
  public void AddDamage(float amount){
-  if(!(profile!=null?profile.breakable:breakable)||IsBroken||!float.IsFinite(amount)||amount<=0)return;
+  bool brittle=material!=null&&material.result==MaterialResult.Brittle&&material.fractureNewtons>0;
+  if(!(brittle||(profile!=null?profile.breakable:breakable))||IsBroken||!float.IsFinite(amount)||amount<=0)return;
   DamageValue=Mathf.Clamp01(DamageValue+amount);
   Damage=DamageValue>=1?DamageState.Broken:DamageValue>=.75f?DamageState.CriticallyDamaged:DamageValue>=.5f?DamageState.Damaged:DamageValue>=.25f?DamageState.SlightlyDamaged:DamageState.Intact;
   fractureVisuals?.SetDamage(DamageValue,IsBroken);
@@ -234,6 +292,7 @@ public sealed class SqueezableObject : MonoBehaviour {
   for(int i=0;i<objectColliders.Length;i++)objectColliders[i].enabled=colliderEnabled[i];
   for(int i=0;i<visualRenderers.Length;i++)visualRenderers[i].enabled=rendererEnabled[i];
   if(deformation!=null){deformation.Reset();mesh.SetVertices(deformation.Vertices);mesh.RecalculateNormals();mesh.RecalculateBounds();}
+  formAmount=formVelocity=formSet=0;formWasShaped=false;
   Body.WakeUp();Physics.SyncTransforms();collisionShield.Step(false);
  }
  void OnDisable(){if(Body!=null&&IsHeld)Release(Vector3.zero);collisionShield.Clear();}

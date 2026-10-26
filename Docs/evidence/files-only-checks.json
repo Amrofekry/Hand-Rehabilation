@@ -1,11 +1,11 @@
 {
-  "utc": "2026-10-25T21:56:49.322143+00:00",
+  "utc": "2026-10-26T06:12:53.521790+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 873
+      "count": 874
     },
     {
       "name": "assembly-graph",
@@ -19,8 +19,8 @@
         "GripRehab.Product.dll": "34267142a54f6fbb28b72d0ea301a5b88d977c341d8cc18f51ab09ca51a135cd",
         "GripRehab.Core.dll": "a2422ad3ef422c60c8166e3659b6a203c098f3eb760287b67701db1cc6d1267d",
         "GripRehab.UI.dll": "437959fa877ece96dd3105cfba014fb01a3c2f3aaeedd9c02de239ea057450fb",
-        "Assembly-CSharp.dll": "b238bdd082281801136be8530a26b8d76b8c952676d23b00bae3a0d5eacd71d9",
-        "Assembly-CSharp-Editor.dll": "6ee248c7f85b39cb5b00c7ea553c6898fc1bceb3a50358bf5a489004e98b2221"
+        "Assembly-CSharp.dll": "3784747544ab842f6861032c78b1d93d0cfb1f0fb72f97b484b019ef46f4313b",
+        "Assembly-CSharp-Editor.dll": "b765eb817e374aa8c9e7c11553e5fc5ec417f74a3b279a82e0738e9721b5435b"
       }
     },
     {
@@ -30,7 +30,7 @@
         "GripRehab.Product.dll": "e6d3f900c5a00ab76b99748deea655d759851b86da4df54e328a7d4ce62ca0e6",
         "GripRehab.Core.dll": "68a9fac4b3954cf08ffae49b0a3a45d56489b5b9f71242005a9c02f34f65bed7",
         "GripRehab.UI.dll": "ec4519d4b3e82e1209c6d31f889302178c91c932878b493c25531a0883120bbd",
-        "Assembly-CSharp.dll": "83e866bb17ade38a2053bfcb78b55a614bc909249c0b0c9fe25cc450a82f912d"
+        "Assembly-CSharp.dll": "d37869f85a5c66b8ff37f0e15c33af00f0bc8e75d6035d5905a1b596404fa3b6"
       }
     },
     {
@@ -59,7 +59,7 @@
     {
       "name": "deformation-fracture-source-tests",
       "passed": true,
-      "result": "PASS Maximum pressure saturates at material depth\nPASS Normal demo pressure makes a visible dent\nPASS No contact creates no dent\nPASS Zero force creates no dent\nPASS Negative force creates no dent\nPASS Rigid material cannot bend\nPASS Many phalanges do not each receive full pressure\nPASS Bad force fails closed NaN\nPASS Bad stiffness fails closed NaN\nPASS Bad material depth fails closed NaN\nPASS Bad timestep ignored NaN\nPASS Bad force fails closed Infinity\nPASS Bad stiffness fails closed Infinity\nPASS Bad material depth fails closed Infinity\nPASS Bad timestep ignored Infinity\nPASS Bad force fails closed -Infinity\nPASS Bad stiffness fails closed -Infinity\nPASS Bad material depth fails closed -Infinity\nPASS Bad timestep ignored -Infinity\nPASS Frame hitch cannot fake one second of damage\nPASS Centre indentation is inward and bounded\nPASS Distant vertices untouched\nPASS Degenerate normal creates no displacement\nPASS No frame-to-frame random jitter\nPASS Contact deformation has irregular local shape\nPASS Rubber has a small lateral bulge\nPASS Contact response follows object rotation -1\nPASS Contact response follows object rotation 1\nPASS State never mutates the shared source mesh array\nPASS Rubber visibly indents under a sustained squeeze\nPASS No global object scaling or far-side collapse\nPASS Original rest array unchanged\nPASS Rubber fully recovers after release\nPASS Final recovery position requests a mesh upload\nPASS Settled mesh avoids unnecessary re-uploads\nPASS Tomato-like material retains a bounded dent\nPASS Reset restores both visible mesh and permanent state\nPASS Bad time cannot poison vertices\nPASS Bad displacement is rejected\nPASS One peak frame cannot break a mug\nPASS Contact loss resets continuous high-force dwell\nPASS Subthreshold squeeze does not damage porcelain\nPASS Sustained maximum visual/demo force can break porcelain\nPASS Cracker has its own brittle-force response\nPASS Invalid grip does not accumulate damage\nPASS Invalid dwell setting fails closed\nPASS Invalid damage capacity fails closed\nPASS Gentle porcelain contact is harmless\nPASS Strong porcelain impact fractures\nPASS Bad impact input is rejected\nPASS Invalid impact threshold fails closed\nPASS Fracture produces multiple bounded source-shaped pieces\nPASS No source triangle disappears during fracture\nPASS Reassembled piece vertices match original geometry\nPASS Each fragment uses compact valid mesh indices\nPASS Repeated fracture partition is deterministic\nPASS Piece count is bounded\nPASS Incomplete triangles rejected\nPASS Invalid index rejected\nPASS Nonfinite geometry rejected\nPASS Nonfinite rest vertices rejected\nDeformation/fracture checks passed: 61",
+      "result": "PASS Maximum pressure saturates at material depth\nPASS Normal demo pressure makes a visible dent\nPASS No contact creates no dent\nPASS Zero force creates no dent\nPASS Negative force creates no dent\nPASS Rigid material cannot bend\nPASS Many phalanges do not each receive full pressure\nPASS Bad force fails closed NaN\nPASS Bad stiffness fails closed NaN\nPASS Bad material depth fails closed NaN\nPASS Bad timestep ignored NaN\nPASS Bad force fails closed Infinity\nPASS Bad stiffness fails closed Infinity\nPASS Bad material depth fails closed Infinity\nPASS Bad timestep ignored Infinity\nPASS Bad force fails closed -Infinity\nPASS Bad stiffness fails closed -Infinity\nPASS Bad material depth fails closed -Infinity\nPASS Bad timestep ignored -Infinity\nPASS Frame hitch cannot fake one second of damage\nPASS Centre indentation is inward and bounded\nPASS Distant vertices untouched\nPASS Degenerate normal creates no displacement\nPASS No frame-to-frame random jitter\nPASS Contact deformation has irregular local shape\nPASS Rubber has a small lateral bulge\nPASS Contact response follows object rotation -1\nPASS Contact response follows object rotation 1\nPASS State never mutates the shared source mesh array\nPASS Rubber visibly indents under a sustained squeeze\nPASS No global object scaling or far-side collapse\nPASS Original rest array unchanged\nPASS Rubber fully recovers after release\nPASS Final recovery position requests a mesh upload\nPASS Settled mesh avoids unnecessary re-uploads\nPASS Tomato-like material retains a bounded dent\nPASS Reset restores both visible mesh and permanent state\nPASS Bad time cannot poison vertices\nPASS Bad displacement is rejected\nPASS One peak frame cannot break a mug\nPASS Contact loss resets continuous high-force dwell\nPASS Subthreshold squeeze does not damage porcelain\nPASS Sustained maximum visual/demo force can break porcelain\nPASS Cracker has its own brittle-force response\nPASS Invalid grip does not accumulate damage\nPASS Invalid dwell setting fails closed\nPASS Invalid damage capacity fails closed\nPASS Gentle porcelain contact is harmless\nPASS Strong porcelain impact fractures\nPASS Bad impact input is rejected\nPASS Invalid impact threshold fails closed\nPASS Fracture produces multiple bounded source-shaped pieces\nPASS No source triangle disappears during fracture\nPASS Reassembled piece vertices match original geometry\nPASS Each fragment uses compact valid mesh indices\nPASS Repeated fracture partition is deterministic\nPASS Piece count is bounded\nPASS Incomplete triangles rejected\nPASS Invalid index rejected\nPASS Nonfinite geometry rejected\nPASS Nonfinite rest vertices rejected\nPASS Chart: twelve example materials in chart order with their class (rigid, semi-rigid, flexible, soft)\nPASS Chart results: glass fractures, clay stays deformed, rubber returns\nPASS Rigid materials do not dent; wood bends as a whole\nPASS Soft materials dent far more than rigid or semi-rigid ones\nPASS Chart forms 1-6 each have an example object (compression to buckling)\nPASS Gel-like spring wobbles past its goal and settles (1.685865)\nPASS Over-damped foam creeps back without overshoot\nPASS Stiff spring stays stable at a 50 ms frame hitch\nPASS Bad spring state is reset, never propagated\nPASS Bad spring goal is ignored\nPASS Below yield: no permanent set\nPASS Past yield: plasticity of the excess stays\nPASS Permanent set never shrinks and ignores bad input\nPASS Seam column and pole duplicates are welded\nPASS Welded seam vertices share one neighbour set\nPASS Incomplete triangle list rejected\nPASS Out-of-range neighbour index rejected\nPASS Mesh volume matches the sphere (0.0001758441 vs 0.0001795944)\nPASS Rubber dents under the finger\nPASS Rubber keeps its volume when squeezed (-0.1570683 %)\nPASS Sponge loses volume when squeezed (-3.403533 %)\nPASS The far side does not move\nPASS Rubber keeps its volume under five fingers (-0.2457399 %)\nPASS Either triangle winding: dents go in and the volume is kept (-0.1570683 %)\nPASS Seam and pole vertices stay together (no tearing)\nPASS Neighbouring vertices move together (continuous surface)\nPASS Elastic rubber returns to its original shape (9.990795E-05 mm)\nPASS Plastic clay keeps the dent after release\nPASS Reset clears the permanent set\nPASS Dynamics without topology does nothing\nPASS Bad time cannot poison the surface\nPASS Bending puts the free end on the arc\nPASS Bending keeps the held end still\nPASS Tension stretches the free end by the strain\nPASS Tension thins the bar (Poisson)\nPASS Stretching with Poisson 0.5 keeps the volume (radius\u00b2 \u00d7 length constant)\nPASS Squashing with Poisson 0.5 keeps the volume\nPASS Torsion turns the free section by the angle, keeping its radius\nPASS Shear slides the top layer, not the bottom\nPASS Buckling bows the middle while the ends stay on the line\nPASS Compression squashes toward the middle\nPASS Bad form input does nothing\nPASS A column does not buckle below its critical load, then gives way\nPASS Form grows with grip force and rejects bad input\nDeformation/fracture checks passed: 105",
       "scope": "Production kernel/state/damage/partition source with managed math; no rendering or native physics"
     },
     {
@@ -71,7 +71,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.151s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.156s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -89,19 +89,19 @@
     {
       "name": "deformation-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.013s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.009s\n\nOK",
       "scope": "Static integration contracts; no native Unity"
     },
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.006s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.008s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.004s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.003s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],

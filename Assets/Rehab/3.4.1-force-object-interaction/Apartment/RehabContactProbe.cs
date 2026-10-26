@@ -25,10 +25,20 @@ namespace GripRehab
         {
             public bool passed, solver; public string utc, scope, detail = ""; public int errors;
             public Case[] cases;
+            public MaterialCase[] materials;
+        }
+        /// <summary>Stage 9 Material Lab measurement per material (SYNTHETIC keyboard-demo force).</summary>
+        [Serializable] public sealed class MaterialCase
+        {
+            public string item, material, materialClass, result, form; public bool held;
+            public float dent18Mm, dent35Mm, form18, form35, volumeChange35Pct, recoverySeconds, setAfterReleaseMm, formSetAfterRelease;
+            public float set1Mm, set2Mm, set3Mm, frameMsMean, frameMsMax; public bool brokeAt45; public int contacts35;
         }
 
         ApartmentExperience app; ApartmentChoices choices; int errors;
         static readonly bool GripLabMode = Array.IndexOf(Environment.GetCommandLineArgs(), "-grip-lab") >= 0;
+        static readonly bool MaterialLabMode = Array.IndexOf(Environment.GetCommandLineArgs(), "-material-lab") >= 0;
+        readonly List<MaterialCase> materialCases = new List<MaterialCase>();
         readonly Collider[] overlaps = new Collider[32];
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -48,7 +58,7 @@ namespace GripRehab
                 scope = "SYNTHETIC keyboard-demo force in the rendered Windows player; no camera, device, person or records" };
             var cases = new List<Case>();
             Exception failure = null;
-            var routine = GripLabMode ? RunGripLab(cases) : Run(cases);
+            var routine = MaterialLabMode ? RunMaterialLab() : GripLabMode ? RunGripLab(cases) : Run(cases);
             while (true)
             {
                 object next = null; bool more;
@@ -57,11 +67,11 @@ namespace GripRehab
                 if (!more) break;
                 yield return next;
             }
-            report.cases = cases.ToArray(); report.errors = errors;
-            report.passed = failure == null && errors == 0 && cases.Count > 0;
+            report.cases = cases.ToArray(); report.materials = materialCases.ToArray(); report.errors = errors;
+            report.passed = failure == null && errors == 0 && (cases.Count > 0 || materialCases.Count > 0);
             report.detail = failure != null ? failure.ToString() : errors > 0 ? errors + " error(s) logged" : "";
             Directory.CreateDirectory("Logs");
-            File.WriteAllText(GripLabMode ? (report.solver ? "Logs/contact-probe-grips.json" : "Logs/contact-probe-grips-baseline.json") : report.solver ? "Logs/contact-probe.json" : "Logs/contact-probe-baseline.json", JsonUtility.ToJson(report, true));
+            File.WriteAllText(MaterialLabMode ? "Logs/material-probe.json" : GripLabMode ? (report.solver ? "Logs/contact-probe-grips.json" : "Logs/contact-probe-grips-baseline.json") : report.solver ? "Logs/contact-probe.json" : "Logs/contact-probe-baseline.json", JsonUtility.ToJson(report, true));
             Debug.Log("[REHAB_CONTACT] " + (report.passed ? "PASS" : "FAIL") + ": " + cases.Count + " cases, solver " + (report.solver ? "on" : "off"));
             Application.Quit(report.passed ? 0 : 1);
         }
@@ -111,6 +121,70 @@ namespace GripRehab
                     }
             }
             app.ResetObjects(); shell.ReturnHome();
+        }
+
+        // Stage 9 deformation chart: every Material Lab prop squeezed at 18 and 35 N, released, squeezed three times,
+        // then held at 45 N to see whether it breaks.
+        IEnumerator RunMaterialLab()
+        {
+            yield return new WaitForSecondsRealtime(2);
+            var shell = FindAnyObjectByType<RehabAppShell>();
+            app = shell != null ? shell.experience : null; choices = app != null ? app.choices : null;
+            if (app == null || choices == null) throw new InvalidOperationException("Apartment not found");
+            shell.SetResearchIdentity(null);
+            shell.openModuleButton.onClick.Invoke(); yield return new WaitForSecondsRealtime(1);
+            app.SetHardware(false);
+            if (choices.materialObjects.Length != 15) throw new InvalidOperationException("Material Lab has " + choices.materialObjects.Length + " props, expected 15");
+            app.player.SetPaused(true); choices.SelectMaterialLab();
+            for (int index = 0; index < choices.materialObjects.Length; index++)
+            {
+                app.Release(); app.player.SetPaused(true); choices.SelectLabGrip(index);
+                yield return new WaitForSecondsRealtime(.3f);
+                var item = choices.materialObjects[index]; var m = item.Material;
+                var c = new MaterialCase { item = item.displayName, material = m != null ? m.name : "", materialClass = m != null ? m.materialClass.ToString() : "", result = m != null ? m.result.ToString() : "", form = m != null && m.formMax > 0 ? m.form.ToString() : "" };
+                materialCases.Add(c);
+                app.player.SetPaused(false); app.player.LookAt(item.transform.position);
+                yield return new WaitForSecondsRealtime(.2f);
+                if (!app.TryGrab(item)) continue;
+                c.held = true; app.TestForce = 0; yield return new WaitForSecondsRealtime(1f);
+                float frameSum = 0, frameMax = 0; int frames = 0;
+                // 18 N then 35 N, 1.5 s each: peak dent (local + form, mm) and form size.
+                foreach (float force in new[] { 18f, 35f })
+                {
+                    app.TestForce = force; float peak = 0, form = 0; double until = Time.realtimeSinceStartupAsDouble + 1.5;
+                    while (Time.realtimeSinceStartupAsDouble < until)
+                    {
+                        yield return null; if (app.Held != item) break;
+                        peak = Mathf.Max(peak, item.MaxDisplacementMeters * 1000); form = Mathf.Max(form, Mathf.Abs(item.FormAmount));
+                        frameSum += Time.unscaledDeltaTime * 1000; frameMax = Mathf.Max(frameMax, Time.unscaledDeltaTime * 1000); frames++;
+                    }
+                    if (force == 18) { c.dent18Mm = peak; c.form18 = form; }
+                    else { c.dent35Mm = peak; c.form35 = form; c.volumeChange35Pct = item.MeasureVolumeChange() * 100; c.contacts35 = item.ContactCount; yield return Shot("material-" + (index + 1).ToString("00") + "-" + item.displayName); }
+                }
+                // Release the squeeze (fingers stay on the object at 0 N): recovery time to 10 % of the peak, and the set left.
+                float before = item.MaxDisplacementMeters * 1000; app.TestForce = 0; double released = Time.realtimeSinceStartupAsDouble; c.recoverySeconds = -1;
+                while (Time.realtimeSinceStartupAsDouble - released < 3)
+                {
+                    yield return null; if (app.Held != item) break;
+                    if (c.recoverySeconds < 0 && item.MaxDisplacementMeters * 1000 <= Mathf.Max(.1f, before * .1f)) c.recoverySeconds = (float)(Time.realtimeSinceStartupAsDouble - released);
+                }
+                c.setAfterReleaseMm = item.MaxDisplacementMeters * 1000; c.formSetAfterRelease = item.FormSet;
+                // Three squeeze cycles: does the permanent part grow (plastic) or stay at zero (elastic)?
+                for (int cycle = 0; cycle < 3; cycle++)
+                {
+                    app.TestForce = 35; yield return new WaitForSecondsRealtime(.8f);
+                    app.TestForce = 0; yield return new WaitForSecondsRealtime(1.2f);
+                    float set = item.MaxDisplacementMeters * 1000;
+                    if (cycle == 0) c.set1Mm = set; else if (cycle == 1) c.set2Mm = set; else c.set3Mm = set;
+                }
+                // Overload: 45 N for 2 s.
+                app.TestForce = 45; double overload = Time.realtimeSinceStartupAsDouble;
+                while (Time.realtimeSinceStartupAsDouble - overload < 2 && !item.IsBroken) yield return null;
+                c.brokeAt45 = item.IsBroken;
+                c.frameMsMean = frames > 0 ? frameSum / frames : 0; c.frameMsMax = frameMax;
+                app.TestForce = 0; app.Release();
+            }
+            app.player.SetPaused(true); choices.SelectStation(false); app.ResetObjects(); shell.ReturnHome();
         }
 
         // Stage 8 grip chart: every Grip Lab prop held in its own grip at 0, 18 and 35 N, then moved at reach speed.
@@ -197,7 +271,7 @@ namespace GripRehab
         // One screenshot of the held object per orientation, for the by-eye before/after check.
         IEnumerator Shot(string name)
         {
-            var folder = Path.Combine("Logs", (GripLabMode ? "grip-shots" : "contact-shots") + (GraspContactSolver.Enabled ? "" : "-baseline"));
+            var folder = Path.Combine("Logs", (MaterialLabMode ? "material-shots" : GripLabMode ? "grip-shots" : "contact-shots") + (GraspContactSolver.Enabled ? "" : "-baseline"));
             Directory.CreateDirectory(folder);
             yield return new WaitForEndOfFrame();
             // Written directly (CaptureScreenshot's relative path is not the working folder in a player).

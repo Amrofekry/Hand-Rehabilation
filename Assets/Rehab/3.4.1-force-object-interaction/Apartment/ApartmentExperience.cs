@@ -399,7 +399,8 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(item==null||Held!=null||item.IsBroken||player.Paused||Hardware&&!forceReceiver.Latest.Valid||CameraMode&&!ForceValid)return false;
   if(!CanReach(item)||!BeginGrab(item,false))return false;
   var grip=HeldGrip;
-  Status="Holding "+item.displayName+(grip!=null?"  -  "+grip.number+". "+grip.name+" ("+grip.fingers+")":"");return true;
+  Status="Holding "+item.displayName+(grip!=null?"  -  "+grip.number+". "+grip.name+" ("+grip.fingers+")":"")+
+   (item.Material!=null?"  -  "+item.Material.name+", "+ApartmentChoices.ClassName(item.Material.materialClass)+", "+item.Material.result.ToString().ToLowerInvariant():"");return true;
  }
  public void Release(){
   if(Held!=null){

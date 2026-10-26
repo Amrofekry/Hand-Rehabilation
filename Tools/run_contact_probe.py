@@ -4,6 +4,7 @@ SYNTHETIC keyboard-demo force only, isolated acceptance storage, never a webcam 
   python Tools/run_contact_probe.py            # both runs plus a comparison table
   python Tools/run_contact_probe.py --solver-only
   python Tools/run_contact_probe.py --grip-lab     # the 18 chart grips (Grip Lab), solver on
+  python Tools/run_contact_probe.py --material-lab # Stage 9 deformation chart (Material Lab)
 """
 from pathlib import Path
 import argparse
@@ -15,9 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 EXE = ROOT / 'Builds/Windows/GripRehab.exe'
 
 
-def run(solver, grip_lab=False):
+def run(solver, grip_lab=False, material_lab=False):
     started = time.time()
-    name = ('contact-probe-grips' if grip_lab else 'contact-probe') + ('' if solver else '-baseline')
+    name = 'material-probe' if material_lab else ('contact-probe-grips' if grip_lab else 'contact-probe') + ('' if solver else '-baseline')
     log = ROOT / f'Logs/{name}.log'
     result_path = ROOT / f'Logs/{name}.json'
     command = [str(EXE), '-apartment-contact-probe', '-force-d3d11', '-screen-fullscreen', '0',
@@ -26,6 +27,8 @@ def run(solver, grip_lab=False):
         command.append('-contact-solver-off')
     if grip_lab:
         command.append('-grip-lab')
+    if material_lab:
+        command.append('-material-lab')
     with subprocess.Popen(command, cwd=ROOT) as process:
         try:
             code = process.wait(timeout=600)
@@ -105,7 +108,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--solver-only', action='store_true')
     parser.add_argument('--grip-lab', action='store_true')
+    parser.add_argument('--material-lab', action='store_true')
     args = parser.parse_args()
+    if args.material_lab:
+        result = run(True, material_lab=True)
+        keys = ('material', 'materialClass', 'result', 'form', 'dent18Mm', 'dent35Mm', 'form18', 'form35', 'volumeChange35Pct',
+                'recoverySeconds', 'setAfterReleaseMm', 'formSetAfterRelease', 'set1Mm', 'set3Mm', 'brokeAt45', 'frameMsMean', 'frameMsMax', 'contacts35', 'held')
+        print(json.dumps({c['item']: {k: (round(c[k], 2) if isinstance(c[k], float) else c[k]) for k in keys} for c in result['materials']}, indent=1))
+        return
     if args.grip_lab:
         print(json.dumps(grip_summary(run(True, grip_lab=True)), indent=1))
         return

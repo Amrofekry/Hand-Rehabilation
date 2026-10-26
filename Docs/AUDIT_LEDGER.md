@@ -590,6 +590,134 @@ Plan tasks 8.1–8.5 (WBS 3.4.1, 3.3). All numbers below are **SYNTHETIC**: rend
 - `ApartmentAcceptance`
 - `RehabVirtualGrasp`
 
+## 10b. Stage 9 deformation and the deformation chart (26 Oct 2026)
+
+Plan tasks 9.1–9.6 (WBS 3.3). The target is your chart "Types and Forms of Deformation". All numbers are **SYNTHETIC**: rendered Windows player on the reference laptop, keyboard-demo force, isolated acceptance storage, no camera, device or person. Probe: `run_contact_probe.py --material-lab`. Data: `evidence/stage9-2026-10-26/material-probe.json`.
+
+**The material values are a game-scale model**, tuned so a 0–45 N grip shows each material's character. They are not laboratory constants, and the deformation is not a finite-element simulation.
+
+### 9.1 Audit of the existing deformer (D-01)
+
+| Part | Decision | Why |
+|---|---|---|
+| Contact-local dents (`ContactDeformation.Indentation`, probe contacts) | Kept | Bounded, rotation-following, contact-only; 61 tests |
+| Damage dwell, impact damage, crack seams, fracture pieces (`FracturePartitioner`, `ObjectFractureVisuals`) | Kept and reused | Brittle materials now break through this path from their own force threshold |
+| First-order recovery (`LocalDeformationState.Step`) | Kept for objects without a material | It has no springiness, so a gel cannot wobble, and no yield point (any dent could stay) |
+| Per-dent tangent "bulge" | Replaced (with a material) | It was not volume preservation |
+| Compression-only response | Extended | The chart also shows tension, bending, shear, torsion and buckling |
+
+### What was built
+- **`DeformationMaterial`:** class (rigid, semi-rigid, flexible, soft), result (elastic, plastic, brittle) and these settings:
+  - stiffness and maximum dent
+  - spring frequency and damping
+  - yield point and plasticity
+  - Poisson ratio, which sets how much volume is kept
+  - smoothing
+  - fracture force
+  - whole-object form
+
+  It has presets for the chart's 12 materials (steel, glass, concrete, wood, ABS, dense foam, rubber, silicone, fabric, gel, sponge, clay), the form examples, and the station objects.
+- **Surface dynamics (`LocalDeformationState.StepDynamic`):**
+  - a damped spring per vertex;
+  - neighbour smoothing across welded UV seams and poles, so there is no tearing;
+  - permanent set past yield;
+  - an outward bulge within half a dent radius of each dent, sized by the exact enclosed volume, so rubber, gel and clay keep their volume and a sponge loses it;
+  - normals oriented for either triangle winding;
+  - no allocation per step.
+- **Forms (`DeformationDynamics.Form`):** compression, tension (exact Poisson thinning), bending, shear, torsion and buckling (no buckling below the critical load), driven by grip force. Each form springs, keeps its plastic part and stays fixed at the held end.
+- **Material Lab:** a new station with the chart's 12 materials plus a steel strip (torsion), a paper stack (shear) and a plastic straw (buckling), each held in a chart grip (`[` / `]` or the options buttons step through it). The status line names the material, its class and its result.
+- **Existing objects:**
+  - The Grip Lab props and the six station objects now have chart materials.
+  - The station objects keep their authored force and depth calibration.
+  - Volume change through heating (chart form 7) is thermal; grip force cannot cause it. It is documented, not modelled. Squeeze volume change is measured instead.
+
+### Material matrix (Material Lab, 18 and 35 N, then release; 3 squeeze cycles at 35 N; 2 s at 45 N)
+
+| Object | Material | Class / result | Dent 18 / 35 N (mm) | Form at 35 N (kept after release) | Volume change at 35 N | Recovery to 10 % | Set after release / after 3 cycles (mm) | Breaks at 45 N | Frame mean / worst (ms) |
+|---|---|---|---|---|---|---|---|---|---|
+| Steel block | Steel | Rigid / Elastic | 0.0 / 0.0 | — | 0.0 % | instant | 0.0 / 0.0 | no | 2.3 / 3.6 |
+| Glass tumbler | Glass | Rigid / Brittle | 0.0 / 0.0 | — | 0.0 % | instant | 0.0 / 0.0 | **yes** | 2.6 / 4.7 |
+| Concrete block | Concrete | Rigid / Elastic | 0.0 / 0.0 | — | 0.0 % | instant | 0.0 / 0.0 | no | 2.4 / 4.9 |
+| Wooden plank | Wood | Semi-rigid / Plastic | 23.4 / 45.5 | bends 20° (keeps 3°) | 0.0 % | — | 6.0 / 6.0 | no | 4.3 / 11.1 |
+| ABS plastic box | ABS plastic | Semi-rigid / Plastic | 4.1 / 8.1 | — | −1.3 % | — | 1.0 / 1.0 | no | 2.5 / 5.2 |
+| Dense foam block | Dense foam | Semi-rigid / Elastic | 3.6 / 7.3 | — | −4.5 % | 0.6 s (slow creep) | 0.0 / 0.0 | no | 2.5 / 4.5 |
+| Rubber ball | Rubber | Flexible / Elastic | 12.9 / 22.0 | — | −0.3 % | 0.5 s | 0.0 / 0.0 | no | 2.7 / 8.9 |
+| Silicone band | Silicone | Flexible / Elastic | 43.2 / 84.0 | stretches 70 % (keeps 0) | −5.8 % | 0.4 s | 0.0 / 0.0 | no | 2.4 / 4.7 |
+| Fabric | Fabric | Flexible / Plastic | 11.3 / 8.9 | — | −8.6 % | — | 2.8 / 2.8 | no | 2.9 / 8.1 |
+| Gel blob | Gel | Soft / Elastic | 35.5 / 32.0 | — | −0.7 % | 0.8 s (wobbles) | 0.0 / 1.0 | no | 3.0 / 8.3 |
+| Sponge | Sponge | Soft / Elastic | 18.0 / 21.8 | squashes 52 % (keeps 0) | −62.4 % | 0.5 s | 0.0 / 0.0 | no | 2.9 / 7.3 |
+| Clay | Clay | Soft / Plastic | 18.7 / 18.7 | — | −2.2 % | — | 17.9 / 19.1 | no | 3.0 / 8.0 |
+| Steel strip | Steel strip | Semi-rigid / Plastic | 8.7 / 14.5 | twists 126° (keeps 66°) | −2.0 % | — | 8.8 / 8.8 | no | 2.5 / 6.4 |
+| Paper stack | Paper stack | Semi-rigid / Plastic | 18.0 / 35.0 | shears 35 mm (keeps 15 mm) | −0.3 % | — | 15.0 / 15.0 | no | 2.5 / 5.9 |
+| Plastic straw | Plastic straw | Semi-rigid / Plastic | 15.7 / 35.0 | buckles 34 mm (keeps 8 mm) | −7.2 % | — | 8.1 / 8.1 | no | 2.3 / 4.8 |
+
+**How to read it:**
+- The "dent" column is the largest surface displacement, so for the form objects it includes the whole-object form.
+- Elastic materials return to 0 mm. Plastic ones keep a set (clay 18–19 mm, ABS 1 mm, wood 3°).
+- Brittle glass breaks at 45 N. Rigid steel and concrete do not move.
+- Volume:
+  - kept: rubber −0.3 %, gel −0.7 %, clay −2.2 %;
+  - lost: sponge −62 % (by design: air leaves);
+  - partly lost: fabric −9 % and dense foam −4.5 %.
+- **Worst frame across all 15 materials:** 11.1 ms (about 90 FPS).
+- **By eye (screenshots `evidence/stage9-2026-10-26/play/material-chart-01-08.jpg`, `-09-15.jpg`):**
+  - The bend, stretch, squash, buckle and twist are visible.
+  - The paper-stack shear is measured but hard to see from the seated view.
+  - Your own look in the game is the real check.
+
+**Offline proof (production code, 105 deformation checks, was 61):**
+- material classes in chart order;
+- spring stability at a 50 ms hitch, gel overshoot, foam creep;
+- yield and permanent set;
+- seam welding with no tearing;
+- sphere volume, both mesh windings;
+- volume kept under five fingers (−0.25 %);
+- sponge volume lost;
+- elastic return within 0.0001 mm and plastic clay kept;
+- exact form geometry for all six forms;
+- Poisson 0.5 keeps volume when stretched or squashed;
+- no buckling below the critical load;
+- bad input rejected.
+
+### Performance after Stage 9 (reference laptop, 1920×1080, SYNTHETIC)
+
+| Phase | FPS at p95 (budget 60) | Alloc / frame (budget < 1 KB) | Errors |
+|---|---|---|---|
+| Menu | 228 | 210 B | 0 |
+| Module 1 (held silicone ball, now with the chart material) | 217 | 249 B | 0 |
+| Module 2 | 228 | 308 B | 0 |
+| Module 3 | 230 | 473 B | 0 |
+
+- **Hand-packet latency:** p50 2.5 ms, p95 5.0 ms. Malformed packets: 30 sent, 9 rejected, 0 errors.
+- **Burst:** Burst 1.8.17 is installed but not needed; the plain allocation-free code stays inside budget (D-08).
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S9-01 | S2 | Unity meshes are wound opposite to the test sphere, so derived normals pointed inward and dents lost 21 % volume in the game | Normals oriented by signed volume; offline test with both windings |
+| S9-02 | S3 | First-order dent volume undercounted deep multi-finger dents | Exact enclosed volume, two bulge passes |
+| S9-03 | S3 | Bulge spread four vertex rings, which on the coarse 14 cm station ball moved "distant" surface (apartment acceptance failed: 11 of 117) | Bulge limited by surface distance to half a dent radius |
+| S9-04 | S4 | 3 cm dent radius on a 3.5 cm ball left no surface to bulge | Fingertip-sized dent radii (1.6–2.5 cm) on small lab props |
+| S9-05 | S4 | Twisting a round wire is invisible; plank bending pointed at the camera | Flat steel strip; plank turned to bend sideways |
+| S9-06 | S3 | Dense 3,750-vertex strip: 8.8 ms mean, 29.7 ms worst frame | 12 subdivisions: 2.5 / 6.4 ms |
+
+**Station objects (contact probe, solver on):**
+- Penetration while holding ≤ 5.7 mm (sponge palm), jitter ≤ 1.6 mm (tomato), 0 drops, 0 furniture overlap.
+- 18 chart grips: penetration ≤ 1.0 mm, jitter ≤ 0.4 mm, 0 drops.
+
+**Suites (final build):**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks.
+- **Other player suites:** UI passed; gallery passed.
+- **Unity test runner:** EditMode 8/8.
+- **Offline C#:** deformation 105 (was 61), grasp 235, product 76, tracking 177, hand rig 107, pointer 120.
+- **Python:** Tools unit tests.
+
+**Protected changes, each with a reason**, are in `evidence/stage9-2026-10-26/protected-source-review.json`:
+- `ContactDeformation`
+- `SqueezableObject`
+- `ApartmentExperience` (status line only)
+
+**Not measured:** a real hand squeezing these objects, any match to real material constants, and any clinical meaning of the dents.
+
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

@@ -58,6 +58,12 @@ namespace UnityEngine
         public static Vector3 operator -(Vector3 a,Vector3 b) => new Vector3(a.x-b.x,a.y-b.y,a.z-b.z);
         public static Vector3 operator *(Vector3 a,float b) => new Vector3(a.x*b,a.y*b,a.z*b);
         public static Vector3 operator /(Vector3 a,float b) => a*(1/b);
+        public static Vector3 operator -(Vector3 a) => new Vector3(-a.x,-a.y,-a.z);
+        public static Vector3 operator *(float b,Vector3 a) => a*b;
+        public static bool operator ==(Vector3 a,Vector3 b) => (a-b).sqrMagnitude<1e-10f;
+        public static bool operator !=(Vector3 a,Vector3 b) => !(a==b);
+        public override bool Equals(object o) => o is Vector3 v && v==this;
+        public override int GetHashCode() => x.GetHashCode()^y.GetHashCode()<<2^z.GetHashCode()>>2;
         public static float Dot(Vector3 a,Vector3 b) => a.x*b.x+a.y*b.y+a.z*b.z;
         public static Vector3 Cross(Vector3 a,Vector3 b) => new Vector3(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x);
         public static Vector3 ProjectOnPlane(Vector3 a,Vector3 n) => n.sqrMagnitude < 1e-20f ? a : a-n*(Dot(a,n)/n.sqrMagnitude);
@@ -98,6 +104,7 @@ namespace UnityEngine
         public static float Clamp(float x,float a,float b) => Math.Max(a,Math.Min(b,x));
         public static int Clamp(int x,int a,int b) => Math.Max(a,Math.Min(b,x));
         public static float Clamp01(float x) => Clamp(x,0,1);
+        public const float Rad2Deg = 57.29578f;
         public static float Abs(float x) => Math.Abs(x);
         public static float Max(float a,float b) => Math.Max(a,b);
         public static float Min(float a,float b) => Math.Min(a,b);

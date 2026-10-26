@@ -274,6 +274,7 @@ Each stage starts only when you authorize it ("Start Stage N, then stop for revi
 | 14 | 4. Optional eye tracking | 3.2 | Shares the dwell/focus pipeline and Stage 11 focus states |
 | 15 | 8. Optional voice assistant | 3.4 | Needs Stage 13 speech and the Stage 10 activity state |
 | 16 | 9. Pipeline, block diagram and Gantt audit | 1.1, 6.3 | Audits everything above |
+| 15A | Environment upgrade, kitchen and living room (added 2026-10-26) | 3.1 | After the activities, audio and assistant use the rooms; before the Stage 16 audit so it is audited. Lettered to keep every other stage number |
 | 17 | 10. Next-stage research proposal | 1.1 | Follows the Stage 16 gap analysis; recommendations only |
 
 ### Global rules for Stages 8–17
@@ -367,28 +368,35 @@ dynamic). Interactions and the game should look like it.
 - the offline deformation and fracture tests (61)
 
 ### Task 9.1: Audit (D-01)
-- [ ] Audit the existing deformer and decide part by part what to keep or rebuild. Record the reasoning.
+- [x] Audit the existing deformer and decide part by part what to keep or rebuild. Record the reasoning.
 
 ### Task 9.2: Physical model (D-02, D-05, D-06)
-- [ ] A per-vertex spring–damper driven continuously by contact force, not by animations or scaling.
-- [ ] Neighbour (Laplacian) smoothing for surface continuity.
-- [ ] An approximate volume-preservation bulge.
-- [ ] Collision stays stable while deformed.
+- [x] A per-vertex spring–damper driven continuously by contact force, not by animations or scaling.
+- [x] Neighbour (Laplacian) smoothing for surface continuity.
+- [x] An approximate volume-preservation bulge.
+- [x] Collision stays stable while deformed.
 
 ### Task 9.3: Material behaviours and presets (D-03, D-04, D-09)
-- [ ] Elastic: deforms and recovers.
-- [ ] Plastic: keeps some or all of the dent.
-- [ ] Rigid: resists normal forces.
-- [ ] Breakable: cracks, then fractures and splits past thresholds.
-- [ ] Configurable stiffness, elasticity, plasticity, damping, fracture threshold and recovery speed.
-- [ ] Reusable components and presets, so new objects need no rebuild.
+- [x] Elastic: deforms and recovers.
+- [x] Plastic: keeps some or all of the dent.
+- [x] Rigid: resists normal forces.
+- [x] Breakable: cracks, then fractures and splits past thresholds.
+- [x] Configurable stiffness, elasticity, plasticity, damping, fracture threshold and recovery speed.
+- [x] Reusable components and presets, so new objects need no rebuild.
 
 ### Task 9.4: Integration and performance (D-07, D-08)
-- [ ] Driven by hand tracking, grip and force sensing through Stage 8 contacts.
-- [ ] Job/Burst-friendly with no per-frame GC; the perf probe stays within the Stage 7 budget.
+- [x] Driven by hand tracking, grip and force sensing through Stage 8 contacts.
+- [x] Job/Burst-friendly with no per-frame GC; the perf probe stays within the Stage 7 budget.
 
-### Task 9.5: Tests (D-10)
-- [ ] Squeeze, release, recovery, repeated squeeze and fracture across ball, cylinder and box shapes for each material.
+### Task 9.5: Your deformation chart (added 2026-10-26)
+Your chart "Types and Forms of Deformation" sets the target:
+- [x] **Material classes** with presets from the chart: rigid (steel, glass, concrete), semi-rigid (wood, ABS plastic, dense foam), flexible (rubber, silicone, fabric) and soft / very soft (gel, sponge, clay). Bone is in the chart's summary; it is not added as a game object.
+- [x] **Forms of deformation** driven by grip force: compression, tension, bending, shear, torsion and buckling. Volume change in the chart is thermal (heating/cooling); grip force cannot cause it, so it is documented as out of scope, while the squeeze-volume change of soft materials is measured.
+- [x] **Results**: elastic (returns), plastic (stays deformed) and fracture (crack, then break).
+- [x] A **Material Lab** with code-built examples (D7), playable with mouse, keyboard and hand pointer.
+
+### Task 9.6: Tests (D-10)
+- [x] Squeeze, release, recovery, repeated squeeze and fracture across ball, cylinder and box shapes for each material.
 
 **Gate 9:** a material matrix of measured dent, recovery time, fracture threshold and frame time. No "AAA" claim without these numbers. Stop.
 
@@ -591,6 +599,18 @@ dynamic). Interactions and the game should look like it.
 **Tests:** intent tests from transcripts against fixture game states.
 
 **Gate 15:** answer table by game state. Stop.
+
+---
+
+## Stage 15A: Environment upgrade, kitchen and living room (WBS 3.1, added 2026-10-26)
+
+You asked for this "in next stages later". Details are fixed when you authorize it; the starting scope:
+- [ ] Audit both rooms (lighting, materials and textures, props, clutter around the stations, scale, readability from the seated and standing views) and record findings with screenshots.
+- [ ] Improve lighting and materials (URP), keep stations clear for the grip and material labs, and dress both rooms with code-built or licence-documented props.
+- [ ] Keep station positions, colliders, teleports and every input method working; re-run the apartment acceptance and contact probes.
+- [ ] Stay inside the Stage 7 budget (≥ 60 FPS at p95, < 1 KB/frame GC) on the reference laptop.
+
+**Gate 15A:** before/after screenshots of both rooms and the perf numbers. Stop.
 
 ---
 
