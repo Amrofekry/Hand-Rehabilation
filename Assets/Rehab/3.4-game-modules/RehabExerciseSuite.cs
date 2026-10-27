@@ -510,7 +510,7 @@ namespace GripRehab
             o.Add(Metric("level", "Level", "", Level));
             o.Add(Metric("stars", "Stars", "", score >= 85 ? 3 : score >= 65 ? 2 : score > 0 ? 1 : 0));
             pendingScore = score; pendingSeconds = seconds; completionHold = CompletionHoldSeconds;
-            RehabAudio.Play(RehabSound.Success);
+            RehabAudio.Play(RehabSound.Complete);
             Refresh();
         }
 

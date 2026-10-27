@@ -7,3 +7,6 @@ Full project decisions: `Docs/DECISIONS.md` and the decisions table in the upgra
 - 2026-10-27 ADR-AI-3: Work goes on `claude/<feature>` branches from the current work branch. WBS commit prefixes are kept, and merges happen only on the user's approval.
 - 2026-10-27 ADR-AI-4: `Logs/` stays readable, because it holds build and probe evidence. Library/Temp/Obj/Builds/UserSettings are denied to Read.
 - 2026-10-27 ADR-AI-5: Skills are manual-only (`disable-model-invocation`), with Sonnet for routine work and Opus for architecture and debugging.
+- 2026-10-27 ADR-AU-1: All game audio is synthesised in code (`RehabSoundBank`): six material families, variant pools, loudness targets with a −1 dBFS ceiling. No recordings, no new dependencies.
+- 2026-10-27 ADR-AU-2: `GripRehabMixer` (Master, SFX, Ambience, Voice) is generated once by `RehabAudioMixerBuilder`, which calls Unity's editor `AudioMixerController` by reflection (there is no public API). The asset is committed; the runtime falls back to per-source volumes without it.
+- 2026-10-27 ADR-AU-3: Impacts are detected in both `OnCollisionEnter` and `OnCollisionStay` (with a firmer threshold), from the fastest contact point, because a landing on a contact the engine kept alive sends no Enter.

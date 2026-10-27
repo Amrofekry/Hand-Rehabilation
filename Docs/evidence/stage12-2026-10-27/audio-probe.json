@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "utc": "2026-10-27T15:30:12.0546063Z",
+  "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; measures events and levels, not how the sounds feel to a person",
+  "detail": "",
+  "errors": 0,
+  "checks": [
+    {
+      "name": "mixer loaded",
+      "value": "True",
+      "passed": true
+    },
+    {
+      "name": "sources routed (SFX, Ambience)",
+      "value": "16, 1",
+      "passed": true
+    },
+    {
+      "name": "master 50% = -6 dB",
+      "value": "-6.02",
+      "passed": true
+    },
+    {
+      "name": "game-sounds mute silences SFX, keeps master (UI cues)",
+      "value": "-80 / 0.0",
+      "passed": true
+    },
+    {
+      "name": "voice group volume set",
+      "value": "-1.4",
+      "passed": true
+    },
+    {
+      "name": "ambience menu -> gameplay fades",
+      "value": "0.45 -> 0.66 -> 1.00",
+      "passed": true
+    },
+    {
+      "name": "grab sound (Soft family)",
+      "value": "Soft Grab",
+      "passed": true
+    },
+    {
+      "name": "strain follows deformation rate",
+      "value": "peak 0.700, held 0.096; compression 0.00 -> 0.69 -> 0.69",
+      "passed": true
+    },
+    {
+      "name": "release sound",
+      "value": "Soft Impact",
+      "passed": true
+    },
+    {
+      "name": "drop impact (Glass family)",
+      "value": "Porcelain mug impacts 1 peak gain 0.85",
+      "passed": true
+    },
+    {
+      "name": "40 cm drop breaks porcelain, with its fracture sound",
+      "value": "Broken",
+      "passed": true
+    },
+    {
+      "name": "harder drop is louder",
+      "value": "Silicone ball: 40 cm 0.77 > 5 cm 0.56 (2 impacts)",
+      "passed": true
+    },
+    {
+      "name": "silent at rest",
+      "value": "0 impacts in 2 s; speed 0.000 m/s",
+      "passed": true
+    },
+    {
+      "name": "ball impacts after release",
+      "value": "0 -> 6",
+      "passed": true
+    },
+    {
+      "name": "fracture sound (Wood family)",
+      "value": "Broken Wood Fracture",
+      "passed": true
+    },
+    {
+      "name": "objects tracked",
+      "value": "2: Silicone ball=Soft, Kitchen sponge=Soft, Brittle cracker=Wood, Porcelain mug=Glass, Silicone cup=Soft, Ripe tomato=Soft, Blue rubber ball=Soft, Small red cube=Plastic, Ballpoint pen=Plastic, Plastic card=Plastic, Kettlebell=Metal, Basketball=Soft, Water bottle=Plastic, Stress ball=Soft, Coin=Metal, Porcelain cup=Glass, USB flash drive=Plastic, Smartphone=Plastic, Screw=Metal, Grip strength tool=Plastic, Hardcover book=Wood, Large rubber ball=Soft, Cleaning cloth=Fabric, Claw hammer=Metal, Steel block=Metal, Glass tumbler=Glass, Concrete block=Wood, Wooden plank (bending)=Wood, ABS plastic box=Plastic, Dense foam block=Soft, Rubber ball=Soft, Silicone band (tension)=Soft, Fabric=Fabric, Gel blob=Soft, Sponge (compression)=Soft, Clay=Soft, Steel strip (torsion)=Metal, Paper stack (shear)=Wood, Plastic straw (buckling)=Plastic",
+      "passed": true
+    },
+    {
+      "name": "gameplay -> menu fades down",
+      "value": "0.45",
+      "passed": true
+    }
+  ],
+  "exit": 0
+}

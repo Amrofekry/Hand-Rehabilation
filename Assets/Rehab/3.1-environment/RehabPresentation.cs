@@ -8,7 +8,7 @@ namespace GripRehab
     /// <summary>
     /// Stage 4.1/4.2: runtime presentation layer, so the protected saved scene stays untouched.
     /// Adds realtime reflection probes at the stations, warms the existing grade, applies the
-    /// chosen hand tone and drives squeeze, liquid, crack and round sounds. Visual and audio
+    /// chosen hand tone and drives liquid and round sounds and starts the Stage 12 material sounds. Visual and audio
     /// feedback only: nothing here changes physics, input or any recorded value.
     /// </summary>
     public sealed class RehabPresentation : MonoBehaviour
@@ -22,7 +22,6 @@ namespace GripRehab
         RehabAppShell shell;
         Material handMaterial;
         float nextSquish;
-        DamageState[] lastDamage;
         ForceRoundSession lastRounds; int lastRound, lastBreaks;
         public int ProbeCount { get; private set; }
         public static RehabPresentation Instance => instance;
@@ -40,6 +39,7 @@ namespace GripRehab
             if (experience == null || instance != null) return;
             instance = new GameObject("Rehab presentation").AddComponent<RehabPresentation>();
             instance.app = experience; instance.shell = FindAnyObjectByType<RehabAppShell>();
+            ApartmentSounds.Ensure(experience); // Stage 12: material, impact, strain and fracture sounds
         }
 
         void Start()
@@ -47,7 +47,6 @@ namespace GripRehab
             AddReflectionProbes();
             WarmGrade();
             ApplyHandTone();
-            lastDamage = new DamageState[app.objects != null ? app.objects.Length : 0];
         }
 
         void AddReflectionProbes()
@@ -93,26 +92,20 @@ namespace GripRehab
         {
             if (app == null) return;
             var held = app.Held;
-            RehabAudio.SetSqueeze(held != null && app.ForceValid ? held.Compression : 0);
+            // Stage 12: the held object's material strain loop (ApartmentSounds) replaces the single creak; rigid objects stay silent.
+            RehabAudio.SetSqueeze(0);
+            RehabAudio.SetGameplay((shell == null || !shell.BlocksGameplay) && (app.player == null || !app.player.Paused)); // menus, portal and pause are calmer
             if (held != null && held.Liquid != null && held.Compression > held.profile.liquidStartCompression && Time.unscaledTime >= nextSquish)
             { RehabAudio.Play(RehabSound.Squish, Random.Range(.9f, 1.1f)); nextSquish = Time.unscaledTime + .45f; }
-            if (app.objects != null)
-                for (int i = 0; i < app.objects.Length && i < lastDamage.Length; i++)
-                {
-                    var item = app.objects[i]; if (item == null) continue;
-                    if (item.Damage == DamageState.Broken && lastDamage[i] != DamageState.Broken) RehabAudio.Play(RehabSound.Crack);
-                    lastDamage[i] = item.Damage;
-                }
-            // Module 1 rounds: chime per finished round, crack per over-squeeze, fanfare at the end.
+            // Module 1 rounds: chime per finished round, fanfare at the end. Over-squeeze breaks sound from the object itself (ObjectSound).
             var rounds = shell != null && shell.Research != null ? shell.Research.ForceRounds : null;
             if (rounds != lastRounds)
             {
-                if (lastRounds != null && lastRounds.Complete) RehabAudio.Play(RehabSound.Success);
+                if (lastRounds != null && lastRounds.Complete) RehabAudio.Play(RehabSound.Complete);
                 lastRounds = rounds; lastRound = rounds != null ? rounds.RoundIndex : 0; lastBreaks = rounds != null ? rounds.Breaks : 0;
             }
             else if (rounds != null)
             {
-                if (rounds.Breaks > lastBreaks) RehabAudio.Play(RehabSound.Crack, 1.15f);
                 if (rounds.RoundIndex > lastRound) RehabAudio.Play(RehabSound.Chime);
                 lastBreaks = rounds.Breaks; lastRound = rounds.RoundIndex;
             }

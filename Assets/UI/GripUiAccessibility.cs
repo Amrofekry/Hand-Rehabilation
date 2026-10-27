@@ -59,6 +59,10 @@ namespace GripRehab.UI
             volumeSlider.onValueChanged.AddListener(SetVolume);
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false; audioSource.spatialBlend = 0;
+            // Stage 12: UI cues follow the master volume of the project mixer (Resources/Audio/GripRehabMixer); they keep their own volume and mute.
+            var mixer = Resources.Load<UnityEngine.Audio.AudioMixer>("Audio/GripRehabMixer");
+            var master = mixer != null ? mixer.FindMatchingGroups("Master") : null;
+            if (master != null && master.Length > 0) audioSource.outputAudioMixerGroup = master[0];
             hoverTone = Tone(theme.Current.hoverToneHz, .045f);
             clickTone = Tone(theme.Current.clickToneHz, .075f);
             if (controls != null)

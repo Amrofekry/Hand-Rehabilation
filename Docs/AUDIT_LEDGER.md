@@ -837,6 +837,37 @@ The "before" ratios are computed from the theme colours with the same formula; t
 - real hand-pointer use on the new controls;
 - an Arabic/RTL layout.
 
+## 10e. Stage 12 audio and sound design (27 Oct 2026)
+
+Design, the event-to-sound map and the loudness table are in [AUDIO_DESIGN.md](AUDIO_DESIGN.md). Evidence is in `evidence/stage12-2026-10-27/`.
+
+| ID | Before | After | How it was checked |
+|---|---|---|---|
+| S12-01 | Dropped objects were silent | Impacts by material family, with gain from contact speed and mass | Audio probe: Glass impact from a 40 cm drop; on the ball, 40 cm gives gain 0.77 and 5 cm gives 0.56 |
+| S12-02 | No grab or release sound | Grab and release by family, 3D at the object | Audio probe |
+| S12-03 | One creak by compression level, including on rigid objects | Strain loop per family, driven by deformation rate; none for metal and glass | Audio probe: peak 0.70 while the squeeze changes, 0.096 when held still |
+| S12-04 | Generic crack, played twice in Module 1 rounds | Stress crack and fracture by family, once per state change | Audio probe: cracker fracture (Wood); a mug drop breaks it, with its fracture sound |
+| S12-05 | Placement and finish used the same sound | Placed / Complete | EditMode |
+| S12-06 | Room tone dipped to silence every 4 s | Crossfaded loops; a check for seam jumps and dips | EditMode `SynthesisedAudio` |
+| S12-07 | Code-only volumes, all 2D | GripRehabMixer with Master, SFX, Ambience and Voice settings; 3D material sounds | EditMode `AudioMixerAsset`; probe: −6.02 dB at 50 %, mute keeps the UI |
+| S12-08 | Ambience jumped between menu and play | 45 % in menus, the portal and pause, with a 1.2 s fade | Probe: 0.45, then 0.66, then 1.00, and back to 0.45 |
+
+**Defects found and fixed during the stage:**
+- A landing on a contact the physics engine kept alive sent no `OnCollisionEnter`, so the impact was silent. Impacts are now also detected in `OnCollisionStay` (at ≥ 0.25 m/s), from the fastest contact point.
+- The strain level depended on frame timing, because compression moves on physics steps. The target is now peak-held with a decay.
+- The probe's first drop tests were vacuous: a sleeping body, an object shown out of its room, and a mug the impact had already broken. They now use the room's picker and an unbreakable object, and a check fails if the low drop is silent.
+
+**Regression (final build):**
+- All pass: smoke, replay, journey, UI at 4 sizes, gallery, perf, contact ×3, activity, activity UI-only, audio probe 17/17, EditMode 10/10, offline 17, Python 70, pytest 32.
+- Perf: mean 243–307 FPS, worst p95 7.0 ms; GC p95 unchanged at 4096 B.
+
+**Kinds of result:**
+- Every result above is SYNTHETIC (keyboard-demo input) or offline.
+- No person has listened yet. Loudness balance on real speakers, and whether anything is annoying or misleading (S-07, S-09), are pending your listening session.
+- Levels are digital (dBFS), not a sound pressure level.
+
+**Protected file:** `ResearchPortalPages.cs` gained master, ambience and voice volume settings. It is recorded in `evidence/stage12-2026-10-27/protected-source-review.json`.
+
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

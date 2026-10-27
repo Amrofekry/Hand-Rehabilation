@@ -1,0 +1,10 @@
+{
+  "scope": "Stage 12 audio changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "76abf93766d9389654d07228dae8499bf7b5fec04e9f2207ddafede8cf51c37f",
+      "currentSha256": "6b6b293abef5bddaacee8449fb2de785b70f13c75a617eca8e6c2ae88a7bee6e",
+      "reason": "User-authorized Stage 12 audio (2026-10-27). Settings page: master, ambience and voice volume steps for the new mixer groups (S-08); effects volume and mute unchanged."
+    }
+  }
+}

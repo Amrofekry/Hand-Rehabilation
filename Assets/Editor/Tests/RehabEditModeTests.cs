@@ -12,6 +12,8 @@ namespace GripRehab.Editor.Tests
         [Test] public void FatigueAiAndSentisParity() => FatigueAiVerification.Run();
         [Test] public void SqueezeLiquidAuthored() => SqueezeLiquidAuthoring.Verify();
         [Test] public void SynthesisedAudio() => RehabAudioVerification.Run();
+        [Test] public void MaterialSoundBank() => RehabAudioVerification.RunMaterialBank();
+        [Test] public void AudioMixerAsset() => RehabAudioMixerBuilder.Verify();
         [Test] public void ClosedAdaptiveLoop() => ClosedLoopVerification.Run();
         [Test] public void DashboardFixturesOnDisk() => DashboardVerification.Run();
     }

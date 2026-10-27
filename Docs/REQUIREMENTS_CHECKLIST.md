@@ -101,16 +101,16 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| S-01 | Audit missing, low-quality, repetitive, badly timed or wrongly triggered sounds | Not Started | | |
-| S-02 | Upgrade ambience, UI, grab, release, collision, deformation, fracture and completion audio | Not Started | | |
-| S-03 | Material-dependent sounds (wood, metal, glass, plastic, fabric, soft) | Not Started | | |
-| S-04 | Variation so repeats do not sound identical | Not Started | | |
-| S-05 | Synchronised with contact force, deformation intensity and fracture events | Not Started | | |
-| S-06 | Spatial audio and distance attenuation | Not Started | | |
-| S-07 | Volume balance, clarity, mixing and menu–gameplay transitions | Not Started | | AudioMixer asset |
-| S-08 | Separate master, effects, ambience and voice-assistance volumes | Not Started | | |
-| S-09 | Nothing loud, distracting, repetitive or misleading | Not Started | | Human listening recorded separately |
-| S-10 | Licensed or original audio, new dependencies documented | Not Started | | |
+| S-01 | Audit missing, low-quality, repetitive, badly timed or wrongly triggered sounds | Tested | [AUDIO_DESIGN.md](AUDIO_DESIGN.md) §1 | Ten findings AU-1..AU-10: silent impacts, no grab/release, one creak on every object (even rigid), duplicated generic crack, same sound for placement and finish, loop dips every 4 s and 1.2 s, all 2D, no mixer, ambience jump between menu and play, no cutting sound |
+| S-02 | Upgrade ambience, UI, grab, release, collision, deformation, fracture and completion audio | Tested | [AUDIO_DESIGN.md](AUDIO_DESIGN.md) §3, [audio-probe.json](evidence/stage12-2026-10-27/audio-probe.json) | Impact, grab, release, strain, stress crack, fracture, cut, placed, complete; ambience loop fixed; UI cues on the Master group |
+| S-03 | Material-dependent sounds (wood, metal, glass, plastic, fabric, soft) | Tested | [AUDIO_DESIGN.md](AUDIO_DESIGN.md) §2, EditMode MaterialSoundBank | Wood, metal, glass (ceramic), plastic, fabric, soft; family from material name, then object name, then class |
+| S-04 | Variation so repeats do not sound identical | Tested | EditMode MaterialSoundBank | 4 impact and 3 other variants per family, checked to differ; no immediate repeat; ±5 % pitch; size-based pitch |
+| S-05 | Synchronised with contact force, deformation intensity and fracture events | Tested | [audio-probe.json](evidence/stage12-2026-10-27/audio-probe.json) | Impact gain from contact normal speed and mass (silent < 0.12 m/s); strain from compression rate; stress crack and fracture from the damage state; cut from cut count. SYNTHETIC player probe |
+| S-06 | Spatial audio and distance attenuation | Tested | [audio-probe.json](evidence/stage12-2026-10-27/audio-probe.json) | 3D sources, logarithmic roll-off 0.6–18 m, no Doppler |
+| S-07 | Volume balance, clarity, mixing and menu–gameplay transitions | Implemented | [audio-loudness.json](evidence/stage12-2026-10-27/audio-loudness.json), [audio-probe.json](evidence/stage12-2026-10-27/audio-probe.json) | Loudness targets per event with a -1 dBFS ceiling; impact spread between families measured; ambience 45 % in menus/pause, 1.2 s fade. Balance on real speakers not judged by a person yet |
+| S-08 | Separate master, effects, ambience and voice-assistance volumes | Tested | [audio-probe.json](evidence/stage12-2026-10-27/audio-probe.json), [AUDIO_DESIGN.md](AUDIO_DESIGN.md) §4 | GripRehabMixer: Master, SFX, Ambience, Voice; one setting each in Settings; mute keeps UI cues |
+| S-09 | Nothing loud, distracting, repetitive or misleading | Implemented | [AUDIO_DESIGN.md](AUDIO_DESIGN.md) §1 | Rate-driven strain fades when still; no sound at rest; cooldowns; peaks ≤ -1 dBFS. Your listening session pending (human check) |
+| S-10 | Licensed or original audio, new dependencies documented | Tested | [AUDIO_DESIGN.md](AUDIO_DESIGN.md) §6, CREDITS.md | All synthesised in code; no recordings, no new dependencies |
 
 ## 7. UI modernization → Stage 11 (WBS 3.4, 5.1, 5.2)
 

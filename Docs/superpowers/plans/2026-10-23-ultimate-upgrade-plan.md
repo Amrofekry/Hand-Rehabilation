@@ -483,27 +483,29 @@ Your chart "Types and Forms of Deformation" sets the target:
 - `GripUiAccessibility.PlayCue`
 
 ### Task 12.1: Audit (S-01)
-- [ ] List missing, low-quality, repetitive, badly timed or wrongly triggered sounds.
+- [x] List missing, low-quality, repetitive, badly timed or wrongly triggered sounds.
 
 ### Task 12.2: Sound families and events (S-02 to S-05)
-- [ ] Ambience, UI, grab, release, collision, deformation, fracture and activity-completion sounds.
-- [ ] Material families: wood, metal, glass, plastic, fabric and soft.
-- [ ] Variant pools and pitch variation.
-- [ ] Triggered by real contact force, deformation rate and fracture events from Stages 8–9.
+- [x] Ambience, UI, grab, release, collision, deformation, fracture and activity-completion sounds.
+- [x] Material families: wood, metal, glass, plastic, fabric and soft.
+- [x] Variant pools and pitch variation.
+- [x] Triggered by real contact force, deformation rate and fracture events from Stages 8–9.
 
 ### Task 12.3: Space and mix (S-06 to S-09)
-- [ ] 3D spatial sources with distance attenuation.
-- [ ] An AudioMixer asset with Master, SFX, Ambience and Voice groups, replacing the code-only volumes from Stage 4.
-- [ ] Balanced menu-to-gameplay transitions.
-- [ ] Separate settings for each group.
-- [ ] Nothing loud, distracting or misleading.
+- [x] 3D spatial sources with distance attenuation.
+- [x] An AudioMixer asset with Master, SFX, Ambience and Voice groups, replacing the code-only volumes from Stage 4.
+- [x] Balanced menu-to-gameplay transitions.
+- [x] Separate settings for each group.
+- [x] Nothing loud, distracting or misleading. *(Measured: peaks ≤ -1 dBFS, rate-driven strain, no sound at rest. Your listening check pending.)*
 
 ### Task 12.4: Licensing (S-10)
-- [ ] Original, synthesised audio or documented-licence assets only, recorded in the credits.
+- [x] Original, synthesised audio or documented-licence assets only, recorded in the credits.
 
 **Tests:** EditMode audio checks (levels, no clipping, no NaN, seamless loops). Your own listening session is recorded as human-verified only when you do it.
 
 **Gate 12:** event-to-sound map and loudness table. Stop.
+
+**Result (2026-10-27):** event-to-sound map and loudness table in `Docs/AUDIO_DESIGN.md`; evidence in `Docs/evidence/stage12-2026-10-27/`; full regression in `Docs/AUDIT_LEDGER.md` §10e.
 
 ---
 

@@ -169,7 +169,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   var result=best.carrier!=null?new PlacementResult{accepted=true,positionError=bestError,score=1}:ActivityRules.Placement(bestError,angle,tolerance,Current.tuning.angleTolerance);
   if(!result.accepted){Current.misses++;Feedback="Turn it to match the "+best.label+" (off by "+angle.ToString("0")+"°): , and . turn it before you place.";RehabAudio.Play(RehabSound.Error);Refresh();return;}
   if(!Current.Decide(a,best,out string reason)){Current.errors++;Feedback=reason;RehabAudio.Play(RehabSound.Error);Refresh();return;}
-  Snap(a,best);Current.Placed(a,best,result);Feedback=Current.PraiseFor(a,best);RehabAudio.Play(RehabSound.Success);
+  Snap(a,best);Current.Placed(a,best,result);Feedback=Current.PraiseFor(a,best);RehabAudio.Play(RehabSound.Placed);
   Refresh();CheckDone();
  }
  public void Snap(ActivityItem a,SnapTarget t){
@@ -225,7 +225,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   finished=true;float seconds=Time.unscaledTime-startedAt;
   var result=Current.Result(Level,seconds);LastResult=result;
   Feedback="Activity complete: "+result.score+"/100, "+ActivityRules.Stars(result.score)+" of 3 stars. K replays it, N picks the next one.";
-  RehabAudio.Play(RehabSound.Success);Refresh();
+  RehabAudio.Play(RehabSound.Complete);Refresh();
   StartCoroutine(Report(result));
  }
  IEnumerator Report(ActivityResult result){

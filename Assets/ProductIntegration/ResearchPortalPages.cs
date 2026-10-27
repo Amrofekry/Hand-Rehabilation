@@ -189,8 +189,11 @@ namespace GripRehab
             }
             // Stage 4: game feedback sounds, room ambience and the virtual hand's appearance (per computer).
             view.Button("GAME SOUNDS: " + (RehabAudio.Muted ? "OFF" : "ON"), () => { RehabAudio.Muted = !RehabAudio.Muted; SettingsAt(view.ScrollPosition); });
+            // Stage 12: one volume per mixer group (master, effects, ambience, voice).
+            view.Button("MASTER VOLUME: " + Mathf.RoundToInt(RehabAudio.MasterVolume * 100) + "%", () => { RehabAudio.MasterVolume = NextStep(RehabAudio.MasterVolume); SettingsAt(view.ScrollPosition); });
             view.Button("EFFECTS VOLUME: " + Mathf.RoundToInt(RehabAudio.EffectsVolume * 100) + "%", () => { RehabAudio.EffectsVolume = NextStep(RehabAudio.EffectsVolume); SettingsAt(view.ScrollPosition); });
-            view.Button("ROOM AMBIENCE: " + (RehabAudio.AmbienceVolume > 0 ? "ON" : "OFF"), () => { RehabAudio.AmbienceVolume = RehabAudio.AmbienceVolume > 0 ? 0 : .35f; SettingsAt(view.ScrollPosition); });
+            view.Button("AMBIENCE VOLUME: " + Mathf.RoundToInt(RehabAudio.AmbienceVolume * 100) + "%", () => { RehabAudio.AmbienceVolume = NextStep(RehabAudio.AmbienceVolume); SettingsAt(view.ScrollPosition); });
+            view.Button("VOICE VOLUME: " + Mathf.RoundToInt(RehabAudio.VoiceVolume * 100) + "%", () => { RehabAudio.VoiceVolume = NextStep(RehabAudio.VoiceVolume); SettingsAt(view.ScrollPosition); });
             view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; SettingsAt(view.ScrollPosition); });
             view.Button("DIAGNOSTICS FOR SUPPORT", Diagnostics);
             view.Button("BACK TO MENU", Welcome, true);
