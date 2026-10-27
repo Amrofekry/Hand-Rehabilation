@@ -50,6 +50,8 @@ public sealed class ApartmentChoices:MonoBehaviour {
    var label=buttons[i].GetComponentInChildren<Text>();var labelRect=label.rectTransform;labelRect.sizeDelta=new Vector2(96,31);labelRect.anchoredPosition=new Vector2(0,-17.5f);label.fontSize=13;
   }
   labButton.GetComponentInChildren<Text>().text="GRIP LAB";materialLabButton.GetComponentInChildren<Text>().text="MATERIAL LAB";
+  // Stage 10: the six multi-step activities (living room and kitchen).
+  ActivityRunner.Ensure(experience,this,source);
  }
  private UnityAction[] callbacks;
  private RehabAppShell shell;
@@ -90,6 +92,7 @@ public sealed class ApartmentChoices:MonoBehaviour {
  private void ToggleInput(){experience.CycleInputMode();Refresh();}
  public bool SelectStation(bool kitchen){
   var player=experience.player;experience.Release();
+  var activity=experience.GetComponent<ActivityRunner>();if(activity!=null&&activity.Current!=null&&!activityStarting)activity.End(false);
   if(Lab)LeaveLab();
   Kitchen=kitchen;
   if(kitchen){player.TeleportToStanding(kitchenStation.position,kitchenStation.rotation);player.LookAt(kitchenObjects[KitchenSelection].transform.position);}
@@ -100,7 +103,10 @@ public sealed class ApartmentChoices:MonoBehaviour {
  public void SelectLab()=>OpenLab(false);
  /// <summary>Material Lab: the deformation chart's materials and forms, one at a time, at the same table.</summary>
  public void SelectMaterialLab()=>OpenLab(true);
+ /// <summary>True while an activity sets up its room (so choosing the station does not end it).</summary>
+ [NonSerialized] public bool activityStarting;
  void OpenLab(bool materials){
+  var activity=experience.GetComponent<ActivityRunner>();if(activity!=null&&activity.Current!=null)activity.End(false);
   if((materials?materialObjects:labObjects).Length==0)return;
   var player=experience.player;experience.Release();
   if(Lab)HideLabObjects();else foreach(var item in livingObjects)item.gameObject.SetActive(false);

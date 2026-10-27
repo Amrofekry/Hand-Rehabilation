@@ -197,7 +197,7 @@ namespace GripRehab.Product
         {
             if (Current == null || Current.role != LocalRole.Patient) throw new UnauthorizedAccessException("Patient sign-in required.");
             if (string.IsNullOrEmpty(Current.profileId)) throw new InvalidOperationException("Link your hand profile before starting practice.");
-            if (module < 1 || module > 3 || task < 0 || task > 1) throw new ArgumentException("Choose a valid module/task.");
+            if (module < 1 || module > 3 || task < 0 || task > CatalogValidation.MaxTask(module)) throw new ArgumentException("Choose a valid module/task.");
             var session = new SessionRecord { id = Guid.NewGuid().ToString("N"), accountId = Current.id,
                 profileId = Current.profileId, module = module, task = task, startedUtc = clock.Utc,
                 baselineId = LatestBaseline(Current.id)?.id, synthetic = synthetic, state = RecordState.InProgress };

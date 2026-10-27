@@ -39,6 +39,10 @@ public sealed class ApartmentExperience:MonoBehaviour {
  // Keyboard/demo presentation: the holding hand moves so the held object sits in the middle of the view, at a
  // distance that suits its size (like the grip chart photographs). Independent of the arrow-key hand offset.
  Vector3 _presentRight,_presentLeft;Vector3 _requestedGrip;bool _hasRequestedGrip;
+ /// <summary>Stage 10: view-space shift of the presented object (activities keep it low-right so the aim point shows).</summary>
+ public Vector3 PresentationOffset;
+ /// <summary>Stage 10: raised after a pickup succeeds and after a held object is let go (activity scoring and assist).</summary>
+ public event Action<SqueezableObject> ObjectGrabbed,ObjectReleased;
  public GripDefinition HeldGrip=>Held!=null&&GraspContactSolver.Enabled?GraspContactSolver.PropOf(Held)?.Definition:null;
  public float TestForce=-1; // Used only when an explicit acceptance-test command-line flag is present.
  public string Status{get;private set;}="Ready";
@@ -168,7 +172,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var renderer=Held.visual!=null?Held.visual.GetComponentInChildren<Renderer>():null;
   var bounds=renderer!=null?renderer.bounds:new Bounds(Held.transform.position,Vector3.one*Held.radius);
   float distance=Mathf.Clamp(.3f+bounds.extents.magnitude*2.2f,.32f,.7f);
-  var wantedWorld=player.view.transform.TransformPoint(new Vector3(0,-.03f,distance));
+  var wantedWorld=player.view.transform.TransformPoint(new Vector3(0,-.03f,distance)+PresentationOffset);
   // Middle of the view, but never down into the table or counter under it (seated or standing).
   if(Physics.Raycast(wantedWorld+Vector3.up*.6f,Vector3.down,out var support,1.2f,~((1<<8)|(1<<9)),QueryTriggerInteraction.Ignore))
    wantedWorld.y=Mathf.Max(wantedWorld.y,support.point.y+bounds.extents.y+.05f);
@@ -267,7 +271,8 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.HasPickupCollider)return false;
   var eye=player.view.transform.position;var point=item.ClosestSurface(eye);var direction=point-eye;
   if(direction.magnitude>settings.reachMeters)return false;
-  return direction.sqrMagnitude<.000001f||!Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.01f,~(1<<8),QueryTriggerInteraction.Ignore)||hit.collider.GetComponentInParent<SqueezableObject>()==item;
+  // Stage 10: something the object rests on or in (a pan, a plate) touching its surface does not block it.
+  return direction.sqrMagnitude<.000001f||!Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.01f,~(1<<8),QueryTriggerInteraction.Ignore)||hit.collider.GetComponentInParent<SqueezableObject>()==item||hit.distance>=direction.magnitude-.03f;
  }
  // Check endpoint overlap as well as the camera-to-hand sweep.
  private bool TrySafeGripTarget(SqueezableObject item,out Vector3 target){
@@ -330,6 +335,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   item.Body.position=target;item.Body.rotation=initial;Physics.SyncTransforms();_holdCorrectionLocal=Vector3.zero;_palmExtra=0;
   _lastHeld=target;_lastMotionTime=Time.unscaledTime;_velocity=Vector3.zero;_task.Reset();
   _lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;
+  ObjectGrabbed?.Invoke(item);
   return true;
  }
  private SqueezableObject KeyboardTarget(out ApartmentDoor door){
@@ -405,7 +411,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public void Release(){
   if(Held!=null){
    var velocity=!player.Paused&&Time.unscaledTime-_lastMotionTime<=.1f?_velocity:Vector3.zero;
-   Held.Release(velocity);Held=null;
+   var released=Held;Held.Release(velocity);Held=null;ObjectReleased?.Invoke(released);
    if(CameraMode)_cameraReleaseBlocked=true;
    Status=CameraMode?"Released - open hand before gripping again, or use G":"Object released";
   }

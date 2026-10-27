@@ -1,0 +1,20 @@
+{
+  "scope": "Stage 10 activity changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/Product/CatalogValidation.cs": {
+      "previousSha256": "2807166524d111b03cb995703b05a38dee44fe5f2fe24b116d7f8b06bc8e2b9e",
+      "currentSha256": "ab65c26512b06dd217a6f141429a2e08c56ba5c8a62a8c2662664faf1614837f",
+      "reason": "User-authorized Stage 10 activities (2026-10-27). Session validation accepts Module 1 tasks 0..7 (MaxTask), so the six Stage 10 activities (tasks 2-7) can be saved for signed-in users; other modules still allow tasks 0..1 only."
+    },
+    "Assets/Product/ProductRepository.cs": {
+      "previousSha256": "a8e42939679288c096fba0bddee33b821f1affb661fe00eb50734d2739630fbd",
+      "currentSha256": "a2e057f766209c5c998359b2b9a6d38d842526bca0674e7cb66b414c9f0e70ff",
+      "reason": "User-authorized Stage 10 activities (2026-10-27). Begin uses the same MaxTask range (Module 1 tasks 0..7) so an activity session can start; no other behaviour changes."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "e54324166d35c3a0c222756b53d81110ec8d50536cdc1b689f367d6c43231c90",
+      "currentSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
+      "reason": "User-authorized Stage 10 activities (2026-10-27). Adds ObjectGrabbed/ObjectReleased events (raised at the end of BeginGrab and in Release) and a PresentationOffset used by the activity runner while a tool is held; CanReach ignores a blocker within 3 cm of the item's surface (a pan or plate it rests on). Grab, hold, release and every input path are otherwise unchanged."
+    }
+  }
+}

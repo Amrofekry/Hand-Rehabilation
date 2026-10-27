@@ -29,9 +29,11 @@ namespace GripRehab.Product
                 !Positive(b.enduranceSeconds)||b.enduranceSeconds>b.validSeconds||!Ratio(b.closureRange)||!Positive(b.romDegrees)||b.romDegrees>180||
                 (!b.hasForce&&(b.mvcNewtons!=0||b.enduranceSeconds!=0))))throw new ArgumentException("Invalid staged baseline values.");
         }
+        /// <summary>Highest task per module: Module 1 has force rounds (0, 1) and the six Stage 10 activities (2-7).</summary>
+        public static int MaxTask(int module) => module == 1 ? 7 : 1;
         public static void Session(SessionRecord s)
         {
-            if (s.task < 0 || s.task > 1 || !Enum.IsDefined(typeof(RecordState), s.state) || s.score < 0 || s.score > 100 ||
+            if (s.task < 0 || s.task > MaxTask(s.module) || !Enum.IsDefined(typeof(RecordState), s.state) || s.score < 0 || s.score > 100 ||
                 !Positive(s.durationSeconds) || !Positive(s.validSeconds) || s.validSeconds > s.durationSeconds + .2 ||
                 !Positive(s.activeSeconds) || s.activeSeconds > s.validSeconds + .2 ||
                 !Positive(s.peakNewtons) || (!s.hasForce && s.peakNewtons != 0) || !Ratio(s.meanClosure) ||

@@ -412,30 +412,32 @@ Your chart "Types and Forms of Deformation" sets the target:
 **Props are built in code (decision D7):** a `PropFactory` makes books of several heights, shelf slots, cups, plates, a tray, a storage box, a knife, a cutting board and vegetables.
 
 ### Task 10.1: Living room (A-01 to A-03)
-- [ ] **Bookshelf:** pick up, rotate and place books in order by height or category; wrong placements are detected and correct organisation is rewarded.
-- [ ] **Coffee table:** arrange cups, plates, a tray and other items to a target layout, scored on position, orientation and spacing.
-- [ ] **Storage box:** choose items, grip them suitably, and fit them inside the volume without excessive overlap or instability.
+- [x] **Bookshelf:** pick up, rotate and place books in order by height or category; wrong placements are detected and correct organisation is rewarded.
+- [x] **Coffee table:** arrange cups, plates, a tray and other items to a target layout, scored on position, orientation and spacing.
+- [x] **Storage box:** choose items, grip them suitably, and fit them inside the volume without excessive overlap or instability.
 
 ### Task 10.2: Kitchen (A-04 to A-06)
-- [ ] **Simple meal:** ingredients to the preparation area, utensils, and a sequence of safe, simulated cooking steps.
-- [ ] **Cutting:** a knife stroke cuts compatible vegetables into pieces. It uses a plane cut through the existing partitioner, a technically feasible approximation that is labelled as such.
-- [ ] **Prepare and serve:** collect ingredients and utensils, prepare in several steps, plate the food and serve it at the right place.
+- [x] **Simple meal:** ingredients to the preparation area, utensils, and a sequence of safe, simulated cooking steps.
+- [x] **Cutting:** a knife stroke cuts compatible vegetables into pieces. It uses a plane cut through the existing partitioner, a technically feasible approximation that is labelled as such.
+- [x] **Prepare and serve:** collect ingredients and utensils, prepare in several steps, plate the food and serve it at the right place.
 
 ### Task 10.3: Requirements for every activity (A-07 to A-13)
-- [ ] Every missing prop and environment element is added.
-- [ ] Instructions, objectives, a progress indicator, success conditions and completion feedback.
-- [ ] Realistic manipulation and placement constraints.
-- [ ] Difficulty levels and optional precision requirements.
-- [ ] Scoring on accuracy, completion, handling and task-specific measures.
-- [ ] Integrated into the existing environment and UI without breaking current features.
-- [ ] Replayable, and completable with every supported input method.
+- [x] Every missing prop and environment element is added.
+- [x] Instructions, objectives, a progress indicator, success conditions and completion feedback.
+- [x] Realistic manipulation and placement constraints.
+- [x] Difficulty levels and optional precision requirements.
+- [x] Scoring on accuracy, completion, handling and task-specific measures.
+- [x] Integrated into the existing environment and UI without breaking current features.
+- [ ] Replayable, and completable with every supported input method. *(Replay and keyboard/mouse done; camera hand not tested end-to-end: A-13 In Progress.)*
 
 ### Task 10.4: Tests
-- [ ] An EditMode completion test per activity using synthetic input.
-- [ ] A by-eye playtest.
-- [ ] Results visible on the patient and doctor dashboards.
+- [x] ~~An EditMode completion test per activity using synthetic input.~~ Replaced by a player completion probe (`Tools/run_activity_probe.py`: all six activities at levels 2 and 8 through the real grab/aim/release path, SYNTHETIC input), because the activities need the rendered apartment, physics and UI; the pure rules are in the offline activity checks.
+- [ ] A by-eye playtest. *(Claude checked the probe screenshots; your hands-on playtest is pending.)*
+- [x] Results visible on the patient and doctor dashboards.
 
 **Gate 10:** all six activities playable start to finish, with outcomes saved. Stop.
+
+**Result (2026-10-27):** 12 of 12 probe runs complete (levels 2 and 8), scores 88–100; three repeated runs all pass. Details in `Docs/AUDIT_LEDGER.md` §10c.
 
 ---
 

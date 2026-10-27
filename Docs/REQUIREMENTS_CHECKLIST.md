@@ -51,19 +51,19 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| A-01 | Living room: organise a bookshelf | Not Started | | |
-| A-02 | Living room: set up a coffee table to a target layout | Not Started | | |
-| A-03 | Living room: pack and organise a storage box | Not Started | | |
-| A-04 | Kitchen: prepare a simple meal | Not Started | | |
-| A-05 | Kitchen: cut and prepare ingredients | Not Started | | Plane-cut approximation, labelled as such |
-| A-06 | Kitchen: prepare a meal and serve it | Not Started | | |
-| A-07 | Add every missing object, tool, prop and environment element | Not Started | | Props built in code (D7) |
-| A-08 | Instructions, objectives, progress, success conditions and completion feedback | Not Started | | |
-| A-09 | Realistic manipulation, placement constraints and physical interactions | Not Started | | |
-| A-10 | Difficulty levels and optional precision requirements | Not Started | | |
-| A-11 | Scoring on accuracy, completion, handling and task performance | Not Started | | |
-| A-12 | Integrated into the environment and UI without breaking current features | Not Started | | |
-| A-13 | Replayable and completable with every supported input | Not Started | | |
+| A-01 | Living room: organise a bookshelf | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/) | Books ordered shortest to tallest into shelf slots; a wrong slot is an error. SYNTHETIC: L2 94, L8 88 (5 books) |
+| A-02 | Living room: set up a coffee table to a target layout | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/) | Plate, cup (handle turned), tray, bowl, napkin on outlines; scored on position, angle and spacing. SYNTHETIC: L2 97, L8 95 |
+| A-03 | Living room: pack and organise a storage box | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/) | Items must lie fully inside the box walls and rim, at rest, without overlapping. SYNTHETIC: L2 100 (3 items), L8 100 (5 items) |
+| A-04 | Kitchen: prepare a simple meal | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/) | Pan to burner, ingredients into the pan, stir with the spoon (simulated cooking, colour change), serve on the plate. SYNTHETIC: L2 100, L8 100 |
+| A-05 | Kitchen: cut and prepare ingredients | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/), offline plane-cutter checks | Knife squeeze where you look cuts the cucumber with a mesh plane cut (an approximation of cutting, labelled as such); scored on evenness. SYNTHETIC: L2 98, L8 97 |
+| A-06 | Kitchen: prepare a meal and serve it | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/) | Plate to prep mat, bread on plate, cut tomato, tomato on plate, plate to serving mat. SYNTHETIC: L2 99, L8 98 |
+| A-07 | Add every missing object, tool, prop and environment element | Implemented | [play](evidence/stage10-2026-10-27/play/) | Shelf, books, cups, plates, bowl, tray, napkin, box, ball, block, can, sponge, pan, spoon, knife, board, cucumber, tomato, bread, mats: all built in code (D7). Look checked by Claude in screenshots; your by-eye review pending |
+| A-08 | Instructions, objectives, progress, success conditions and completion feedback | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json), [play](evidence/stage10-2026-10-27/play/) | Top panel: step text, needed count, feedback, progress bar; completion report with score and stars |
+| A-09 | Realistic manipulation, placement constraints and physical interactions | Tested | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json) | Placement on aimed surfaces, upright, position and yaw tolerances, carriers (pan, plate), box volume and overlap check. Game-scale assist, not free rigid-body stacking |
+| A-10 | Difficulty levels and optional precision requirements | Tested | offline activity checks, [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json) | Levels 1–10: tolerances 6→2 cm and 35→12°, more items and cuts, longer stirring, more force |
+| A-11 | Scoring on accuracy, completion, handling and task performance | Tested | offline activity checks, [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json) | Score = 60 accuracy + 25 completion + 15 handling (errors); outcomes include position mm, angle °, retries, time and per-activity measures |
+| A-12 | Integrated into the environment and UI without breaking current features | Tested | full regression, [play](evidence/stage10-2026-10-27/play/) | Options panel row ACTIVITY / START ACTIVITY (K); every Stage 0–9 suite still passes; outcomes saved in sessions and shown in the PDF and module dashboards (offline product test) |
+| A-13 | Replayable and completable with every supported input | In Progress | [activity-probe.json](evidence/stage10-2026-10-27/activity-probe.json) | Replay: K restarts, N picks the next activity. Keyboard/mouse path tested (SYNTHETIC). Camera hand grab and hand pointer use the same grab/release path but are not tested end-to-end with a real camera |
 
 ## 4. Optional eye tracking → Stage 14 (WBS 3.2)
 

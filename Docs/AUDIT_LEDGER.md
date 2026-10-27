@@ -718,6 +718,63 @@ Plan tasks 9.1–9.6 (WBS 3.3). The target is your chart "Types and Forms of Def
 
 **Not measured:** a real hand squeezing these objects, any match to real material constants, and any clinical meaning of the dents.
 
+## 10c. Stage 10 six multi-step activities (27 Oct 2026)
+
+**What was built:**
+- Six activities, Module 1 tasks 2–7, started from the options panel (ACTIVITY / START ACTIVITY) or with K; N picks the next one in the room, K replays.
+- **Living room (seated):** organise the bookshelf, set the coffee table, pack the storage box.
+- **Kitchen (standing):** cook a simple meal, cut the vegetables, prepare and serve.
+- **How you play:** grab (E or the camera hand), look where it goes, release (Q). The item is put upright on the aimed surface and checked against its target after 0.35 s; `,` and `.` turn it by 15°. Tools act where you look while you squeeze: the knife cuts, the spoon stirs.
+- **Props are built in code (D7):** shelf, books, cups, plates, bowl, tray, napkin, box, ball, block, can, sponge, pan, spoon, knife, board, cucumber, tomato, bread and mats.
+- **Cutting** is a mesh plane cut (`PlaneCutter`), an approximation of cutting, not a simulation of a blade.
+- **Levels 1–10:** position tolerance 6 → 2 cm, angle 35 → 12°, 3 → 5 items, 2 → 4 cuts, stirring 2 → 5 s at 10 → 20 N, chop force 12 → 22 N.
+- **Score** = 60 × accuracy + 25 × completion + 15 × handling (errors), with 1–3 stars. Outcomes (position mm, angle °, errors, retries, time and per-activity measures) are saved in the session and appear in the PDF and module dashboards.
+
+**SYNTHETIC player probe** (`Tools/run_activity_probe.py`, keyboard-demo input through the real grab/aim/release path, isolated storage, no camera or person):
+
+| Activity | Level 2 score | Level 8 score | Level 8 detail |
+|---|---|---|---|
+| Organise the bookshelf | 94 | 88 | 5 books, 8.4 mm position error, all first try |
+| Set the coffee table | 97 | 95 | 3.5 mm, 0° angle error |
+| Pack the storage box | 100 | 100 | 5 items inside, 0 overlaps |
+| Cook a simple meal | 100 | 100 | 4 ingredients, stirred 4.3 s |
+| Cut the vegetables | 98 | 97 | 4 cuts, 94 % even |
+| Prepare and serve | 99 | 98 | 5 steps, 5.6 mm |
+
+12 of 12 runs completed, 0 errors logged; the probe passed 3 times in a row on the final build.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S10-01 | S2 | Round props rolled off the counter before first pickup | Props rest kinematic until picked up |
+| S10-02 | S2 | Targets and placements followed the current look, giving 33° angle errors; kitchen props spawned in the living-room direction | Room facing fixed when the activity starts |
+| S10-03 | S2 | Cooked food could not be picked out of the pan (the pan blocked the reach ray) | `CanReach` ignores a blocker within 3 cm of the item |
+| S10-04 | S2 | The pan sank into the stove while physics settled | Assisted placements stay at rest |
+| S10-05 | S3 | Items stacked on each other in the storage box and stuck out over the rim | Free floor spot search inside the box; stacking kept inside the walls; box enlarged to 30 × 22 cm for 5 items |
+| S10-06 | S3 | Releasing the knife counted as a miss | Items with no target are ignored |
+| S10-07 | S2 | Signed-in users could not start activities (task range 0–1) | Module 1 accepts tasks 0–7 (`MaxTask`), offline product test |
+| S10-08 | S3 | 1 in 3 probe runs missed every knife chop | The knife finds the nearest food along the whole look ray, or within 2.5 cm of the look point; re-armed per activity |
+| S10-09 | S4 | The activity row covered the Resume button and its label was cut off | Row placed under input/hand, Resume moved down, label fits |
+
+**Suites (final build):**
+- **Windows player:** smoke / replay / journey 168 / 169 / 74, each with 10 model checks; UI and gallery (87 checks) passed; contact, grip-lab and material-lab probes passed.
+- **Performance probe:** passed (mean 195–310 FPS across scenes, worst p95 frame 8.8 ms).
+- **Unity test runner:** EditMode 8/8.
+- **Offline C#:** activity and deformation checks, product 77 (with a new activity-session test), grasp 235, tracking 177, keyboard 72.
+- **Python:** Tools unit tests 66, ai-engine 32.
+
+**The plan asked for an EditMode completion test per activity.** It is replaced by the player probe, because the activities need the rendered apartment, physics and UI. The pure rules (tuning, placement, book order, evenness, score, steps, plane cut) are covered by offline checks.
+
+**Protected changes, each with a reason**, are in `evidence/stage10-2026-10-27/protected-source-review.json`:
+- `ApartmentExperience` (grab/release events, held-tool offset, reach tolerance)
+- `CatalogValidation` and `ProductRepository` (Module 1 task range)
+
+**Not measured:**
+- your hands-on playtest;
+- a real camera hand completing an activity;
+- any clinical meaning of the scores.
+
+**Seen but left for Stage 11:** the options-panel section labels touch the room and object buttons. This predates Stage 10.
+
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

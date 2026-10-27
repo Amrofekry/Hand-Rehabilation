@@ -112,7 +112,45 @@ class DeformationTests {
   Invalid(()=>FracturePartitioner.Split(new[]{new Vector3(float.NaN,0,0)},new[]{0,0,0},1),"Nonfinite geometry rejected");
   Invalid(()=>new LocalDeformationState(new[]{new Vector3(float.PositiveInfinity,0,0)}),"Nonfinite rest vertices rejected");
   MaterialChartChecks();
+  ActivityChecks();
   Console.WriteLine("Deformation/fracture checks passed: "+passed);
+ }
+
+ // ---- Stage 10: activity rules and the plane cutter (production code).
+ static void ActivityChecks(){
+  var easy=ActivityTuning.ForLevel(1);var hard=ActivityTuning.ForLevel(10);
+  Check(hard.positionTolerance<easy.positionTolerance&&hard.angleTolerance<easy.angleTolerance&&hard.items>=easy.items&&hard.cuts>easy.cuts&&hard.stirSeconds>easy.stirSeconds,"Higher levels ask for more items and tighter placement");
+  Check(ActivityTuning.ForLevel(-5).items==easy.items&&ActivityTuning.ForLevel(99).cuts==hard.cuts,"Out-of-range levels are clamped");
+  Check(Math.Abs(ActivityRules.YawError(350,10)-20)<1e-4f&&Math.Abs(ActivityRules.YawError(0,170,180)-10)<1e-4f&&ActivityRules.YawError(float.NaN,0)==180,"Yaw error wraps and honours symmetry");
+  var perfect=ActivityRules.Placement(0,0,.04f,20);var near=ActivityRules.Placement(.02f,10,.04f,20);var off=ActivityRules.Placement(.05f,0,.04f,20);
+  Check(perfect.accepted&&Math.Abs(perfect.score-1)<1e-5f&&near.accepted&&near.score<perfect.score&&near.score>0&&!off.accepted&&off.score==0,"Placement scores fall with error and fail past the tolerance");
+  Check(!ActivityRules.Placement(float.NaN,0,.04f,20).accepted&&!ActivityRules.Placement(0,0,0,20).accepted,"Bad placement input is not accepted");
+  var heights=new[]{.21f,.15f,.18f};
+  Check(ActivityRules.BookFitsSlot(heights,1,0)&&ActivityRules.BookFitsSlot(heights,2,1)&&ActivityRules.BookFitsSlot(heights,0,2)&&!ActivityRules.BookFitsSlot(heights,0,0),"Books go shortest to tallest, left to right");
+  Check(!ActivityRules.BookFitsSlot(heights,5,0)&&!ActivityRules.BookFitsSlot(null,0,0),"Bad book or slot is rejected");
+  Check(Math.Abs(ActivityRules.Evenness(new[]{.03f,.03f,.03f})-1)<1e-5f&&ActivityRules.Evenness(new[]{.01f,.05f})<.5f&&ActivityRules.Evenness(new[]{.03f,-1f})==0,"Cut evenness: equal pieces 1, uneven lower, bad lengths 0");
+  Check(ActivityRules.Score(1,true,0)==100&&ActivityRules.Score(1,false,0)<=75&&ActivityRules.Score(1,true,5)==85&&ActivityRules.Score(float.NaN,true,0)==40,"Score: accuracy, completion and errors");
+  Check(ActivityRules.Stars(100)==3&&ActivityRules.Stars(70)==2&&ActivityRules.Stars(10)==1&&ActivityRules.Stars(0)==0,"Stars match the other exercises");
+  Check(ActivityRules.Task(ActivityKind.Bookshelf)==2&&ActivityRules.Task(ActivityKind.PrepareAndServe)==7&&ActivityRules.Kitchen(ActivityKind.Cutting)&&!ActivityRules.Kitchen(ActivityKind.StorageBox),"Activities are Module 1 tasks 2-7, kitchen ones flagged");
+  var steps=new ActivitySteps();steps.Add("Place the books",3);steps.Add("Check the order");
+  steps.Advance();steps.Advance();Check(!steps.Complete&&steps.CurrentDone==2&&Math.Abs(steps.Progress-.5f)<1e-5f,"Steps count units toward progress");
+  steps.Retract();Check(steps.CurrentDone==1,"An item taken back is uncounted");
+  steps.Advance(5);steps.Advance();Check(steps.Complete&&Math.Abs(steps.Progress-1)<1e-5f&&steps.Instruction=="Done"&&!steps.Advance(),"All steps complete; extra credit is ignored");
+  steps.Reset();Check(steps.Current==0&&steps.Progress==0,"Replay resets the steps");
+
+  // Plane cutter on a sphere: two closed pieces whose volumes add up to the original.
+  Sphere(.03f,16,24,out var v,out var t);float whole=Math.Abs(DeformationDynamics.Volume(v,t));
+  Check(PlaneCutter.Split(v,t,new Vector3(0,.01f,0),Vector3.up,out var above,out var below),"A plane through the object cuts it");
+  float va=Math.Abs(DeformationDynamics.Volume(above.vertices.ToArray(),above.triangles.ToArray())),vb=Math.Abs(DeformationDynamics.Volume(below.vertices.ToArray(),below.triangles.ToArray()));
+  Check(Math.Abs(va+vb-whole)/whole<.01f&&va<vb,"Cut pieces are closed and their volumes add up ("+(va+vb)/whole*100+" %)");
+  bool sides=true;foreach(var p in above.vertices)sides&=p.y>=.01f-1e-5f;foreach(var p in below.vertices)sides&=p.y<=.01f+1e-5f;
+  Check(sides,"Each piece lies on its own side of the cut");
+  Check(!PlaneCutter.Split(v,t,new Vector3(0,.5f,0),Vector3.up,out _,out _),"A plane that misses the object does not cut");
+  Check(!PlaneCutter.Split(v,t,new Vector3(float.NaN,0,0),Vector3.up,out _,out _)&&!PlaneCutter.Split(v,new[]{0,1},Vector3.zero,Vector3.up,out _,out _)&&!PlaneCutter.Split(v,t,Vector3.zero,Vector3.zero,out _,out _),"Bad cut input is rejected");
+  var flipped=(int[])t.Clone();for(int i=0;i<flipped.Length;i+=3){int s=flipped[i+1];flipped[i+1]=flipped[i+2];flipped[i+2]=s;}
+  PlaneCutter.Split(v,flipped,Vector3.zero,Vector3.right,out var fa,out var fb);
+  float fva=DeformationDynamics.Volume(fa.vertices.ToArray(),fa.triangles.ToArray()),fvb=DeformationDynamics.Volume(fb.vertices.ToArray(),fb.triangles.ToArray());
+  Check(Math.Sign(fva)==Math.Sign(DeformationDynamics.Volume(v,flipped))&&Math.Abs(Math.Abs(fva)+Math.Abs(fvb)-whole)/whole<.01f,"Cut faces follow the mesh's own winding");
  }
 
  // ---- Stage 9: the deformation chart (materials, dynamics, volume, forms) on production code.

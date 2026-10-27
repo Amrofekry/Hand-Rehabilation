@@ -180,7 +180,7 @@ def main():
                  'Tools/Offline/TrackingMathShim.cs','Tools/Offline/DeformationTests.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/GraspMotionPolicy.cs',
                  'Assets/Rehab/3.4.1-force-object-interaction/Apartment/ContactDeformation.cs',
-                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FracturePartitioner.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/DeformationMaterial.cs'],OUTPUT/'deformation-tests-compile.log')
+                 'Assets/Rehab/3.4.1-force-object-interaction/Apartment/FracturePartitioner.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/DeformationMaterial.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/ActivityCore.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/PlaneCutter.cs'],OUTPUT/'deformation-tests-compile.log')
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',deformation],OUTPUT/'deformation-tests.log')
             evidence['checks'].append(dict(name='deformation-fracture-source-tests',passed=True,result=result.stdout.strip(),
                 scope='Production kernel/state/damage/partition source with managed math; no rendering or native physics'))

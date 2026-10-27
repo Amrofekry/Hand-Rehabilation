@@ -3,7 +3,7 @@
   "passed": true,
   "game": {
     "passed": true,
-    "utc": "2026-10-26T06:31:02.0122523Z",
+    "utc": "2026-10-27T04:33:36.8946685Z",
     "error": "",
     "checks": [
       "Serialized scene bindings survive reload",
@@ -58,10 +58,10 @@
       "Object menu appears when input is paused",
       "Living room chair can be used from the approach position",
       "Therapy ball can be reached and grabbed from the chair",
-      "Held ball is kinematic and deforms under grip force; held=True kinematic=True compression=0.5142853 contacts=6 ball=(2.58, 0.98, -4.41) anchor=(2.39, 0.67, -4.53) hand=(2.53, 0.93, -4.51) eye=(1.97, 1.11, -4.41) probes=0:0=False@0.083;0:1=False@0.087;0:2=True@0.077;1:0=False@0.089;1:1=False@0.092;1:2=True@0.078;2:0=False@0.087;2:1=False@0.090;2:2=True@0.077;3:0=False@0.085;3:1=False@0.086;3:2=True@0.076;4:0=False@0.088;4:1=True@0.082;4:2=True@0.071",
-      "Independent finger capsules contribute only when touching the ball (6/15); ball=(2.58, 0.98, -4.41) colliderRadius=0.07 probes=0:0=0.083;0:1=0.087;0:2=0.077;1:0=0.089;1:1=0.092;1:2=0.078;2:0=0.087;2:1=0.090;2:2=0.077;3:0=0.085;3:1=0.086;3:2=0.076;4:0=0.088;4:1=0.082;4:2=0.071",
+      "Held ball is kinematic and deforms under grip force; held=True kinematic=True compression=0.5142854 contacts=6 ball=(2.58, 0.98, -4.41) anchor=(2.39, 0.67, -4.53) hand=(2.53, 0.93, -4.51) eye=(1.97, 1.11, -4.41) probes=0:0=False@0.083;0:1=False@0.087;0:2=True@0.076;1:0=False@0.089;1:1=False@0.092;1:2=True@0.078;2:0=False@0.087;2:1=False@0.089;2:2=True@0.077;3:0=False@0.085;3:1=False@0.086;3:2=True@0.076;4:0=False@0.088;4:1=True@0.082;4:2=True@0.071",
+      "Independent finger capsules contribute only when touching the ball (6/15); ball=(2.58, 0.98, -4.41) colliderRadius=0.07 probes=0:0=0.083;0:1=0.087;0:2=0.076;1:0=0.089;1:1=0.092;1:2=0.078;2:0=0.087;2:1=0.089;2:2=0.077;3:0=0.085;3:1=0.086;3:2=0.076;4:0=0.088;4:1=0.082;4:2=0.071",
       "Noncontacting fingers resolve exactly zero force",
-      "Mesh vertices deform near finger contacts while distant regions remain stable (338 moved, 120 distant, 0 distant moved)",
+      "Mesh vertices deform near finger contacts while distant regions remain stable (338 moved, 117 distant, 0 distant moved)",
       "A valid 18 N hold completes the three-second exercise; progress=3.00",
       "Rigged fingers close onto a held object (closure=0.15, pads touching=5, finger penetration=0.0 mm)",
       "Held object follows right hand workspace movement",
@@ -81,7 +81,7 @@
       "Kitchen silicone cup is selectable and can be gripped",
       "A held object cannot push the standing player's CharacterController backwards",
       "Pickup preserves cup orientation",
-      "Silicone cup visibly yields to demo grip force; compression=1 contacts=13 force=30.00197 hand=(0.69, 1.33, -1.85) cup=(0.57, 1.28, -1.80) probes=0:0=0.091;0:1=0.090;0:2=0.072;1:0=0.098;1:1=0.095;1:2=0.074;2:0=0.098;2:1=0.097;2:2=0.081;3:0=0.095;3:1=0.099;3:2=0.095;4:0=0.089;4:1=0.073;4:2=0.057",
+      "Silicone cup visibly yields to demo grip force; compression=1 contacts=13 force=30.00215 hand=(0.69, 1.32, -1.85) cup=(0.58, 1.28, -1.81) probes=0:0=0.092;0:1=0.090;0:2=0.072;1:0=0.099;1:1=0.095;1:2=0.073;2:0=0.098;2:1=0.097;2:2=0.081;3:0=0.096;3:1=0.099;3:2=0.096;4:0=0.089;4:1=0.074;4:2=0.058",
       "Overlapping held cup cannot displace the standing player horizontally; drift=0.0000 m",
       "Overlapping release retains player exclusion until separation",
       "Dropped object remains dynamic with gravity",
@@ -116,7 +116,7 @@
       "One lost hand expires independently while the other remains tracked",
       "Both input hands leave tracking mode after the 500 ms timeout",
       "Left hand can pick up the kitchen sponge",
-      "Left hand vendor joints make visible, localized sponge deformation: contacts=13 depth=0.02632668",
+      "Left hand vendor joints make visible, localized sponge deformation: contacts=13 depth=0.02632241",
       "Camera test mode does not silently open the physical webcam",
       "Right synthetic v1 world-pose extension traverses UDP and drives the imported SDK index independently",
       "Left synthetic v1 world-pose extension traverses UDP and drives the imported SDK index independently",
@@ -129,7 +129,7 @@
       "Summoned object is positioned at the right hand without requiring camera depth alignment",
       "Summoned object drops if the tracked hand stays open beyond the grace period",
       "Stale camera landmarks clear visual pressure and cannot keep holding",
-      "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=31.68 next=31.77056",
+      "Premium HUD does not show zero as a live camera closure after tracking loss; actual=-- page=Home blocks=False enabled=True active=True sameExperience=True shellValid=False now=32.63 next=32.71825",
       "G cannot summon an object without a fresh tracked hand",
       "Right camera data automatically switches the selected hand from left to right",
       "Left camera data automatically selects and drives the left vendor mesh",
@@ -176,8 +176,8 @@
       "Lost managed pointer event is rebuilt when the cached EventSystem survives reload",
       "Production five-second left palm dwell survives finger bending beside a low-confidence right hand; hover="
     ],
-    "contactMeanMs": 0.7104658041270875,
-    "contactMaxMs": 11.6234,
+    "contactMeanMs": 1.173594480309881,
+    "contactMaxMs": 18.7242,
     "name": "ai-player-replay",
     "exit": 0,
     "rendered": false
@@ -186,10 +186,10 @@
     "passed": true,
     "assertions": 10,
     "unity": "2022.3.20f1",
-    "utc": "2026-10-26T06:30:21.3269077Z",
+    "utc": "2026-10-27T04:32:55.6128866Z",
     "error": "",
     "onnxDifference": 7.450580596923828e-09,
-    "inferenceP50Ms": 0.1671,
-    "inferenceP95Ms": 0.3088
+    "inferenceP50Ms": 0.3322,
+    "inferenceP95Ms": 0.5006
   }
 }

@@ -377,6 +377,24 @@ static class ProductTests
             var events = ProgressSummary.SafetyEvents(sessions);
             Check(events.Count == 2 && events[0].Contains("PAUSE at 30 s") && events[0].Contains("grip force") && events[1].Contains("STOP at 40 s") && events[1].Contains("movement"), "Plain safety events: " + string.Join(" | ", events));
         });
+        Test("Stage 10 activity sessions keep their named outcomes for the dashboards", () => {
+            var f = new Fixture(); f.Login();
+            Reject<ArgumentException>(() => f.repo.Begin(2, 2, true));
+            Reject<ArgumentException>(() => f.repo.Begin(1, 8, true));
+            var s = f.repo.Begin(1, 4, true); s.durationSeconds = 42; s.state = RecordState.Completed; s.score = 96; s.level = 3;
+            s.outcomes = new System.Collections.Generic.List<OutcomeMetric> {
+                new OutcomeMetric { key = "activity.id", label = "Activity 3: Pack the storage box", unit = "", value = 3 },
+                new OutcomeMetric { key = "activity.accuracy", label = "Placement accuracy", unit = "%", value = 95.5f },
+                new OutcomeMetric { key = "activity.errors", label = "Wrong placements", unit = "", value = 0 },
+                new OutcomeMetric { key = "box.overlaps", label = "Items pressed into each other", unit = "", value = 1 },
+                new OutcomeMetric { key = "stars", label = "Stars", unit = "", value = 3 } };
+            f.repo.SaveSession(s);
+            var stored = f.repo.Sessions("patient.one").Single(x => x.task == 4);
+            Check(stored.outcomes.Any(o => o.label == "Activity 3: Pack the storage box") && stored.score == 96, "Activity outcome stored with its name");
+            var pdf = Encoding.ASCII.GetString(ResearchExport.SessionPdf("fabricated", stored));
+            Check(pdf.Contains("Activity 3: Pack the storage box") && pdf.Contains("Placement accuracy"), "Session PDF lists the activity outcomes");
+            Check(ProgressSummary.ByModule(new[] { stored })[0].completed == 1, "Activity counts as Module 1 practice");
+        });
         Test("Dashboards show missing data as a dash, never 0", () => {
             var r = Seeded(); r.SignIn(DashboardFixtures.Alpha, DashboardFixtures.Password);
             Check(ProgressSummary.Cards(new SessionRecord[0]).All(c => c.missing && c.value == ProgressSummary.Missing), "No sessions: every card is a dash");
