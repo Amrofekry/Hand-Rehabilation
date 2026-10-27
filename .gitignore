@@ -55,3 +55,6 @@ __pycache__/
 
 # CV hybrid training data, runs and weights (large; stay local)
 /CVTraining/
+
+# Machine-level tool caches and runtimes moved off drive C (uv, pip, Unity UPM, Python)
+/.local/
