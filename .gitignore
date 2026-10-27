@@ -48,3 +48,7 @@ __pycache__/
 # Stage 0 hygiene
 /.venv*/
 /Tools/**/__pycache__/
+
+# Claude Code local-only files
+/.claude/settings.local.json
+*.bak

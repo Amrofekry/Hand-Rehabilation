@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#v10.0.0",
     "com.unity.burst": "file:../Tools/AI/PackageCache/com.unity.burst-1.8.17.tgz",
     "com.unity.collections": "file:../Tools/AI/Unity2022Packages/com.unity.collections-2.2.1.tgz",
     "com.unity.ext.nunit": "file:../Tools/AI/Unity2022Packages/com.unity.ext.nunit-1.0.6.tgz",
