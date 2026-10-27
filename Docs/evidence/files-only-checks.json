@@ -1,11 +1,11 @@
 {
-  "utc": "2026-10-27T15:30:41.575360+00:00",
+  "utc": "2026-10-27T16:40:56.989844+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 891
+      "count": 894
     },
     {
       "name": "assembly-graph",
@@ -19,8 +19,8 @@
         "GripRehab.Product.dll": "80682b9728171d49175d24a7e91979c6ec02e79d7f23eaa5cafd322e1a91f9f7",
         "GripRehab.Core.dll": "bc03ea56546bdff41367e59f960c692eb3bd97e156efd91d1b5bbb2b5eba5be4",
         "GripRehab.UI.dll": "fd4e9e7e657faea0777cf2e7d1c959a64531b81b9dd30493aadb121f9d151668",
-        "Assembly-CSharp.dll": "d747d793b73c2aaf005821587608ab3936cd7e2a9b5407da225b07f76dcf733f",
-        "Assembly-CSharp-Editor.dll": "21732b9e5ba9ce08ea4faccd21c569d36f1de014263a6e7ae66987d130ed3ec1"
+        "Assembly-CSharp.dll": "004c51e4b6cbf791d2d09f9c00f39c8634f24ebc1d47d679f76968ff2fecae64",
+        "Assembly-CSharp-Editor.dll": "97a6099f8875576f67e6d504eb99fb1c51739a29e555f55887032b3a64ad7931"
       }
     },
     {
@@ -30,7 +30,7 @@
         "GripRehab.Product.dll": "aa54b6a241f87196cab6919eecc1257c9865d1ec4dc2e9866c12d3e8d0dbf9a0",
         "GripRehab.Core.dll": "79754f3bb30da57af576c4fc24b6eca1e9d4008be2f9c7adc85327392f8e9046",
         "GripRehab.UI.dll": "232cdafe30e10412c4731420c3dabeb2ac2b7df8e6d02d1afd73f6fdaeb45da7",
-        "Assembly-CSharp.dll": "0b3eceb72c375db330fd54aeb05329d8493c75a39019e04a6ec3e7dcaeb66067"
+        "Assembly-CSharp.dll": "620222e235343cfe57f9194c8b8ed5fe3bb150d0b8409cbe3ff5d6dbfdf07087"
       }
     },
     {
@@ -49,6 +49,12 @@
       "passed": true,
       "result": "PASS startup held inputs wait for release\nPASS Space squeezes after a neutral frame\nPASS Space release stops squeezing\nPASS left mouse also squeezes\nPASS Escape pause: active grip before interruption\nPASS Escape pause: state change blocks all same-frame reads\nPASS Escape pause: held inputs do not squeeze after resume\nPASS Escape pause: release and new Space press restores grip\nPASS Escape pause: release and new mouse press restores grip\nPASS Tab pause: active grip before interruption\nPASS Tab pause: state change blocks all same-frame reads\nPASS Tab pause: held inputs do not squeeze after resume\nPASS Tab pause: release and new Space press restores grip\nPASS Tab pause: release and new mouse press restores grip\nPASS Resume button: active grip before interruption\nPASS Resume button: state change blocks all same-frame reads\nPASS Resume button: held inputs do not squeeze after resume\nPASS Resume button: release and new Space press restores grip\nPASS Resume button: release and new mouse press restores grip\nPASS mode switch: active grip before interruption\nPASS mode switch: state change blocks all same-frame reads\nPASS mode switch: held inputs do not squeeze after resume\nPASS mode switch: release and new Space press restores grip\nPASS mode switch: release and new mouse press restores grip\nPASS focus loss: active grip before interruption\nPASS focus loss: state change blocks all same-frame reads\nPASS focus loss: held inputs do not squeeze after resume\nPASS focus loss: release and new Space press restores grip\nPASS focus loss: release and new mouse press restores grip\nPASS component disable: active grip before interruption\nPASS component disable: state change blocks all same-frame reads\nPASS component disable: held inputs do not squeeze after resume\nPASS component disable: release and new Space press restores grip\nPASS component disable: release and new mouse press restores grip\nPASS Home: keyboard actions and grip are blocked\nPASS Home: another consumer cannot reopen input in the same frame\nPASS Home: held Space does not leak across context\nPASS profile text field: keyboard actions and grip are blocked\nPASS profile text field: another consumer cannot reopen input in the same frame\nPASS profile text field: held Space does not leak across context\nPASS session options: keyboard actions and grip are blocked\nPASS session options: another consumer cannot reopen input in the same frame\nPASS session options: held Space does not leak across context\nPASS research activity: keyboard actions and grip are blocked\nPASS research activity: another consumer cannot reopen input in the same frame\nPASS research activity: held Space does not leak across context\nPASS lost focus: keyboard actions and grip are blocked\nPASS lost focus: another consumer cannot reopen input in the same frame\nPASS lost focus: held Space does not leak across context\nPASS Space can re-arm independently of a held Resume mouse button\nPASS unreleased mouse alone remains blocked\nPASS mouse becomes usable after its own release\nPASS separate gate instances do not share state\nPASS Escape toggles session options\nPASS Tab toggles session options\nPASS Escape and Tab together request one toggle\nPASS no pause key does nothing\nPASS Home/activity cannot be unpaused by apartment keys\nPASS typing cannot toggle gameplay\nPASS background keys cannot toggle gameplay\nPASS Space/mouse uses demo setpoint\nPASS either Shift uses maximum demo force\nPASS Shift alone is not a squeeze\nPASS blocked context produces no demo force\nPASS demo force cannot substitute for Camera/Phase 2\nPASS mouse wheel adds three newtons per notch\nPASS plus increases at defined rate\nPASS minus decreases at defined rate\nPASS opposing plus/minus cancel\nPASS setpoint cannot exceed maximum\nPASS setpoint cannot drop below minimum\nPASS negative elapsed time does not change setpoint\nRESULT 72 passed, 0 failed; production keyboard policy only; no Unity or physical input",
       "scope": "Production keyboard gate with fabricated frame/key states; no Unity Input/EventSystem or OS input"
+    },
+    {
+      "name": "voice-router-tests",
+      "passed": true,
+      "result": "PASS keyword 'next' maps to a command\nPASS keyword 'down' maps to a command\nPASS keyword 'previous' maps to a command\nPASS keyword 'up' maps to a command\nPASS keyword 'select' maps to a command\nPASS keyword 'press' maps to a command\nPASS keyword 'back' maps to a command\nPASS keyword 'go back' maps to a command\nPASS keyword 'open settings' maps to a command\nPASS keyword 'settings' maps to a command\nPASS keyword 'confirm' maps to a command\nPASS keyword 'yes' maps to a command\nPASS keyword 'cancel' maps to a command\nPASS keyword 'no' maps to a command\nPASS keyword 'help' maps to a command\nPASS keyword 'what can I say' maps to a command\nPASS keyword 'move forward' maps to a command\nPASS keyword 'walk forward' maps to a command\nPASS keyword 'move back' maps to a command\nPASS keyword 'walk back' maps to a command\nPASS keyword 'move left' maps to a command\nPASS keyword 'move right' maps to a command\nPASS keyword 'stop' maps to a command\nPASS keyword 'look at object' maps to a command\nPASS keyword 'look at it' maps to a command\nPASS keyword 'grab' maps to a command\nPASS keyword 'pick up' maps to a command\nPASS keyword 'select object' maps to a command\nPASS keyword 'release' maps to a command\nPASS keyword 'let go' maps to a command\nPASS keyword 'put down' maps to a command\nPASS keyword 'open inventory' maps to a command\nPASS keyword 'inventory' maps to a command\nPASS keyword 'options' maps to a command\nPASS keyword 'start bookshelf' maps to a command\nPASS keyword 'start coffee table' maps to a command\nPASS keyword 'start storage box' maps to a command\nPASS keyword 'start simple meal' maps to a command\nPASS keyword 'start cutting' maps to a command\nPASS keyword 'start prepare and serve' maps to a command\nPASS keyword 'restart' maps to a command\nPASS keyword 'pause' maps to a command\nPASS keyword 'resume' maps to a command\nPASS keyword 'continue' maps to a command\nPASS keyword 'instructions' maps to a command\nPASS keyword 'main menu' maps to a command\nPASS keyword 'stop listening' maps to a command\nPASS keyword 'start listening' maps to a command\nPASS command Next has a phrase\nPASS command Previous has a phrase\nPASS command Select has a phrase\nPASS command Back has a phrase\nPASS command OpenSettings has a phrase\nPASS command Confirm has a phrase\nPASS command Cancel has a phrase\nPASS command Help has a phrase\nPASS command MoveForward has a phrase\nPASS command MoveBack has a phrase\nPASS command MoveLeft has a phrase\nPASS command MoveRight has a phrase\nPASS command Stop has a phrase\nPASS command LookAtObject has a phrase\nPASS command GrabObject has a phrase\nPASS command ReleaseObject has a phrase\nPASS command OpenInventory has a phrase\nPASS command StartBookshelf has a phrase\nPASS command StartCoffeeTable has a phrase\nPASS command StartStorageBox has a phrase\nPASS command StartMeal has a phrase\nPASS command StartCutting has a phrase\nPASS command StartServe has a phrase\nPASS command Restart has a phrase\nPASS command Pause has a phrase\nPASS command Resume has a phrase\nPASS command Instructions has a phrase\nPASS command MainMenu has a phrase\nPASS command StopListening has a phrase\nPASS command StartListening has a phrase\nPASS command Space has a phrase\nPASS command DeleteLetter has a phrase\nPASS command ClearText has a phrase\nPASS command Done has a phrase\nPASS spelling grammar: NATO, letters and controls\nPASS menu: next\nPASS menu: select\nPASS menu: open settings\nPASS home: back has nowhere to go\nPASS sub-page: back\nPASS menu: activities start in the apartment\nPASS apartment: launch an activity\nPASS one activity at a time\nPASS move forward\nPASS no moving while paused\nPASS stop\nPASS grab\nPASS grab while holding is refused\nPASS release with empty hands is refused\nPASS release while holding\nPASS look at object\nPASS open inventory\nPASS no grabbing from a menu\nPASS pause and resume\nPASS nothing to resume\nPASS instructions\nPASS restart needs an activity\nPASS restart asks to confirm\nPASS confirm runs it\nPASS cancel drops it\nPASS state changed before confirm: refused\nPASS confirmation expires\nPASS low confidence asks first\nPASS yes confirms a low-confidence command\nPASS stop acts even at low confidence\nPASS rejected audio is ignored\nPASS silence is ignored\nPASS unknown phrase is refused with help\nPASS confirm with nothing pending\nPASS stop listening\nPASS asleep: only start listening\nPASS commands are not spelling\nPASS password field refuses voice\nPASS spell 'alpha'\nPASS spell 'mike'\nPASS spell 'romeo'\nPASS spell 'oscar'\nPASS spell 'space'\nPASS spell 'f'\nPASS spell 'echo'\nPASS spell 'kilo'\nPASS spell 'romeo'\nPASS spell 'yankee'\nPASS spell 'yankee'\nPASS spell 'delete'\nPASS spelled text with capitals and a correction: Amro Fekry\nPASS nothing is entered before review\nPASS done shows the text for review\nPASS confirm enters the reviewed text\nPASS unclear letter is confirmed first\nPASS spelling variants\nPASS length is capped\nVOICE TESTS PASSED: 140",
+      "scope": "Production voice router and spelling buffer with text transcripts; no microphone, Windows speech or Unity"
     },
     {
       "name": "grasp-source-tests",
@@ -71,7 +77,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.137s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.125s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -89,19 +95,19 @@
     {
       "name": "deformation-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.008s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.010s\n\nOK",
       "scope": "Static integration contracts; no native Unity"
     },
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.005s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.007s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.003s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.004s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],
