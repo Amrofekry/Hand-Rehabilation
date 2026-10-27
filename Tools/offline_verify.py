@@ -164,6 +164,13 @@ def main():
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',keyboard],OUTPUT/'keyboard-tests.log')
             evidence['checks'].append(dict(name='keyboard-policy-tests',passed=True,result=result.stdout.strip(),
                 scope='Production keyboard gate with fabricated frame/key states; no Unity Input/EventSystem or OS input'))
+            voice=OUTPUT/'VoiceTests.exe'
+            run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(voice),
+                 *reference_flags,'Tools/Offline/VoiceTests.cs',
+                 'Assets/Rehab/3.4-game-modules/VoiceCommandRouter.cs'],OUTPUT/'voice-tests-compile.log')
+            result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',voice],OUTPUT/'voice-tests.log')
+            evidence['checks'].append(dict(name='voice-router-tests',passed=True,result=result.stdout.strip(),
+                scope='Production voice router and spelling buffer with text transcripts; no microphone, Windows speech or Unity'))
             grasp=OUTPUT/'GraspTests.exe'
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(grasp),
                  *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),

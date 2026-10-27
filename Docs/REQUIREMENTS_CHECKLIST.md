@@ -85,17 +85,17 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| V-01 | Voice as an additional input for UI and gameplay | Not Started | | Windows built-in offline (D9) |
-| V-02 | UI commands: navigate, select, settings, screens, confirm, cancel, launch activities | Not Started | | |
-| V-03 | In-game commands: move, stop, look at, select, release, open inventory and context actions | Not Started | | |
-| V-04 | Restart, pause/resume, instructions and main menu commands | Not Started | | |
-| V-05 | Speech-to-text for text fields (names, profile) | Not Started | | Passwords excluded |
-| V-06 | Letter-by-letter name spelling into editable text | Not Started | | |
-| V-07 | Show recognised text before submitting; allow correction | Not Started | | |
-| V-08 | Feedback when a command is recognised, rejected or unavailable | Not Started | | |
-| V-09 | Handle ambiguity, noise, recognition failure and commands invalid in the current state | Not Started | | |
-| V-10 | Configurable activation, push-to-talk and microphone permission handling | Not Started | | |
-| V-11 | Mouse, keyboard, hand pointer and existing controls fully functional | Not Started | | |
+| V-01 | Voice as an additional input for UI and gameplay | Tested | [VOICE_COMMANDS.md](VOICE_COMMANDS.md) §1, [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | Windows on-device keyword recognizer; starts on this computer (Realtek microphone). Router and actions checked with SYNTHETIC transcripts; recognition of your voice pending (human) |
+| V-02 | UI commands: navigate, select, settings, screens, confirm, cancel, launch activities | Tested | [VOICE_COMMANDS.md](VOICE_COMMANDS.md) §3, offline VoiceTests (140), [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | next/previous, select, open settings, back, confirm/cancel, help, start <activity> |
+| V-03 | In-game commands: move, stop, look at, select, release, open inventory and context actions | Tested | [VOICE_COMMANDS.md](VOICE_COMMANDS.md) §3, offline VoiceTests (140), [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | move forward/back/left/right, stop, look at object, grab, release, open inventory (session options). No squeeze by voice: force stays with hand, keyboard or sensor |
+| V-04 | Restart, pause/resume, instructions and main menu commands | Tested | offline VoiceTests (140), [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | restart (confirmed), pause/resume, instructions (current step), main menu (confirmed) |
+| V-05 | Speech-to-text for text fields (names, profile) | Blocked | [VOICE_COMMANDS.md](VOICE_COMMANDS.md) §1 | Free dictation in Windows is an online service (Microsoft Learn); you chose offline spelling only (2026-10-27). Names and profile text are entered by spelling (V-06) |
+| V-06 | Letter-by-letter name spelling into editable text | Tested | offline VoiceTests (140), [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | NATO words or letters, space, delete, clear; capitalised names; 40-character cap. Probe spelled "Amro" into the profile name |
+| V-07 | Show recognised text before submitting; allow correction | Tested | offline VoiceTests (140), [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | "done" shows the text for review; only "confirm" writes the field; password and PIN fields refuse voice |
+| V-08 | Feedback when a command is recognised, rejected or unavailable | Tested | [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | Strip state, message panel (covers no text, measured) and tones for heard, refused, needs confirmation, not clear, asleep and unavailable |
+| V-09 | Handle ambiguity, noise, recognition failure and commands invalid in the current state | Tested | offline VoiceTests (140) | Low confidence asks to confirm; confirmations expire in 6 s and are re-checked; rejected audio ignored; invalid-now commands refused with the reason. Real room noise not tested (human) |
+| V-10 | Configurable activation, push-to-talk and microphone permission handling | Implemented | [VOICE_COMMANDS.md](VOICE_COMMANDS.md) §2, [voice-probe.json](evidence/stage13-2026-10-27/voice-probe.json) | Off (default), hold Ctrl to talk, always on with sleep/wake; missing microphone or blocked speech shows UNAVAILABLE. Push-to-talk timing needs your hands-on check |
+| V-11 | Mouse, keyboard, hand pointer and existing controls fully functional | Tested | full regression | Voice is off by default and adds no key bindings except Ctrl (push-to-talk); every existing suite passes |
 
 ## 6. Audio and sound design → Stage 12 (WBS 3.1, 3.4)
 

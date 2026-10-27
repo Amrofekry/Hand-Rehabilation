@@ -1,0 +1,10 @@
+{
+  "scope": "Stage 13 voice changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "6b6b293abef5bddaacee8449fb2de785b70f13c75a617eca8e6c2ae88a7bee6e",
+      "currentSha256": "a5949a4957f4c6d1ddee9957f53df133be5ceef69b1b2fc8f879e125c9f89f75",
+      "reason": "User-authorized Stage 13 voice (2026-10-27). Settings page: VOICE COMMANDS mode (off, hold Ctrl to talk, always on) for the offline keyword recognizer (V-10); off by default."
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "passed": true,
+  "utc": "2026-10-27T16:40:33.7672792Z",
+  "scope": "SYNTHETIC transcripts through the real router and game actions in the rendered Windows player; recognizer start checked on this computer, no speech",
+  "detail": "",
+  "platform": "microphones=1 (Microphone (Realtek(R) Audio)), unavailable=none, recognizer running=True",
+  "errors": 0,
+  "checks": [
+    {
+      "name": "platform: Windows keyword recognizer starts (offline)",
+      "value": "microphones=1 (Microphone (Realtek(R) Audio)), unavailable=none, recognizer running=True",
+      "passed": true
+    },
+    {
+      "name": "off stops the recognizer",
+      "value": "False",
+      "passed": true
+    },
+    {
+      "name": "menu: next moves the selection",
+      "value": "Main menu button -> Appearance",
+      "passed": true
+    },
+    {
+      "name": "home: back is refused, with feedback",
+      "value": "Rejected Back: There is nothing to go back to. | toast: There is nothing to go back to.",
+      "passed": true
+    },
+    {
+      "name": "feedback covers no text (home)",
+      "value": "clear",
+      "passed": true
+    },
+    {
+      "name": "unknown phrase refused",
+      "value": "Rejected None: Not a command. Say help for the list.",
+      "passed": true
+    },
+    {
+      "name": "spelling stays in review, not in the field",
+      "value": "field '', buffer 'Amro'",
+      "passed": true
+    },
+    {
+      "name": "done shows the text for review",
+      "value": "Is \"Amro\" right? Say confirm to put it in the field, or delete to correct it.",
+      "passed": true
+    },
+    {
+      "name": "confirm enters the name",
+      "value": "'Amro'",
+      "passed": true
+    },
+    {
+      "name": "password field refuses voice",
+      "value": "Rejected None: Voice is turned off in password fields. Type the password.",
+      "passed": true
+    },
+    {
+      "name": "move back walks, stop stops",
+      "value": "walked 1.64 m, after stop 0.000 m",
+      "passed": true
+    },
+    {
+      "name": "look at object",
+      "value": "0.0\u00b0",
+      "passed": true
+    },
+    {
+      "name": "grab picks it up",
+      "value": "Execute GrabObject: Grab object held=Silicone ball",
+      "passed": true
+    },
+    {
+      "name": "grab while holding is refused",
+      "value": "Rejected GrabObject: You are already holding something. Say release first.",
+      "passed": true
+    },
+    {
+      "name": "release lets go",
+      "value": "Execute ReleaseObject: Release object",
+      "passed": true
+    },
+    {
+      "name": "release with empty hands is refused",
+      "value": "Rejected ReleaseObject: You are not holding anything.",
+      "passed": true
+    },
+    {
+      "name": "low confidence asks to confirm",
+      "value": "NeedsConfirmation GrabObject: Did you say 'grab'? Say confirm or cancel.",
+      "passed": true
+    },
+    {
+      "name": "open inventory pauses (session options)",
+      "value": "Execute OpenInventory: Open inventory",
+      "passed": true
+    },
+    {
+      "name": "moving while paused is refused",
+      "value": "Rejected MoveLeft: Moving works while you are in the apartment and not paused.",
+      "passed": true
+    },
+    {
+      "name": "resume",
+      "value": "Execute Resume: Resume",
+      "passed": true
+    },
+    {
+      "name": "start an activity by voice",
+      "value": "Execute StartBookshelf: Start bookshelf / ",
+      "passed": true
+    },
+    {
+      "name": "instructions read the current step",
+      "value": "Step 1 of 1: Put the books on the shelf, shortest on the left to tallest on the right",
+      "passed": true
+    },
+    {
+      "name": "feedback covers no text (activity)",
+      "value": "clear",
+      "passed": true
+    },
+    {
+      "name": "second activity refused while one runs",
+      "value": "Rejected StartCutting: An activity is running. Finish it or say restart.",
+      "passed": true
+    },
+    {
+      "name": "restart asks to confirm",
+      "value": "NeedsConfirmation Restart: Restart the activity: your progress here will end. Say confirm or cancel.",
+      "passed": true
+    },
+    {
+      "name": "confirm restarts it",
+      "value": "Execute Restart: Confirmed: Restart the activity",
+      "passed": true
+    },
+    {
+      "name": "asleep ignores commands",
+      "value": "Ignored GrabObject: Voice is asleep. Say start listening.",
+      "passed": true
+    },
+    {
+      "name": "main menu after confirm",
+      "value": "Execute MainMenu: Confirmed: Main menu page=Home",
+      "passed": true
+    }
+  ],
+  "exit": 0
+}

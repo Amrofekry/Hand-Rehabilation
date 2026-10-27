@@ -868,6 +868,31 @@ Design, the event-to-sound map and the loudness table are in [AUDIO_DESIGN.md](A
 
 **Protected file:** `ResearchPortalPages.cs` gained master, ambience and voice volume settings. It is recorded in `evidence/stage12-2026-10-27/protected-source-review.json`.
 
+## 10f. Stage 13 voice commands and spelling (27 Oct 2026)
+
+Design, the investigation and the command coverage table are in [VOICE_COMMANDS.md](VOICE_COMMANDS.md). Evidence is in `evidence/stage13-2026-10-27/`.
+
+| ID | Result | How it was checked |
+|---|---|---|
+| S13-01 | Speech is available here: SAPI en-US recognizer, David and Zira voices, Realtek microphone allowed. The Unity keyword recognizer starts in the built player | System checks; voice probe platform check (no speech judged) |
+| S13-02 | Windows free dictation is an online service, which differs from D9 "offline". You chose offline spelling only, so V-05 is **Blocked** and D9 is revised | Microsoft Learn, Speech recognition, Predefined grammars |
+| S13-03 | Router: about 50 command phrases, state rules, confirmation for low confidence and for losing progress (re-checked, expires in 6 s), sleep and wake | Offline `VoiceTests`: 140 checks from transcripts |
+| S13-04 | Actions run through the existing paths: walking 1.64 m then stopping, looking at 0.0°, grab and release, inventory, pause and resume, starting an activity, instructions, a confirmed restart, a confirmed main menu | Voice probe 28/28 (SYNTHETIC transcripts) |
+| S13-05 | Spelling with review: "Amro" goes in only after "done" and "confirm"; password fields are refused | Voice probe |
+| S13-06 | The feedback panel covers no text in the apartment or the menus. The first placement, at top centre, covered the activity panel; it now sits in the free band above the input strip, and in menus in the bottom margin | Voice probe overlap check, screenshots in `play/` |
+
+**Regression (final build):**
+- All pass: smoke, replay, journey, UI at 4 sizes, gallery, perf, contact ×3, activity, activity UI-only, audio 17/17, voice 28/28, EditMode 10/10, offline (now with voice-router-tests), Python 70, pytest 32.
+- Perf: mean 235–309 FPS, worst p95 7.2 ms.
+
+**Kinds of result:**
+- **Not tested by a person:** recognition of your voice, room noise, and push-to-talk timing. These are human checks for your microphone session.
+- **SYNTHETIC:** the probe feeds transcripts.
+- **Machine check:** the recognizer start on this computer.
+- **Language:** en-US only.
+
+**Protected file:** `ResearchPortalPages.cs` gained the VOICE COMMANDS setting. It is recorded in `evidence/stage13-2026-10-27/protected-source-review.json`.
+
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

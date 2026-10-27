@@ -1,0 +1,141 @@
+PASS keyword 'next' maps to a command
+PASS keyword 'down' maps to a command
+PASS keyword 'previous' maps to a command
+PASS keyword 'up' maps to a command
+PASS keyword 'select' maps to a command
+PASS keyword 'press' maps to a command
+PASS keyword 'back' maps to a command
+PASS keyword 'go back' maps to a command
+PASS keyword 'open settings' maps to a command
+PASS keyword 'settings' maps to a command
+PASS keyword 'confirm' maps to a command
+PASS keyword 'yes' maps to a command
+PASS keyword 'cancel' maps to a command
+PASS keyword 'no' maps to a command
+PASS keyword 'help' maps to a command
+PASS keyword 'what can I say' maps to a command
+PASS keyword 'move forward' maps to a command
+PASS keyword 'walk forward' maps to a command
+PASS keyword 'move back' maps to a command
+PASS keyword 'walk back' maps to a command
+PASS keyword 'move left' maps to a command
+PASS keyword 'move right' maps to a command
+PASS keyword 'stop' maps to a command
+PASS keyword 'look at object' maps to a command
+PASS keyword 'look at it' maps to a command
+PASS keyword 'grab' maps to a command
+PASS keyword 'pick up' maps to a command
+PASS keyword 'select object' maps to a command
+PASS keyword 'release' maps to a command
+PASS keyword 'let go' maps to a command
+PASS keyword 'put down' maps to a command
+PASS keyword 'open inventory' maps to a command
+PASS keyword 'inventory' maps to a command
+PASS keyword 'options' maps to a command
+PASS keyword 'start bookshelf' maps to a command
+PASS keyword 'start coffee table' maps to a command
+PASS keyword 'start storage box' maps to a command
+PASS keyword 'start simple meal' maps to a command
+PASS keyword 'start cutting' maps to a command
+PASS keyword 'start prepare and serve' maps to a command
+PASS keyword 'restart' maps to a command
+PASS keyword 'pause' maps to a command
+PASS keyword 'resume' maps to a command
+PASS keyword 'continue' maps to a command
+PASS keyword 'instructions' maps to a command
+PASS keyword 'main menu' maps to a command
+PASS keyword 'stop listening' maps to a command
+PASS keyword 'start listening' maps to a command
+PASS command Next has a phrase
+PASS command Previous has a phrase
+PASS command Select has a phrase
+PASS command Back has a phrase
+PASS command OpenSettings has a phrase
+PASS command Confirm has a phrase
+PASS command Cancel has a phrase
+PASS command Help has a phrase
+PASS command MoveForward has a phrase
+PASS command MoveBack has a phrase
+PASS command MoveLeft has a phrase
+PASS command MoveRight has a phrase
+PASS command Stop has a phrase
+PASS command LookAtObject has a phrase
+PASS command GrabObject has a phrase
+PASS command ReleaseObject has a phrase
+PASS command OpenInventory has a phrase
+PASS command StartBookshelf has a phrase
+PASS command StartCoffeeTable has a phrase
+PASS command StartStorageBox has a phrase
+PASS command StartMeal has a phrase
+PASS command StartCutting has a phrase
+PASS command StartServe has a phrase
+PASS command Restart has a phrase
+PASS command Pause has a phrase
+PASS command Resume has a phrase
+PASS command Instructions has a phrase
+PASS command MainMenu has a phrase
+PASS command StopListening has a phrase
+PASS command StartListening has a phrase
+PASS command Space has a phrase
+PASS command DeleteLetter has a phrase
+PASS command ClearText has a phrase
+PASS command Done has a phrase
+PASS spelling grammar: NATO, letters and controls
+PASS menu: next
+PASS menu: select
+PASS menu: open settings
+PASS home: back has nowhere to go
+PASS sub-page: back
+PASS menu: activities start in the apartment
+PASS apartment: launch an activity
+PASS one activity at a time
+PASS move forward
+PASS no moving while paused
+PASS stop
+PASS grab
+PASS grab while holding is refused
+PASS release with empty hands is refused
+PASS release while holding
+PASS look at object
+PASS open inventory
+PASS no grabbing from a menu
+PASS pause and resume
+PASS nothing to resume
+PASS instructions
+PASS restart needs an activity
+PASS restart asks to confirm
+PASS confirm runs it
+PASS cancel drops it
+PASS state changed before confirm: refused
+PASS confirmation expires
+PASS low confidence asks first
+PASS yes confirms a low-confidence command
+PASS stop acts even at low confidence
+PASS rejected audio is ignored
+PASS silence is ignored
+PASS unknown phrase is refused with help
+PASS confirm with nothing pending
+PASS stop listening
+PASS asleep: only start listening
+PASS commands are not spelling
+PASS password field refuses voice
+PASS spell 'alpha'
+PASS spell 'mike'
+PASS spell 'romeo'
+PASS spell 'oscar'
+PASS spell 'space'
+PASS spell 'f'
+PASS spell 'echo'
+PASS spell 'kilo'
+PASS spell 'romeo'
+PASS spell 'yankee'
+PASS spell 'yankee'
+PASS spell 'delete'
+PASS spelled text with capitals and a correction: Amro Fekry
+PASS nothing is entered before review
+PASS done shows the text for review
+PASS confirm enters the reviewed text
+PASS unclear letter is confirmed first
+PASS spelling variants
+PASS length is capped
+VOICE TESTS PASSED: 140

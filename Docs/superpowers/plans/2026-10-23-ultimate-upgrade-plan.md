@@ -62,7 +62,7 @@
 | D4 (revised 2026-10-25) | Voice commands and eye tracking | **In scope** as Stages 13 and 14 (your 2026-10-25 request). This supersedes the earlier deferral. |
 | D7 (2026-10-25) | Props for the new activities | **Built in code:** procedural meshes and materials (books, shelf slots, plates, cups, tray, box, knife, board, vegetables). No downloads or licences. |
 | D8 (2026-10-25) | Eye tracking without hardware | **Webcam gaze estimate** from MediaPipe face/iris landmarks. Coarse, optional, off by default, with stated accuracy limits. |
-| D9 (2026-10-25) | Speech engine | **Windows built-in, offline:** Unity keyword and dictation recognizers plus Windows text-to-speech. |
+| D9 (2026-10-25) | Speech engine | **Windows built-in, offline:** Unity keyword and dictation recognizers plus Windows text-to-speech. *Revised 2026-10-27 (Stage 13): Windows free dictation is an online service, so you chose offline keyword commands and letter-by-letter spelling only; free dictation is not offered.* |
 | D10 (2026-10-25) | Order of the new stages | **Dependency order:** contact, deformation, activities, UI, audio, voice, eye, assistant, audit, research. |
 
 ---
@@ -514,34 +514,36 @@ Your chart "Types and Forms of Deformation" sets the target:
 **Engine (decision D9):** Windows built-in, offline. Unity's Windows keyword and dictation recognizers, plus Windows text-to-speech for feedback.
 
 ### Task 13.1: Investigate (V-01)
-- [ ] Check speech-service availability, the Windows privacy setting and microphone permission on this machine.
-- [ ] If speech is unavailable, the stage is marked **Blocked** with the reason; it is never faked.
+- [x] Check speech-service availability, the Windows privacy setting and microphone permission on this machine.
+- [x] If speech is unavailable, the stage is marked **Blocked** with the reason; it is never faked.
 
 ### Task 13.2: Commands (V-02 to V-04, V-08, V-09)
-- [ ] A `VoiceCommandRouter` (keyword grammar) mapping commands to existing UI and game actions:
+- [x] A `VoiceCommandRouter` (keyword grammar) mapping commands to existing UI and game actions:
   - **UI:** navigate, select, open settings, back, confirm, cancel, launch activity
   - **In-game:** move forward, back, left and right; stop; look at, select and release the object; open inventory
   - **Session:** restart, pause/resume, instructions, main menu
-- [ ] State-aware: commands that are invalid in the current state are rejected.
-- [ ] Recognized, rejected and unavailable feedback, visual and audio.
-- [ ] Ambiguity and background-noise handling.
+- [x] State-aware: commands that are invalid in the current state are rejected.
+- [x] Recognized, rejected and unavailable feedback, visual and audio.
+- [x] Ambiguity and background-noise handling.
 
 ### Task 13.3: Speech-to-text (V-05 to V-07)
-- [ ] Dictation into text fields (names, profile).
-- [ ] **Letter-by-letter spelling** becomes editable text.
-- [ ] The recognized text is shown for review and correction before submit.
-- [ ] **Password fields are excluded.**
+- [ ] Dictation into text fields (names, profile). *(Blocked: Windows dictation is online; you chose offline spelling, which fills names and profile text.)*
+- [x] **Letter-by-letter spelling** becomes editable text.
+- [x] The recognized text is shown for review and correction before submit.
+- [x] **Password fields are excluded.**
 
 ### Task 13.4: Control (V-10, V-11)
-- [ ] Activation toggle and push-to-talk.
-- [ ] Microphone-permission handling.
-- [ ] All existing inputs unchanged.
+- [x] Activation toggle and push-to-talk.
+- [x] Microphone-permission handling.
+- [x] All existing inputs unchanged.
 
 **Tests:**
 - Router unit tests from transcripts (no microphone needed).
 - A microphone run with you, recorded as human-verified.
 
 **Gate 13:** command coverage table. Stop.
+
+**Result (2026-10-27):** coverage table in `Docs/VOICE_COMMANDS.md`; evidence in `Docs/evidence/stage13-2026-10-27/`; full regression in `Docs/AUDIT_LEDGER.md` §10f. Microphone session with you pending.
 
 ---
 
