@@ -21,10 +21,14 @@ namespace GripRehab
             public OutcomeView[] outcomes;
         }
         [Serializable] public sealed class OutcomeView { public string key, label, unit; public float value; }
-        [Serializable] public sealed class Report { public bool passed; public string utc, scope, detail = ""; public int errors; public Run[] runs; }
+        [Serializable] public sealed class UiCheck { public string name, value; public bool passed; }
+        [Serializable] public sealed class Report { public bool passed; public string utc, scope, detail = "", resolution; public int errors; public Run[] runs; public UiCheck[] uiChecks; }
 
         ApartmentExperience app; ActivityRunner runner; int errors;
         readonly List<Run> runs = new List<Run>();
+        readonly List<UiCheck> uiChecks = new List<UiCheck>();
+        static bool UiOnly => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-ui-only") >= 0;
+        void Check(string name, bool passed, string value) => uiChecks.Add(new UiCheck { name = name, passed = passed, value = value });
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Boot()
@@ -49,9 +53,10 @@ namespace GripRehab
                 if (!more) break;
                 yield return next;
             }
-            report.runs = runs.ToArray(); report.errors = errors;
-            report.passed = failure == null && errors == 0 && runs.Count == 12 && runs.All(r => r.completed);
-            report.detail = failure != null ? failure.ToString() : errors > 0 ? errors + " error(s) logged" : runs.Any(r => !r.completed) ? "Not completed: " + string.Join(", ", runs.Where(r => !r.completed).Select(r => r.activity + " L" + r.level)) : "";
+            report.runs = runs.ToArray(); report.errors = errors; report.uiChecks = uiChecks.ToArray(); report.resolution = Screen.width + "x" + Screen.height;
+            bool uiPassed = uiChecks.Count > 0 && uiChecks.All(c => c.passed);
+            report.passed = failure == null && errors == 0 && uiPassed && (UiOnly || runs.Count == 12 && runs.All(r => r.completed));
+            report.detail = failure != null ? failure.ToString() : errors > 0 ? errors + " error(s) logged" : !uiPassed ? "UI checks failed: " + string.Join(", ", uiChecks.Where(c => !c.passed).Select(c => c.name + "=" + c.value)) : runs.Any(r => !r.completed) ? "Not completed: " + string.Join(", ", runs.Where(r => !r.completed).Select(r => r.activity + " L" + r.level)) : "";
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/activity-probe.json", JsonUtility.ToJson(report, true));
             Debug.Log("[REHAB_ACTIVITY] " + (report.passed ? "PASS" : "FAIL") + " " + report.detail);
@@ -67,8 +72,8 @@ namespace GripRehab
             app.SetHardware(false);
             runner = app.GetComponent<ActivityRunner>();
             if (runner == null) throw new InvalidOperationException("Activity runner missing");
-            // The options panel (TAB) with the new activity row, for the by-eye check.
-            app.player.SetPaused(true); yield return new WaitForSecondsRealtime(1.5f); yield return Shot("options-panel-activities"); app.player.SetPaused(false);
+            yield return UiChecks(shell);
+            if (UiOnly) { shell.ReturnHome(); yield break; }
             foreach (int level in new[] { 2, 8 })
                 foreach (ActivityKind kind in Enum.GetValues(typeof(ActivityKind)))
                 {
@@ -96,6 +101,87 @@ namespace GripRehab
                     if (shell.Research != null && !shell.Research.LiveSession) { shell.openModuleButton.onClick.Invoke(); yield return new WaitForSecondsRealtime(1); app.SetHardware(false); }
                 }
             shell.ReturnHome();
+        }
+
+        // Stage 11 design-system checks on the live apartment UI (SYNTHETIC; no person).
+        IEnumerator UiChecks(RehabAppShell shell)
+        {
+            string size = Screen.width + "x" + Screen.height;
+            var choices = FindAnyObjectByType<ApartmentChoices>();
+            var presentation = FindAnyObjectByType<GripRehab.UI.GripUiThemeController>();
+            var guide = app.GetComponent<ApartmentGuide>();
+            app.player.SetPaused(true); yield return new WaitForSecondsRealtime(1.5f);
+            yield return Shot("options-panel-" + size);
+            // 1. Nothing in the options panel overlaps, and the panel fits on screen.
+            var panel = (RectTransform)choices.inputButton.transform.parent;
+            var items = panel.GetComponentsInChildren<UnityEngine.UI.Button>().Select(b => (RectTransform)b.transform)
+                .Concat(panel.GetComponentsInChildren<UnityEngine.UI.Text>().Where(t => t.GetComponentInParent<UnityEngine.UI.Button>() == null && t.enabled && t.text.Trim().Length > 0).Select(t => t.rectTransform)).ToList();
+            var overlaps = new List<string>();
+            for (int a = 0; a < items.Count; a++) for (int b = a + 1; b < items.Count; b++)
+                    if (Intersect(items[a], items[b]) > 4) overlaps.Add(items[a].name + "/" + items[b].name);
+            Check("options panel: no overlapping elements (" + size + ")", overlaps.Count == 0, overlaps.Count == 0 ? "0" : string.Join(";", overlaps.Take(4)));
+            var corners = new Vector3[4]; panel.GetWorldCorners(corners);
+            Check("options panel fits on screen (" + size + ")", corners[0].y >= 0 && corners[1].y <= Screen.height, corners[0].y.ToString("0") + ".." + corners[1].y.ToString("0"));
+            // 2. Focus ring reaches 3:1 against every panel button in all three themes; selection has a marker.
+            var es = UnityEngine.EventSystems.EventSystem.current;
+            for (int theme = 0; theme < 3 && presentation != null; theme++)
+            {
+                presentation.Select(theme); yield return new WaitForSecondsRealtime(.5f);
+                float worst = 99; string worstName = "";
+                foreach (var button in panel.GetComponentsInChildren<UnityEngine.UI.Button>())
+                {
+                    if (!button.IsInteractable()) continue;
+                    es.SetSelectedGameObject(button.gameObject); yield return null; yield return null;
+                    var feedback = button.GetComponent<GripRehab.UI.GripUiControlFeedback>();
+                    float contrast = feedback != null && feedback.FocusVisible ? feedback.FocusContrast : 0;
+                    if (contrast < worst) { worst = contrast; worstName = button.name; }
+                }
+                Check("focus ring contrast >= 3:1, theme " + theme, worst >= 3, worst.ToString("0.0") + " (" + worstName + ")");
+                if (theme == 2) yield return Shot("options-panel-contrast-" + size);
+            }
+            es.SetSelectedGameObject(null);
+            if (presentation != null) { presentation.Select(0); yield return new WaitForSecondsRealtime(.5f); }
+            var living = choices.livingButton.GetComponent<GripRehab.UI.GripUiControlFeedback>();
+            Check("selected room has a marker, not colour alone", living != null && living.Selected, living != null ? living.Selected.ToString() : "no feedback");
+            app.player.SetPaused(false); yield return new WaitForSecondsRealtime(.4f);
+            // 3. Input-mode strip: the active input in words, and later stages can report their state.
+            var strip = guide != null ? guide.Strip : null; var hudOverlaps = new List<string>();
+            if (strip != null)
+                foreach (var t in strip.GetComponentInParent<Canvas>().GetComponentsInChildren<UnityEngine.UI.Text>())
+                    if (t.enabled && t.canvasRenderer.GetInheritedAlpha() > .01f && t.color.a > .01f && t.text.Trim().Length > 0 && !t.transform.IsChildOf(strip) && Intersect(strip, t.rectTransform) > 4) hudOverlaps.Add(t.text.Trim());
+            Check("input strip covers no HUD text (" + size + ")", strip != null && hudOverlaps.Count == 0, hudOverlaps.Count == 0 ? "0" : string.Join(";", hudOverlaps.Take(3)));
+            var offscreen = strip.GetComponentInParent<Canvas>().GetComponentsInChildren<UnityEngine.UI.Graphic>()
+                .Where(g => g.enabled && g.canvasRenderer.GetInheritedAlpha() > .01f && g.color.a > .01f && (g is UnityEngine.UI.Text tx ? tx.text.Trim().Length > 0 : g.GetComponent<UnityEngine.UI.Button>() != null))
+                .Where(g => { var c4 = new Vector3[4]; g.rectTransform.GetWorldCorners(c4); return c4[0].x < -2 || c4[2].x > Screen.width + 2; })
+                .Select(g => g.name).ToList();
+            Check("HUD text and buttons stay on screen (" + size + ")", offscreen.Count == 0, offscreen.Count == 0 ? "0" : string.Join(";", offscreen.Take(4)));
+            Check("input strip names the active input", guide != null && guide.ChannelText(ApartmentGuide.Channel.Input).Contains("KEYBOARD DEMO"), guide != null ? guide.ChannelText(ApartmentGuide.Channel.Input) : "no guide");
+            ApartmentGuide.Set(ApartmentGuide.Channel.Voice, true, "LISTENING"); yield return null; yield return null;
+            Check("input strip shows a reported state", guide.ChannelText(ApartmentGuide.Channel.Voice) == "VOICE  LISTENING", guide.ChannelText(ApartmentGuide.Channel.Voice));
+            ApartmentGuide.Clear(ApartmentGuide.Channel.Voice); yield return null;
+            // 4. Onboarding completes from real actions: look, grab, squeeze, release, open options.
+            guide.Restart(true); yield return new WaitForSecondsRealtime(.6f);
+            yield return Shot("onboarding-step1-" + size);
+            var p = app.player.transform; app.player.LookAt(p.position + Quaternion.Euler(0, 50, 0) * Vector3.ProjectOnPlane(p.forward, Vector3.up) * 2 + Vector3.down * .3f);
+            yield return new WaitForSecondsRealtime(.4f); int afterLook = guide.Step;
+            var ball = choices.SelectedObject; app.player.LookAt(ball.transform.position); yield return new WaitForSecondsRealtime(.3f);
+            app.TryGrab(ball); yield return new WaitForSecondsRealtime(.6f); int afterGrab = guide.Step;
+            yield return Shot("onboarding-step3-" + size);
+            app.TestForce = 12; yield return new WaitForSecondsRealtime(.6f); app.TestForce = 0; int afterSqueeze = guide.Step;
+            app.Release(); yield return new WaitForSecondsRealtime(.8f); int afterRelease = guide.Step;
+            app.player.SetPaused(true); yield return new WaitForSecondsRealtime(.3f); app.player.SetPaused(false); yield return new WaitForSecondsRealtime(.5f);
+            yield return Shot("onboarding-done-" + size);
+            Check("onboarding advances from real actions", afterLook == 1 && afterGrab == 2 && afterSqueeze == 3 && afterRelease == 4 && !guide.Showing,
+                afterLook + "," + afterGrab + "," + afterSqueeze + "," + afterRelease + " showing=" + guide.Showing);
+            PlayerPrefs.DeleteKey(ApartmentGuide.DoneKey); PlayerPrefs.Save();
+            yield return new WaitForSecondsRealtime(4.2f);
+        }
+
+        static float Intersect(RectTransform a, RectTransform b)
+        {
+            var ca = new Vector3[4]; var cb = new Vector3[4]; a.GetWorldCorners(ca); b.GetWorldCorners(cb);
+            float w = Mathf.Min(ca[2].x, cb[2].x) - Mathf.Max(ca[0].x, cb[0].x), h = Mathf.Min(ca[2].y, cb[2].y) - Mathf.Max(ca[0].y, cb[0].y);
+            return w > 0 && h > 0 ? w * h : 0;
         }
 
         IEnumerator Act(ProbeStep step, Run run)

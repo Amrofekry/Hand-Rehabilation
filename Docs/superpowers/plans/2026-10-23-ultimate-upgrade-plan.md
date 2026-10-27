@@ -450,27 +450,29 @@ Your chart "Types and Forms of Deformation" sets the target:
 - `ResearchPortalView`
 
 ### Task 11.1: Research (U-01 to U-04)
-- [ ] Audit the current UI.
-- [ ] Research 2024–2026 AAA and accessibility-focused interfaces (clean hierarchies, restrained effects, readable type, consistent spacing, clear focus, subtle motion, strong feedback). Cite sources.
-- [ ] Use the findings as inspiration only; no proprietary assets or exact interfaces are copied.
+- [x] Audit the current UI.
+- [x] Research 2024–2026 AAA and accessibility-focused interfaces (clean hierarchies, restrained effects, readable type, consistent spacing, clear focus, subtle motion, strong feedback). Cite sources.
+- [x] Use the findings as inspiration only; no proprietary assets or exact interfaces are copied.
 
 ### Task 11.2: Design system (U-05 to U-07, U-11)
-- [ ] Tokens for colour, type scale, spacing, panels, icons and transitions.
-- [ ] Distinct hover, focus, pressed, disabled, selected and error states.
-- [ ] Better readability, contrast, text scaling and hierarchy.
-- [ ] No clutter, heavy gradients or distracting animation.
-- [ ] Reduce Motion respected.
+- [x] Tokens for colour, type scale, spacing, panels, icons and transitions.
+- [x] Distinct hover, focus, pressed, disabled, selected and error states.
+- [x] Better readability, contrast, text scaling and hierarchy.
+- [x] No clutter, heavy gradients or distracting animation.
+- [x] Reduce Motion respected.
 
 ### Task 11.3: Screens and indicators (U-08 to U-10)
-- [ ] A modern main menu, pause menu, settings, activity selection, progress display and onboarding.
-- [ ] Every screen works with mouse, keyboard, hand pointer, gaze and voice.
-- [ ] Indicators for the active input mode, gaze focus, voice listening and assistant status.
+- [x] A modern main menu, pause menu, settings, activity selection, progress display and onboarding. *(Your by-eye review pending.)*
+- [ ] Every screen works with mouse, keyboard, hand pointer, gaze and voice. *(Mouse, keyboard and hand pointer done; gaze and voice arrive in Stages 13–14.)*
+- [ ] Indicators for the active input mode, gaze focus, voice listening and assistant status. *(Strip built; input and pointer live; gaze, voice and assistant read OFF until Stages 13–15 report.)*
 
 ### Task 11.4: Tests (U-12)
-- [ ] UI and gallery suites extended to the new screens at 1024×768, 1280×720, 1280×800 and 1600×900.
-- [ ] Contrast checks.
+- [x] UI and gallery suites extended to the new screens at 1024×768, 1280×720, 1280×800 and 1600×900.
+- [x] Contrast checks.
 
 **Gate 11:** before/after gallery. Stop.
+
+**Result (2026-10-27):** before/after gallery in `Docs/evidence/stage11-2026-10-27/`; UI checks pass at 4 resolutions × 3 themes; full regression passes. Details in `Docs/AUDIT_LEDGER.md` §10d.
 
 ---
 

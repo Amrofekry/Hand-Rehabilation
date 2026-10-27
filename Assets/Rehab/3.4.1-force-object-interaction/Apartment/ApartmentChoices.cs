@@ -52,6 +52,8 @@ public sealed class ApartmentChoices:MonoBehaviour {
   labButton.GetComponentInChildren<Text>().text="GRIP LAB";materialLabButton.GetComponentInChildren<Text>().text="MATERIAL LAB";
   // Stage 10: the six multi-step activities (living room and kitchen).
   ActivityRunner.Ensure(experience,this,source);
+  // Stage 11: input-mode strip and first-run onboarding.
+  ApartmentGuide.Ensure(experience,this);
  }
  private UnityAction[] callbacks;
  private RehabAppShell shell;
@@ -154,9 +156,16 @@ public sealed class ApartmentChoices:MonoBehaviour {
   if(labButton!=null)PaintChoice(labButton,Lab&&!MaterialLab);if(materialLabButton!=null)PaintChoice(materialLabButton,MaterialLab);
  }
  public static string ClassName(MaterialClass c)=>c==MaterialClass.SemiRigid?"semi-rigid":c==MaterialClass.Soft?"soft":c==MaterialClass.Flexible?"flexible":"rigid";
- private void PaintChoice(Button button,bool selected){
+ // Stage 11: selected = filled and a marker bar (not colour alone); bold labels stay legible on every fill;
+ // every choice gets the shared focus ring.
+ internal void PaintChoice(Button button,bool selected){
+  if(presentation!=null)lastPalette=presentation.Current;
   button.image.color=lastPalette!=null?(selected?lastPalette.primary:lastPalette.secondary):new Color(.10f,.13f,.19f);
-  button.GetComponentInChildren<Text>().color=lastPalette!=null?(selected?lastPalette.textOnPrimary:lastPalette.textOnSecondary):Color.white;
+  var label=button.GetComponentInChildren<Text>();
+  label.color=lastPalette!=null?(selected?lastPalette.textOnPrimary:lastPalette.textOnSecondary):Color.white;label.fontStyle=FontStyle.Bold;
+  if(accessibility==null)accessibility=FindAnyObjectByType<GripRehab.UI.GripUiAccessibility>();
+  var feedback=GripRehab.UI.GripUiControlFeedback.Attach(accessibility,button);if(feedback!=null)feedback.SetSelected(selected);
  }
+ private GripRehab.UI.GripUiAccessibility accessibility;
 }
 }

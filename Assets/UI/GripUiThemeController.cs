@@ -39,6 +39,9 @@ namespace GripRehab.UI
         void Start()
         {
             if (canvas == null || dark == null || lightTheme == null || highContrast == null) return;
+            if (canvas.GetComponent<CanvasScaler>() != null && canvas.GetComponent<GripUiAspectFit>() == null)
+                canvas.gameObject.AddComponent<GripUiAspectFit>();
+            TidyAppearance();
             CacheGraphics();
             // Use saved default. No patient or game data is written by the UI.
             selectedTheme = Mathf.Clamp(selectedTheme, 0, 2);
@@ -101,6 +104,30 @@ namespace GripRehab.UI
                     artwork = role == GripUiRole.Backdrop && graphic is Image image ? image.sprite : null });
             }
             ApplyImmediate();
+        }
+
+        // Stage 11: in the authored modal the text-size note was squeezed against the theme buttons and the
+        // bare theme name floated alone. The labelled current theme takes the line under the subtitle and the
+        // note takes the free space under the theme buttons (positions in the authoring script's frame).
+        void TidyAppearance()
+        {
+            if (appearancePanel == null) return;
+            var note = appearancePanel.transform.Find("Text sizing note") as RectTransform;
+            if (note != null) { note.anchoredPosition = new Vector2(-255, -110); note.sizeDelta = new Vector2(440, 40); }
+            if (activeThemeLabel != null)
+            {
+                var r = activeThemeLabel.rectTransform;
+                r.anchoredPosition = new Vector2(-255, 205); r.sizeDelta = new Vector2(440, 32);
+            }
+        }
+
+        // Stage 11: a layout that resizes a registered label sets its base size here, so the text-size
+        // preference scales from the new size instead of restoring the authored one.
+        public void SetBaseFontSize(Graphic graphic, float size)
+        {
+            for (int i = 0; i < bindings.Count; i++)
+                if (bindings[i].graphic == graphic) { var item = bindings[i]; item.fontSize = size; bindings[i] = item; }
+            if (graphic is Text text) text.fontSize = Mathf.RoundToInt(size * fontScale);
         }
 
         GripUiRole InferRole(Graphic graphic)
@@ -255,6 +282,8 @@ namespace GripRehab.UI
                     text.resizeTextMinSize = Mathf.Min(14, Mathf.RoundToInt(item.fontSize));
                     text.resizeTextMaxSize = Mathf.RoundToInt(item.fontSize * fontScale);
                     text.fontSize = text.resizeTextMaxSize;
+                    // Stage 11: thin strokes on a bright filled control read weakly; labels there are bold.
+                    if (item.role == GripUiRole.TextOnPrimary) text.fontStyle = FontStyle.Bold;
                 }
                 if (item.graphic is TMPro.TMP_Text tmp)
                 {
@@ -283,7 +312,7 @@ namespace GripRehab.UI
         void UpdateLabel()
         {
             if (activeThemeLabel != null)
-                activeThemeLabel.text = selectedTheme == 1 ? "LIGHT" : selectedTheme == 2 ? "HIGH CONTRAST" : "DARK";
+                activeThemeLabel.text = "CURRENT THEME:  " + (selectedTheme == 1 ? "LIGHT" : selectedTheme == 2 ? "HIGH CONTRAST" : "DARK");
         }
 
         public void OpenAppearance()

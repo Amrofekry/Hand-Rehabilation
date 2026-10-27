@@ -45,7 +45,8 @@ def run(width, height):
     return result
 
 if __name__ == '__main__':
-    results = [run(1280, 720), run(1600, 900)]
+    # Stage 11 (U-12): all four target resolutions, 4:3, 16:9 and 16:10.
+    results = [run(1024, 768), run(1280, 720), run(1280, 800), run(1600, 900)]
     (ROOT / 'Docs/ui-player-checks.json').write_text(json.dumps(results, indent=2))
     print(json.dumps([{'size': f'{r["width"]}x{r["height"]}', 'checks': len(r['checks']),
                        'passed': r['passed']} for r in results], indent=2))

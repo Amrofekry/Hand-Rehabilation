@@ -116,18 +116,18 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| U-01 | Audit and redesign UI, menus, buttons, type, icons, colour, spacing, layouts and states | Not Started | | |
-| U-02 | Research 2024–2026 AAA and accessibility-focused UI/UX | Not Started | | Sources cited |
-| U-03 | Analyse hierarchy, restrained effects, readable type, spacing, focus, motion and feedback | Not Started | | |
-| U-04 | Use as inspiration only; no proprietary assets or exact interfaces | Not Started | | |
-| U-05 | Consistent design system (colour, type, buttons, panels, icons, transitions, states) | Not Started | | |
-| U-06 | Distinct hover, focus, pressed, disabled, selected and error states | Not Started | | |
-| U-07 | Readability, contrast, text scaling, navigation clarity and hierarchy | Not Started | | |
-| U-08 | Main menu, pause, settings, activity selection, progress and onboarding redesigned | Not Started | | |
-| U-09 | Works with mouse, keyboard, hand pointer, gaze and voice | Not Started | | |
-| U-10 | Indicators for input mode, gaze focus, voice recognition and assistant status | Not Started | | |
-| U-11 | Clean menus without clutter, heavy gradients or distracting animation | Not Started | | |
-| U-12 | Tested at the target resolutions and aspect ratios | Not Started | | |
+| U-01 | Audit and redesign UI, menus, buttons, type, icons, colour, spacing, layouts and states | Tested | [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) §Stage 11, [stage11](evidence/stage11-2026-10-27/)/before-after.jpg | Audit found: focus ring invisible on primary buttons (Dark 1.0:1) and on white buttons (High Contrast 1.1:1); options-panel labels overlapping rows; clipped chips; HUD cut off at 4:3; Appearance note colliding with buttons; thin labels on filled buttons. All fixed and measured |
+| U-02 | Research 2024–2026 AAA and accessibility-focused UI/UX | Tested | [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) §Stage 11 | Sources: Xbox Accessibility Guidelines 101/102, Game Accessibility Guidelines, WCAG 2.2 (2.4.11, 1.4.11), Material states |
+| U-03 | Analyse hierarchy, restrained effects, readable type, spacing, focus, motion and feedback | Tested | [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) §Stage 11 | Hierarchy, restrained effects, readable type, spacing, focus, motion and feedback analysed in the research table |
+| U-04 | Use as inspiration only; no proprietary assets or exact interfaces | Tested | [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) §Stage 11 | Inspiration only; no proprietary assets, fonts or layouts copied |
+| U-05 | Consistent design system (colour, type, buttons, panels, icons, transitions, states) | Tested | [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) §Stage 11, test_ui_contrast.py | Tokens: colour roles, type scale, spacing scale, targets, motion, state tokens in GripUiTheme (three themes) |
+| U-06 | Distinct hover, focus, pressed, disabled, selected and error states | Tested | [activity-ui-checks.json](evidence/stage11-2026-10-27/activity-ui-checks.json), test_ui_contrast.py | Hover/focus ring ≥ 3:1 on every control in every theme (measured 4.7–19.6), pressed scale, selected marker bar ≥ 4.5:1, disabled, error flash |
+| U-07 | Readability, contrast, text scaling, navigation clarity and hierarchy | Tested | [activity-ui-checks.json](evidence/stage11-2026-10-27/activity-ui-checks.json), test_ui_contrast.py, ui-player-checks.json | Text ≥ 4.5:1 (High Contrast ≥ 7:1), bold labels on filled controls, text-size preference scales new layouts, numbered sections |
+| U-08 | Main menu, pause, settings, activity selection, progress and onboarding redesigned | Implemented | [stage11](evidence/stage11-2026-10-27/)/play/ | Pause (session options), activity selection, progress (activity panel), onboarding (new), settings (Appearance tidied) redesigned; main menu kept with bold primary labels. Your by-eye review pending |
+| U-09 | Works with mouse, keyboard, hand pointer, gaze and voice | In Progress | [activity-ui-checks.json](evidence/stage11-2026-10-27/activity-ui-checks.json) | Mouse, keyboard (focus and Submit) and hand pointer work on every new control. Gaze and voice do not exist yet (Stages 13–14) |
+| U-10 | Indicators for input mode, gaze focus, voice recognition and assistant status | In Progress | [activity-ui-checks.json](evidence/stage11-2026-10-27/activity-ui-checks.json) | Input-mode strip shows input and pointer live; gaze, voice and assistant show OFF and accept live state through ApartmentGuide.Set once Stages 13–15 exist (tested with a SYNTHETIC "LISTENING" state) |
+| U-11 | Clean menus without clutter, heavy gradients or distracting animation | Tested | [stage11](evidence/stage11-2026-10-27/)/play/ | Flat cards, one accent, no gradients added, no looping animation; Reduce Motion removes scaling and transitions |
+| U-12 | Tested at the target resolutions and aspect ratios | Tested | [activity-ui-checks.json](evidence/stage11-2026-10-27/activity-ui-checks.json), ui-player-checks.json | 1024×768, 1280×720, 1280×800, 1600×900: no overlaps, everything on screen, 4:3 matches width (GripUiAspectFit) |
 
 ## 8. Optional voice assistant → Stage 15 (WBS 3.4)
 

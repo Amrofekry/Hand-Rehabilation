@@ -26,6 +26,15 @@ namespace GripRehab.UI
         [Range(0f, .3f)] public float backgroundOpacity = .09f;
         [Range(0f, 32f)] public float backgroundTravel = 12f;
         [Range(.005f, .1f)] public float backgroundSpeed = .035f;
+        // Stage 11 design tokens (Docs/UI_DESIGN_SYSTEM.md). Assets saved before Stage 11 load these defaults.
+        public int[] spacingScale = { 4, 8, 12, 16, 24, 32 };
+        [Range(.2f, .7f)] public float disabledAlpha = .45f;
+        [Range(2f, 8f)] public float selectedMarkerPixels = 4f;
+        [Range(.2f, 1.5f)] public float errorSeconds = .6f;
+        [Range(3f, 7f)] public float minimumFocusContrast = 3f;
+
+        public int Space(int step) =>
+            spacingScale == null || spacingScale.Length == 0 ? 8 : spacingScale[Mathf.Clamp(step, 0, spacingScale.Length - 1)];
 
         public Color Resolve(GripUiRole role)
         {

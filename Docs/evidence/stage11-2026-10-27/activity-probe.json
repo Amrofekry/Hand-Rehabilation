@@ -1,0 +1,1052 @@
+{
+  "passed": true,
+  "utc": "2026-10-27T06:07:28.6619493Z",
+  "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
+  "detail": "",
+  "resolution": "1600x900",
+  "errors": 0,
+  "runs": [
+    {
+      "activity": "Organise the bookshelf",
+      "level": 2,
+      "score": 94,
+      "stepsDone": 1,
+      "stepsTotal": 1,
+      "errors": 0,
+      "misses": 0,
+      "actions": 3,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 7.6196794509887695,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 1: Organise the bookshelf",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 89.45999908447266
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 8.369999885559082
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 7.519999980926514
+        },
+        {
+          "key": "bookshelf.firstTry",
+          "label": "Right slot first time",
+          "unit": "%",
+          "value": 100.0
+        },
+        {
+          "key": "bookshelf.books",
+          "label": "Books",
+          "unit": "",
+          "value": 3.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Set the coffee table",
+      "level": 2,
+      "score": 97,
+      "stepsDone": 1,
+      "stepsTotal": 1,
+      "errors": 0,
+      "misses": 0,
+      "actions": 3,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 7.5700225830078125,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 2: Set the coffee table",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 95.81999969482422
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 3.309999942779541
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 7.460000038146973
+        },
+        {
+          "key": "table.spacingErrorMm",
+          "label": "Spacing error",
+          "unit": "mm",
+          "value": 0.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Pack the storage box",
+      "level": 2,
+      "score": 100,
+      "stepsDone": 1,
+      "stepsTotal": 1,
+      "errors": 0,
+      "misses": 0,
+      "actions": 3,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 7.619088649749756,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 3: Pack the storage box",
+          "unit": "",
+          "value": 3.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 100.0
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 0.0
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 7.239999771118164
+        },
+        {
+          "key": "box.items",
+          "label": "Items packed",
+          "unit": "",
+          "value": 3.0
+        },
+        {
+          "key": "box.overlaps",
+          "label": "Items pressed into each other",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Cook a simple meal",
+      "level": 2,
+      "score": 100,
+      "stepsDone": 4,
+      "stepsTotal": 4,
+      "errors": 0,
+      "misses": 0,
+      "actions": 8,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 18.56471824645996,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 4: Cook a simple meal",
+          "unit": "",
+          "value": 4.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 99.41999816894531
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 4.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 10.100000381469727
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 18.479999542236328
+        },
+        {
+          "key": "meal.stirSeconds",
+          "label": "Stirring with grip",
+          "unit": "s",
+          "value": 2.3299999237060547
+        },
+        {
+          "key": "meal.ingredients",
+          "label": "Ingredients",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Cut the vegetables",
+      "level": 2,
+      "score": 98,
+      "stepsDone": 2,
+      "stepsTotal": 2,
+      "errors": 0,
+      "misses": 0,
+      "actions": 3,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 3.8012266159057617,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 5: Cut the vegetables",
+          "unit": "",
+          "value": 5.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 95.83999633789062
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 3.7200000286102295
+        },
+        {
+          "key": "cut.evenness",
+          "label": "Even pieces",
+          "unit": "%",
+          "value": 95.83999633789062
+        },
+        {
+          "key": "cut.cuts",
+          "label": "Cuts",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Prepare and serve",
+      "level": 2,
+      "score": 99,
+      "stepsDone": 5,
+      "stepsTotal": 5,
+      "errors": 0,
+      "misses": 0,
+      "actions": 7,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 13.428264617919922,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 6: Prepare and serve",
+          "unit": "",
+          "value": 6.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 98.52999877929688
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 5.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 5.610000133514404
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 13.300000190734863
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Organise the bookshelf",
+      "level": 8,
+      "score": 88,
+      "stepsDone": 1,
+      "stepsTotal": 1,
+      "errors": 0,
+      "misses": 0,
+      "actions": 5,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 12.052699089050293,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 1: Organise the bookshelf",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 79.62999725341797
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 8.40999984741211
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 12.100000381469727
+        },
+        {
+          "key": "bookshelf.firstTry",
+          "label": "Right slot first time",
+          "unit": "%",
+          "value": 100.0
+        },
+        {
+          "key": "bookshelf.books",
+          "label": "Books",
+          "unit": "",
+          "value": 5.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 8.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Set the coffee table",
+      "level": 8,
+      "score": 95,
+      "stepsDone": 1,
+      "stepsTotal": 1,
+      "errors": 0,
+      "misses": 0,
+      "actions": 5,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 12.047526359558105,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 2: Set the coffee table",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 91.55999755859375
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 3.4800000190734863
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 12.109999656677246
+        },
+        {
+          "key": "table.spacingErrorMm",
+          "label": "Spacing error",
+          "unit": "mm",
+          "value": 0.009999999776482582
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 8.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Pack the storage box",
+      "level": 8,
+      "score": 100,
+      "stepsDone": 1,
+      "stepsTotal": 1,
+      "errors": 0,
+      "misses": 0,
+      "actions": 5,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 12.051628112792969,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 3: Pack the storage box",
+          "unit": "",
+          "value": 3.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 100.0
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 1.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 0.0
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 12.0600004196167
+        },
+        {
+          "key": "box.items",
+          "label": "Items packed",
+          "unit": "",
+          "value": 5.0
+        },
+        {
+          "key": "box.overlaps",
+          "label": "Items pressed into each other",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 8.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Cook a simple meal",
+      "level": 8,
+      "score": 100,
+      "stepsDone": 4,
+      "stepsTotal": 4,
+      "errors": 0,
+      "misses": 0,
+      "actions": 12,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 29.889759063720703,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 4: Cook a simple meal",
+          "unit": "",
+          "value": 4.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 99.33000183105469
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 4.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 11.84000015258789
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 29.950000762939453
+        },
+        {
+          "key": "meal.stirSeconds",
+          "label": "Stirring with grip",
+          "unit": "s",
+          "value": 4.340000152587891
+        },
+        {
+          "key": "meal.ingredients",
+          "label": "Ingredients",
+          "unit": "",
+          "value": 4.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 8.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Cut the vegetables",
+      "level": 8,
+      "score": 97,
+      "stepsDone": 2,
+      "stepsTotal": 2,
+      "errors": 0,
+      "misses": 0,
+      "actions": 5,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 5.980174541473389,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 5: Cut the vegetables",
+          "unit": "",
+          "value": 5.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 94.30999755859375
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 2.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 6.110000133514404
+        },
+        {
+          "key": "cut.evenness",
+          "label": "Even pieces",
+          "unit": "%",
+          "value": 94.30999755859375
+        },
+        {
+          "key": "cut.cuts",
+          "label": "Cuts",
+          "unit": "",
+          "value": 4.0
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 8.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "activity": "Prepare and serve",
+      "level": 8,
+      "score": 98,
+      "stepsDone": 5,
+      "stepsTotal": 5,
+      "errors": 0,
+      "misses": 0,
+      "actions": 7,
+      "failedGrabs": 0,
+      "completed": true,
+      "seconds": 13.053553581237793,
+      "outcomes": [
+        {
+          "key": "activity.id",
+          "label": "Activity 6: Prepare and serve",
+          "unit": "",
+          "value": 6.0
+        },
+        {
+          "key": "activity.accuracy",
+          "label": "Placement accuracy",
+          "unit": "%",
+          "value": 97.18000030517578
+        },
+        {
+          "key": "activity.steps",
+          "label": "Steps completed",
+          "unit": "",
+          "value": 5.0
+        },
+        {
+          "key": "activity.errors",
+          "label": "Wrong placements",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.retries",
+          "label": "Placements off target",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "key": "activity.positionErrorMm",
+          "label": "Mean position error",
+          "unit": "mm",
+          "value": 5.610000133514404
+        },
+        {
+          "key": "activity.angleErrorDeg",
+          "label": "Mean turn error",
+          "unit": "\u00b0",
+          "value": 0.0
+        },
+        {
+          "key": "activity.seconds",
+          "label": "Time",
+          "unit": "s",
+          "value": 13.109999656677246
+        },
+        {
+          "key": "level",
+          "label": "Level",
+          "unit": "",
+          "value": 8.0
+        },
+        {
+          "key": "stars",
+          "label": "Stars",
+          "unit": "",
+          "value": 3.0
+        }
+      ]
+    }
+  ],
+  "uiChecks": [
+    {
+      "name": "options panel: no overlapping elements (1600x900)",
+      "value": "0",
+      "passed": true
+    },
+    {
+      "name": "options panel fits on screen (1600x900)",
+      "value": "178..722",
+      "passed": true
+    },
+    {
+      "name": "focus ring contrast >= 3:1, theme 0",
+      "value": "7.4 (KITCHEN)",
+      "passed": true
+    },
+    {
+      "name": "focus ring contrast >= 3:1, theme 1",
+      "value": "4.7 (LIVING ROOM)",
+      "passed": true
+    },
+    {
+      "name": "focus ring contrast >= 3:1, theme 2",
+      "value": "19.6 (LIVING ROOM)",
+      "passed": true
+    },
+    {
+      "name": "selected room has a marker, not colour alone",
+      "value": "True",
+      "passed": true
+    },
+    {
+      "name": "input strip covers no HUD text (1600x900)",
+      "value": "0",
+      "passed": true
+    },
+    {
+      "name": "HUD text and buttons stay on screen (1600x900)",
+      "value": "0",
+      "passed": true
+    },
+    {
+      "name": "input strip names the active input",
+      "value": "INPUT  KEYBOARD DEMO",
+      "passed": true
+    },
+    {
+      "name": "input strip shows a reported state",
+      "value": "VOICE  LISTENING",
+      "passed": true
+    },
+    {
+      "name": "onboarding advances from real actions",
+      "value": "1,2,3,4 showing=False",
+      "passed": true
+    }
+  ],
+  "exit": 0
+}

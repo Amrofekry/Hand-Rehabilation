@@ -1,0 +1,270 @@
+[
+  {
+    "passed": true,
+    "utc": "2026-10-27T06:02:04.9144468Z",
+    "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
+    "detail": "",
+    "resolution": "1024x768",
+    "errors": 0,
+    "runs": [],
+    "uiChecks": [
+      {
+        "name": "options panel: no overlapping elements (1024x768)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "options panel fits on screen (1024x768)",
+        "value": "210..558",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 0",
+        "value": "7.4 (KITCHEN)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 1",
+        "value": "4.7 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 2",
+        "value": "19.6 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "selected room has a marker, not colour alone",
+        "value": "True",
+        "passed": true
+      },
+      {
+        "name": "input strip covers no HUD text (1024x768)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "HUD text and buttons stay on screen (1024x768)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "input strip names the active input",
+        "value": "INPUT  KEYBOARD DEMO",
+        "passed": true
+      },
+      {
+        "name": "input strip shows a reported state",
+        "value": "VOICE  LISTENING",
+        "passed": true
+      },
+      {
+        "name": "onboarding advances from real actions",
+        "value": "1,2,3,4 showing=False",
+        "passed": true
+      }
+    ],
+    "exit": 0
+  },
+  {
+    "passed": true,
+    "utc": "2026-10-27T06:02:26.0807210Z",
+    "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
+    "detail": "",
+    "resolution": "1280x720",
+    "errors": 0,
+    "runs": [],
+    "uiChecks": [
+      {
+        "name": "options panel: no overlapping elements (1280x720)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "options panel fits on screen (1280x720)",
+        "value": "142..578",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 0",
+        "value": "7.4 (KITCHEN)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 1",
+        "value": "4.7 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 2",
+        "value": "19.6 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "selected room has a marker, not colour alone",
+        "value": "True",
+        "passed": true
+      },
+      {
+        "name": "input strip covers no HUD text (1280x720)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "HUD text and buttons stay on screen (1280x720)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "input strip names the active input",
+        "value": "INPUT  KEYBOARD DEMO",
+        "passed": true
+      },
+      {
+        "name": "input strip shows a reported state",
+        "value": "VOICE  LISTENING",
+        "passed": true
+      },
+      {
+        "name": "onboarding advances from real actions",
+        "value": "1,2,3,4 showing=False",
+        "passed": true
+      }
+    ],
+    "exit": 0
+  },
+  {
+    "passed": true,
+    "utc": "2026-10-27T06:02:47.3896588Z",
+    "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
+    "detail": "",
+    "resolution": "1280x800",
+    "errors": 0,
+    "runs": [],
+    "uiChecks": [
+      {
+        "name": "options panel: no overlapping elements (1280x800)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "options panel fits on screen (1280x800)",
+        "value": "171..629",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 0",
+        "value": "7.4 (KITCHEN)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 1",
+        "value": "4.7 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 2",
+        "value": "19.6 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "selected room has a marker, not colour alone",
+        "value": "True",
+        "passed": true
+      },
+      {
+        "name": "input strip covers no HUD text (1280x800)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "HUD text and buttons stay on screen (1280x800)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "input strip names the active input",
+        "value": "INPUT  KEYBOARD DEMO",
+        "passed": true
+      },
+      {
+        "name": "input strip shows a reported state",
+        "value": "VOICE  LISTENING",
+        "passed": true
+      },
+      {
+        "name": "onboarding advances from real actions",
+        "value": "1,2,3,4 showing=False",
+        "passed": true
+      }
+    ],
+    "exit": 0
+  },
+  {
+    "passed": true,
+    "utc": "2026-10-27T06:03:09.0306434Z",
+    "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
+    "detail": "",
+    "resolution": "1600x900",
+    "errors": 0,
+    "runs": [],
+    "uiChecks": [
+      {
+        "name": "options panel: no overlapping elements (1600x900)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "options panel fits on screen (1600x900)",
+        "value": "178..722",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 0",
+        "value": "7.4 (KITCHEN)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 1",
+        "value": "4.7 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "focus ring contrast >= 3:1, theme 2",
+        "value": "19.6 (LIVING ROOM)",
+        "passed": true
+      },
+      {
+        "name": "selected room has a marker, not colour alone",
+        "value": "True",
+        "passed": true
+      },
+      {
+        "name": "input strip covers no HUD text (1600x900)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "HUD text and buttons stay on screen (1600x900)",
+        "value": "0",
+        "passed": true
+      },
+      {
+        "name": "input strip names the active input",
+        "value": "INPUT  KEYBOARD DEMO",
+        "passed": true
+      },
+      {
+        "name": "input strip shows a reported state",
+        "value": "VOICE  LISTENING",
+        "passed": true
+      },
+      {
+        "name": "onboarding advances from real actions",
+        "value": "1,2,3,4 showing=False",
+        "passed": true
+      }
+    ],
+    "exit": 0
+  }
+]

@@ -24,7 +24,7 @@ public sealed class ActivityRunner : MonoBehaviour {
  public float PlacementYaw{get;private set;}
  bool finished;float startedAt;Transform root;Material source;SqueezableObject[] savedObjects;
  readonly RaycastHit[] hits=new RaycastHit[24];
- Text title,body;Image fill;GameObject panel;Button chooseButton,startButton;bool chopArmed=true;
+ Text title,body;Image fill;GameObject panel;Button[] activityButtons;bool chopArmed=true;
 
  public static ActivityRunner Ensure(ApartmentExperience app,ApartmentChoices choices,Material source){
   var runner=app.GetComponent<ActivityRunner>();if(runner==null)runner=app.gameObject.AddComponent<ActivityRunner>();
@@ -189,6 +189,7 @@ public sealed class ActivityRunner : MonoBehaviour {
  // ---------------- Per-frame: keys, tools, completion
  void Update(){
   if(app==null)return;
+  if(activityButtons!=null&&buttonsState!=ButtonsState)RefreshButtons();
   bool input=app.player.GameplayInputAllowed;
   if(input&&Input.GetKeyDown(KeyCode.K))Begin(Active?Current.kind:Selected,Active?Level:0);
   if(input&&Input.GetKeyDown(KeyCode.N)){Selected=NextInRoom(Active?Current.kind:Selected);if(Active)Begin(Selected);else Refresh();}
@@ -247,6 +248,8 @@ public sealed class ActivityRunner : MonoBehaviour {
   var f=new GameObject("Fill",typeof(RectTransform),typeof(Image));f.transform.SetParent(bar.transform,false);
   var fr=(RectTransform)f.transform;fr.anchorMin=new Vector2(0,0);fr.anchorMax=new Vector2(0,1);fr.pivot=new Vector2(0,.5f);fr.sizeDelta=new Vector2(0,0);fill=f.GetComponent<Image>();fill.color=new Color(.1f,.85f,.95f);
   panel.SetActive(false);
+  // Stage 11: the activity panel follows the theme (colours, font, text size) like every other card.
+  var presentation=FindAnyObjectByType<GripRehab.UI.GripUiThemeController>();if(presentation!=null)presentation.RegisterPresentation(panel.transform);
  }
  static Text Label(Transform parent,Vector2 pos,Vector2 size,int font,FontStyle style){
   var go=new GameObject("Text",typeof(RectTransform),typeof(Text));go.transform.SetParent(parent,false);
@@ -254,23 +257,41 @@ public sealed class ActivityRunner : MonoBehaviour {
   var t=go.GetComponent<Text>();t.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");t.fontSize=font;t.fontStyle=style;t.alignment=TextAnchor.UpperLeft;t.color=new Color(.9f,.96f,1);t.raycastTarget=false;
   return t;
  }
+ // Stage 11: section 04 of the options panel holds the three activities of the current room;
+ // pressing one starts it (fewer steps than choose-then-start). K restarts, N picks the next.
  void BuildOptionButtons(){
   if(choices==null||choices.inputButton==null)return;
-  var parent=(RectTransform)choices.inputButton.transform.parent;parent.sizeDelta=new Vector2(parent.sizeDelta.x,parent.sizeDelta.y+52);
-  chooseButton=Instantiate(choices.inputButton,parent);chooseButton.name="ACTIVITY CHOICE";startButton=Instantiate(choices.inputButton,parent);startButton.name="START ACTIVITY";
-  foreach(var b in new[]{chooseButton,startButton}){b.onClick=new Button.ButtonClickedEvent();var r=(RectTransform)b.transform;r.anchoredPosition=new Vector2(r.anchoredPosition.x,r.anchoredPosition.y-52);}
-  // The new row sits under INPUT / HAND; RESUME moves down with the panel so nothing overlaps.
-  var hand=choices.handButton!=null?(RectTransform)choices.handButton.transform:null;
-  if(hand!=null)((RectTransform)startButton.transform).anchoredPosition=new Vector2(hand.anchoredPosition.x,((RectTransform)chooseButton.transform).anchoredPosition.y);
-  var resume=(RectTransform)choices.resumeButton.transform;resume.anchoredPosition=new Vector2(resume.anchoredPosition.x,resume.anchoredPosition.y-52);
-  {var label=chooseButton.GetComponentInChildren<Text>();label.resizeTextMaxSize=label.fontSize;label.resizeTextMinSize=10;label.resizeTextForBestFit=true;}
-  chooseButton.onClick.AddListener(()=>{Selected=(ActivityKind)(((int)Selected+1)%6);Refresh();});
-  startButton.onClick.AddListener(()=>{if(Begin(Selected))choices.experience.player.SetPaused(false);});
-  Refresh();
+  var parent=(RectTransform)choices.inputButton.transform.parent;
+  activityButtons=new Button[3];
+  for(int i=0;i<3;i++){
+   int slot=i;var b=Instantiate(choices.inputButton,parent);b.name="ACTIVITY "+(i+1);b.onClick=new Button.ButtonClickedEvent();
+   b.onClick.AddListener(()=>{var kind=RoomKinds()[slot];Selected=kind;if(Begin(kind))choices.experience.player.SetPaused(false);});
+   activityButtons[i]=b;
+  }
+  var presentation=FindAnyObjectByType<GripRehab.UI.GripUiThemeController>();
+  if(presentation!=null){foreach(var b in activityButtons)presentation.RegisterPresentation(b.transform);presentation.PresentationApplied+=RefreshButtons;}
+  ApartmentOptionsLayout.Apply(choices,activityButtons,presentation);
+  RefreshButtons();
+ }
+ static readonly ActivityKind[] livingKinds={ActivityKind.Bookshelf,ActivityKind.CoffeeTable,ActivityKind.StorageBox};
+ static readonly ActivityKind[] kitchenKinds={ActivityKind.SimpleMeal,ActivityKind.Cutting,ActivityKind.PrepareAndServe};
+ public static string ShortName(ActivityKind k)=>k==ActivityKind.PrepareAndServe?"PREPARE & SERVE":System.Text.RegularExpressions.Regex.Replace(k.ToString(),"(?<=[a-z])(?=[A-Z])"," ").ToUpperInvariant();
+ ActivityKind[] RoomKinds()=>choices!=null&&choices.Kitchen?kitchenKinds:livingKinds;
+ int buttonsState=-1;
+ int ButtonsState=>(choices.Kitchen?1:0)+(choices.Lab?2:0)+(Active?4+8*(int)Current.kind:0);
+ void RefreshButtons(){
+  if(activityButtons==null)return;
+  bool lab=choices.Lab;var kinds=RoomKinds();
+  buttonsState=ButtonsState;
+  for(int i=0;i<3;i++){
+   var b=activityButtons[i];b.interactable=!lab;
+   b.GetComponentInChildren<Text>().text=lab?"-":ShortName(kinds[i]);
+   choices.PaintChoice(b,!lab&&Active&&Current.kind==kinds[i]);
+  }
  }
  void Show(bool on){if(panel!=null&&panel.activeSelf!=on)panel.SetActive(on);}
  void Refresh(){
-  if(chooseButton!=null){chooseButton.GetComponentInChildren<Text>().text="ACTIVITY "+((int)Selected+1)+"/6: "+System.Text.RegularExpressions.Regex.Replace(Selected.ToString(),"(?<=[a-z])(?=[A-Z])"," ").ToUpperInvariant();startButton.GetComponentInChildren<Text>().text=Active?"RESTART (K)":"START ACTIVITY (K)";}
+  if(activityButtons!=null&&buttonsState!=ButtonsState)RefreshButtons();
   if(panel==null)return;
   bool show=Current!=null&&!app.player.Paused;Show(show);if(!show)return;
   var s=Current.steps;

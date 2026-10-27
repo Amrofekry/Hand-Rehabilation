@@ -1,22 +1,25 @@
 # State (2026-10-27)
 
-**Branch:** `claude/setup`, from `3.4-upgrade-baseline`. Stage 11 work goes on `claude/stage11-ui`.
+**Branch:** `claude/stage11-ui`, from `claude/setup`, which is from `3.4-upgrade-baseline`. Not merged.
 
 ## Done
+- Stage 11 UI design system: tokens, contrast-aware focus, pause panel, onboarding, input strip, 4:3 fit. UI checks at 4 resolutions × 3 themes pass.
+- a8ff3df: Claude Code setup.
 - 0f6e5e2: Stage 10 six activities. SYNTHETIC probe 12/12, full regression passes.
 - 0d47b17: Stage 9 deformation.
 - 5b44747: Stage 8 contact and the 18-grip chart.
 - Claude Code setup: unity-mcp 10.0.0, uv, `.mcp.json` (UnityMCP and context7), deny rules, 6 skills, CLAUDE.md, Docs/ai.
 
 ## In progress
-- Stage 11: UI modernization and design system (WBS 3.4, 5.1, 5.2).
+- None. Stage 11 is waiting for review.
 
 ## Next steps
-1. Stage 11, then stop for review.
+1. Your Stage 11 review.
 2. Stage 12 audio (needs authorization).
+3. Merge `claude/*` branches into `3.4-upgrade-baseline` when you approve.
 
 ## Open bugs
-- UI-01: options-panel section labels touch the room and object buttons. This predates Stage 10 and is part of Stage 11.
+- A-OB1: the level-8 simple-meal probe run fails intermittently (1 of 3 full runs).
 
 ## Pending user checks
 - Hands-on playtest of the Stage 10 activities.

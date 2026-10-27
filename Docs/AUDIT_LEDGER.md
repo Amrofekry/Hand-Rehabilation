@@ -775,6 +775,68 @@ Plan tasks 9.1–9.6 (WBS 3.3). The target is your chart "Types and Forms of Def
 
 **Seen but left for Stage 11:** the options-panel section labels touch the room and object buttons. This predates Stage 10.
 
+## 10d. Stage 11 UI modernization and design system (27 Oct 2026)
+
+**Design system:** `Docs/UI_DESIGN_SYSTEM.md`, §Stage 11. Research sources are cited there: Xbox Accessibility Guidelines 101/102, Game Accessibility Guidelines, WCAG 2.2 and Material states.
+
+**What was built:**
+- **Tokens:** spacing, state, focus and error tokens, plus `GripUiContrast` (the WCAG formula).
+- **Contrast-aware focus ring:** the selected marker bar means selection is no longer shown by colour alone; there is also an error flash, and labels on filled controls are bold.
+- **Pause panel:** four numbered sections, with one-press activity selection (three per room).
+- **Themed activity panel:** follows the theme's colours, font and text size.
+- **Onboarding:** five steps, each completed by a real action; it never blocks play.
+- **Input-mode strip:** shows input and pointer live; gaze, voice and assistant read OFF until Stages 13–15.
+- **4:3 fit:** `GripUiAspectFit`.
+- **Appearance modal:** the current theme is labelled, and the text-size note no longer collides with the buttons.
+
+**Measured before → after:**
+
+| Check | Before | After |
+|---|---|---|
+| Focus ring on the selected cyan button (Dark) | 1.0:1 (invisible) | ≥ 7.4:1 on every panel control |
+| Focus ring on white buttons (High Contrast) | 1.1:1 (invisible) | ≥ 19.6:1 |
+| Focus ring, worst panel control (Light) | 1.2:1 (teal on teal) | 4.7:1 |
+| Options-panel overlaps | Labels on the room/object rows, clipped chips | 0 at 4 resolutions |
+| HUD at 1024×768 | Breadcrumb, MAIN MENU and force card cut off | All text and buttons on screen |
+| Selection cue | Fill colour only | Fill + marker bar (≥ 4.5:1) |
+
+The "before" ratios are computed from the theme colours with the same formula; the "after" ratios are measured in the running player.
+
+**SYNTHETIC UI checks** (`run_activity_probe.py --ui-only`, 1024×768, 1280×720, 1280×800, 1600×900): 11 checks per resolution, all passed:
+- no overlaps; panel and HUD on screen; the strip covers no text;
+- focus ring ≥ 3:1 in 3 themes; selected marker;
+- strip states;
+- onboarding advanced 1, 2, 3, 4, then done.
+
+`run_ui_checks.py` now covers the same four resolutions: 60 checks each, passed.
+
+| ID | Sev | Found | Fix and check |
+|---|---|---|---|
+| S11-01 | S2 | Focus ring invisible on primary (Dark, Light) and on white (High Contrast) controls | Colour picked per control for ≥ 3:1; measured in the player and in `test_ui_contrast.py` |
+| S11-02 | S3 | Options panel: section labels on top of rows, clipped room chips | `ApartmentOptionsLayout` grid; overlap check |
+| S11-03 | S3 | 4:3: the 16:9 HUD was cut off at both sides | Canvas matches width below 3:2; on-screen check |
+| S11-04 | S4 | Thin labels on filled buttons read weakly (text colour itself 9.5–11.5:1) | Bold on filled controls and options |
+| S11-05 | S4 | Appearance: note squeezed against the buttons, bare theme name floating | Moved; "CURRENT THEME: …" |
+| S11-06 | S3 | First strip placement covered the breadcrumb at 4:3 and 16:10 | Strip measured above the bottom cards; "covers no HUD text" check |
+
+**Open (pre-existing, intermittent):** A-OB1. The level-8 "Cook a simple meal" probe run failed once in 3 full runs: 3 failed grabs and 2 misses. It passed in 2 reruns and in all four Stage 10 runs. No cause is identified yet; for the next activity work.
+
+**Suites (final build):**
+- **Windows player:** smoke / replay / journey, UI (4 resolutions), gallery, perf, contact, grip-lab and material-lab all pass.
+- **Perf:** mean 192–267 FPS; worst p95 frame 8.1 ms.
+- **Activity probe:** 12/12 in 2 of 3 runs (see A-OB1).
+- **Unity test runner:** EditMode 8/8.
+- **Offline C#:** all 17 checks pass.
+- **Python:** Tools unit tests 70 (4 new contrast tests); ai-engine 32.
+
+**Protected files:** none changed in Stage 11, so the hash test passes without a new review link.
+
+**Not measured:**
+- your by-eye review;
+- gaze and voice input (not built yet);
+- real hand-pointer use on the new controls;
+- an Arabic/RTL layout.
+
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

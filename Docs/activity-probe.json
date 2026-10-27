@@ -1,8 +1,9 @@
 {
   "passed": true,
-  "utc": "2026-10-27T04:27:54.0043829Z",
+  "utc": "2026-10-27T06:07:28.6619493Z",
   "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
   "detail": "",
+  "resolution": "1600x900",
   "errors": 0,
   "runs": [
     {
@@ -16,7 +17,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.5608110427856445,
+      "seconds": 7.6196794509887695,
       "outcomes": [
         {
           "key": "activity.id",
@@ -64,7 +65,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.639999866485596
+          "value": 7.519999980926514
         },
         {
           "key": "bookshelf.firstTry",
@@ -103,7 +104,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.563841342926025,
+      "seconds": 7.5700225830078125,
       "outcomes": [
         {
           "key": "activity.id",
@@ -184,7 +185,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.552929878234863,
+      "seconds": 7.619088649749756,
       "outcomes": [
         {
           "key": "activity.id",
@@ -232,7 +233,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.400000095367432
+          "value": 7.239999771118164
         },
         {
           "key": "box.items",
@@ -271,7 +272,7 @@
       "actions": 8,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 18.575420379638672,
+      "seconds": 18.56471824645996,
       "outcomes": [
         {
           "key": "activity.id",
@@ -319,13 +320,13 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 18.469999313354492
+          "value": 18.479999542236328
         },
         {
           "key": "meal.stirSeconds",
           "label": "Stirring with grip",
           "unit": "s",
-          "value": 2.3399999141693115
+          "value": 2.3299999237060547
         },
         {
           "key": "meal.ingredients",
@@ -358,7 +359,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 3.793444871902466,
+      "seconds": 3.8012266159057617,
       "outcomes": [
         {
           "key": "activity.id",
@@ -433,7 +434,7 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.45047378540039,
+      "seconds": 13.428264617919922,
       "outcomes": [
         {
           "key": "activity.id",
@@ -508,7 +509,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.036850929260254,
+      "seconds": 12.052699089050293,
       "outcomes": [
         {
           "key": "activity.id",
@@ -556,7 +557,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.09000015258789
+          "value": 12.100000381469727
         },
         {
           "key": "bookshelf.firstTry",
@@ -595,7 +596,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.036438941955566,
+      "seconds": 12.047526359558105,
       "outcomes": [
         {
           "key": "activity.id",
@@ -676,7 +677,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.043073654174805,
+      "seconds": 12.051628112792969,
       "outcomes": [
         {
           "key": "activity.id",
@@ -724,7 +725,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.050000190734863
+          "value": 12.0600004196167
         },
         {
           "key": "box.items",
@@ -763,7 +764,7 @@
       "actions": 12,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 29.918485641479492,
+      "seconds": 29.889759063720703,
       "outcomes": [
         {
           "key": "activity.id",
@@ -811,13 +812,13 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 29.979999542236328
+          "value": 29.950000762939453
         },
         {
           "key": "meal.stirSeconds",
           "label": "Stirring with grip",
           "unit": "s",
-          "value": 4.329999923706055
+          "value": 4.340000152587891
         },
         {
           "key": "meal.ingredients",
@@ -850,7 +851,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 5.986404895782471,
+      "seconds": 5.980174541473389,
       "outcomes": [
         {
           "key": "activity.id",
@@ -925,7 +926,7 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.192548751831055,
+      "seconds": 13.053553581237793,
       "outcomes": [
         {
           "key": "activity.id",
@@ -973,7 +974,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.270000457763672
+          "value": 13.109999656677246
         },
         {
           "key": "level",
@@ -989,5 +990,63 @@
         }
       ]
     }
-  ]
+  ],
+  "uiChecks": [
+    {
+      "name": "options panel: no overlapping elements (1600x900)",
+      "value": "0",
+      "passed": true
+    },
+    {
+      "name": "options panel fits on screen (1600x900)",
+      "value": "178..722",
+      "passed": true
+    },
+    {
+      "name": "focus ring contrast >= 3:1, theme 0",
+      "value": "7.4 (KITCHEN)",
+      "passed": true
+    },
+    {
+      "name": "focus ring contrast >= 3:1, theme 1",
+      "value": "4.7 (LIVING ROOM)",
+      "passed": true
+    },
+    {
+      "name": "focus ring contrast >= 3:1, theme 2",
+      "value": "19.6 (LIVING ROOM)",
+      "passed": true
+    },
+    {
+      "name": "selected room has a marker, not colour alone",
+      "value": "True",
+      "passed": true
+    },
+    {
+      "name": "input strip covers no HUD text (1600x900)",
+      "value": "0",
+      "passed": true
+    },
+    {
+      "name": "HUD text and buttons stay on screen (1600x900)",
+      "value": "0",
+      "passed": true
+    },
+    {
+      "name": "input strip names the active input",
+      "value": "INPUT  KEYBOARD DEMO",
+      "passed": true
+    },
+    {
+      "name": "input strip shows a reported state",
+      "value": "VOICE  LISTENING",
+      "passed": true
+    },
+    {
+      "name": "onboarding advances from real actions",
+      "value": "1,2,3,4 showing=False",
+      "passed": true
+    }
+  ],
+  "exit": 0
 }

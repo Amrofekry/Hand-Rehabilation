@@ -1,11 +1,11 @@
 {
-  "utc": "2026-10-27T04:24:01.871038+00:00",
+  "utc": "2026-10-27T05:38:33.140751+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 880
+      "count": 884
     },
     {
       "name": "assembly-graph",
@@ -16,21 +16,21 @@
       "name": "compile-editor",
       "passed": true,
       "assemblies": {
-        "GripRehab.Product.dll": "767d58747494cacb1a39f5947bb932b2ddcfa648d023127fa595245503b9b13a",
-        "GripRehab.Core.dll": "a2422ad3ef422c60c8166e3659b6a203c098f3eb760287b67701db1cc6d1267d",
-        "GripRehab.UI.dll": "49aa41216df4ea0d05dd3ea55b358a526ac401d7ab3069e7c7561884ccab194d",
-        "Assembly-CSharp.dll": "aabc471c021b1be7b4a84564cab6aeab6ca05da1b9b6eae14959553d8cbf4d61",
-        "Assembly-CSharp-Editor.dll": "40e2a4a4486c97fe8dc0ba40e6ccf53567c6cd47742898ab9a65dda8bbc7e261"
+        "GripRehab.Product.dll": "80682b9728171d49175d24a7e91979c6ec02e79d7f23eaa5cafd322e1a91f9f7",
+        "GripRehab.Core.dll": "bc03ea56546bdff41367e59f960c692eb3bd97e156efd91d1b5bbb2b5eba5be4",
+        "GripRehab.UI.dll": "9268830000e89a642502d54b65303e287ce1885a9945e41693fd9659f7e36a9d",
+        "Assembly-CSharp.dll": "aa623aeff318f3d049d5a0bbfde26bb2e6bb9714fe8d14b0942196ca1abb9c4c",
+        "Assembly-CSharp-Editor.dll": "626b7e789f7d249b733825d50216b6b2db280a5ed7aad1000afc60ebc3f04381"
       }
     },
     {
       "name": "compile-player",
       "passed": true,
       "assemblies": {
-        "GripRehab.Product.dll": "64fb0ab0e04d23b7cd8bd286b2310c8fdb0a7434c92d80209aa2097f7aeb0de2",
-        "GripRehab.Core.dll": "68a9fac4b3954cf08ffae49b0a3a45d56489b5b9f71242005a9c02f34f65bed7",
-        "GripRehab.UI.dll": "d8822c54ddf57169fa9ee085735184f7e31d6506c1285ae2d02fa2e4dff13af1",
-        "Assembly-CSharp.dll": "e4a1c1b5642dc9cb78abd1726dd5d92b52e12d6be52113dd26cb950ec846da58"
+        "GripRehab.Product.dll": "aa54b6a241f87196cab6919eecc1257c9865d1ec4dc2e9866c12d3e8d0dbf9a0",
+        "GripRehab.Core.dll": "79754f3bb30da57af576c4fc24b6eca1e9d4008be2f9c7adc85327392f8e9046",
+        "GripRehab.UI.dll": "72a4ed15f82e369f522e64aa016939ba0e1d9bbb09964d71b2c03f5b1ec65286",
+        "Assembly-CSharp.dll": "67c6ebab6b83aa46660f21930c5d84ad1bab1e153a2e63b5e15b25409cde317a"
       }
     },
     {
@@ -71,7 +71,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.240s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.223s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -89,19 +89,19 @@
     {
       "name": "deformation-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.017s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.013s\n\nOK",
       "scope": "Static integration contracts; no native Unity"
     },
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.014s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.010s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.006s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.005s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],

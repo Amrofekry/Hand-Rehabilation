@@ -13,9 +13,48 @@ namespace GripRehab.UI
         RectTransform rect;
         Vector3 restScale;
         UnityEngine.UI.Image[] edges;
+        UnityEngine.UI.Image marker;
         bool hover, focus, pressed;
-        float scale = 1;
+        float scale = 1, errorUntil = -1;
         public bool FocusVisible => focus && control != null && control.IsInteractable();
+        public bool Selected { get; private set; }
+        public bool ErrorVisible => Time.unscaledTime < errorUntil;
+        // Contrast of the focus ring against this control's own fill (WCAG 2.4.11 asks for 3:1).
+        public float FocusContrast { get; private set; }
+
+        // Stage 11: attach the shared feedback (focus ring, hover, cues, selected, error) to any control.
+        public static GripUiControlFeedback Attach(GripUiAccessibility owner, UnityEngine.UI.Selectable item)
+        {
+            if (owner == null || owner.theme == null || item == null) return null;
+            var feedback = item.GetComponent<GripUiControlFeedback>();
+            if (feedback == null) feedback = item.gameObject.AddComponent<GripUiControlFeedback>();
+            if (feedback.settings == null) feedback.Bind(owner, item);
+            return feedback;
+        }
+
+        // Selected is shown by a bar, not by colour alone.
+        public void SetSelected(bool on)
+        {
+            Selected = on;
+            if (marker == null && on && settings != null)
+            {
+                var go = new GameObject("Selected marker", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+                go.transform.SetParent(transform, false);
+                var r = (RectTransform)go.transform;
+                r.anchorMin = new Vector2(.5f, 0); r.anchorMax = new Vector2(.5f, 0); r.pivot = new Vector2(.5f, 0);
+                r.anchoredPosition = new Vector2(0, settings.theme.Current.selectedMarkerPixels + 2);
+                marker = go.GetComponent<UnityEngine.UI.Image>(); marker.raycastTarget = false;
+            }
+            if (marker != null) marker.enabled = on;
+        }
+
+        public void FlashError()
+        {
+            if (settings == null) return;
+            errorUntil = Time.unscaledTime + settings.theme.Current.errorSeconds;
+        }
+
+        Color Fill => control != null && control.targetGraphic != null ? control.targetGraphic.color : Color.black;
 
         public void Bind(GripUiAccessibility owner, UnityEngine.UI.Selectable item)
         {
@@ -56,10 +95,20 @@ namespace GripRehab.UI
         void Update()
         {
             if (settings == null || control == null || edges == null) return;
-            bool visible = (hover || focus) && control.IsInteractable();
+            bool error = ErrorVisible;
+            bool visible = (hover || focus) && control.IsInteractable() || error;
             var theme = settings.theme.Current;
+            var fill = Fill;
+            var ring = error ? GripUiContrast.MostVisible(fill, theme.danger, theme.textOnDark, theme.backdrop, theme.minimumFocusContrast)
+                : GripUiContrast.MostVisible(fill, theme.accent, theme.textOnDark, theme.backdrop, theme.minimumFocusContrast);
+            FocusContrast = GripUiContrast.Ratio(ring, fill);
             for (int i = 0; i < edges.Length; i++)
-            { edges[i].enabled = visible; if (visible) edges[i].color = theme.accent; }
+            { edges[i].enabled = visible; if (visible) edges[i].color = ring; }
+            if (marker != null && Selected)
+            {
+                marker.color = GripUiContrast.MostVisible(fill, theme.textOnPrimary, theme.textOnDark, theme.backdrop, 4.5f);
+                ((RectTransform)marker.transform).sizeDelta = new Vector2(Mathf.Min(48, rect.rect.width * .4f), theme.selectedMarkerPixels);
+            }
             float target = settings.theme.reduceMotion || !control.IsInteractable() ? 1 :
                 pressed ? .99f : hover || focus ? theme.hoverScale : 1;
             if (Mathf.Abs(scale - target) < .0001f) return;
