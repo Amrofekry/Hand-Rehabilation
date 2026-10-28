@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-10-27T16:35:01.5518153Z",
+  "utc": "2026-10-28T11:37:25.8111477Z",
   "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
   "detail": "",
   "resolution": "1600x900",
@@ -17,7 +17,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.614744663238525,
+      "seconds": 7.54236364364624,
       "outcomes": [
         {
           "key": "activity.id",
@@ -65,7 +65,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.53000020980835
+          "value": 7.449999809265137
         },
         {
           "key": "bookshelf.firstTry",
@@ -104,7 +104,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.608527183532715,
+      "seconds": 7.570473670959473,
       "outcomes": [
         {
           "key": "activity.id",
@@ -152,7 +152,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.489999771118164
+          "value": 7.449999809265137
         },
         {
           "key": "table.spacingErrorMm",
@@ -185,7 +185,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.577726364135742,
+      "seconds": 7.543540000915527,
       "outcomes": [
         {
           "key": "activity.id",
@@ -233,7 +233,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.230000019073486
+          "value": 7.21999979019165
         },
         {
           "key": "box.items",
@@ -272,7 +272,7 @@
       "actions": 8,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 18.56825065612793,
+      "seconds": 18.543001174926758,
       "outcomes": [
         {
           "key": "activity.id",
@@ -320,13 +320,13 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 18.479999542236328
+          "value": 18.450000762939453
         },
         {
           "key": "meal.stirSeconds",
           "label": "Stirring with grip",
           "unit": "s",
-          "value": 2.3299999237060547
+          "value": 2.3399999141693115
         },
         {
           "key": "meal.ingredients",
@@ -359,7 +359,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 3.8039095401763916,
+      "seconds": 3.7446138858795166,
       "outcomes": [
         {
           "key": "activity.id",
@@ -395,7 +395,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 3.690000057220459
+          "value": 3.6700000762939453
         },
         {
           "key": "cut.evenness",
@@ -434,7 +434,7 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.397417068481445,
+      "seconds": 13.508119583129883,
       "outcomes": [
         {
           "key": "activity.id",
@@ -482,7 +482,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.25
+          "value": 13.399999618530273
         },
         {
           "key": "level",
@@ -509,7 +509,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.033178329467773,
+      "seconds": 12.043207168579102,
       "outcomes": [
         {
           "key": "activity.id",
@@ -596,7 +596,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.03902816772461,
+      "seconds": 12.036059379577637,
       "outcomes": [
         {
           "key": "activity.id",
@@ -644,7 +644,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.109999656677246
+          "value": 12.100000381469727
         },
         {
           "key": "table.spacingErrorMm",
@@ -677,7 +677,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.052444458007812,
+      "seconds": 12.04697036743164,
       "outcomes": [
         {
           "key": "activity.id",
@@ -764,7 +764,7 @@
       "actions": 12,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 29.875198364257812,
+      "seconds": 29.86695671081543,
       "outcomes": [
         {
           "key": "activity.id",
@@ -812,7 +812,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 29.940000534057617
+          "value": 29.920000076293945
         },
         {
           "key": "meal.stirSeconds",
@@ -851,7 +851,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 5.98339319229126,
+      "seconds": 5.974647045135498,
       "outcomes": [
         {
           "key": "activity.id",
@@ -887,7 +887,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 6.110000133514404
+          "value": 6.099999904632568
         },
         {
           "key": "cut.evenness",
@@ -926,7 +926,7 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.053162574768066,
+      "seconds": 13.038822174072266,
       "outcomes": [
         {
           "key": "activity.id",
@@ -974,7 +974,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.109999656677246
+          "value": 13.09000015258789
         },
         {
           "key": "level",

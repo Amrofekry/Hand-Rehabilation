@@ -1,7 +1,7 @@
 {
   "passed": true,
   "error": "",
-  "utc": "2026-10-27T16:18:57.9884556Z",
+  "utc": "2026-10-28T11:25:38.6573527Z",
   "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
   "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
   "checks": [
@@ -73,9 +73,9 @@
     {
       "screen": "Home",
       "frames": 300,
-      "averageMs": 2.0424859523773193,
-      "p95Ms": 2.8919999599456787,
-      "averageFps": 489.59942626953125,
+      "averageMs": 2.2194225788116455,
+      "p95Ms": 3.139500141143799,
+      "averageFps": 450.567626953125,
       "gcCounterAvailable": false,
       "batchCounterAvailable": true,
       "gcAverageBytes": 0,
@@ -85,9 +85,9 @@
     {
       "screen": "Appearance",
       "frames": 300,
-      "averageMs": 2.1767566204071045,
-      "p95Ms": 3.24399995803833,
-      "averageFps": 459.3990783691406,
+      "averageMs": 2.0810129642486572,
+      "p95Ms": 2.9303998947143555,
+      "averageFps": 480.5351867675781,
       "gcCounterAvailable": false,
       "batchCounterAvailable": true,
       "gcAverageBytes": 0,
