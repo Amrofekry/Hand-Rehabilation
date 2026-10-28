@@ -58,3 +58,4 @@ __pycache__/
 
 # Machine-level tool caches and runtimes moved off drive C (uv, pip, Unity UPM, Python)
 /.local/
+/ai-engine/.venv-ai-old/

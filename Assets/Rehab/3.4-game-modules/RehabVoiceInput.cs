@@ -36,7 +36,7 @@ namespace GripRehab
         public bool ToastVisible => toast != null && toast.alpha > .5f;
         public string ToastText => toastText != null ? toastText.text : "";
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        KeywordRecognizer commands, letters;
+        KeywordRecognizer commands, letters, shared;
 #endif
 
         public static VoiceMode Mode
@@ -80,9 +80,13 @@ namespace GripRehab
                 try
                 {
                     // Low minimum confidence: low results reach the router, which asks for confirmation instead of acting.
-                    commands = new KeywordRecognizer(VoiceCommandRouter.CommandKeywords(), ConfidenceLevel.Low);
-                    letters = new KeywordRecognizer(VoiceCommandRouter.SpellingKeywords(), ConfidenceLevel.Low);
-                    commands.OnPhraseRecognized += Heard; letters.OnPhraseRecognized += Heard;
+                    // Windows allows a phrase in only one recognizer, so phrases both grammars use (confirm, yes, cancel, no,
+                    // stop listening) get their own recognizer that runs alongside whichever grammar is active.
+                    var both = VoiceCommandRouter.CommandKeywords().Intersect(VoiceCommandRouter.SpellingKeywords(), System.StringComparer.OrdinalIgnoreCase).ToArray();
+                    commands = new KeywordRecognizer(VoiceCommandRouter.CommandKeywords().Except(both, System.StringComparer.OrdinalIgnoreCase).ToArray(), ConfidenceLevel.Low);
+                    letters = new KeywordRecognizer(VoiceCommandRouter.SpellingKeywords().Except(both, System.StringComparer.OrdinalIgnoreCase).ToArray(), ConfidenceLevel.Low);
+                    shared = new KeywordRecognizer(both, ConfidenceLevel.Low);
+                    commands.OnPhraseRecognized += Heard; letters.OnPhraseRecognized += Heard; shared.OnPhraseRecognized += Heard;
                     PhraseRecognitionSystem.OnError += code => { Unavailable = "Speech error: " + code; Feedback(false, "VOICE UNAVAILABLE", "Voice stopped: " + code + ". Other controls still work."); };
                 }
                 catch (System.Exception error) { Unavailable = "Speech could not start: " + error.Message; want = false; }
@@ -117,6 +121,7 @@ namespace GripRehab
         {
             if (commands != null && commands.IsRunning) commands.Stop();
             if (letters != null && letters.IsRunning) letters.Stop();
+            if (shared != null && shared.IsRunning) shared.Stop();
             RecognizerRunning = false;
         }
         void RunRecognizer(bool spellingMode)
@@ -124,10 +129,11 @@ namespace GripRehab
             if (commands == null) return;
             var on = spellingMode ? letters : commands; var off = spellingMode ? commands : letters;
             if (off.IsRunning) off.Stop();
-            if (!on.IsRunning) { try { on.Start(); } catch (System.Exception error) { Unavailable = "Microphone or speech blocked: " + error.Message; StopRecognizers(); return; } }
-            RecognizerRunning = on.IsRunning;
+            try { if (!on.IsRunning) on.Start(); if (!shared.IsRunning) shared.Start(); }
+            catch (System.Exception error) { Unavailable = "Microphone or speech blocked: " + error.Message; StopRecognizers(); return; }
+            RecognizerRunning = on.IsRunning && shared.IsRunning;
         }
-        void OnDestroy() { StopRecognizers(); commands?.Dispose(); letters?.Dispose(); }
+        void OnDestroy() { StopRecognizers(); commands?.Dispose(); letters?.Dispose(); shared?.Dispose(); }
 #endif
 
         /// <summary>Feeds a transcript as if it had been heard (checks and tests; SYNTHETIC, no microphone).</summary>

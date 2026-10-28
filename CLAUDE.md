@@ -15,6 +15,7 @@ Hand-grip rehabilitation game: the apartment and its activities, hand tracking b
 - **Player suites** (one at a time; two players at once break the UDP ports):
   `Tools/run_ai_player_checks.py smoke|replay|journey`, `run_ui_checks.py`, `run_gallery_checks.py`, `run_perf_probe.py`, `run_contact_probe.py [--grip-lab|--material-lab]`, `run_activity_probe.py`
 - **EditMode:** `Unity.exe -batchmode -nographics -projectPath . -runTests -testPlatform EditMode -testResults Logs/editmode.xml`
+- **Console zero (Editor closed):** `Unity.exe -projectPath . -executeMethod GripRehab.Editor.ConsoleZeroCheck.Run -logFile Logs/console-zero.log`: opens the Editor, plays 25 s with voice on, passes only at 0 errors / 0 warnings / 0 logs and the MCP bridge up (`Logs/console-zero.json`).
 - **Protected files:** after editing a hash-pinned file, record it with `python Docs/evidence/<stage>/update_review.py <path> "<reason>"`.
 
 ## Conventions
@@ -24,6 +25,8 @@ Hand-grip rehabilitation game: the apartment and its activities, hand tracking b
 - Every input path must keep working: mouse, keyboard, hand pointer, camera.
 
 ## Rules
+- **The Unity console stays at 0 errors, 0 warnings, 0 logs.** Fix the source; only known, documented info lines go to `Logs/editor-info.log` (`EditorConsoleHygiene`), never errors. Run the console-zero check after Unity changes.
+- Everything lives on drive E (`.local/`, `CVTraining/`); nothing project-related on C.
 - Grep before reading; read targeted line ranges; never scan `Library/`, `Temp/` or `Builds/`.
 - Ask before editing `Packages/manifest.json`, `ProjectSettings/`, scenes or prefabs. Edit scenes and prefabs through UnityMCP, never raw YAML.
 - Don't modify vendor code (VirtualGrasp, ThirdParty, Brick Project Studio).
