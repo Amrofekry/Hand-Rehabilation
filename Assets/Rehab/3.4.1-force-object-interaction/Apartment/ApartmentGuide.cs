@@ -18,7 +18,7 @@ public sealed class ApartmentGuide:MonoBehaviour {
  public static void Clear(Channel c)=>overridden[(int)c]=false;
 
  public static readonly string[] Steps={
-  "Look around: move the mouse, or turn with the camera hand.",
+  "Look around: move your hand toward the edge of the camera view (or move the mouse). Point your index finger to walk.",
   "Pick up the object: look at it and press E, or close your hand.",
   "Squeeze it: hold Space or the left mouse button, or squeeze the sensor.",
   "Put it down: look at the table and press Q, or open your hand.",

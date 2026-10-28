@@ -61,6 +61,15 @@ class VoiceTests
             Check(Say("restart", Game(activity: true)).outcome == VoiceOutcome.NeedsConfirmation && Say("confirm", Game(activity: false)).outcome == VoiceOutcome.Rejected, "state changed before confirm: refused");
             Check(Say("main menu", Game()).outcome == VoiceOutcome.NeedsConfirmation && r.Route("confirm", VoiceConfidence.High, Game(), t += 10).outcome == VoiceOutcome.Rejected, "confirmation expires");
 
+            // Special actions that were keys only (2026-10-28).
+            Check(Say("sit down", Game()).outcome == VoiceOutcome.Execute && Say("stand up", Game()).outcome == VoiceOutcome.Execute, "sit down / stand up (was F)");
+            Check(Say("reset objects", Game()).outcome == VoiceOutcome.Execute && Say("reset objects", Menu()).outcome == VoiceOutcome.Rejected, "reset objects in the apartment only (was R)");
+            Check(Say("next activity", Game()).outcome == VoiceOutcome.Execute, "next activity (was N)");
+            Check(Say("camera mode", Game()).outcome == VoiceOutcome.Execute && Say("keyboard mode", Game()).outcome == VoiceOutcome.Execute, "input mode (was B)");
+            Check(Say("recenter hand", Game()).outcome == VoiceOutcome.Execute, "recenter hand (was C)");
+            Check(Say("rotate left", Game(holding: true, activity: true)).outcome == VoiceOutcome.Execute, "rotate while holding an activity item (was , and .)");
+            Check(Say("rotate right", Game(activity: true)).outcome == VoiceOutcome.Rejected, "rotate needs a held item");
+
             // V-09 ambiguity, noise, failures.
             Check(Say("grab", Game(), VoiceConfidence.Low).outcome == VoiceOutcome.NeedsConfirmation, "low confidence asks first");
             Check(Say("yes", Game()).outcome == VoiceOutcome.Execute && r.Route("x", VoiceConfidence.High, Game(), t).command == VoiceCommand.None, "yes confirms a low-confidence command");

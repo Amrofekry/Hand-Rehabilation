@@ -1,0 +1,10 @@
+{
+  "scope": "Hand look and walk changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "a5949a4957f4c6d1ddee9957f53df133be5ceef69b1b2fc8f879e125c9f89f75",
+      "currentSha256": "0a67b70b37f552e7acd9f13c5b1ffc21c0f3a43ee4a7359f498dfb05c94b10f4",
+      "reason": "User-authorized hand look and walk (2026-10-28). Settings page: HAND LOOK & WALK (CAMERA) on/off toggle; on by default."
+    }
+  }
+}

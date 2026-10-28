@@ -261,6 +261,22 @@ namespace GripRehab
                     if (guide != null) { guide.Restart(true); return null; }
                     LastMessage = HelpText(); return null;
                 case VoiceCommand.Restart: return runner != null && runner.Begin(runner.Current.kind, runner.Level) ? null : runner != null ? runner.Feedback : "No activity to restart.";
+                case VoiceCommand.SitDown:
+                {
+                    if (player.IsSeated) return "You are already seated.";
+                    SeatPoint nearest = null; float distance = 2.2f;
+                    if (app.seats != null) foreach (var s in app.seats) { if (s == null) continue; float gap = Vector3.Distance(player.transform.position, s.seatedFeet.position); if (gap < distance) { nearest = s; distance = gap; } }
+                    if (nearest == null) return "Move closer to a seat first.";
+                    move = Vector3.zero; app.Release(); return player.Sit(nearest) ? null : "That seat is not free.";
+                }
+                case VoiceCommand.StandUp: return !player.IsSeated ? "You are already standing." : player.Stand() ? null : "There is no room to stand up here.";
+                case VoiceCommand.ResetObjects: app.ResetObjects(); return null;
+                case VoiceCommand.NextActivity: if (runner == null) return "Activities are not available here."; runner.NextActivity(); return null;
+                case VoiceCommand.CameraMode: if (app.CameraMode) return "Camera hand is already on."; app.SetCameraMode(); return null;
+                case VoiceCommand.KeyboardMode: if (!app.CameraMode && !app.Hardware) return "Keyboard demo is already on."; app.SetHardware(false); return null;
+                case VoiceCommand.RecenterHand: app.Release(); app.ActiveHand.RecenterTracking(); return null;
+                case VoiceCommand.RotateLeft: runner.TurnPlacement(-15); return null;
+                case VoiceCommand.RotateRight: runner.TurnPlacement(15); return null;
                 case VoiceCommand.StartBookshelf: return StartActivity(ActivityKind.Bookshelf);
                 case VoiceCommand.StartCoffeeTable: return StartActivity(ActivityKind.CoffeeTable);
                 case VoiceCommand.StartStorageBox: return StartActivity(ActivityKind.StorageBox);

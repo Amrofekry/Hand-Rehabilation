@@ -1,0 +1,33 @@
+PASS centre: no turning
+PASS anywhere in the work zone: no turning (reach and grab freely)
+PASS hand to the right: turn right
+PASS hand to the left: turn left
+PASS hand up looks up, down looks down
+PASS further out turns faster
+PASS turn rate is capped
+PASS turning eases in, no jerk
+PASS turning eases out
+PASS returning to the work zone stops turning
+PASS a brief point does not walk
+PASS a held point walks at full speed
+PASS any other hand shape stops walking quickly
+PASS walk and turn together
+PASS lost tracking or a menu stops everything at once
+PASS low confidence stops everything
+PASS bad coordinates stop everything
+PASS a long frame hitch does not jump the turn
+PASS a brief fist does not grab
+PASS a held fist grabs once, not repeatedly
+PASS opening and closing again grabs again
+PASS a fist while already holding does not grab again
+PASS a brief pinch does not open options
+PASS a held pinch opens options once
+PASS twist starts at zero when the object is grabbed
+PASS small twists are ignored (dead zone)
+PASS twisting right turns the placement right in 5° steps: 70
+PASS twisting left turns it left
+PASS turn stays within ±180°
+PASS no placement turn when not holding
+PASS roll: fingers up is 0, leaning right is positive
+PASS lost tracking restarts the fist hold (no grab from half a hold)
+HAND LOCOMOTION TESTS PASSED: 32

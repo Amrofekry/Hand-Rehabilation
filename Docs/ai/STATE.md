@@ -3,6 +3,7 @@
 **Branch:** `claude/stage13-voice`, from `claude/stage12-audio`, from `claude/stage11-ui`, from `claude/setup`, from `3.4-upgrade-baseline`. Not merged.
 
 ## Done
+- Hand-first controls (2026-10-28): edge look, point to walk, fist grab, pinch options, twist placement; voice for special actions; console zero with MCP over stdio.
 - Stage 13 voice: offline keyword commands, spelling with review, confirmations, feedback; off by default. Offline router tests 140, voice probe 28/28 (SYNTHETIC). Free dictation Blocked (online-only; your choice).
 - Stage 12 audio: synthesised material sounds from real events, 3D, GripRehabMixer with 4 group settings, menu fade, seamless loops. EditMode 10/10, audio probe 17/17 (SYNTHETIC).
 - Stage 11 UI design system: tokens, contrast-aware focus, pause panel, onboarding, input strip, 4:3 fit. UI checks at 4 resolutions × 3 themes pass.
@@ -21,7 +22,7 @@
 3. Merge `claude/*` branches into `3.4-upgrade-baseline` when you approve.
 
 ## Open bugs
-- A-OB1: the level-8 simple-meal probe run fails intermittently (1 of 3 full runs).
+- A-OB1: activity probe grab failures, intermittent and getting more frequent (4 of 6 runs on 2026-10-28; also with hand controls off). Needs its own fix.
 
 ## Pending user checks
 - Hands-on playtest of the Stage 10 activities.

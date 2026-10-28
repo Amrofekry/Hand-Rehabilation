@@ -23,6 +23,7 @@ def play(width, height, ui_only):
                '-screen-width', str(width), '-screen-height', str(height), '-logFile', str(ROOT / 'Logs/activity-probe.log')]
     if ui_only:
         command.append('-activity-ui-only')
+    command.extend(a for a in sys.argv[1:] if a.startswith('-no-'))  # diagnostics switches pass through
     with subprocess.Popen(command, cwd=ROOT) as process:
         try:
             code = process.wait(timeout=900)

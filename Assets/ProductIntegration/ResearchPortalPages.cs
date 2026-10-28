@@ -194,6 +194,8 @@ namespace GripRehab
             view.Button("EFFECTS VOLUME: " + Mathf.RoundToInt(RehabAudio.EffectsVolume * 100) + "%", () => { RehabAudio.EffectsVolume = NextStep(RehabAudio.EffectsVolume); SettingsAt(view.ScrollPosition); });
             view.Button("AMBIENCE VOLUME: " + Mathf.RoundToInt(RehabAudio.AmbienceVolume * 100) + "%", () => { RehabAudio.AmbienceVolume = NextStep(RehabAudio.AmbienceVolume); SettingsAt(view.ScrollPosition); });
             view.Button("VOICE VOLUME: " + Mathf.RoundToInt(RehabAudio.VoiceVolume * 100) + "%", () => { RehabAudio.VoiceVolume = NextStep(RehabAudio.VoiceVolume); SettingsAt(view.ScrollPosition); });
+            // Camera hand: turn the view at the camera edges and walk by pointing (mouse and keyboard stay optional).
+            view.Button("HAND LOOK & WALK (CAMERA): " + (HandLocomotion.Enabled ? "ON" : "OFF"), () => { HandLocomotion.Enabled = !HandLocomotion.Enabled; SettingsAt(view.ScrollPosition); });
             // Stage 13: voice commands (offline keyword recognition), off by default.
             view.Button("VOICE COMMANDS: " + RehabVoiceInput.ModeName(RehabVoiceInput.Mode) + (RehabVoiceInput.Mode != VoiceMode.Off && RehabVoiceInput.Instance != null && RehabVoiceInput.Instance.Unavailable != null ? " (UNAVAILABLE)" : ""), () => { RehabVoiceInput.Mode = (VoiceMode)(((int)RehabVoiceInput.Mode + 1) % 3); SettingsAt(view.ScrollPosition); });
             view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; SettingsAt(view.ScrollPosition); });

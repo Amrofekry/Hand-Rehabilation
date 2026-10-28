@@ -1,0 +1,5 @@
+L8 Cook a simple meal         done=False score=  0 steps=1/4 errors=0 misses=2 grabsFailed=3 t=28s acc=- posMm=-
+L8 Cook a simple meal         done=False score=  0 steps=2/4 errors=0 misses=0 grabsFailed=4 t=25s acc=- posMm=-
+L8 Prepare and serve          done=False score=  0 steps=1/5 errors=2 misses=1 grabsFailed=0 t=17s acc=- posMm=-
+L2 Cook a simple meal         done=False score=  0 steps=2/4 errors=0 misses=0 grabsFailed=2 t=18s acc=- posMm=-
+with hand controls: 2 of 2 runs had an L8 failure; without (-no-hand-locomotion): 1 of 2 failed (L2 meal) -> A-OB1, independent of this change

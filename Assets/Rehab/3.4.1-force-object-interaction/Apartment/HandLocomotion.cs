@@ -1,0 +1,117 @@
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+namespace GripRehab {
+/// <summary>
+/// Camera-hand mode: the view turns when the palm reaches the edge band of the camera image and the player walks while
+/// pointing (<see cref="HandLocomotionPolicy"/>). Runs after ApartmentPlayer, so mouse look and WASD still add on top; they
+/// are options, not required. Thin bars at the screen edges show which way the view is turning. Off in keyboard and
+/// sensor modes; a setting turns it off for people who prefer the mouse.
+/// </summary>
+[DefaultExecutionOrder(50)]
+public sealed class HandLocomotion : MonoBehaviour {
+ const string Key="GripRehab.HandLocomotion";
+ public static bool Enabled{get=>PlayerPrefs.GetInt(Key,1)==1;set=>PlayerPrefs.SetInt(Key,value?1:0);}
+ public const float MaxPitch=60;
+ ApartmentExperience app;RehabAppShell shell;bool acceptance;
+ public readonly HandLocomotionPolicy Policy=new HandLocomotionPolicy();
+ public readonly HandActionPolicy Actions=new HandActionPolicy();
+ ActivityRunner runner;float twistBase;bool twistStarted;
+ public int Grabs{get;private set;}
+ public int OptionsOpened{get;private set;}
+ public static HandLocomotion Instance{get;private set;}
+ public float WalkedMeters{get;private set;}
+ public float TurnedDegrees{get;private set;}
+ public bool Active{get;private set;}
+ Image left,right,up,down;CanvasGroup overlay;Text controls;string controlsText;bool handHint;
+ public const string HandHint="EDGE LOOK  POINT WALK  FIST GRAB  PINCH MENU";
+
+ [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+ static void Boot(){if(Array.IndexOf(Environment.GetCommandLineArgs(),"-no-hand-locomotion")>=0)return; // diagnostics: run without it
+  var e=FindAnyObjectByType<ApartmentExperience>();if(e!=null&&e.GetComponent<HandLocomotion>()==null)e.gameObject.AddComponent<HandLocomotion>();}
+ void Awake(){Instance=this;app=GetComponent<ApartmentExperience>();acceptance=Array.Exists(Environment.GetCommandLineArgs(),a=>a.StartsWith("-apartment-"));BuildOverlay();}
+ void Start(){
+  shell=FindAnyObjectByType<RehabAppShell>();
+  // The QUICK CONTROLS card is authored in the scene; in camera mode its first line says how to look and walk by hand.
+  foreach(var t in FindObjectsByType<Text>(FindObjectsInactive.Include,FindObjectsSortMode.None)){
+   if(t.text.Trim()!="QUICK CONTROLS"||t.transform.parent==null)continue;
+   foreach(var b in t.transform.parent.GetComponentsInChildren<Text>(true))if(b!=t&&b.text.IndexOf('\n')>=0){controls=b;controlsText=b.text;break;}
+   break;
+  }
+ }
+ void Hint(bool hand){
+  if(controls==null||hand==handHint)return;handHint=hand;
+  int cut=controlsText.IndexOf('\n');controls.text=hand&&cut>0?HandHint+controlsText.Substring(cut):controlsText;
+ }
+
+ void Update(){
+  var player=app!=null?app.player:null;if(player==null||app.vision==null){Show(0,0);return;}
+  var frame=app.LeftSelected?app.vision.LatestLeft:app.vision.LatestRight;
+  bool tracked=Enabled&&app.CameraMode&&(app.LeftSelected?app.vision.LeftValid:app.vision.RightValid)&&frame!=null&&
+   (app.cameraLauncher==null||app.cameraLauncher.CameraOpened||acceptance)&&HandKinematics.HasPoseGeometry(frame);
+  bool usable=tracked&&!player.Paused&&(shell==null||!shell.BlocksGameplay)&&player.GameplayInputAllowed;
+  float px=0,py=0,roll=float.NaN;var gesture=HandGesture.None;
+  if(tracked){var p=frame.landmarks;px=(p[0].x+p[5].x+p[9].x+p[13].x+p[17].x)/5;py=(p[0].y+p[5].y+p[9].y+p[13].y+p[17].y)/5;gesture=GestureClassifier.Classify(frame);roll=HandActionPolicy.Roll(p[0].x,p[0].y,p[9].x,p[9].y);}
+  bool pointing=gesture==HandGesture.Point;
+  Hint(Enabled&&app.CameraMode);
+  float dt=Time.deltaTime;
+  Policy.Step(px,py,pointing,usable,tracked?frame.confidence:0,dt);Active=usable;
+  Act(gesture,roll,usable,dt);
+  if(Policy.YawRate!=0){player.transform.Rotate(0,Policy.YawRate*dt,0);TurnedDegrees+=Mathf.Abs(Policy.YawRate*dt);}
+  if(Policy.PitchRate!=0){
+   var view=player.view.transform;float pitch=view.localEulerAngles.x;if(pitch>180)pitch-=360;
+   pitch=Mathf.Clamp(pitch+Policy.PitchRate*dt,-MaxPitch,MaxPitch);
+   player.LookAt(view.position+Quaternion.Euler(pitch,player.transform.eulerAngles.y,0)*Vector3.forward);
+  }
+  if(Policy.Walking&&!player.IsSeated&&player.Controller!=null&&player.Controller.enabled){
+   var before=player.transform.position;
+   player.Controller.Move(player.transform.forward*player.settings.walkSpeed*.8f*Policy.Walk*dt);
+   var moved=player.transform.position-before;moved.y=0;WalkedMeters+=moved.magnitude;
+  }
+  Show(Policy.YawRate/Policy.maxYawDegPerSec,Policy.PitchRate/Policy.maxPitchDegPerSec);
+ }
+
+ /// <summary>Camera actions that replace keys: fist grabs (G/E), pinch opens options (TAB), a twist turns the placement (, .).</summary>
+ void Act(HandGesture gesture,float roll,bool usable,float dt){
+  bool holding=app.Held!=null;
+  Actions.Step(gesture==HandGesture.Fist,gesture==HandGesture.Pinch,holding,roll,usable,dt);
+  if(Actions.GrabRequested&&app.CameraGripScore>=app.settings.cameraCloseAt){var target=Aimed();if(target!=null&&app.TryGrab(target))Grabs++;}
+  if(Actions.OptionsRequested&&!app.player.Paused){app.player.SetPaused(true);OptionsOpened++;}
+  if(runner==null)runner=app.GetComponent<ActivityRunner>();
+  bool turning=holding&&runner!=null&&runner.Active&&!float.IsNaN(Actions.PlacementYaw)&&app.Held.GetComponent<ActivityItem>()!=null;
+  if(!turning){twistStarted=false;return;}
+  if(!twistStarted){twistStarted=true;twistBase=runner.PlacementYaw;}
+  runner.SetPlacementYaw(twistBase+Actions.PlacementYaw);
+ }
+ readonly RaycastHit[] hits=new RaycastHit[8];
+ /// <summary>What a fist grabs: the object at the centre of the view within reach, else the station's selected object.</summary>
+ SqueezableObject Aimed(){
+  var view=app.player.view.transform;int n=Physics.RaycastNonAlloc(view.position,view.forward,hits,2.5f,~0,QueryTriggerInteraction.Ignore);
+  SqueezableObject best=null;float near=float.MaxValue;
+  for(int i=0;i<n;i++){var o=hits[i].collider.GetComponentInParent<SqueezableObject>();if(o!=null&&!o.IsBroken&&hits[i].distance<near){near=hits[i].distance;best=o;}}
+  if(best!=null)return best;
+  var selected=app.choices!=null?app.choices.SelectedObject:null;
+  return selected!=null&&selected.gameObject.activeInHierarchy&&!selected.IsBroken?selected:null;
+ }
+
+ void Show(float yaw,float pitch){
+  if(overlay==null)return;
+  bool on=app!=null&&app.CameraMode&&Enabled;overlay.alpha=on?1:0;
+  SetAlpha(right,Mathf.Max(0,yaw));SetAlpha(left,Mathf.Max(0,-yaw));SetAlpha(down,Mathf.Max(0,pitch));SetAlpha(up,Mathf.Max(0,-pitch));
+ }
+ static void SetAlpha(Image i,float a){var c=i.color;c.a=.55f*Mathf.Clamp01(a);i.color=c;}
+
+ void BuildOverlay(){
+  var go=new GameObject("Hand look indicators",typeof(Canvas),typeof(CanvasGroup));go.transform.SetParent(transform,false);
+  var canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=850;
+  overlay=go.GetComponent<CanvasGroup>();overlay.alpha=0;overlay.blocksRaycasts=false;overlay.interactable=false;
+  left=Bar(go,"Turning left",new Vector2(0,0),new Vector2(0,1),new Vector2(16,0));right=Bar(go,"Turning right",new Vector2(1,0),new Vector2(1,1),new Vector2(16,0));
+  up=Bar(go,"Looking up",new Vector2(0,1),new Vector2(1,1),new Vector2(0,16));down=Bar(go,"Looking down",new Vector2(0,0),new Vector2(1,0),new Vector2(0,16));
+ }
+ static Image Bar(GameObject parent,string name,Vector2 min,Vector2 max,Vector2 size){
+  var g=new GameObject(name,typeof(Image));g.transform.SetParent(parent.transform,false);
+  var r=g.GetComponent<RectTransform>();r.anchorMin=min;r.anchorMax=max;r.pivot=new Vector2(min.x==max.x?min.x:.5f,min.y==max.y?min.y:.5f);r.sizeDelta=size;r.anchoredPosition=Vector2.zero;
+  var i=g.GetComponent<Image>();i.color=new Color(.21f,.79f,.64f,0);i.raycastTarget=false;return i;
+ }
+}
+}

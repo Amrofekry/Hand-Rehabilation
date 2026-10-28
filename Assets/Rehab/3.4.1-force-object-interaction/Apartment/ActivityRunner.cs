@@ -192,10 +192,10 @@ public sealed class ActivityRunner : MonoBehaviour {
   if(activityButtons!=null&&buttonsState!=ButtonsState)RefreshButtons();
   bool input=app.player.GameplayInputAllowed;
   if(input&&Input.GetKeyDown(KeyCode.K))Begin(Active?Current.kind:Selected,Active?Level:0);
-  if(input&&Input.GetKeyDown(KeyCode.N)){Selected=NextInRoom(Active?Current.kind:Selected);if(Active)Begin(Selected);else Refresh();}
+  if(input&&Input.GetKeyDown(KeyCode.N))NextActivity();
   if(!Active){Show(false);return;}
-  if(input&&Input.GetKeyDown(KeyCode.Comma)){PlacementYaw-=15;Refresh();}
-  if(input&&Input.GetKeyDown(KeyCode.Period)){PlacementYaw+=15;Refresh();}
+  if(input&&Input.GetKeyDown(KeyCode.Comma))TurnPlacement(-15);
+  if(input&&Input.GetKeyDown(KeyCode.Period))TurnPlacement(15);
   // Tools act on what the player looks at while squeezing.
   var held=app.Held!=null?app.Held.GetComponent<ActivityItem>():null;
   if(held!=null&&app.ForceValid){
@@ -218,6 +218,12 @@ public sealed class ActivityRunner : MonoBehaviour {
   return found;
  }
  public void Say(string text){Feedback=text;Refresh();}
+ /// <summary>Turns the held item's placement (keys , and ., camera wrist roll, voice "rotate").</summary>
+ public void TurnPlacement(float degrees){if(float.IsNaN(degrees)||float.IsInfinity(degrees))return;PlacementYaw=Mathf.Repeat(PlacementYaw+degrees+180,360)-180;Refresh();}
+ /// <summary>Sets the placement turn directly (camera wrist roll follows the hand).</summary>
+ public void SetPlacementYaw(float degrees){if(float.IsNaN(degrees)||float.IsInfinity(degrees)||Mathf.Approximately(degrees,PlacementYaw))return;PlacementYaw=Mathf.Repeat(degrees+180,360)-180;Refresh();}
+ /// <summary>Next activity in this room (key N, voice "next activity").</summary>
+ public void NextActivity(){Selected=NextInRoom(Active?Current.kind:Selected);if(Active)Begin(Selected);else Refresh();}
  ActivityKind NextInRoom(ActivityKind kind){int first=ActivityRules.Kitchen(kind)?3:0;return (ActivityKind)(first+((int)kind-first+1)%3);}
 
  void CheckDone(){

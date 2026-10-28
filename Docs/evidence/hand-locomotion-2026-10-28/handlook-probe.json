@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "utc": "2026-10-28T11:22:49.7189935Z",
+  "scope": "SYNTHETIC camera-hand frames over the loopback vision port in the rendered Windows player; no webcam or person",
+  "detail": "",
+  "errors": 0,
+  "checks": [
+    {
+      "name": "camera hand is tracked",
+      "value": "active=True camera=True",
+      "passed": true
+    },
+    {
+      "name": "controls card shows the hand controls in camera mode",
+      "value": "EDGE LOOK  POINT WALK  FIST GRAB  PINCH MENU | E   GRAB   G   SUMMON   Q   RELEASE | F   SIT   TAB   OPTIONS   B   INPUT",
+      "passed": true
+    },
+    {
+      "name": "work zone (reach and grab) does not turn",
+      "value": "0.00\u00b0",
+      "passed": true
+    },
+    {
+      "name": "hand at the right edge turns right",
+      "value": "131.9\u00b0 in 2 s",
+      "passed": true
+    },
+    {
+      "name": "turn speed stays under the cap",
+      "value": "131.9\u00b0 in 2 s (cap 75\u00b0/s)",
+      "passed": true
+    },
+    {
+      "name": "hand at the left edge turns left",
+      "value": "-117.6\u00b0",
+      "passed": true
+    },
+    {
+      "name": "hand at the top looks up",
+      "value": "-43.6\u00b0",
+      "passed": true
+    },
+    {
+      "name": "hand at the bottom looks down",
+      "value": "-8.3\u00b0",
+      "passed": true
+    },
+    {
+      "name": "pointing walks forward",
+      "value": "1.71 m in 2 s",
+      "passed": true
+    },
+    {
+      "name": "open hand stops walking",
+      "value": "0.000 m after stop",
+      "passed": true
+    },
+    {
+      "name": "a fist (grab) does not walk",
+      "value": "0.000 m",
+      "passed": true
+    },
+    {
+      "name": "a held fist grabs the object (no key)",
+      "value": "held=Silicone ball",
+      "passed": true
+    },
+    {
+      "name": "keeping the fist keeps holding",
+      "value": "held=Silicone ball",
+      "passed": true
+    },
+    {
+      "name": "opening the hand releases it",
+      "value": "held=none",
+      "passed": true
+    },
+    {
+      "name": "a held pinch opens the options panel",
+      "value": "paused=True",
+      "passed": true
+    },
+    {
+      "name": "twisting the hand turns the placement",
+      "value": "grabbed=True turned 60\u00b0",
+      "passed": true
+    },
+    {
+      "name": "twisting the other way turns it back",
+      "value": "-60\u00b0",
+      "passed": true
+    },
+    {
+      "name": "lost tracking stops walking and turning",
+      "value": "0.000 m, 0.00\u00b0",
+      "passed": true
+    },
+    {
+      "name": "paused: the hand does not turn the view",
+      "value": "0.00\u00b0",
+      "passed": true
+    },
+    {
+      "name": "setting off: no hand turning",
+      "value": "0.00\u00b0",
+      "passed": true
+    },
+    {
+      "name": "keyboard mode: camera frames do not move the player",
+      "value": "0.00\u00b0",
+      "passed": true
+    }
+  ],
+  "exit": 0
+}

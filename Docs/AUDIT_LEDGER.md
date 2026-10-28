@@ -893,6 +893,28 @@ Design, the investigation and the command coverage table are in [VOICE_COMMANDS.
 
 **Protected file:** `ResearchPortalPages.cs` gained the VOICE COMMANDS setting. It is recorded in `evidence/stage13-2026-10-27/protected-source-review.json`.
 
+## 10g. Hand-first controls (28 Oct 2026, user request)
+
+Design and the full key-to-hand map are in [HAND_CONTROLS.md](HAND_CONTROLS.md). Evidence is in `evidence/hand-locomotion-2026-10-28/`.
+
+| ID | Result | Check |
+|---|---|---|
+| H-01 | View turns when the palm reaches the camera-image edges; the centre is a free work zone; eased and capped (75°/s, 45°/s) | Offline 32; probe: right +133°, left −118° in 2 s; work zone 0.00° |
+| H-02 | Point to walk; any other shape stops; a fist never walks | Probe: 1.72 m in 2 s, 0.000 m after stop |
+| H-03 | Fist held grabs (was G/E); open hand releases; pinch held opens options (was TAB); twist turns the placement (was , and .) | Probe: grab, hold, release, options, ±60° |
+| H-04 | Voice for special actions: sit down, stand up, reset objects, next activity, camera/keyboard mode, recenter hand, rotate left/right | Offline voice tests 165 |
+| H-05 | Lost tracking, low confidence, pause, setting off and keyboard mode stop hand control at once | Probe |
+| H-06 | Console 0/0/0 and the MCP bridge up | ConsoleZeroCheck |
+
+**Regression:**
+- Passed: smoke, journey, UI at 4 sizes, activity UI-only, voice 28/28, hand 21/21, EditMode 10/10, offline 19, Python, and console zero.
+- Activity probe: **A-OB1 recurred**, with L8 meal/serve, L8 bookshelf and L2 meal failing grabs.
+- A run with the hand controls switched off (`-no-hand-locomotion`) also failed once in two. The cause is therefore independent of this change and still open, but the rate is now higher (4 of 6 runs today).
+
+**Kinds of result:** all SYNTHETIC (camera frames sent over the real vision port) or offline. How it feels with your real hand is a human check that is still pending.
+
+**Protected file:** `ResearchPortalPages.cs` gained the HAND LOOK & WALK setting. It is recorded in `evidence/hand-locomotion-2026-10-28/protected-source-review.json`.
+
 ## 11. Severity summary and Stage 2 entry list (Stage 1)
 
 - **S1 (2):** A-002 profile rollback on transient read error · P-012 Sequence Memory pattern never shown.

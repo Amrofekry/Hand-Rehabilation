@@ -13,6 +13,8 @@ namespace GripRehab
         // In-game
         MoveForward, MoveBack, MoveLeft, MoveRight, Stop, LookAtObject, GrabObject, ReleaseObject, OpenInventory,
         StartBookshelf, StartCoffeeTable, StartStorageBox, StartMeal, StartCutting, StartServe,
+        // Special actions that were keys only (2026-10-28): F, R, N, B, C and , .
+        SitDown, StandUp, ResetObjects, NextActivity, CameraMode, KeyboardMode, RecenterHand, RotateLeft, RotateRight,
         // Session
         Restart, Pause, Resume, Instructions, MainMenu,
         // Control
@@ -62,7 +64,10 @@ namespace GripRehab
             ["start simple meal"] = VoiceCommand.StartMeal, ["start cutting"] = VoiceCommand.StartCutting, ["start prepare and serve"] = VoiceCommand.StartServe,
             ["restart"] = VoiceCommand.Restart, ["pause"] = VoiceCommand.Pause, ["resume"] = VoiceCommand.Resume, ["continue"] = VoiceCommand.Resume,
             ["instructions"] = VoiceCommand.Instructions, ["main menu"] = VoiceCommand.MainMenu,
-            ["stop listening"] = VoiceCommand.StopListening, ["start listening"] = VoiceCommand.StartListening
+            ["stop listening"] = VoiceCommand.StopListening, ["start listening"] = VoiceCommand.StartListening,
+            ["sit down"] = VoiceCommand.SitDown, ["stand up"] = VoiceCommand.StandUp, ["reset objects"] = VoiceCommand.ResetObjects,
+            ["next activity"] = VoiceCommand.NextActivity, ["camera mode"] = VoiceCommand.CameraMode, ["keyboard mode"] = VoiceCommand.KeyboardMode,
+            ["recenter hand"] = VoiceCommand.RecenterHand, ["rotate left"] = VoiceCommand.RotateLeft, ["rotate right"] = VoiceCommand.RotateRight
         };
 
         /// <summary>Spelling words: NATO alphabet (recognised far more reliably than single letters) plus the plain letters.</summary>
@@ -157,6 +162,12 @@ namespace GripRehab
                     return x.inGame ? (x.activityRunning ? "An activity is running. Finish it or say restart." : null) : "Activities start in the apartment.";
                 case VoiceCommand.Restart:
                     return x.inGame && x.activityRunning ? null : "Restart works during an activity.";
+                case VoiceCommand.SitDown: case VoiceCommand.StandUp: case VoiceCommand.ResetObjects: case VoiceCommand.CameraMode: case VoiceCommand.KeyboardMode: case VoiceCommand.RecenterHand:
+                    return x.inGame ? null : "That works in the apartment.";
+                case VoiceCommand.NextActivity:
+                    return x.inGame ? null : "Activities are chosen in the apartment.";
+                case VoiceCommand.RotateLeft: case VoiceCommand.RotateRight:
+                    return x.inGame && x.activityRunning && x.holding ? null : "Rotate works while you hold an activity item.";
                 case VoiceCommand.MainMenu:
                     return x.inMenu && !x.canGoBack ? "You are on the main menu." : null;
                 case VoiceCommand.Back:

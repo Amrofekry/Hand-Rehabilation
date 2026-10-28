@@ -22,7 +22,7 @@ Hand-grip rehabilitation game: the apartment and its activities, hand tracking b
 - Folders follow WBS IDs (`Assets/Rehab/3.4.1-...`). Pure logic is kept in Unity-free files so the offline harness can compile it.
 - Match the surrounding style. Many apartment files are compact one-liners, so keep their density.
 - Use no allocations per frame (NonAlloc queries, no LINQ in Update). The perf probe enforces this.
-- Every input path must keep working: mouse, keyboard, hand pointer, camera.
+- Every input path must keep working: mouse, keyboard, hand pointer, camera. **The camera hand is the main input**: every new action needs a hand gesture or the hand pointer, voice for special actions, keys and mouse as options (`Docs/HAND_CONTROLS.md`).
 
 ## Rules
 - **The Unity console stays at 0 errors, 0 warnings, 0 logs.** Fix the source; only known, documented info lines go to `Logs/editor-info.log` (`EditorConsoleHygiene`), never errors. Run the console-zero check after Unity changes.
