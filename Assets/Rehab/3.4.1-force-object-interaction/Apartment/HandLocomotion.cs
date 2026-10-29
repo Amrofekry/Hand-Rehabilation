@@ -12,12 +12,14 @@ namespace GripRehab {
 public sealed class HandLocomotion : MonoBehaviour {
  const string Key="GripRehab.HandLocomotion";
  public static bool Enabled{get=>PlayerPrefs.GetInt(Key,1)==1;set=>PlayerPrefs.SetInt(Key,value?1:0);}
+ const string AimKey="GripRehab.CameraAimAssist";
+ /// <summary>On (default): a closed hand also picks up what you look at within reach, counted as assisted. Off: only a fingertip at the object grabs (physical reach).</summary>
+ public static bool AimAssist{get=>PlayerPrefs.GetInt(AimKey,1)==1;set=>PlayerPrefs.SetInt(AimKey,value?1:0);}
  public const float MaxPitch=60;
  ApartmentExperience app;RehabAppShell shell;bool acceptance;
  public readonly HandLocomotionPolicy Policy=new HandLocomotionPolicy();
  public readonly HandActionPolicy Actions=new HandActionPolicy();
  ActivityRunner runner;float twistBase;bool twistStarted;
- public int Grabs{get;private set;}
  public int OptionsOpened{get;private set;}
  public static HandLocomotion Instance{get;private set;}
  public float WalkedMeters{get;private set;}
@@ -75,23 +77,13 @@ public sealed class HandLocomotion : MonoBehaviour {
  void Act(HandGesture gesture,float roll,bool usable,float dt){
   bool holding=app.Held!=null;
   Actions.Step(gesture==HandGesture.Fist,gesture==HandGesture.Pinch,holding,roll,usable,dt);
-  if(Actions.GrabRequested&&app.CameraGripScore>=app.settings.cameraCloseAt){var target=Aimed();if(target!=null&&app.TryGrab(target))Grabs++;}
-  if(Actions.OptionsRequested&&!app.player.Paused){app.player.SetPaused(true);OptionsOpened++;}
+  // Grabbing is the single camera path in ApartmentExperience (closed-hand gate + reach or aim assist), so it is not repeated here.
+  if(Actions.OptionsRequested&&!app.player.Paused&&app.Held==null){app.player.SetPaused(true);OptionsOpened++;}
   if(runner==null)runner=app.GetComponent<ActivityRunner>();
   bool turning=holding&&runner!=null&&runner.Active&&!float.IsNaN(Actions.PlacementYaw)&&app.Held.GetComponent<ActivityItem>()!=null;
   if(!turning){twistStarted=false;return;}
   if(!twistStarted){twistStarted=true;twistBase=runner.PlacementYaw;}
   runner.SetPlacementYaw(twistBase+Actions.PlacementYaw);
- }
- readonly RaycastHit[] hits=new RaycastHit[8];
- /// <summary>What a fist grabs: the object at the centre of the view within reach, else the station's selected object.</summary>
- SqueezableObject Aimed(){
-  var view=app.player.view.transform;int n=Physics.RaycastNonAlloc(view.position,view.forward,hits,2.5f,~0,QueryTriggerInteraction.Ignore);
-  SqueezableObject best=null;float near=float.MaxValue;
-  for(int i=0;i<n;i++){var o=hits[i].collider.GetComponentInParent<SqueezableObject>();if(o!=null&&!o.IsBroken&&hits[i].distance<near){near=hits[i].distance;best=o;}}
-  if(best!=null)return best;
-  var selected=app.choices!=null?app.choices.SelectedObject:null;
-  return selected!=null&&selected.gameObject.activeInHierarchy&&!selected.IsBroken?selected:null;
  }
 
  void Show(float yaw,float pitch){

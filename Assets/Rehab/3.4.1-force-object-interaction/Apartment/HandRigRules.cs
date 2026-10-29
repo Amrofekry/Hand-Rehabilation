@@ -25,4 +25,25 @@ public static class HandRigRules {
  }
  public static Vector3 Axis(Vector3 value,Vector3 fallback)=>Finite(value)&&value.sqrMagnitude>1e-8f&&float.IsFinite(value.sqrMagnitude)?value.normalized:fallback;
 }
+
+/// <summary>
+/// One Euro filter (Casiez, Roussel and Vogel, CHI 2012) for one value: strong smoothing when the hand is still (low
+/// jitter), little when it moves fast (low lag). minCutoff (Hz) sets jitter at rest; beta raises the cutoff with speed
+/// (units per second); dCutoff filters the speed estimate. No allocation; a bad sample or time step resets it.
+/// </summary>
+public struct OneEuroFilter {
+ public float minCutoff,beta,dCutoff;float x,dx;bool primed;
+ public OneEuroFilter(float minCutoff,float beta,float dCutoff=1f){this.minCutoff=minCutoff;this.beta=beta;this.dCutoff=dCutoff;x=dx=0;primed=false;}
+ public bool Primed=>primed;
+ public void Reset(){primed=false;x=dx=0;}
+ static float Alpha(float cutoff,float dt){float tau=1f/(2f*(float)Math.PI*Math.Max(1e-3f,cutoff));return 1f/(1f+tau/dt);}
+ public float Step(float value,float dt){
+  if(!float.IsFinite(value))return primed?x:0;
+  if(!primed||!(dt>0)||!float.IsFinite(dt)){x=value;dx=0;primed=true;return x;}
+  dt=Math.Min(dt,.1f);
+  float speed=(value-x)/dt;dx+=Alpha(dCutoff,dt)*(speed-dx);
+  x+=Alpha(minCutoff+beta*Math.Abs(dx),dt)*(value-x);
+  return x;
+ }
+}
 }

@@ -156,9 +156,8 @@ namespace GripRehab
             player.transform.Rotate(0, 180, 0); var station = app.choices.SelectedObject;
             player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f);
             if (Vector3.Distance(player.transform.position, station.transform.position) > 1.6f) { player.Teleport(station.transform.position - player.transform.forward * 1.1f + Vector3.up * .05f, player.transform.rotation); yield return null; player.LookAt(station.transform.position); }
-            int grabs = loco.Grabs;
             yield return Hold(.5f, .5f, Shape.Fist, 1f);
-            Add("a held fist grabs the object (no key)", app.Held == station && loco.Grabs == grabs + 1, "held=" + (app.Held != null ? app.Held.displayName : "none"));
+            Add("a held fist grabs the object (no key)", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none"));
             yield return Hold(.5f, .5f, Shape.Fist, 1f);
             Add("keeping the fist keeps holding", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none"));
             yield return Hold(.5f, .5f, Shape.Open, .8f);

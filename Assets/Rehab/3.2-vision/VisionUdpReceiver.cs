@@ -10,6 +10,7 @@ namespace GripRehab
 {
     // Two independent 21-point streams on loopback. A legacy packet without handedness is Right.
     // Receive age includes time spent queued for Unity's main thread.
+    [DefaultExecutionOrder(-30)] // frames land before ApartmentExperience reads them in the same frame (2026-10-29)
     public sealed class VisionUdpReceiver : MonoBehaviour, IHandTracker
     {
         public int port = 27817;

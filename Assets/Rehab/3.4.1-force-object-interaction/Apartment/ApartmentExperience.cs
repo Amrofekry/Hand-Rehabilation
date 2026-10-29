@@ -49,7 +49,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  private readonly Collider[] _clearanceOverlaps=new Collider[64];
  private readonly RaycastHit[] _clearanceHits=new RaycastHit[64];
  private Quaternion _heldRotationOffset;private Collider[] _playerColliders;
- private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime;private bool _cameraReleaseBlocked;
+ private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime,_cameraValidAt,_cameraClosedFor;private bool _cameraReleaseBlocked;
  private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
  private ForceHoldTask _task=new ForceHoldTask(18,3,3);
  private long _contactTicks;
@@ -96,13 +96,19 @@ public sealed class ApartmentExperience:MonoBehaviour {
   bool cameraValid=cameraTracked&&!player.Paused;
   if(CameraMode){
    ForceValid=cameraValid;
-   CameraGripScore=cameraTracked?HandKinematics.GripScore(selectedFrame):0;
-   _cameraGrip.Step(CameraGripScore,cameraValid,Time.deltaTime,settings.cameraCloseAt,settings.cameraOpenAt,settings.cameraGestureDwellSeconds);
+   // 2026-10-29 hybrid control: a short tracking gap keeps the hold and the gate state (GraspHoldRule.LossGraceSeconds);
+   // the thumb-aware grasp score lets pinches grab and keeps pointing (walk) from grabbing.
+   if(cameraValid)_cameraValidAt=Time.unscaledTime;
+   bool cameraGrace=!cameraValid&&Held!=null&&!GraspHoldRule.ShouldRelease(true,false,Time.unscaledTime-_cameraValidAt,player.Paused);
+   CameraGripScore=cameraTracked?HandGrasp.Score(selectedFrame):cameraGrace?CameraGripScore:0;
+   if(!cameraGrace)_cameraGrip.Step(CameraGripScore,cameraValid,Time.deltaTime,settings.cameraCloseAt,settings.cameraOpenAt,settings.cameraGestureDwellSeconds);
+   _cameraClosedFor=_cameraGrip.Closed?_cameraClosedFor+Time.deltaTime:0;
    if(cameraValid&&!_cameraGrip.Closed&&CameraGripScore<=settings.cameraOpenAt)_cameraReleaseBlocked=false;
-   if(!cameraValid&&Held!=null){Release();Status="Camera tracking lost - object released";}
-   else if(_cameraGrip.Closed&&CameraGripScore>=settings.cameraCloseAt)_summonGraceUntil=0;
+   if(!cameraValid&&Held!=null&&!cameraGrace){Release();Status="Camera tracking lost - object released";}
+   // Hysteresis: hold until the gate opens (score at or below the open threshold for the dwell), not on the first dip under the grab threshold.
+   else if(_cameraGrip.Closed||cameraGrace)_summonGraceUntil=0;
    else if(Held!=null&&Time.unscaledTime>=_summonGraceUntil){Release();Status="Hand opened - object released";}
-   ForceNewtons=cameraValid?Mathf.MoveTowards(ForceNewtons,CameraGripScore*settings.cameraVisualMaxNewtons,90*Time.deltaTime):0;
+   ForceNewtons=cameraValid||cameraGrace?Mathf.MoveTowards(ForceNewtons,CameraGripScore*settings.cameraVisualMaxNewtons,90*Time.deltaTime):0;
   } else if(Hardware){
    ForceValid=forceReceiver.Latest.Valid&&!player.Paused;ForceNewtons=ForceValid?forceReceiver.Latest.Newtons:0;
    if(_generation!=forceReceiver.State.Generation){_generation=forceReceiver.State.Generation;Release();_filter.Reset();_filter.Push(0,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);_sessionValidSamples=1;_filteredSamples=forceReceiver.State.SampleCount;ContactForceNewtons=0;_task.Reset();Status="Connection/calibration changed";}
@@ -160,7 +166,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
     _holdCorrectionLocal=ActiveHand.transform.InverseTransformVector(correction);
    }
   } else {LastContact=default;_holdCorrectionLocal=Vector3.zero;_palmExtra=0;}
-  if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&Held==null)TryCameraGrab();
+  if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&_cameraClosedFor>=.15f&&Held==null)TryCameraGrab();
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
  }
  void UpdatePresentation(bool present,float handLift){
@@ -189,10 +195,10 @@ public sealed class ApartmentExperience:MonoBehaviour {
  // Follow the only actively observed physical hand. When both are visible,
  // retain the selected side until its stream has stopped refreshing.
  private void AutoSelectCameraHand(){
-  if(!CameraMode||vision==null)return;
+  if(!CameraMode||vision==null||Held!=null)return; // never swap hands (which releases) while holding
   double selectedAge=LeftSelected?vision.LeftAgeSeconds:vision.RightAgeSeconds;
   double otherAge=LeftSelected?vision.RightAgeSeconds:vision.LeftAgeSeconds;
-  if(otherAge<.15&&(double.IsPositiveInfinity(selectedAge)||selectedAge>.25)){
+  if(otherAge<.15&&(double.IsPositiveInfinity(selectedAge)||selectedAge>1.0)){
    SelectHand(!LeftSelected);
    Status=LeftSelected?"Camera selected LEFT hand":"Camera selected RIGHT hand";
   }
@@ -368,8 +374,15 @@ public sealed class ApartmentExperience:MonoBehaviour {
     if(distance<best){best=distance;nearest=item;}
    }
   }
-  if(nearest!=null&&TryGrab(nearest))Status="Camera grip: holding "+nearest.displayName;
+  if(nearest!=null&&TryGrab(nearest)){Status="Camera grip: holding "+nearest.displayName;return;}
+  // Aim assist (default, a setting): with no fingertip at an object, a closed hand takes what you look at within reach,
+  // like the E key. Counted separately so assisted pickups are never mistaken for physical reach.
+  if(!HandLocomotion.AimAssist)return;
+  var aimed=KeyboardTarget(out _);
+  if(aimed!=null&&TryGrab(aimed)){AssistedGrabs++;Status="Camera grip (aim assist): holding "+aimed.displayName;}
  }
+ /// <summary>Camera pickups made by aim assist rather than a fingertip at the object (2026-10-29).</summary>
+ public int AssistedGrabs{get;private set;}
  // G brings the station's selected object into the tracked hand without
  // changing input mode. The patient must close the hand within a short grace
  // period; tracking loss always releases immediately.

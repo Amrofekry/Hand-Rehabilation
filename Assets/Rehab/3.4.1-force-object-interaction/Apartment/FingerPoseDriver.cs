@@ -29,6 +29,17 @@ namespace GripRehab
         [Header("Tracking loss")]
         [Tooltip("If false, blend to the visible demo/rest pose when this hand disappears.")]
         public bool holdLastTrackedPoseOnLoss = false;
+        [Header("Camera hand (2026-10-29)")]
+        [Tooltip("Seconds the last tracked pose is held through a tracking gap before easing to rest.")]
+        public float lossGraceSeconds = .6f;
+        [Tooltip("A gap longer than this re-anchors position, depth and palm references on reacquisition.")]
+        public float reanchorAfterSeconds = 1.5f;
+        [Tooltip("Largest sideways / vertical reach from rest in camera mode (metres).")]
+        public float reachX = .30f, reachY = .26f;
+        [Tooltip("One Euro filter on the camera hand position: min cutoff (Hz) and speed coefficient. Lower cutoff = steadier, higher beta = less lag.")]
+        public float positionMinCutoff = 1.2f, positionBeta = 8f;
+        [Tooltip("One Euro filter on the palm-size depth estimate (noisier than position, so steadier settings).")]
+        public float depthMinCutoff = .35f, depthBeta = 2f;
 
         public Vector3 PalmDirection { get; private set; }
         public Vector3 PalmNormal { get; private set; }
@@ -50,7 +61,9 @@ namespace GripRehab
         public bool RigReady { get; private set; }
         private Quaternion _rootRest, _cameraPalmReference;
         private Vector3 _wristReference;
-        private float _palmWidthReference;
+        private float _palmWidthReference, _palmLengthReference, _clock, _lastTrackedAt = -10;
+        private bool _referencesValid;
+        private OneEuroFilter _fx, _fy, _fz;
         private bool _anchored, _everTracked;
         private readonly float[] _angles = new float[15];
         private readonly float[] _smoothed = new float[15];
@@ -83,7 +96,7 @@ namespace GripRehab
             }
         }
         public void UseDemoPose() { _everTracked = false; _anchored = false; TrackingUsed = UsingWorldLandmarks = false; LastPoseSequence=0; }
-        public void RecenterTracking() { _anchored = false; }
+        public void RecenterTracking() { _anchored = false; _referencesValid = false; }
 
         public static float Bend(Vector3 a, Vector3 b, Vector3 c)
         {
@@ -120,6 +133,7 @@ namespace GripRehab
             travelMeters=float.IsFinite(travelMeters)?Mathf.Clamp(travelMeters,0,2):0;
             smoothing=float.IsFinite(smoothing)?Mathf.Clamp(smoothing,.02f,1):.045f;
             var alpha = 1f - Mathf.Exp(-dt / smoothing);
+            _clock += dt;
             var liveCurlAxis=HandRigRules.Axis(curlAxis,_safeCurlAxis);
             var liveSpreadAxis=HandRigRules.Axis(spreadAxis,_safeSpreadAxis);
             float liveCurlSign=float.IsFinite(curlSign)?Mathf.Clamp(curlSign,-1,1):_safeCurlSign;
@@ -142,25 +156,52 @@ namespace GripRehab
 
                 var wristImage = HandKinematics.ToCameraSpace(frame.landmarks[0]);
                 var width = Vector3.Distance(frame.landmarks[5], frame.landmarks[17]);
+                // Two palm-size measures (palm width and wrist-to-middle-knuckle length) averaged: half the noise of either alone.
+                var length = Vector3.Distance(frame.landmarks[0], frame.landmarks[9]);
                 HandKinematics.TryPalmBasis(palmSide, palmUp, out var currentBasis);
                 if (!_anchored)
                 {
-                    _wristReference = wristImage;
-                    _palmWidthReference = Mathf.Max(.025f, width);
-                    _cameraPalmReference = currentBasis;
+                    // References survive short gaps (no re-anchoring jump); a long gap or an explicit recenter takes new ones.
+                    if (!_referencesValid || _clock - _lastTrackedAt > reanchorAfterSeconds)
+                    {
+                        _wristReference = wristImage;
+                        _palmWidthReference = Mathf.Max(.025f, width);
+                        _palmLengthReference = Mathf.Max(.025f, length);
+                        _cameraPalmReference = currentBasis;
+                        _referencesValid = true;
+                        _fx.Reset(); _fy.Reset(); _fz.Reset();
+                    }
                     _anchored = true;
                 }
+                _lastTrackedAt = _clock;
                 // Camera mode maps the image center to the resting hand, so moving
                 // the real wrist toward an on-screen object moves the virtual wrist.
                 // Relative mode stays available for the older synthetic/demo contract.
                 var delta = absoluteImageSpace ? wristImage - new Vector3(.5f, .5f, 0) : wristImage - _wristReference;
                 // Keep image X as received. Y conversion and palm-size depth
                 // mapping retain their existing signs and limits.
-                var requested = restingPosition + new Vector3(
-                    Mathf.Clamp(delta.x * travelMeters, -.23f, .23f),
-                    Mathf.Clamp(delta.y * travelMeters, -.20f, .20f),
-                    Mathf.Clamp((width / _palmWidthReference - 1f) * (absoluteImageSpace ? .75f : .08f), absoluteImageSpace ? -.20f : -.12f, absoluteImageSpace ? .65f : .12f));
-                transform.localPosition = Vector3.Lerp(transform.localPosition, requested, alpha);
+                if (absoluteImageSpace)
+                {
+                    // Camera mode: One Euro filtered position (steady at rest, little lag when moving) and a filtered depth.
+                    float size = .5f * (width / _palmWidthReference + (_palmLengthReference > 0 ? length / _palmLengthReference : width / _palmWidthReference));
+                    _fx.minCutoff = _fy.minCutoff = positionMinCutoff; _fx.beta = _fy.beta = positionBeta; _fx.dCutoff = _fy.dCutoff = 1f;
+                    _fz.minCutoff = depthMinCutoff; _fz.beta = depthBeta; _fz.dCutoff = 1f;
+                    float rx = float.IsFinite(reachX) ? Mathf.Clamp(reachX, .05f, .6f) : .30f, ry = float.IsFinite(reachY) ? Mathf.Clamp(reachY, .05f, .6f) : .26f;
+                    var target = restingPosition + new Vector3(
+                        Mathf.Clamp(delta.x * travelMeters, -rx, rx),
+                        Mathf.Clamp(delta.y * travelMeters, -ry, ry),
+                        Mathf.Clamp((size - 1f) * .75f, -.20f, .65f));
+                    if (!_fx.Primed) { _fx.Step(transform.localPosition.x, dt); _fy.Step(transform.localPosition.y, dt); _fz.Step(transform.localPosition.z, dt); }
+                    transform.localPosition = new Vector3(_fx.Step(target.x, dt), _fy.Step(target.y, dt), _fz.Step(target.z, dt));
+                }
+                else
+                {
+                    var requested = restingPosition + new Vector3(
+                        Mathf.Clamp(delta.x * travelMeters, -.23f, .23f),
+                        Mathf.Clamp(delta.y * travelMeters, -.20f, .20f),
+                        Mathf.Clamp((width / _palmWidthReference - 1f) * .08f, -.12f, .12f));
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, requested, alpha);
+                }
                 // Preserve the upright fingers, then turn the palm over around
                 // the upright vertical axis: the camera sees the opposite side
                 // of the hand from the patient. This changes the rest facing,
@@ -177,7 +218,7 @@ namespace GripRehab
             else
             {
                 _anchored = false;
-                if (_everTracked && holdLastTrackedPoseOnLoss) return;
+                if (_everTracked && (holdLastTrackedPoseOnLoss || _clock - _lastTrackedAt < lossGraceSeconds)) return;
                 transform.localPosition = Vector3.Lerp(transform.localPosition, restingPosition, alpha);
                 var restRotation = _rootRest;
                 if (HasDemoRotation && HandRigRules.TryRotation(DemoRotation, out var presented))

@@ -2,6 +2,15 @@
 
 **Branch:** `claude/stage13-voice`, from `claude/stage12-audio`, from `claude/stage11-ui`, from `claude/setup`, from `3.4-upgrade-baseline`. Not merged.
 
+## Resume here (2026-10-29, paused by the user)
+- **Plan:** `C:/Users/lenovo/.claude/plans/alaways-use-graphify-of-generic-yeti.md` (approved; one continuous run, Blocks A to J).
+- **Branch:** `claude/final-release`. WIP commit; Unity compile **not yet verified** after the CV edits.
+- **Block A in progress:**
+  - Done: One Euro filter (HandRigRules), HandGrasp score, GraspHoldRule + HandInteractionMachine + HandControlProfile (HandLocomotionPolicy.cs), ApartmentExperience hysteresis/grace/aim-assist grab, FingerPoseDriver filtering/depth/grace, receiver order −30.
+  - Next: RehabControlIntent, HUD state, settings buttons, SyntheticHandStream + `run_activity_probe.py --camera`, offline tests, record protected hashes, build, `run_hand_benchmark.py after`.
+- **Baseline:** `Docs/evidence/final-2026-10-29/hand-benchmark-before.json`.
+- **Tools status:** `Docs/ai/TOOLS_CHECKLIST.md`. Graphify graph: `graphify-out/` (refresh with `graphify update .`).
+
 ## Done
 - Hand-first controls (2026-10-28): edge look, point to walk, fist grab, pinch options, twist placement; voice for special actions; console zero with MCP over stdio.
 - Stage 13 voice: offline keyword commands, spelling with review, confirmations, feedback; off by default. Offline router tests 140, voice probe 28/28 (SYNTHETIC). Free dictation Blocked (online-only; your choice).

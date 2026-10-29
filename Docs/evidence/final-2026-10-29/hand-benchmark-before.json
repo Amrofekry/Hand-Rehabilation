@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-29T19:07:34.5086607Z",
+  "scope": "SYNTHETIC 30 fps camera-hand frames with Gaussian landmark noise (sigma 0.004 of the image, about 2.6 px at 640) over the loopback vision port; no camera or person",
+  "build": "0.5.0 2026-10-23T19:26:25",
+  "restJitterMm": 17.53074073791504,
+  "restXYJitterMm": 2.4253461360931396,
+  "restDepthJitterMm": 17.362157821655273,
+  "restStepMm": 0.9460447430610657,
+  "sweepRmsMm": 17.186922073364258,
+  "settleMs": 62.41350173950195,
+  "turnDepthMm": 0.0,
+  "gripScoreMin": 0.6986512541770935,
+  "gripScoreMean": 0.8634666204452515,
+  "holdDrops": 0,
+  "errors": 0,
+  "blipHeld": false,
+  "activityCameraGrab": false,
+  "pinchGrab": false,
+  "pointFalseGrab": false,
+  "detail": "",
+  "exit": 0
+}

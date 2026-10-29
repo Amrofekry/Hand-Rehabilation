@@ -17,7 +17,7 @@ namespace GripRehab
     public sealed class HandLocomotionPolicy
     {
         // Work zone half-sizes (fraction of the image from its centre) and the outer edge where speed is full.
-        public float deadZoneX = .22f, deadZoneY = .2f, fullAt = .44f;
+        public float deadZoneX = .30f, deadZoneY = .26f, fullAt = .46f; // 2026-10-29: wider work zone, so reaching for an object does not turn the view
         public float maxYawDegPerSec = 75f, maxPitchDegPerSec = 45f;
         /// <summary>Seconds for the turn rate to follow the hand (eases in and out).</summary>
         public float turnSmoothing = .18f;
@@ -112,5 +112,72 @@ namespace GripRehab
         }
 
         static float Wrap(float a) { a %= 360; if (a > 180) a -= 360; if (a < -180) a += 360; return a; }
+    }
+
+    /// <summary>
+    /// When a camera-held object is released (2026-10-29). Old rule: release as soon as the score dips under the grab
+    /// threshold, so one noisy frame dropped the object, and any tracking gap released at once. New rule: hysteresis (hold
+    /// while the closed-hand gate stays closed; it only opens after the score stays at or below the open threshold for its
+    /// dwell) plus a short grace through tracking gaps.
+    /// </summary>
+    public static class GraspHoldRule
+    {
+        public const float LossGraceSeconds = .6f;
+        public static bool OldShouldRelease(bool gateClosed, float score, float closeAt, bool trackingValid) =>
+            !trackingValid || !(gateClosed && score >= closeAt);
+        public static bool ShouldRelease(bool gateClosed, bool trackingValid, float secondsSinceValid, bool paused) =>
+            trackingValid ? !gateClosed : paused || secondsSinceValid > LossGraceSeconds;
+    }
+
+    public enum HandInteraction { Idle, Tracking, ReadyToGrab, Holding, Releasing, TrackingLost }
+
+    /// <summary>
+    /// Explicit camera-hand interaction state (Idle → Tracking → ReadyToGrab → Holding → Releasing, and TrackingLost).
+    /// It reads the same facts ApartmentExperience acts on (tracking, closed-hand gate, holding) and reports transitions once,
+    /// for the HUD, the session counts and the tests. Unity-free.
+    /// </summary>
+    public sealed class HandInteractionMachine
+    {
+        public HandInteraction State { get; private set; } = HandInteraction.Idle;
+        public int Grabs { get; private set; }
+        public int Releases { get; private set; }
+        public int Losses { get; private set; }
+        public bool JustGrabbed { get; private set; }
+        public bool JustReleased { get; private set; }
+
+        public void Reset() { State = HandInteraction.Idle; Grabs = Releases = Losses = 0; JustGrabbed = JustReleased = false; }
+
+        public HandInteraction Step(bool tracked, bool gateClosed, bool holding)
+        {
+            var before = State;
+            JustGrabbed = JustReleased = false;
+            if (holding)
+                State = tracked ? HandInteraction.Holding : HandInteraction.TrackingLost;
+            else if (before == HandInteraction.Holding || before == HandInteraction.TrackingLost)
+                State = HandInteraction.Releasing;
+            else if (!tracked)
+                State = HandInteraction.Idle;
+            else
+                State = gateClosed ? HandInteraction.ReadyToGrab : HandInteraction.Tracking;
+            if (holding && before != HandInteraction.Holding && before != HandInteraction.TrackingLost) { Grabs++; JustGrabbed = true; }
+            if (State == HandInteraction.Releasing) { Releases++; JustReleased = true; }
+            if (State == HandInteraction.TrackingLost && before != HandInteraction.TrackingLost) Losses++;
+            return State;
+        }
+    }
+
+    /// <summary>
+    /// Player-facing camera hand settings, three steps each (Settings page; no code changes needed).
+    /// Sensitivity = how far the virtual hand reaches; steadiness = One Euro cutoff (steadier = slightly more lag).
+    /// </summary>
+    public static class HandControlProfile
+    {
+        public static readonly string[] SensitivityNames = { "LOW", "NORMAL", "HIGH" };
+        public static readonly string[] SteadinessNames = { "RESPONSIVE", "BALANCED", "STEADY" };
+        public static float Reach(int sensitivity) => new[] { .24f, .30f, .36f }[Clamp(sensitivity)];
+        public static float TravelScale(int sensitivity) => new[] { .85f, 1f, 1.2f }[Clamp(sensitivity)];
+        public static float PositionCutoff(int steadiness) => new[] { 2.0f, 1.2f, .7f }[Clamp(steadiness)];
+        public static float DepthCutoff(int steadiness) => new[] { .6f, .35f, .2f }[Clamp(steadiness)];
+        static int Clamp(int v) => v < 0 ? 0 : v > 2 ? 2 : v;
     }
 }
