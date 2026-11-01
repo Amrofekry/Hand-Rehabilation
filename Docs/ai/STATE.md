@@ -14,7 +14,10 @@
   - **I, optional plan:** `Docs/OPTIONAL_PLAN.md`.
   - **G, release:** `Tools/release/` (stager, first-run check, Inno Setup script; Inno in `.local/innosetup`).
 - **Full regression (2026-11-01):** build, 16 player suites, EditMode 10/10, offline, Python, pytest 32, console 0/0/0 with MCP. All green.
-- **Deferred:** C, Stage 15A environment polish (cosmetic; risks the perf/gallery baselines).
+- **C, Stage 15A (by-eye):** removed the candle glare (runtime) and calmed the marble. The scene is unchanged: this 2022.3 Editor would rewrite the Unity-6-format scene.
+- **Delivery:**
+  - `Docs/delivery/GripRehab_Final.pptx` (12 slides; script `Tools/release/make_slides.js`).
+  - Demo video `.local/release/GripRehab_demo.mp4`: an automated in-game capture via `-record-frames`, labelled SYNTHETIC.
 - **J (2026-11-01):** merged (baseline fast-forwarded) and tagged v1.0.0. The outer folders now sit in `02_Hardware`, `03_Docs`, `04_Delivery` and `99_Archive`. The Arduino caches moved into `firmware/`.
 - **Waiting on you:**
   - Run `.local/scratch/block-j-cleanup.ps1` (about 14 GB; the classifier blocked me from running it).

@@ -173,6 +173,8 @@ class HandMateDesignTests(unittest.TestCase):
                     self.assertEqual(final_review[path]['previousSha256'], expected)
                     self.assertTrue(final_review[path]['reason'])
                     expected = final_review[path]['currentSha256']
+                if expected == 'removed':  # an approved, reviewed deletion: the file must be gone
+                    self.assertFalse((ROOT/path).exists()); continue
                 self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), expected)
         logic = json.loads((ROOT/'Docs/evidence/handmate-scene-logic-baseline.json').read_text())
         current = composed_blocks()

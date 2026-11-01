@@ -64,7 +64,7 @@ gantt
 | Voice commands | 13 | Tested (router offline, voice probe); microphone session OPEN |
 | Eye tracking | 14 | Not started → optional O1 |
 | Voice assistant | 15 | Not started → optional O2 |
-| Environment upgrade | 15A | Not done in this release → see §5 |
+| Environment upgrade | 15A | Done (by-eye): candle glare removed, calmer marble; perf and probes pass |
 | Audit | 16 | This document |
 | Research proposal | 17 | `Docs/STAGE17_RESEARCH.md` |
 | Hardware readiness | 18 | Software tested on SYNTHETIC input; physical OPEN (`Docs/PHYSICAL_TEST_PROTOCOL.md`) |
@@ -80,7 +80,6 @@ The journey suite (`run_ai_player_checks.py journey`) runs the whole data path i
 | Important | Real-hand camera feel and latency not measured | Needs a person and the webcam | `PHYSICAL_TEST_PROTOCOL.md` P5; add a latency meter |
 | Important | Monocular depth is a proxy | Hardware limit | O5 depth camera |
 | Important | A-OB1: intermittent activity grab failures in some earlier runs | Was not reproduced in the final runs; root cause not proven | Keep the 3-run activity check in regression |
-| Optional | Stage 15A environment polish | Deferred: cosmetic, risks the perf and gallery baselines | Do with by-eye review in a later pass |
 | Optional | Eye tracking, voice assistant, Arabic UI | See `OPTIONAL_PLAN.md` | O1, O2, O4 |
 | Future | Hybrid detector (YOLO26 + RF-DETR) | Training unfinished | O3 with an A/B |
 

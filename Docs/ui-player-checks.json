@@ -2,7 +2,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-01T20:18:51.3433903Z",
+    "utc": "2026-11-01T21:52:29.3338538Z",
     "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
     "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
     "checks": [
@@ -74,9 +74,9 @@
       {
         "screen": "Home",
         "frames": 300,
-        "averageMs": 7.145219326019287,
-        "p95Ms": 11.548699378967285,
-        "averageFps": 139.95372009277344,
+        "averageMs": 2.035174608230591,
+        "p95Ms": 3.1791000366210938,
+        "averageFps": 491.3583068847656,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -86,9 +86,9 @@
       {
         "screen": "Appearance",
         "frames": 300,
-        "averageMs": 6.836660385131836,
-        "p95Ms": 10.354599952697754,
-        "averageFps": 146.27024841308594,
+        "averageMs": 2.2434868812561035,
+        "p95Ms": 3.484999895095825,
+        "averageFps": 445.7347106933594,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -112,7 +112,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-01T20:19:13.6660826Z",
+    "utc": "2026-11-01T21:52:39.7858752Z",
     "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
     "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
     "checks": [
@@ -184,9 +184,9 @@
       {
         "screen": "Home",
         "frames": 300,
-        "averageMs": 7.766303062438965,
-        "p95Ms": 14.082200050354004,
-        "averageFps": 128.7613983154297,
+        "averageMs": 2.10919189453125,
+        "p95Ms": 3.1863999366760254,
+        "averageFps": 474.1152038574219,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -196,9 +196,9 @@
       {
         "screen": "Appearance",
         "frames": 300,
-        "averageMs": 7.285672187805176,
-        "p95Ms": 10.969099998474121,
-        "averageFps": 137.2556915283203,
+        "averageMs": 2.157132387161255,
+        "p95Ms": 3.123199939727783,
+        "averageFps": 463.57843017578125,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -222,7 +222,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-01T20:19:34.6654687Z",
+    "utc": "2026-11-01T21:52:50.2666975Z",
     "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
     "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
     "checks": [
@@ -294,9 +294,9 @@
       {
         "screen": "Home",
         "frames": 300,
-        "averageMs": 7.483025074005127,
-        "p95Ms": 12.696800231933594,
-        "averageFps": 133.63580322265625,
+        "averageMs": 2.1543118953704834,
+        "p95Ms": 3.1270999908447266,
+        "averageFps": 464.1853332519531,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -306,9 +306,9 @@
       {
         "screen": "Appearance",
         "frames": 300,
-        "averageMs": 7.856335163116455,
-        "p95Ms": 13.754400253295898,
-        "averageFps": 127.28581237792969,
+        "averageMs": 2.361915111541748,
+        "p95Ms": 3.5876998901367188,
+        "averageFps": 423.38525390625,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -332,7 +332,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-01T20:20:05.8675627Z",
+    "utc": "2026-11-01T21:53:01.0168084Z",
     "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
     "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
     "checks": [
@@ -404,9 +404,9 @@
       {
         "screen": "Home",
         "frames": 300,
-        "averageMs": 7.723297595977783,
-        "p95Ms": 12.154899597167969,
-        "averageFps": 129.47837829589844,
+        "averageMs": 2.5440568923950195,
+        "p95Ms": 3.295300006866455,
+        "averageFps": 393.0729675292969,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,
@@ -416,9 +416,9 @@
       {
         "screen": "Appearance",
         "frames": 300,
-        "averageMs": 8.953695297241211,
-        "p95Ms": 15.240900039672852,
-        "averageFps": 111.68572235107422,
+        "averageMs": 2.4996886253356934,
+        "p95Ms": 3.2112998962402344,
+        "averageFps": 400.0498046875,
         "gcCounterAvailable": false,
         "batchCounterAvailable": true,
         "gcAverageBytes": 0,

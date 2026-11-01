@@ -187,7 +187,7 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| EN-01 | Audit both rooms (lighting, materials, props, clutter, readability) | Not Started | | Scheduled later, at your request |
-| EN-02 | Upgrade lighting, materials and props of the kitchen and living room | Not Started | | |
-| EN-03 | Stations, colliders, teleports and all inputs still work | Not Started | | |
-| EN-04 | Stays inside the Stage 7 performance budget | Not Started | | |
+| EN-01 | Audit both rooms (lighting, materials, props, clutter, readability) | Implemented | `Docs/evidence/final-2026-10-29/env-15a/` before/after; audit in `Docs/STAGE16_AUDIT.md` §5 | By-eye. Kitchen judged fine; two living-room defects found |
+| EN-02 | Upgrade lighting, materials and props of the kitchen and living room | Implemented | `RehabPresentation.SoftenCandles`, `030_Marble_Dark.mat` | Candle glare removed; marble vein contrast lowered |
+| EN-03 | Stations, colliders, teleports and all inputs still work | Tested | activity, smoke, UI and contact probes (2026-11-01) | SYNTHETIC |
+| EN-04 | Stays inside the Stage 7 performance budget | Tested | perf probe (2026-11-01) | Within the Stage 7 budget |

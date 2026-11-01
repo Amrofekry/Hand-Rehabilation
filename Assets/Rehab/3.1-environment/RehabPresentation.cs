@@ -46,7 +46,18 @@ namespace GripRehab
         {
             AddReflectionProbes();
             WarmGrade();
+            SoftenCandles();
             ApplyHandTone();
+        }
+
+        // Stage 15A (2026-11-01): each table candle's point light sits about 5 cm inside its glass holder, so the glass blows
+        // out past the bloom threshold and lights hot spots right where the living-room activities are placed. Dimming did not
+        // remove it (the distance is the cause), so these two tiny lights are off; the room's bounce lights light the table.
+        void SoftenCandles()
+        {
+            foreach (var light in FindObjectsByType<Light>(FindObjectsSortMode.None))
+                if (light.type == LightType.Point && light.range < 1f && light.transform.parent != null && light.transform.parent.name == "Candle Flame")
+                    light.enabled = false;
         }
 
         void AddReflectionProbes()

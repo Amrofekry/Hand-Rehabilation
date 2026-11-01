@@ -30,6 +30,26 @@
       "previousSha256": "5b62eae2d1c1389a0637b87aa62cd5ea1284cd38b7b084247190e355e9dba56d",
       "currentSha256": "b197389e60023f85692aa6f0f4f0c0528c91bf4a9909c4432063974e308158b8",
       "reason": "User-authorized final release (2026-10-29). Stale-landmark check waits out the 0.6 s loss grace of the hybrid hold rule before asserting release."
+    },
+    "Assets/_Recovery/0 (1).unity": {
+      "previousSha256": "198658a6d2df4f8b486988497db1abf303b27b45fededd042063dd0aa71eb142",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Unity auto-recovery copies of the scene; not in build settings or referenced by code; deletion approved by the user (Block J)."
+    },
+    "Assets/_Recovery/0 (2).unity": {
+      "previousSha256": "8e18a4fed29ae975d709a9310e3f880ab665dd5c8bb8877e7aa31803da0a6520",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Unity auto-recovery copies of the scene; not in build settings or referenced by code; deletion approved by the user (Block J)."
+    },
+    "Assets/_Recovery/0 (3).unity": {
+      "previousSha256": "4d001d3f0d61c8af8015814c1d5ea6dddaa2d69885a58b2246a27abf8ba87b65",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Unity auto-recovery copies of the scene; not in build settings or referenced by code; deletion approved by the user (Block J)."
+    },
+    "Assets/_Recovery/0.unity": {
+      "previousSha256": "28ee8f1e04f0648d20212f5fd71b584f593551fd6c1909a00f1206b395e78ff5",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Unity auto-recovery copies of the scene; not in build settings or referenced by code; deletion approved by the user (Block J)."
     }
   }
 }
