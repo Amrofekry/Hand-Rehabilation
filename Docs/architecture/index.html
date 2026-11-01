@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GripRehab Architecture</title>
+<style>
+:root{--bg:#f6f8f7;--card:#ffffff;--ink:#1b2321;--muted:#5b6b67;--line:#d3dedb;--accent:#1f8a72;--accent-soft:#dcefe9}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#111716;--card:#18201f;--ink:#e4ecea;--muted:#9db0ab;--line:#2c3a37;--accent:#4fd1b0;--accent-soft:#1d3530}}
+:root[data-theme="dark"]{--bg:#111716;--card:#18201f;--ink:#e4ecea;--muted:#9db0ab;--line:#2c3a37;--accent:#4fd1b0;--accent-soft:#1d3530}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:34px 0 10px;border-bottom:2px solid var(--accent);padding-bottom:4px}
+p.lead{color:var(--muted);margin:0 0 18px}
+nav a{color:var(--accent);margin-right:14px;font-weight:600;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
+.layers{display:grid;gap:8px}.layer{display:grid;grid-template-columns:170px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;padding:10px 12px}
+.layer b{color:var(--accent)}.layer span{color:var(--muted);font-size:13px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.step{background:var(--accent-soft);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;max-width:190px}
+.step small{display:block;color:var(--muted)}.arrow{color:var(--accent);font-weight:700}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:15px;margin-bottom:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600}
+code{font-family:Consolas,monospace;font-size:12.5px;background:var(--accent-soft);padding:1px 4px;border-radius:4px;word-break:break-all}
+.note{color:var(--muted);font-size:13px}
+@media (max-width:640px){.layer{grid-template-columns:1fr}.step{max-width:none;width:100%}.arrow{transform:rotate(90deg);width:100%;text-align:center}}
+</style>
+</head>
+<body>
+<main>
+<h1>GripRehab / HandMate architecture</h1>
+<p class="lead">As built (v1.0.0, 2026-11-01). From the graphify knowledge graph: 6026 nodes, 15445 edges, 382 communities. The most connected game types are <code>SqueezableObject</code>, <code>ApartmentExperience</code>, <code>RehabAppShell</code> and <code>ResearchPortalHost</code>.</p>
+<nav><a href="#layers">Layers</a><a href="#pipeline">Hand pipeline</a><a href="#force">Force pipeline</a><a href="#where">Where does X live</a><a href="graph.html">Full graph</a></nav>
+
+<h2 id="layers">Block diagram</h2>
+<div class="layers">
+<div class="layer"><b>Input</b><div>Camera hand (MediaPipe → UDP 27817), force sensor (HX711 → BLE → bridge → UDP 27818), voice (Windows KeywordRecognizer), hand pointer, keyboard and mouse <span>· 3.2-vision, 6.1-bluetooth-integration, 3.4-game-modules</span></div></div>
+<div class="layer"><b>Interaction</b><div>Grab, hold, release and reach; grip selection (18 grips); contact geometry; hybrid camera hold <span>· 3.4.1 Apartment: ApartmentExperience, FingerPoseDriver, HandGrasp, GripCatalog, ContactGeometry</span></div></div>
+<div class="layer"><b>Physics and deformation</b><div>Spring-damper vertices, materials, fracture and cutting <span>· 3.3-deformation, ContactDeformation, SqueezableObject, PlaneCutter</span></div></div>
+<div class="layer"><b>Game</b><div>Apartment, 6 activities × 10 levels, exercise modules, audio, onboarding <span>· ActivityRunner, Activities, RehabExerciseSuite, RehabAudio</span></div></div>
+<div class="layer"><b>Product</b><div>Local accounts, sessions, outcomes, PDF/CSV export, patient and doctor dashboards <span>· Assets/Product, Assets/ProductIntegration</span></div></div>
+<div class="layer"><b>AI</b><div>Fatigue model (ONNX via Sentis), adaptive difficulty, safety policy <span>· ai-engine/4.1–4.5, AdaptiveDifficulty, FatigueSafetyPolicy</span></div></div>
+<div class="layer"><b>Verification</b><div>Offline harness (Unity-free C#), EditMode, player probes, Python and pytest, ConsoleZeroCheck <span>· Tools/, Assets/Editor</span></div></div>
+</div>
+
+<h2 id="pipeline">Camera hand pipeline</h2>
+<div class="card flow">
+<div class="step">Webcam<small>mediapipe_bridge.py, no video saved</small></div><span class="arrow">→</span>
+<div class="step">21 landmarks<small>UDP 27817, JSON</small></div><span class="arrow">→</span>
+<div class="step">VisionUdpReceiver<small>execution order −30</small></div><span class="arrow">→</span>
+<div class="step">FingerPoseDriver<small>One Euro position and depth, 0.6 s pose grace</small></div><span class="arrow">→</span>
+<div class="step">HandGrasp.Score<small>max(power, pinch); point = 0</small></div><span class="arrow">→</span>
+<div class="step">CameraGripGate<small>close .55 / open .28 / dwell .12 s</small></div><span class="arrow">→</span>
+<div class="step">GraspHoldRule<small>hysteresis + 0.6 s loss grace</small></div><span class="arrow">→</span>
+<div class="step">TryGrab / Release<small>same entry points as keyboard</small></div><span class="arrow">→</span>
+<div class="step">HandInteractionMachine<small>HUD: TRACKING / READY / HOLDING / LOST</small></div>
+</div>
+<p class="note">Look and walk run in parallel: HandLocomotionPolicy (edge band turns the view, a held point walks) and HandActionPolicy (pinch opens options, twist turns placement).</p>
+
+<h2 id="force">Force pipeline</h2>
+<div class="card flow">
+<div class="step">Load cell + HX711<small>24-bit, 10/80 SPS</small></div><span class="arrow">→</span>
+<div class="step">Nano 33 IoT<small>RehabCore: tare, calibration, CRC</small></div><span class="arrow">→</span>
+<div class="step">BLE<small>calibrated samples, flags</small></div><span class="arrow">→</span>
+<div class="step">unity_bridge.py<small>UDP 27818</small></div><span class="arrow">→</span>
+<div class="step">LiveForceState<small>validation, 500 ms staleness</small></div><span class="arrow">→</span>
+<div class="step">DeviceHealth<small>rate, loss, age, reconnects</small></div><span class="arrow">→</span>
+<div class="step">ApartmentExperience<small>force → deformation and scoring</small></div>
+</div>
+
+<h2 id="where">Where does X live?</h2>
+<input id="q" type="search" placeholder="Type a feature, e.g. voice, calibration, cup, score…" aria-label="Search features">
+<div class="card"><table><thead><tr><th>Feature</th><th>Main files</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p class="note">Full interactive dependency graph: <a href="graph.html">graph.html</a> (graphify, aggregated by community because the graph has more than 5000 nodes).</p>
+</main>
+<script>
+const rows=[
+["Camera hand position, depth, filtering","Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs, HandRigRules.cs (OneEuroFilter)"],
+["Grab / hold / release, aim assist, camera force","Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs, Assets/Rehab/3.2-vision/HandGrasp.cs"],
+["Hand look and walk, gestures, interaction state","Assets/Rehab/3.2-vision/HandLocomotionPolicy.cs, Apartment/HandLocomotion.cs"],
+["MediaPipe bridge and UDP receiver","Tools/Vision/mediapipe_bridge.py, Assets/Rehab/3.2-vision/VisionUdpReceiver.cs, HandTracking.cs"],
+["Grip types (18)","Apartment/GripCatalog.cs, GraspMotionPolicy.cs"],
+["Contact and collision","Apartment/ContactGeometry.cs, GraspCollisionShield.cs"],
+["Deformation, materials, fracture, cutting","Assets/Rehab/3.3-deformation, Apartment/ContactDeformation.cs, DeformationMaterial.cs, SqueezableObject.cs, PlaneCutter.cs"],
+["Activities and scoring (cup, coffee table, cooking…)","Apartment/ActivityRunner.cs, Activities, ActivityProps.cs, ActivityTuning"],
+["Voice commands","Assets/Rehab/3.4-game-modules/RehabVoiceInput.cs, VoiceCommandRouter.cs, Docs/VOICE_COMMANDS.md"],
+["Audio and sounds","RehabAudio.cs, RehabSoundBank.cs, Docs/AUDIO_DESIGN.md"],
+["Settings page (hand reach, steadiness, aim assist)","Assets/ProductIntegration/ResearchPortalPages.cs"],
+["Accounts, sessions, export, dashboards","Assets/Product/ProductRepository.cs, ResearchExport.cs, Assets/ProductIntegration/ResearchPortalHost.cs"],
+["Adaptive difficulty and safety","Assets/Product/AdaptiveDifficulty.cs, FatigueSafetyPolicy.cs, ai-engine/4.5-decision-policy/policy.py"],
+["Fatigue AI model (ONNX / Sentis)","ai-engine/4.3-fatigue-model, 4.4-onnx-export, Assets/ProductIntegration/ResearchAiRuntime.cs"],
+["Force sensor, BLE bridge, staleness","Assets/Rehab/6.1-bluetooth-integration/LiveForceReceiver.cs, LiveForceState.cs, Tools/Phase2Bridge/unity_bridge.py"],
+["Device status panel","Assets/Rehab/6.1-bluetooth-integration/DeviceHealth.cs, DeviceStatusPanel.cs"],
+["Load-cell calibration wizard","firmware/2.3-load-cell-calibration/calibration_wizard.py, verify_calibration.py, RehabCore"],
+["Probes and acceptance tests","Apartment/ApartmentAcceptance.cs, RehabHandLookProbe.cs, RehabHandBenchmark.cs, RehabActivityProbe.cs, Tools/run_*.py"],
+["Offline (Unity-free) tests","Tools/offline_verify.py, Tools/Offline/*.cs"],
+["Console zero and MCP","Assets/Editor/ConsoleZeroCheck.cs, EditorConsoleHygiene.cs, .mcp.json"]];
+const body=document.getElementById('rows'),q=document.getElementById('q');
+function show(f){body.innerHTML='';rows.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(f.toLowerCase())).forEach(r=>{const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=r[0];const b=document.createElement('td');r[1].split(', ').forEach((p,i)=>{if(i)b.append(', ');const c=document.createElement('code');c.textContent=p;b.append(c)});tr.append(a,b);body.append(tr)})}
+q.addEventListener('input',()=>show(q.value));show('');
+</script>
+</body>
+</html>

@@ -174,10 +174,10 @@ namespace GripRehab
     {
         public static readonly string[] SensitivityNames = { "LOW", "NORMAL", "HIGH" };
         public static readonly string[] SteadinessNames = { "RESPONSIVE", "BALANCED", "STEADY" };
-        public static float Reach(int sensitivity) => new[] { .24f, .30f, .36f }[Clamp(sensitivity)];
-        public static float TravelScale(int sensitivity) => new[] { .85f, 1f, 1.2f }[Clamp(sensitivity)];
-        public static float PositionCutoff(int steadiness) => new[] { 2.0f, 1.2f, .7f }[Clamp(steadiness)];
-        public static float DepthCutoff(int steadiness) => new[] { .6f, .35f, .2f }[Clamp(steadiness)];
+        static readonly float[] reach = { .24f, .30f, .36f }, posCut = { 2.0f, 1.2f, .7f }, depthCut = { .6f, .3f, .2f };
+        public static float Reach(int sensitivity) => reach[Clamp(sensitivity)];
+        public static float PositionCutoff(int steadiness) => posCut[Clamp(steadiness)];
+        public static float DepthCutoff(int steadiness) => depthCut[Clamp(steadiness)];
         static int Clamp(int v) => v < 0 ? 0 : v > 2 ? 2 : v;
     }
 }

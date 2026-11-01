@@ -1,0 +1,73 @@
+{
+  "steps": [
+    "shape",
+    "tare",
+    "known load",
+    "start",
+    "verify",
+    "save"
+  ],
+  "verification": {
+    "passed": true,
+    "absolute_tolerance_n": 1.0,
+    "relative_tolerance": 0.02,
+    "rows": [
+      {
+        "reference_n": 0.0,
+        "measured_n": 0.002,
+        "direction": "loading",
+        "error_n": 0.002,
+        "limit_n": 1.0,
+        "passed": true
+      },
+      {
+        "reference_n": 9.80665,
+        "measured_n": 9.806,
+        "direction": "loading",
+        "error_n": 0.0006500000000002615,
+        "limit_n": 1.0,
+        "passed": true
+      },
+      {
+        "reference_n": 29.41995,
+        "measured_n": 29.405,
+        "direction": "loading",
+        "error_n": 0.014949999999998909,
+        "limit_n": 1.0,
+        "passed": true
+      },
+      {
+        "reference_n": 29.41995,
+        "measured_n": 29.416,
+        "direction": "unloading",
+        "error_n": 0.003949999999999676,
+        "limit_n": 1.0,
+        "passed": true
+      },
+      {
+        "reference_n": 9.80665,
+        "measured_n": 9.813,
+        "direction": "unloading",
+        "error_n": 0.006350000000001188,
+        "limit_n": 1.0,
+        "passed": true
+      },
+      {
+        "reference_n": 0.0,
+        "measured_n": -0.002,
+        "direction": "unloading",
+        "error_n": 0.002,
+        "limit_n": 1.0,
+        "passed": true
+      }
+    ]
+  },
+  "shape": 1,
+  "calibration_id": 1,
+  "offset": "8149",
+  "counts_per_N": "420.123080",
+  "crc": "180F8906",
+  "saved": true,
+  "mode": "SYNTHETIC simulated console; not a physical calibration",
+  "utc": "2026-11-01T19:12:01Z"
+}

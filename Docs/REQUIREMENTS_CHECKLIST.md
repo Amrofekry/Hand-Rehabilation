@@ -151,43 +151,43 @@ One row per requirement from your 2026-10-25 list. The plan is [Stages 8–17 in
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| P-01 | Review pipeline, architecture, block diagram, Gantt, requirements, status and source | Not Started | | |
-| P-02 | Compare design with implementation; find gaps and inconsistencies | Not Started | | |
-| P-03 | Verify end-to-end data flow (tracking → input → grasp → force → physics → deformation → collision → activity → feedback → logging) | Not Started | | |
-| P-04 | Check the architecture supports eye, voice, assistant, audio, UI and activity systems | Not Started | | |
-| P-05 | Updated block diagram (as-built) | Not Started | | |
-| P-06 | Updated pipeline (implementation, integration, testing, optimisation, validation) | Not Started | | |
-| P-07 | Updated Gantt (tasks, dependencies, milestones, priorities, durations, critical path) | Not Started | | |
-| P-08 | Review requirements and acceptance criteria for missing deliverables | Not Started | | |
-| P-09 | Audit stability, errors, configuration, assets, performance and hardware compatibility | Not Started | | |
-| P-10 | Full start-up to shutdown test | Not Started | | |
-| P-11 | New features coexist; no regressions | Not Started | | |
-| P-12 | Prioritised gap analysis (blockers, important, optional, future) | Not Started | | |
-| P-13 | Architecture docs, block diagram, Gantt, test checklist and final completion report | Not Started | | Never "100 %" on code alone |
+| P-01 | Review pipeline, architecture, block diagram, Gantt, requirements, status and source | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-02 | Compare design with implementation; find gaps and inconsistencies | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-03 | Verify end-to-end data flow (tracking → input → grasp → force → physics → deformation → collision → activity → feedback → logging) | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-04 | Check the architecture supports eye, voice, assistant, audio, UI and activity systems | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-05 | Updated block diagram (as-built) | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-06 | Updated pipeline (implementation, integration, testing, optimisation, validation) | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-07 | Updated Gantt (tasks, dependencies, milestones, priorities, durations, critical path) | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-08 | Review requirements and acceptance criteria for missing deliverables | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-09 | Audit stability, errors, configuration, assets, performance and hardware compatibility | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-10 | Full start-up to shutdown test | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-11 | New features coexist; no regressions | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-12 | Prioritised gap analysis (blockers, important, optional, future) | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | |
+| P-13 | Architecture docs, block diagram, Gantt, test checklist and final completion report | Implemented | `Docs/STAGE16_AUDIT.md`, `Docs/architecture/` | Never "100 %" on code alone |
 
 ## 10. Next-stage research proposal → Stage 17 (WBS 1.1)
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| R-01 | Brainstorm and research improvements after the Stage 16 audit | Not Started | | |
-| R-02 | Gameplay, realism, UI/UX, models, vision, AI, assessment, data, accessibility, performance, maintainability | Not Started | | |
-| R-03 | Digital twin, synchronisation, simulation fidelity, materials, sensor-to-virtual mapping | Not Started | | |
-| R-04 | AI-assisted adaptation, personalised difficulty, feedback and progress tracking (where justified) | Not Started | | |
-| R-05 | Hand tracking, grasp classification, force estimation, deformation, collision and latency | Not Started | | |
-| R-06 | Rehabilitation metrics (time, grip force, steadiness, ROM where measurable, smoothness, repeatability) | Not Started | | |
-| R-07 | Datasets, models, sensors and libraries with measurable benefit | Not Started | | |
-| R-08 | Recent papers, official docs and credible examples, with links | Not Started | | |
-| R-09 | Evaluate impact, complexity, cost, hardware, risk, scientific validity and compatibility | Not Started | | |
-| R-10 | Separate essential fixes, optional enhancements and ambitious research | Not Started | | |
-| R-11 | Ranked list with description, justification, benefit, effort, dependencies and order | Not Started | | |
-| R-12 | Mark what is possible now versus what needs hardware, data, funding or architecture changes | Not Started | | |
-| R-13 | Present for review; implement nothing automatically | Not Started | | |
+| R-01 | Brainstorm and research improvements after the Stage 16 audit | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-02 | Gameplay, realism, UI/UX, models, vision, AI, assessment, data, accessibility, performance, maintainability | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-03 | Digital twin, synchronisation, simulation fidelity, materials, sensor-to-virtual mapping | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-04 | AI-assisted adaptation, personalised difficulty, feedback and progress tracking (where justified) | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-05 | Hand tracking, grasp classification, force estimation, deformation, collision and latency | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-06 | Rehabilitation metrics (time, grip force, steadiness, ROM where measurable, smoothness, repeatability) | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-07 | Datasets, models, sensors and libraries with measurable benefit | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-08 | Recent papers, official docs and credible examples, with links | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-09 | Evaluate impact, complexity, cost, hardware, risk, scientific validity and compatibility | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-10 | Separate essential fixes, optional enhancements and ambitious research | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-11 | Ranked list with description, justification, benefit, effort, dependencies and order | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-12 | Mark what is possible now versus what needs hardware, data, funding or architecture changes | Implemented | `Docs/STAGE17_RESEARCH.md` | |
+| R-13 | Present for review; implement nothing automatically | Implemented | `Docs/STAGE17_RESEARCH.md` | |
 
 ## 11. Environment upgrade (kitchen and living room) → Stage 15A (WBS 3.1), added 2026-10-26
 
 | ID | Requirement | Status | Evidence | Notes |
 |---|---|---|---|---|
-| E-01 | Audit both rooms (lighting, materials, props, clutter, readability) | Not Started | | Scheduled later, at your request |
-| E-02 | Upgrade lighting, materials and props of the kitchen and living room | Not Started | | |
-| E-03 | Stations, colliders, teleports and all inputs still work | Not Started | | |
-| E-04 | Stays inside the Stage 7 performance budget | Not Started | | |
+| EN-01 | Audit both rooms (lighting, materials, props, clutter, readability) | Not Started | | Scheduled later, at your request |
+| EN-02 | Upgrade lighting, materials and props of the kitchen and living room | Not Started | | |
+| EN-03 | Stations, colliders, teleports and all inputs still work | Not Started | | |
+| EN-04 | Stays inside the Stage 7 performance budget | Not Started | | |

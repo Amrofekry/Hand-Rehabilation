@@ -178,11 +178,12 @@ namespace GripRehab
                 if (cup != null)
                 {
                     player.LookAt(cup.transform.position); yield return Hold(.5f, .5f, Shape.Open, .4f);
-                    bool grabbed = app.TryGrab(cup); float yaw0p = runner.PlacementYaw;
-                    yield return Hold(.5f, .5f, Shape.Fist, .5f, 0);
+                    // Grab the way a patient does: close the hand on the cup (camera gate + aim assist), not TryGrab with an open hand.
+                    float yaw0p = runner.PlacementYaw;
+                    yield return Hold(.5f, .5f, Shape.Fist, .8f, 0); bool grabbed = app.Held == cup;
                     yield return Hold(.5f, .5f, Shape.Fist, .6f, 40);
                     float turned = runner.PlacementYaw - yaw0p;
-                    Add("twisting the hand turns the placement", grabbed && turned > 30, "grabbed=" + grabbed + " turned " + turned.ToString("0") + "°");
+                    Add("twisting the hand turns the placement", grabbed && turned > 30, "grabbed=" + grabbed + " turned " + turned.ToString("0") + "° held=" + (app.Held != null ? app.Held.displayName : "none") + " twist=" + loco.Actions.PlacementYaw + " active=" + loco.Active + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status);
                     yield return Hold(.5f, .5f, Shape.Fist, .6f, -40);
                     Add("twisting the other way turns it back", runner.PlacementYaw - yaw0p < -30, (runner.PlacementYaw - yaw0p).ToString("0") + "°");
                 }

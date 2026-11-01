@@ -10,7 +10,14 @@
 - `Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandLocomotion.cs`: wiring, edge indicators and the controls hint.
 - `VoiceCommandRouter.cs` and `RehabVoiceInput.cs`: voice.
 
-**Setting:** Research portal → Settings → HAND LOOK & WALK (CAMERA). It is on by default.
+**Settings (Research portal → Settings):**
+- HAND LOOK & WALK (CAMERA): on by default.
+- HAND REACH: LOW / NORMAL / HIGH.
+- HAND STEADINESS: RESPONSIVE / BALANCED / STEADY.
+- AIM ASSIST: ON (default) / OFF.
+- RECALIBRATE CAMERA HAND: also the C key or voice "recenter hand".
+
+The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measurements are in `Docs/HAND_CONTROL_REPORT.md`.
 
 ## Gestures (camera mode)
 
@@ -19,8 +26,8 @@
 | Palm in the middle of the camera view | Nothing: a free work zone | Reach and grab without the view moving |
 | Palm toward the left, right, top or bottom edge | The view turns that way; the further out, the faster | Eases in and out; capped at 75°/s turning and 45°/s up/down; thin bars at the screen edge show the turn |
 | Point with the index finger | Walk forward where you look | Starts after 0.25 s and stops quickly when the hand changes |
-| Fist, held 0.35 s | Grab the object at the centre of the view, or the station's object | Fires once until the hand opens |
-| Open the hand | Release (place) the held object | Existing camera behaviour |
+| Close the hand (fist or pinch) | Grab: the object at your fingertips, else (aim assist) the object at the centre of the view within reach | One grab path (2026-11-01); the gate closes at score .55 and opens at .28; aim-assisted grabs are counted separately |
+| Open the hand | Release (place) the held object | Hysteresis: a wobbling fist does not drop the object; a tracking gap under 0.6 s keeps it |
 | Close the hand harder | Squeeze (force from grip score) | Existing camera behaviour |
 | Twist the hand like a dial while holding an activity item | Turn the placement | 10° dead zone, 5° steps, at most ±180° |
 | Pinch, held 0.8 s | Open the options panel | Then use the hand pointer (dwell) to choose a room, object or activity, or RESUME |
@@ -52,7 +59,7 @@
 
 ## Checks
 
-- **Offline `HandLocomotionTests` (32):**
+- **Offline `HandLocomotionTests` (53, 2026-11-01):** adds the hold rule (old vs new), the interaction state machine, One Euro and the profile; earlier checks:
   - the work zone and edges;
   - speed rising and capped;
   - easing;

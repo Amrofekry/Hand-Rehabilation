@@ -39,7 +39,7 @@ namespace GripRehab
         [Tooltip("One Euro filter on the camera hand position: min cutoff (Hz) and speed coefficient. Lower cutoff = steadier, higher beta = less lag.")]
         public float positionMinCutoff = 1.2f, positionBeta = 8f;
         [Tooltip("One Euro filter on the palm-size depth estimate (noisier than position, so steadier settings).")]
-        public float depthMinCutoff = .35f, depthBeta = 2f;
+        public float depthMinCutoff = .3f, depthBeta = .3f;
 
         public Vector3 PalmDirection { get; private set; }
         public Vector3 PalmNormal { get; private set; }
@@ -95,7 +95,7 @@ namespace GripRehab
                 else for(int j=0;j<i;j++)if(bone==_cachedJoints[j])RigReady=false;
             }
         }
-        public void UseDemoPose() { _everTracked = false; _anchored = false; TrackingUsed = UsingWorldLandmarks = false; LastPoseSequence=0; }
+        public void UseDemoPose() { _everTracked = false; _anchored = false; _referencesValid = false; TrackingUsed = UsingWorldLandmarks = false; LastPoseSequence=0; }
         public void RecenterTracking() { _anchored = false; _referencesValid = false; }
 
         public static float Bend(Vector3 a, Vector3 b, Vector3 c)
@@ -161,8 +161,8 @@ namespace GripRehab
                 HandKinematics.TryPalmBasis(palmSide, palmUp, out var currentBasis);
                 if (!_anchored)
                 {
-                    // References survive short gaps (no re-anchoring jump); a long gap or an explicit recenter takes new ones.
-                    if (!_referencesValid || _clock - _lastTrackedAt > reanchorAfterSeconds)
+                    // Camera mode: references survive short gaps (no re-anchoring jump); a long gap or an explicit recenter takes new ones. Relative mode re-anchors as before.
+                    if (!_referencesValid || !absoluteImageSpace || _clock - _lastTrackedAt > reanchorAfterSeconds)
                     {
                         _wristReference = wristImage;
                         _palmWidthReference = Mathf.Max(.025f, width);

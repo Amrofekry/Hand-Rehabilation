@@ -196,6 +196,11 @@ namespace GripRehab
             view.Button("VOICE VOLUME: " + Mathf.RoundToInt(RehabAudio.VoiceVolume * 100) + "%", () => { RehabAudio.VoiceVolume = NextStep(RehabAudio.VoiceVolume); SettingsAt(view.ScrollPosition); });
             // Camera hand: turn the view at the camera edges and walk by pointing (mouse and keyboard stay optional).
             view.Button("HAND LOOK & WALK (CAMERA): " + (HandLocomotion.Enabled ? "ON" : "OFF"), () => { HandLocomotion.Enabled = !HandLocomotion.Enabled; SettingsAt(view.ScrollPosition); });
+            // Camera hand control (2026-10-29): reach, steadiness, aim assist and recalibration, no code changes needed.
+            view.Button("HAND REACH (CAMERA): " + HandControlProfile.SensitivityNames[HandLocomotion.Sensitivity], () => { HandLocomotion.Sensitivity = (HandLocomotion.Sensitivity + 1) % 3; SettingsAt(view.ScrollPosition); });
+            view.Button("HAND STEADINESS (CAMERA): " + HandControlProfile.SteadinessNames[HandLocomotion.Steadiness], () => { HandLocomotion.Steadiness = (HandLocomotion.Steadiness + 1) % 3; SettingsAt(view.ScrollPosition); });
+            view.Button("AIM ASSIST FOR GRABBING: " + (HandLocomotion.AimAssist ? "ON (ASSISTED)" : "OFF (REACH ONLY)"), () => { HandLocomotion.AimAssist = !HandLocomotion.AimAssist; SettingsAt(view.ScrollPosition); });
+            view.Button("RECALIBRATE CAMERA HAND", () => { var e = UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>(); if (e != null) { e.Release(); e.ActiveHand.RecenterTracking(); } SettingsAt(view.ScrollPosition); });
             // Stage 13: voice commands (offline keyword recognition), off by default.
             view.Button("VOICE COMMANDS: " + RehabVoiceInput.ModeName(RehabVoiceInput.Mode) + (RehabVoiceInput.Mode != VoiceMode.Off && RehabVoiceInput.Instance != null && RehabVoiceInput.Instance.Unavailable != null ? " (UNAVAILABLE)" : ""), () => { RehabVoiceInput.Mode = (VoiceMode)(((int)RehabVoiceInput.Mode + 1) % 3); SettingsAt(view.ScrollPosition); });
             view.Button("VIRTUAL HAND: " + RehabPresentation.HandToneNames[RehabPresentation.HandTone], () => { RehabPresentation.HandTone = (RehabPresentation.HandTone + 1) % RehabPresentation.HandToneNames.Length; SettingsAt(view.ScrollPosition); });

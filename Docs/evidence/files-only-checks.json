@@ -1,11 +1,11 @@
 {
-  "utc": "2026-10-28T11:26:18.532315+00:00",
+  "utc": "2026-11-01T19:56:52.156200+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 899
+      "count": 903
     },
     {
       "name": "assembly-graph",
@@ -19,8 +19,8 @@
         "GripRehab.Product.dll": "80682b9728171d49175d24a7e91979c6ec02e79d7f23eaa5cafd322e1a91f9f7",
         "GripRehab.Core.dll": "bc03ea56546bdff41367e59f960c692eb3bd97e156efd91d1b5bbb2b5eba5be4",
         "GripRehab.UI.dll": "fd4e9e7e657faea0777cf2e7d1c959a64531b81b9dd30493aadb121f9d151668",
-        "Assembly-CSharp.dll": "78b54f82bfe254851386eaa1862cc637f2f6a61f6625a1b1df729ddc9730eef2",
-        "Assembly-CSharp-Editor.dll": "f429205afe6b43253eafe014fa60391fb906e94c3927c0fc959f0e9645f28222"
+        "Assembly-CSharp.dll": "4e14cf76af2409675c59baaafedb8120bdf4b76bf8c3a7b063357d6acb2eba83",
+        "Assembly-CSharp-Editor.dll": "9baf3a37118f0748d953fd8479fd6330e1cf1ee435b26db79ad39584058dbfb4"
       }
     },
     {
@@ -30,7 +30,7 @@
         "GripRehab.Product.dll": "aa54b6a241f87196cab6919eecc1257c9865d1ec4dc2e9866c12d3e8d0dbf9a0",
         "GripRehab.Core.dll": "79754f3bb30da57af576c4fc24b6eca1e9d4008be2f9c7adc85327392f8e9046",
         "GripRehab.UI.dll": "232cdafe30e10412c4731420c3dabeb2ac2b7df8e6d02d1afd73f6fdaeb45da7",
-        "Assembly-CSharp.dll": "cb6bbf1568f8e0dfeb842f1b428964750a82d41b9d1aecfa22f624486840094e"
+        "Assembly-CSharp.dll": "8a17642ed048f3dea03ac5002fe46d8c724de4ab2343a18f188b7d2cbbaadc71"
       }
     },
     {
@@ -59,8 +59,14 @@
     {
       "name": "hand-locomotion-tests",
       "passed": true,
-      "result": "PASS centre: no turning\nPASS anywhere in the work zone: no turning (reach and grab freely)\nPASS hand to the right: turn right\nPASS hand to the left: turn left\nPASS hand up looks up, down looks down\nPASS further out turns faster\nPASS turn rate is capped\nPASS turning eases in, no jerk\nPASS turning eases out\nPASS returning to the work zone stops turning\nPASS a brief point does not walk\nPASS a held point walks at full speed\nPASS any other hand shape stops walking quickly\nPASS walk and turn together\nPASS lost tracking or a menu stops everything at once\nPASS low confidence stops everything\nPASS bad coordinates stop everything\nPASS a long frame hitch does not jump the turn\nPASS a brief fist does not grab\nPASS a held fist grabs once, not repeatedly\nPASS opening and closing again grabs again\nPASS a fist while already holding does not grab again\nPASS a brief pinch does not open options\nPASS a held pinch opens options once\nPASS twist starts at zero when the object is grabbed\nPASS small twists are ignored (dead zone)\nPASS twisting right turns the placement right in 5\u00b0 steps: 70\nPASS twisting left turns it left\nPASS turn stays within \u00b1180\u00b0\nPASS no placement turn when not holding\nPASS roll: fingers up is 0, leaning right is positive\nPASS lost tracking restarts the fist hold (no grab from half a hold)\nHAND LOCOMOTION TESTS PASSED: 32",
+      "result": "PASS centre: no turning\nPASS anywhere in the work zone: no turning (reach and grab freely)\nPASS hand to the right: turn right\nPASS hand to the left: turn left\nPASS hand up looks up, down looks down\nPASS further out turns faster\nPASS turn rate is capped\nPASS turning eases in, no jerk\nPASS turning eases out\nPASS returning to the work zone stops turning\nPASS a brief point does not walk\nPASS a held point walks at full speed\nPASS any other hand shape stops walking quickly\nPASS walk and turn together\nPASS lost tracking or a menu stops everything at once\nPASS low confidence stops everything\nPASS bad coordinates stop everything\nPASS a long frame hitch does not jump the turn\nPASS a brief fist does not grab\nPASS a held fist grabs once, not repeatedly\nPASS opening and closing again grabs again\nPASS a fist while already holding does not grab again\nPASS a brief pinch does not open options\nPASS a held pinch opens options once\nPASS twist starts at zero when the object is grabbed\nPASS small twists are ignored (dead zone)\nPASS twisting right turns the placement right in 5\u00b0 steps: 70\nPASS twisting left turns it left\nPASS turn stays within \u00b1180\u00b0\nPASS no placement turn when not holding\nPASS roll: fingers up is 0, leaning right is positive\nPASS lost tracking restarts the fist hold (no grab from half a hold)\nPASS hold: old rule drops a wobbling hold (52 frames), new rule never does\nPASS hold: a 0.3 s tracking gap keeps the object\nPASS hold: a 1 s tracking gap releases once\nPASS hold: pausing releases at once\nPASS hold: opening the hand (gate open) releases\nPASS state: no hand = Idle\nPASS state: hand seen = Tracking\nPASS state: closed hand = ReadyToGrab\nPASS state: grab once\nPASS state: holding never re-fires the grab\nPASS state: gap while holding = TrackingLost\nPASS state: recovery keeps the same hold (no new grab)\nPASS state: release once\nPASS state: no duplicate release\nPASS state: lost then released never sticks\nPASS One Euro: rest jitter cut to under a quarter of raw (variance ratio 0.058)\nPASS One Euro: under 2 cm behind a 0.5 m/s hand (0.9 cm)\nPASS One Euro: bad sample ignored, bad time step resets\nPASS profile: reach rises with sensitivity\nPASS profile: steadier = lower cutoff\nPASS profile: out-of-range steps clamp\nHAND LOCOMOTION TESTS PASSED: 53",
       "scope": "Production hand look/walk policy with fabricated palm positions; no camera or Unity"
+    },
+    {
+      "name": "device-health-tests",
+      "passed": true,
+      "result": "PASS no packets yet: WAITING\nPASS 50 Hz stream: LIVE at 50.0 Hz\nPASS no dropouts: 0 % loss\nPASS sample age is the bridge's age\nPASS every 5th packet lost: about 20 % loss (19.8 %)\nPASS no packets for 0.8 s: STALE, age 819 ms\nPASS new connection: RECONNECTED, counted once\nPASS after the reconnect: LIVE, loss measured on the new link only\nPASS reconnect by status frame: no false loss (0.0 %)\nPASS a stale link shows 0 Hz, not the last rate\nPASS an invalid sample is not LIVE\nPASS a synthetic replay is labelled\nPASS a bad clock value is ignored\nPASS battery is not in the protocol, so it is not guessed\nDEVICE HEALTH TESTS PASSED: 14",
+      "scope": "Production device-status logic with injected packets, dropouts, stale gaps and reconnects; no BLE or Unity"
     },
     {
       "name": "grasp-source-tests",
@@ -83,7 +89,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.109s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.234s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -95,25 +101,25 @@
     {
       "name": "pointer-static-bindings",
       "passed": true,
-      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.005s\n\nOK",
+      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.010s\n\nOK",
       "scope": "Static runtime integration contracts; no native uGUI"
     },
     {
       "name": "deformation-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.011s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.019s\n\nOK",
       "scope": "Static integration contracts; no native Unity"
     },
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.005s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.008s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.003s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.007s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],

@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-10-28T11:22:49.7189935Z",
+  "utc": "2026-11-01T20:04:28.0988913Z",
   "scope": "SYNTHETIC camera-hand frames over the loopback vision port in the rendered Windows player; no webcam or person",
   "detail": "",
   "errors": 0,
@@ -22,27 +22,27 @@
     },
     {
       "name": "hand at the right edge turns right",
-      "value": "131.9\u00b0 in 2 s",
+      "value": "113.5\u00b0 in 2 s",
       "passed": true
     },
     {
       "name": "turn speed stays under the cap",
-      "value": "131.9\u00b0 in 2 s (cap 75\u00b0/s)",
+      "value": "113.5\u00b0 in 2 s (cap 75\u00b0/s)",
       "passed": true
     },
     {
       "name": "hand at the left edge turns left",
-      "value": "-117.6\u00b0",
+      "value": "-101.2\u00b0",
       "passed": true
     },
     {
       "name": "hand at the top looks up",
-      "value": "-43.6\u00b0",
+      "value": "-41.2\u00b0",
       "passed": true
     },
     {
       "name": "hand at the bottom looks down",
-      "value": "-8.3\u00b0",
+      "value": "-9.4\u00b0",
       "passed": true
     },
     {
@@ -82,7 +82,7 @@
     },
     {
       "name": "twisting the hand turns the placement",
-      "value": "grabbed=True turned 60\u00b0",
+      "value": "grabbed=True turned 60\u00b0 held=Cup twist=60 active=True score=0.76 status=Camera grip (aim assist): holding Cup",
       "passed": true
     },
     {

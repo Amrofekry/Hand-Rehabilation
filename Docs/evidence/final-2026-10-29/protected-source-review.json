@@ -1,0 +1,35 @@
+{
+  "scope": "Final release changes only, each with a reason. Earlier review links remain immutable; no broad hash refresh.",
+  "changes": {
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
+      "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
+      "currentSha256": "fd6647bbdc809a31fc64651217c0aad07a9679992cae711747c37de0a8afec70",
+      "reason": "User-authorized final release (2026-10-29). Hybrid camera hold: hysteresis, 0.6 s loss grace (force eases to 0 during it), one camera grab path with counted aim assist, camera force curve, no hand swap while holding."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
+      "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
+      "currentSha256": "4a6890f35ca9a638d884468c2fd8dffeeeb15d976eb6a33938aa1b25887ccfd5",
+      "reason": "User-authorized final release (2026-10-29). Camera hand One Euro filter; camera-mode references survive short gaps (relative mode re-anchors as before); UseDemoPose clears references."
+    },
+    "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs": {
+      "previousSha256": "ea2faf1c7d6e8e89e5f1887bfd524dbc2fd5a39c7bf5965548bd88014eadb5de",
+      "currentSha256": "e64f2324cfbe8966b5d7e1d114b011cc1f6e4bb7475ee861528ecc12a7aaef80",
+      "reason": "User-authorized final release (2026-10-29). Execution order -30 so frames land before ApartmentExperience reads them in the same frame."
+    },
+    "Assets/ProductIntegration/ResearchPortalPages.cs": {
+      "previousSha256": "0a67b70b37f552e7acd9f13c5b1ffc21c0f3a43ee4a7359f498dfb05c94b10f4",
+      "currentSha256": "4ed86ce796220899e915f1a35a7461b392c3fcb1b5457a7b48b941f719a53bdc",
+      "reason": "User-authorized final release (2026-10-29). Settings: hand reach, hand steadiness, aim assist on/off, recalibrate camera hand."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs": {
+      "previousSha256": "fd1615e4106f4001299c49a203141347bb3b7becf38db21c59b6832b99ed2e9c",
+      "currentSha256": "c12adc48f7f9c996325962d2e7e5e7d54f0f9b1d7a108adee6f21e1004aee429",
+      "reason": "User-authorized final release (2026-10-29). Adds the zero-allocation OneEuroFilter struct used by the camera hand; existing rig rules unchanged."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
+      "previousSha256": "5b62eae2d1c1389a0637b87aa62cd5ea1284cd38b7b084247190e355e9dba56d",
+      "currentSha256": "b197389e60023f85692aa6f0f4f0c0528c91bf4a9909c4432063974e308158b8",
+      "reason": "User-authorized final release (2026-10-29). Stale-landmark check waits out the 0.6 s loss grace of the hybrid hold rule before asserting release."
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T20:05:10.4382610Z",
+  "scope": "SYNTHETIC 30 fps camera-hand frames with Gaussian landmark noise (sigma 0.004 of the image, about 2.6 px at 640) over the loopback vision port; no camera or person",
+  "build": "0.5.0 2026-10-23T19:26:25",
+  "restJitterMm": 10.436552047729492,
+  "restXYJitterMm": 2.102461099624634,
+  "restDepthJitterMm": 10.222585678100586,
+  "restStepMm": 0.40526944398880005,
+  "sweepRmsMm": 11.615753173828125,
+  "settleMs": 28.420001983642578,
+  "turnDepthMm": 5.9604644775390625e-05,
+  "gripScoreMin": 0.0,
+  "gripScoreMean": 0.8067917823791504,
+  "holdDrops": 0,
+  "errors": 0,
+  "blipHeld": true,
+  "activityCameraGrab": true,
+  "pinchGrab": true,
+  "pointFalseGrab": false,
+  "detail": "pinch@start: optionsOpened=0 dist=0.44 held=Silicone ball | pinch-late (after other tests, not scored): optionsOpened=1 dist=1.83 paused=True assisted=2 camera=True score=1.00 status=Objects restored to their stations | activity: dist=0.51 paused=False assisted=2 camera=True score=0.76 held=Cup status=Camera grip: holding Cup | ",
+  "exit": 0
+}

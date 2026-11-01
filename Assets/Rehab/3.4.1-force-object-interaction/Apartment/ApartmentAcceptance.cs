@@ -378,8 +378,9 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
     Send(cameraUdp,27817,JsonUtility.ToJson(CameraFixture(.5f,.5f,true,++seq,captured+=.06)));
     yield return new WaitForSeconds(.06f);
    }
-   yield return new WaitForSeconds(.6f);
-   Check(!app.ForceValid&&app.ForceNewtons==0&&app.Held==null,"Stale camera landmarks clear visual pressure and cannot keep holding");
+   // 2026-11-01 hybrid control: a short gap keeps the hold for GraspHoldRule.LossGraceSeconds, then stale landmarks release.
+   yield return new WaitForSeconds(.6f+GraspHoldRule.LossGraceSeconds);
+   Check(!app.ForceValid&&app.ForceNewtons==0&&app.Held==null,"Stale camera landmarks clear visual pressure and cannot keep holding beyond the loss grace");
     var staleShell = FindAnyObjectByType<RehabAppShell>();
     var staleHud = staleShell.hudValue.text;
     var refreshField=typeof(RehabAppShell).GetField("nextRefresh",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);

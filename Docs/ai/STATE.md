@@ -1,15 +1,21 @@
-# State (2026-10-27)
+# State (2026-11-01)
 
-**Branch:** `claude/stage13-voice`, from `claude/stage12-audio`, from `claude/stage11-ui`, from `claude/setup`, from `3.4-upgrade-baseline`. Not merged.
+**Branch:** `claude/final-release` (linear chain from `3.4-upgrade-baseline`). Not merged; nothing pushed.
 
-## Resume here (2026-10-29, paused by the user)
-- **Plan:** `C:/Users/lenovo/.claude/plans/alaways-use-graphify-of-generic-yeti.md` (approved; one continuous run, Blocks A to J).
-- **Branch:** `claude/final-release`. WIP commit; Unity compile **not yet verified** after the CV edits.
-- **Block A in progress:**
-  - Done: One Euro filter (HandRigRules), HandGrasp score, GraspHoldRule + HandInteractionMachine + HandControlProfile (HandLocomotionPolicy.cs), ApartmentExperience hysteresis/grace/aim-assist grab, FingerPoseDriver filtering/depth/grace, receiver order −30.
-  - Next: RehabControlIntent, HUD state, settings buttons, SyntheticHandStream + `run_activity_probe.py --camera`, offline tests, record protected hashes, build, `run_hand_benchmark.py after`.
-- **Baseline:** `Docs/evidence/final-2026-10-29/hand-benchmark-before.json`.
-- **Tools status:** `Docs/ai/TOOLS_CHECKLIST.md`. Graphify graph: `graphify-out/` (refresh with `graphify update .`).
+## Resume here (2026-11-01, final release run)
+- **Plan:** `C:/Users/lenovo/.claude/plans/alaways-use-graphify-of-generic-yeti.md`. **Branch:** `claude/final-release`.
+- **Done:**
+  - **A, CV hybrid hand control:** `Docs/HAND_CONTROL_REPORT.md`. SYNTHETIC benchmark: rest jitter 17.5 → 9.9 mm, settle 62 → 20 ms; 0.7 s gap, activity and pinch grabs now hold.
+  - **B, A-OB1:** not reproduced in 3 activity runs × 12 (2026-11-01). Root cause unproven; it stays in regression.
+  - **D, Stage 18:** calibration wizard, device status panel, `Docs/PHYSICAL_TEST_PROTOCOL.md`.
+  - **E, review:** code review found 10 issues and 7 are fixed; the security pass was done by hand.
+  - **F, Stages 16/17:** `Docs/STAGE16_AUDIT.md`, `STAGE17_RESEARCH.md`.
+  - **H, guide:** `Docs/GUIDE_AR.md/.pdf/.docx`, `Docs/architecture/`.
+  - **I, optional plan:** `Docs/OPTIONAL_PLAN.md`.
+  - **G, release:** `Tools/release/` (stager, first-run check, Inno Setup script; Inno in `.local/innosetup`).
+- **Full regression (2026-11-01):** build, 16 player suites, EditMode 10/10, offline, Python, pytest 32, console 0/0/0 with MCP. All green.
+- **Deferred:** C, Stage 15A environment polish (cosmetic; risks the perf/gallery baselines).
+- **Waiting on you:** J (cleanup script `.local/scratch/block-j-cleanup.ps1`, folder move, merge, tag).
 
 ## Done
 - Hand-first controls (2026-10-28): edge look, point to walk, fist grab, pinch options, twist placement; voice for special actions; console zero with MCP over stdio.
@@ -31,7 +37,7 @@
 3. Merge `claude/*` branches into `3.4-upgrade-baseline` when you approve.
 
 ## Open bugs
-- A-OB1: activity probe grab failures, intermittent and getting more frequent (4 of 6 runs on 2026-10-28; also with hand controls off). Needs its own fix.
+- A-OB1: intermittent activity grab failures (4 of 6 runs on 2026-10-28). Not reproduced in 3 runs on 2026-11-01. Kept under watch.
 
 ## Pending user checks
 - Hands-on playtest of the Stage 10 activities.

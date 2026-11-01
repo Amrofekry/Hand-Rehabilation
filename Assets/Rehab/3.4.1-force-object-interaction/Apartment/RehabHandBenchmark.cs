@@ -113,6 +113,14 @@ namespace GripRehab
             yield return Hold(.5f, .5f, Shape.Open, 1.5f);
             var hand = app.ActiveHand.transform;
 
+            // 0. Pinch picks up the station object, from the starting spot (within reach).
+            int optionsBefore0 = HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0;
+            yield return Hold(.5f, .5f, Shape.Pinch, 1.5f);
+            r.pinchGrab = app.Held == station;
+            r.detail += "pinch@start: optionsOpened=" + ((HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0) - optionsBefore0) + " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " held=" + (app.Held != null ? app.Held.displayName : "none") + " | ";
+            yield return Hold(.5f, .5f, Shape.Open, 1.2f); if (app.Held != null) app.Release(); player.SetPaused(false);
+            app.ResetObjects(); player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Open, .8f);
+
             // 1. Rest jitter with noisy input.
             yield return Hold(.5f, .5f, Shape.Open, .8f, .004f);
             var rest = new List<Vector3>();
@@ -162,9 +170,14 @@ namespace GripRehab
             r.pointFalseGrab = app.Held != null; if (app.Held != null) app.Release();
             yield return Hold(.5f, .5f, Shape.Open, 1f);
 
-            // 7. Pinch picks up the station object.
-            player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Pinch, 1.5f);
-            r.pinchGrab = app.Held != null; yield return Hold(.5f, .5f, Shape.Open, 1.2f); if (app.Held != null) app.Release();
+            // 7. Pinch picks up the station object (objects restored first so it is within reach again).
+            app.ResetObjects(); player.SetPaused(false); yield return Hold(.5f, .5f, Shape.Open, .8f);
+            int optionsBefore = HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0;
+            player.LookAt(station.transform.position);
+            if (Vector3.Distance(player.view.transform.position, station.transform.position) > 1.2f) { player.Teleport(station.transform.position - player.transform.forward * 1.0f + Vector3.up * .05f, player.transform.rotation); yield return null; player.LookAt(station.transform.position); }
+            yield return Hold(.5f, .5f, Shape.Open, .4f);
+            yield return Hold(.5f, .5f, Shape.Pinch, 1.5f);
+            r.detail += "pinch-late (after other tests, not scored): optionsOpened=" + ((HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0) - optionsBefore) + " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " paused=" + player.Paused + " assisted=" + app.AssistedGrabs + " camera=" + app.CameraMode + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status + " | "; yield return Hold(.5f, .5f, Shape.Open, 1.2f); if (app.Held != null) app.Release();
 
             // 8. Camera grab of an activity item with no key press.
             var runner = app.GetComponent<ActivityRunner>();
@@ -172,7 +185,7 @@ namespace GripRehab
             {
                 player.SetPaused(false); yield return Hold(.5f, .5f, Shape.Open, 1f);
                 var cup = runner.Current.items.Select(i => i.Item).FirstOrDefault(i => i != null && i.displayName == "Cup");
-                if (cup != null) { player.LookAt(cup.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f); yield return Hold(.5f, .5f, Shape.Fist, 1.5f); r.activityCameraGrab = app.Held == cup; }
+                if (cup != null) { player.LookAt(cup.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f); yield return Hold(.5f, .5f, Shape.Fist, 1.5f); r.activityCameraGrab = app.Held == cup; r.detail += "activity: dist=" + Vector3.Distance(player.view.transform.position, cup.transform.position).ToString("0.00") + " paused=" + player.Paused + " assisted=" + app.AssistedGrabs + " camera=" + app.CameraMode + " score=" + app.CameraGripScore.ToString("0.00") + " held=" + (app.Held != null ? app.Held.displayName : "none") + " status=" + app.Status + " | "; }
                 yield return Hold(.5f, .5f, Shape.Open, 1f); if (app.Held != null) app.Release(); runner.End(false);
             }
             sending = false; shell.ReturnHome(); yield return new WaitForSecondsRealtime(.5f);

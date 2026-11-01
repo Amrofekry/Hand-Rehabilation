@@ -69,6 +69,48 @@ class HandLocomotionTests
             lostAct.Step(true, false, false, 0, false, 1 / 30f); bool fired = false; for (int i = 0; i < 5; i++) { lostAct.Step(true, false, false, 0, true, 1 / 30f); fired |= lostAct.GrabRequested; }
             Check(!fired, "lost tracking restarts the fist hold (no grab from half a hold)");
 
+            // Hold rule: old (release on any dip below closeAt) vs new (hysteresis gate + grace) on a noisy holding score.
+            var rng = new Random(29); int oldDrops = 0, newDrops = 0;
+            for (int i = 0; i < 300; i++)
+            {
+                float score = .62f + (float)(rng.NextDouble() - .5) * .2f; // a real hold wobbling around 0.52-0.72
+                if (GraspHoldRule.OldShouldRelease(true, score, .55f, true)) oldDrops++;
+                if (GraspHoldRule.ShouldRelease(true, true, 0, false)) newDrops++; // gate stays closed: score never at/below 0.28 for its dwell
+            }
+            Check(oldDrops > 0 && newDrops == 0, "hold: old rule drops a wobbling hold (" + oldDrops + " frames), new rule never does");
+            Check(!GraspHoldRule.ShouldRelease(true, false, .3f, false), "hold: a 0.3 s tracking gap keeps the object");
+            Check(GraspHoldRule.ShouldRelease(true, false, 1f, false), "hold: a 1 s tracking gap releases once");
+            Check(GraspHoldRule.ShouldRelease(true, false, .1f, true), "hold: pausing releases at once");
+            Check(GraspHoldRule.ShouldRelease(false, true, 0, false), "hold: opening the hand (gate open) releases");
+
+            // Interaction state machine.
+            var m = new HandInteractionMachine();
+            Check(m.Step(false, false, false) == HandInteraction.Idle, "state: no hand = Idle");
+            Check(m.Step(true, false, false) == HandInteraction.Tracking, "state: hand seen = Tracking");
+            Check(m.Step(true, true, false) == HandInteraction.ReadyToGrab, "state: closed hand = ReadyToGrab");
+            Check(m.Step(true, true, true) == HandInteraction.Holding && m.JustGrabbed && m.Grabs == 1, "state: grab once");
+            Check(m.Step(true, true, true) == HandInteraction.Holding && !m.JustGrabbed && m.Grabs == 1, "state: holding never re-fires the grab");
+            Check(m.Step(false, true, true) == HandInteraction.TrackingLost && m.Losses == 1, "state: gap while holding = TrackingLost");
+            Check(m.Step(true, true, true) == HandInteraction.Holding && m.Grabs == 1, "state: recovery keeps the same hold (no new grab)");
+            Check(m.Step(true, false, false) == HandInteraction.Releasing && m.JustReleased && m.Releases == 1, "state: release once");
+            Check(m.Step(true, false, false) == HandInteraction.Tracking && m.Releases == 1, "state: no duplicate release");
+            Check(m.Step(false, false, true) == HandInteraction.TrackingLost && m.Step(false, false, false) == HandInteraction.Releasing && m.Step(false, false, false) == HandInteraction.Idle, "state: lost then released never sticks");
+
+            // One Euro: steadier than raw at rest, little lag when moving.
+            var oe = new OneEuroFilter(1.2f, 8f); var rr = new Random(3); double rawVar = 0, outVar = 0;
+            for (int i = 0; i < 600; i++) { float noise = (float)(rr.NextDouble() - .5) * .006f; float y = oe.Step(noise, 1 / 60f); if (i > 60) { rawVar += noise * noise; outVar += y * y; } }
+            Check(outVar < rawVar * .25, "One Euro: rest jitter cut to under a quarter of raw (variance ratio " + (outVar / rawVar).ToString("0.000") + ")");
+            var oe2 = new OneEuroFilter(1.2f, 8f); float lag = 0;
+            for (int i = 0; i < 120; i++) { float x = i / 60f * .5f; float y = oe2.Step(x, 1 / 60f); if (i > 30) lag = Math.Max(lag, x - y); }
+            Check(lag < .02f, "One Euro: under 2 cm behind a 0.5 m/s hand (" + (lag * 100).ToString("0.0") + " cm)");
+            var oe3 = new OneEuroFilter(1.2f, 8f); oe3.Step(.1f, 1 / 60f);
+            Check(oe3.Step(float.NaN, 1 / 60f) == .1f && oe3.Step(.2f, float.NaN) == .2f, "One Euro: bad sample ignored, bad time step resets");
+
+            // Profile: three steps, monotonic.
+            Check(HandControlProfile.Reach(0) < HandControlProfile.Reach(1) && HandControlProfile.Reach(1) < HandControlProfile.Reach(2), "profile: reach rises with sensitivity");
+            Check(HandControlProfile.PositionCutoff(0) > HandControlProfile.PositionCutoff(2), "profile: steadier = lower cutoff");
+            Check(HandControlProfile.Reach(-5) == HandControlProfile.Reach(0) && HandControlProfile.Reach(9) == HandControlProfile.Reach(2), "profile: out-of-range steps clamp");
+
             Console.WriteLine("HAND LOCOMOTION TESTS PASSED: " + passed);
             return 0;
         }
