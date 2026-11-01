@@ -15,7 +15,10 @@
   - **G, release:** `Tools/release/` (stager, first-run check, Inno Setup script; Inno in `.local/innosetup`).
 - **Full regression (2026-11-01):** build, 16 player suites, EditMode 10/10, offline, Python, pytest 32, console 0/0/0 with MCP. All green.
 - **Deferred:** C, Stage 15A environment polish (cosmetic; risks the perf/gallery baselines).
-- **Waiting on you:** J (cleanup script `.local/scratch/block-j-cleanup.ps1`, folder move, merge, tag).
+- **J (2026-11-01):** merged (baseline fast-forwarded) and tagged v1.0.0. The outer folders now sit in `02_Hardware`, `03_Docs`, `04_Delivery` and `99_Archive`. The Arduino caches moved into `firmware/`.
+- **Waiting on you:**
+  - Run `.local/scratch/block-j-cleanup.ps1` (about 14 GB; the classifier blocked me from running it).
+  - With Claude and Unity closed, run `E:\GP\codex\Move-GameTo01.ps1`. It moves the game to `01_Game` and fixes the paths.
 
 ## Done
 - Hand-first controls (2026-10-28): edge look, point to walk, fist grab, pinch options, twist placement; voice for special actions; console zero with MCP over stdio.
