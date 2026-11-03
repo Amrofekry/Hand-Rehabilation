@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-11-01T19:55:10.5470853Z",
+  "utc": "2026-11-03T16:50:46.1411862Z",
   "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; measures events and levels, not how the sounds feel to a person",
   "detail": "",
   "errors": 0,
@@ -32,7 +32,7 @@
     },
     {
       "name": "ambience menu -> gameplay fades",
-      "value": "0.45 -> 0.65 -> 1.00",
+      "value": "0.45 -> 0.66 -> 1.00",
       "passed": true
     },
     {

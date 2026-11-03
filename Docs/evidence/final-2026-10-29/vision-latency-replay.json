@@ -1,0 +1,17 @@
+{
+  "scope": "Capture (bridge clock) to applied pose; excludes camera exposure and display. Input described by the caller.",
+  "frameSource": "mediapipe-1.0.1",
+  "utc": "2026-11-03T14:41:00.0321221Z",
+  "samples": 436,
+  "seconds": 20.0,
+  "totalMedianMs": 49.62969970703125,
+  "totalP95Ms": 67.21379852294922,
+  "bridgeMedianMs": 47.0,
+  "bridgeP95Ms": 63.0,
+  "unityMedianMs": 3.0774993896484375,
+  "unityP95Ms": 5.6511993408203125,
+  "frameIntervalMedianMs": 44.93410110473633,
+  "passed": true,
+  "input": "Real hand photos (Ultralytics hand-keypoints val set, first 450 images, 2 frames each) replayed as a 640x480 video through the real MediaPipe bridge to the real UDP port; each image is new, so MediaPipe runs full detection (slower than live tracking). No person, no live camera.",
+  "label": "MEASURED on this PC (pipeline only; replayed images)"
+}

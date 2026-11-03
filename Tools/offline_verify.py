@@ -174,7 +174,7 @@ def main():
             loco=OUTPUT/'HandLocomotionTests.exe'
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(loco),
                  *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),'Tools/Offline/HandLocomotionTests.cs',
-                 'Assets/Rehab/3.2-vision/HandLocomotionPolicy.cs','Tools/Offline/TrackingMathShim.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs'],OUTPUT/'hand-locomotion-tests-compile.log')
+                 'Assets/Rehab/3.2-vision/HandLocomotionPolicy.cs','Assets/Rehab/3.2-vision/LatencyStats.cs','Tools/Offline/TrackingMathShim.cs','Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs'],OUTPUT/'hand-locomotion-tests-compile.log')
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',loco],OUTPUT/'hand-locomotion-tests.log')
             evidence['checks'].append(dict(name='hand-locomotion-tests',passed=True,result=result.stdout.strip(),
                 scope='Production hand look/walk policy with fabricated palm positions; no camera or Unity'))

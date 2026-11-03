@@ -16,8 +16,9 @@ public sealed class HandLocomotion : MonoBehaviour {
  /// <summary>On (default): a closed hand also picks up what you look at within reach, counted as assisted. Off: only a fingertip at the object grabs (physical reach).</summary>
  public static bool AimAssist{get=>PlayerPrefs.GetInt(AimKey,1)==1;set=>PlayerPrefs.SetInt(AimKey,value?1:0);}
  /// <summary>Camera hand sensitivity (reach) and steadiness (filter), 0..2 each; see HandControlProfile.</summary>
- public static int Sensitivity{get=>Mathf.Clamp(PlayerPrefs.GetInt("GripRehab.HandSensitivity",1),0,2);set=>PlayerPrefs.SetInt("GripRehab.HandSensitivity",Mathf.Clamp(value,0,2));}
- public static int Steadiness{get=>Mathf.Clamp(PlayerPrefs.GetInt("GripRehab.HandSteadiness",1),0,2);set=>PlayerPrefs.SetInt("GripRehab.HandSteadiness",Mathf.Clamp(value,0,2));}
+ public static int Sensitivity{get=>Mathf.Clamp(PlayerPrefs.GetInt("GripRehab.HandSensitivity",1),0,2);set{PlayerPrefs.SetInt("GripRehab.HandSensitivity",Mathf.Clamp(value,0,2));profileVersion++;}}
+ public static int Steadiness{get=>Mathf.Clamp(PlayerPrefs.GetInt("GripRehab.HandSteadiness",1),0,2);set{PlayerPrefs.SetInt("GripRehab.HandSteadiness",Mathf.Clamp(value,0,2));profileVersion++;}}
+ static int profileVersion;int appliedVersion=-1; // the setters bump it, so prefs are read only when a setting changes
  public readonly HandInteractionMachine Interaction=new HandInteractionMachine();
  HandInteraction lastState=HandInteraction.Idle;bool stateShown;int lastSens=-1,lastSteady=-1;
  public const float MaxPitch=60;
@@ -58,13 +59,13 @@ public sealed class HandLocomotion : MonoBehaviour {
    (app.cameraLauncher==null||app.cameraLauncher.CameraOpened||acceptance)&&HandKinematics.HasPoseGeometry(frame);
   bool usable=tracked&&!player.Paused&&(shell==null||!shell.BlocksGameplay)&&player.GameplayInputAllowed;
   float px=0,py=0,roll=float.NaN;var gesture=HandGesture.None;
-  if(tracked){var p=frame.landmarks;px=(p[0].x+p[5].x+p[9].x+p[13].x+p[17].x)/5;py=(p[0].y+p[5].y+p[9].y+p[13].y+p[17].y)/5;gesture=GestureClassifier.Classify(frame);roll=HandActionPolicy.Roll(p[0].x,p[0].y,p[9].x,p[9].y);}
+  if(tracked){var p=frame.landmarks;px=(p[0].x+p[5].x+p[9].x+p[13].x+p[17].x)/5;py=(p[0].y+p[5].y+p[9].y+p[13].y+p[17].y)/5;gesture=HandGrasp.Gesture(frame);roll=HandActionPolicy.Roll(p[0].x,p[0].y,p[9].x,p[9].y);}
   bool pointing=gesture==HandGesture.Point;
   Hint(Enabled&&app.CameraMode);
   ApplyProfile();
   // Interaction state on the input strip (camera mode only): TRACKING / READY / HOLDING / LOST.
   if(app.CameraMode){
-   var st=Interaction.Step(tracked&&!player.Paused,app.CameraGripScore>=app.settings.cameraCloseAt,app.Held!=null);
+   var st=Interaction.Step(tracked&&!player.Paused,app.CameraGateClosed,app.Held!=null); // the real hysteresis gate, as the grab path uses
    if(st!=lastState||!stateShown){lastState=st;stateShown=true;ApartmentGuide.Set(ApartmentGuide.Channel.Input,st!=HandInteraction.Idle,StateText(st));}
   } else if(stateShown){stateShown=false;lastState=HandInteraction.Idle;ApartmentGuide.Clear(ApartmentGuide.Channel.Input);}
   float dt=Time.deltaTime;
@@ -102,6 +103,7 @@ public sealed class HandLocomotion : MonoBehaviour {
  static string StateText(HandInteraction s)=>s==HandInteraction.Tracking?"CAMERA  TRACKING":s==HandInteraction.ReadyToGrab?"CAMERA  READY":s==HandInteraction.Holding?"CAMERA  HOLDING":s==HandInteraction.Releasing?"CAMERA  RELEASING":s==HandInteraction.TrackingLost?"CAMERA  LOST":"CAMERA  IDLE";
  // Settings change rarely: apply only when they do (no per-frame work or allocation).
  void ApplyProfile(){
+  if(appliedVersion==profileVersion)return;appliedVersion=profileVersion;
   int sens=Sensitivity,steady=Steadiness;if(sens==lastSens&&steady==lastSteady)return;lastSens=sens;lastSteady=steady;
   Apply(app.rightHand,sens,steady);Apply(app.leftHand,sens,steady);
  }

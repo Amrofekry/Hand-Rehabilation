@@ -111,6 +111,13 @@ class HandLocomotionTests
             Check(HandControlProfile.PositionCutoff(0) > HandControlProfile.PositionCutoff(2), "profile: steadier = lower cutoff");
             Check(HandControlProfile.Reach(-5) == HandControlProfile.Reach(0) && HandControlProfile.Reach(9) == HandControlProfile.Reach(2), "profile: out-of-range steps clamp");
 
+            // Latency statistics (median and p95 for the latency report).
+            var ls = new LatencyStats(100);
+            Check(float.IsNaN(ls.Median), "latency: empty store has no median");
+            for (int i = 1; i <= 100; i++) ls.Add(i);
+            Check(ls.Median == 50 && ls.Percentile(95) == 95 && ls.Percentile(100) == 100, "latency: median 50, p95 95 of 1..100");
+            ls.Add(float.NaN); ls.Add(-3); Check(ls.Count == 100, "latency: bad samples ignored");
+            for (int i = 0; i < 100; i++) ls.Add(1000); Check(ls.Median == 1000, "latency: full store drops the oldest samples");
             Console.WriteLine("HAND LOCOMOTION TESTS PASSED: " + passed);
             return 0;
         }

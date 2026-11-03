@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "fd6647bbdc809a31fc64651217c0aad07a9679992cae711747c37de0a8afec70",
-      "reason": "User-authorized final release (2026-10-29). Hybrid camera hold: hysteresis, 0.6 s loss grace (force eases to 0 during it), one camera grab path with counted aim assist, camera force curve, no hand swap while holding."
+      "currentSha256": "a6dacda62670808f177cca5e1f7e8d852e53a3cf2046ee2a2ba950fd81a9b257",
+      "reason": "User-authorized final release (2026-10-29). Hybrid camera hold (hysteresis, 0.6 s grace, force eases to 0 in it); camera grab prefers the looked-at object over a brushed neighbour (aim assist on); look target = object centre nearest the view direction; reach = closest point or top visible; CameraGateClosed for the HUD."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",

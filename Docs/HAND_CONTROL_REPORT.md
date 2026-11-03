@@ -88,7 +88,12 @@ The offline harness shows the old hold rule dropping a noisy hold on many frames
 | 17 | Keyboard fallback | Activity, smoke and UI probes (keyboard paths unchanged) |
 | 18 | Tracking + rendering + physics together | Perf probe (fps p95, allocation per frame) |
 
-**Not measured:** end-to-end camera latency (median/p95) and position error against a physical reference. Both need the real camera and a reference rig, so they are left OPEN rather than estimated.
+**Pipeline latency (MEASURED on this PC, 2026-11-03):** capture to the frame the pose is applied in: **median 49.6 ms, p95 67.2 ms** (436 frames). Bridge (capture to send, mostly MediaPipe inference): median 47 ms, p95 63 ms. Unity (receive to applied): median 3.1 ms, p95 5.7 ms.
+- **Input:** real hand photos from a dataset, replayed as a video through the real bridge and port (`-vision-latency`, `Docs/evidence/final-2026-10-29/vision-latency-replay.json`).
+- **Why this is conservative:** every image is new, so MediaPipe runs full detection on each one; live tracking is usually faster.
+- **Not included:** camera exposure and display time.
+
+**Still not measured:** latency with a live hand on the webcam, and position error against a physical reference. Both need a person and a reference rig, so they stay OPEN.
 
 ## 7. Build status
 The batch Windows build succeeded. The offline compile and tests pass (53 hand tests), and the Python suite is OK. EditMode, probes and ConsoleZeroCheck results are in `Logs/final-a-regression.txt`, summarised in `Docs/ai/STATE.md`.
@@ -106,8 +111,29 @@ The batch Windows build succeeded. The offline compile and tests pass (53 hand t
 3. **Look:** move to the edge band. **Walk:** hold a point. **Grab:** close the hand. **Release:** open it. **Options:** hold a pinch. **Rotate placement:** twist the hand.
 4. To re-run the benchmark: `ai-engine/.venv-ai/Scripts/python.exe Tools/run_hand_benchmark.py <label>`.
 
-## 10. Next improvements (justified by the limits above)
-1. A latency meter on the real webcam: capture timestamp to applied pose, median and p95.
+## 10. Camera-hand activity run (2026-11-02, SYNTHETIC)
+`Tools/run_activity_probe.py --camera` plays all six activities at levels 2 and 8 with camera-hand frames instead of keyboard calls:
+- **Grab:** the hand closes until the real gate closes, gently.
+- **Place:** the hand opens.
+- **Squeeze:** a closed loop on the camera force.
+- **Cuts:** the hand relaxes between cuts.
+
+The first run completed **3 of 12** (keyboard: 12 of 12). It exposed five real problems:
+
+| # | Problem (affects) | Fix |
+|---|---|---|
+| F1 | In a cluster, a fingertip brushing a neighbour grabbed it, not the looked-at object (camera) | With aim assist on, the looked-at object wins; it counts as assisted only if no fingertip reached it |
+| F2 | The look target was the first collider the ray met: knife on a plate gave the plate (camera and keyboard E) | Among reachable objects in the aim cone, the one whose centre is nearest the view direction wins |
+| F3 | Reach needed a clear line of sight to the single closest point: bread behind a board edge was unreachable (camera and keyboard) | Reachable if the closest point or the top of the object is visible (distance limit unchanged) |
+| F4 | The first cut could never arm with a camera grip, and squeezing while looking at the board spent the cut (camera; keyboard for the second) | Picking up the knife arms the first cut; only a squeeze aimed at food uses it |
+| F5 | 25 N needed grip score 0.85, more than a real fist gives (benchmark mean 0.77), so level-8 tasks were out of reach (camera) | 25 N at score 0.80; an ordinary hold is still about 18 N; porcelain (40 N) only breaks on a deliberate hard squeeze |
+
+**Result after the fixes: 11 of 12.** Keyboard is still 12 of 12. Evidence: `Docs/evidence/final-2026-10-29/activity-probe-camera.json`.
+
+**Open finding:** level 8 "Pack the storage box" (5 items) with the camera hand. A camera release happens as the hand opens (the gate confirms over about 0.12 s), so the largest item (a 12 cm book) lands about 1.5 cm over the wall, even after two pick-up-and-replace corrections. The keyboard's instant release fits. Next step: snap a camera release to the placement preview the way the keyboard path does, or give the box a wider tolerance at high levels.
+
+## 11. Next improvements (justified by the limits above)
+1. Run `-vision-latency` with a live hand on the webcam, and add camera exposure and display time with a photodiode or high-speed video.
 2. A depth camera or stereo option to replace the palm-size proxy (optional plan O5).
 3. A hybrid detector only if an A/B against MediaPipe on recorded clips shows lower jitter or fewer losses (O3).
 4. A per-user automatic reach calibration from a 5 s range-of-motion sweep.

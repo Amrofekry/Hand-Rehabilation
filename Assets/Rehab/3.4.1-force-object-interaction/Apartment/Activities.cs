@@ -189,6 +189,7 @@ public sealed class StorageBoxActivity:Activity {
   while(!steps.Complete&&steps.CurrentDone>inside)steps.Retract();
  }
  public string LastInsideProblem="";
+ public Vector3 BoxCentre=>box.transform.TransformPoint(box.interior.center-new Vector3(0,box.interior.extents.y,0));
  bool Inside(ActivityItem a){
   var b=box.interior;var tr=box.transform;
   foreach(var c in a.GetComponentsInChildren<Collider>()){if(!c.enabled)continue;var cb=c.bounds;

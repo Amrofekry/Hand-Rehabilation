@@ -1,11 +1,11 @@
 {
-  "utc": "2026-11-01T21:55:10.858961+00:00",
+  "utc": "2026-11-03T16:52:35.873759+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 899
+      "count": 901
     },
     {
       "name": "assembly-graph",
@@ -19,8 +19,8 @@
         "GripRehab.Product.dll": "80682b9728171d49175d24a7e91979c6ec02e79d7f23eaa5cafd322e1a91f9f7",
         "GripRehab.Core.dll": "bc03ea56546bdff41367e59f960c692eb3bd97e156efd91d1b5bbb2b5eba5be4",
         "GripRehab.UI.dll": "fd4e9e7e657faea0777cf2e7d1c959a64531b81b9dd30493aadb121f9d151668",
-        "Assembly-CSharp.dll": "7cd462cdecd6720a4dadd5c7101a07289e89afdca543f7ce05e082b1a1b9a2b1",
-        "Assembly-CSharp-Editor.dll": "3bb161110327bd8307a5f568efd72b3acb79fd52d8b5df51b11474ff037311f0"
+        "Assembly-CSharp.dll": "80f47b9b5f8390b5ca36210675a0c8b27cad7957fdc0cc562049de9f99240d2a",
+        "Assembly-CSharp-Editor.dll": "64c7dfe0992727f0b6ef71d33ce2fea6ce8871dcce343cc4203afbf9170e1d09"
       }
     },
     {
@@ -30,7 +30,7 @@
         "GripRehab.Product.dll": "aa54b6a241f87196cab6919eecc1257c9865d1ec4dc2e9866c12d3e8d0dbf9a0",
         "GripRehab.Core.dll": "79754f3bb30da57af576c4fc24b6eca1e9d4008be2f9c7adc85327392f8e9046",
         "GripRehab.UI.dll": "232cdafe30e10412c4731420c3dabeb2ac2b7df8e6d02d1afd73f6fdaeb45da7",
-        "Assembly-CSharp.dll": "5a078b051d53f825a3dfd9ae3666e1dc7eecf584bae0ccd3449da41bcf6b1e75"
+        "Assembly-CSharp.dll": "9eb11f34e43ab8c5601a59857f7b941e8ebc3ccb4d845c116f9a55d8ef503918"
       }
     },
     {
@@ -59,7 +59,7 @@
     {
       "name": "hand-locomotion-tests",
       "passed": true,
-      "result": "PASS centre: no turning\nPASS anywhere in the work zone: no turning (reach and grab freely)\nPASS hand to the right: turn right\nPASS hand to the left: turn left\nPASS hand up looks up, down looks down\nPASS further out turns faster\nPASS turn rate is capped\nPASS turning eases in, no jerk\nPASS turning eases out\nPASS returning to the work zone stops turning\nPASS a brief point does not walk\nPASS a held point walks at full speed\nPASS any other hand shape stops walking quickly\nPASS walk and turn together\nPASS lost tracking or a menu stops everything at once\nPASS low confidence stops everything\nPASS bad coordinates stop everything\nPASS a long frame hitch does not jump the turn\nPASS a brief fist does not grab\nPASS a held fist grabs once, not repeatedly\nPASS opening and closing again grabs again\nPASS a fist while already holding does not grab again\nPASS a brief pinch does not open options\nPASS a held pinch opens options once\nPASS twist starts at zero when the object is grabbed\nPASS small twists are ignored (dead zone)\nPASS twisting right turns the placement right in 5\u00b0 steps: 70\nPASS twisting left turns it left\nPASS turn stays within \u00b1180\u00b0\nPASS no placement turn when not holding\nPASS roll: fingers up is 0, leaning right is positive\nPASS lost tracking restarts the fist hold (no grab from half a hold)\nPASS hold: old rule drops a wobbling hold (52 frames), new rule never does\nPASS hold: a 0.3 s tracking gap keeps the object\nPASS hold: a 1 s tracking gap releases once\nPASS hold: pausing releases at once\nPASS hold: opening the hand (gate open) releases\nPASS state: no hand = Idle\nPASS state: hand seen = Tracking\nPASS state: closed hand = ReadyToGrab\nPASS state: grab once\nPASS state: holding never re-fires the grab\nPASS state: gap while holding = TrackingLost\nPASS state: recovery keeps the same hold (no new grab)\nPASS state: release once\nPASS state: no duplicate release\nPASS state: lost then released never sticks\nPASS One Euro: rest jitter cut to under a quarter of raw (variance ratio 0.058)\nPASS One Euro: under 2 cm behind a 0.5 m/s hand (0.9 cm)\nPASS One Euro: bad sample ignored, bad time step resets\nPASS profile: reach rises with sensitivity\nPASS profile: steadier = lower cutoff\nPASS profile: out-of-range steps clamp\nHAND LOCOMOTION TESTS PASSED: 53",
+      "result": "PASS centre: no turning\nPASS anywhere in the work zone: no turning (reach and grab freely)\nPASS hand to the right: turn right\nPASS hand to the left: turn left\nPASS hand up looks up, down looks down\nPASS further out turns faster\nPASS turn rate is capped\nPASS turning eases in, no jerk\nPASS turning eases out\nPASS returning to the work zone stops turning\nPASS a brief point does not walk\nPASS a held point walks at full speed\nPASS any other hand shape stops walking quickly\nPASS walk and turn together\nPASS lost tracking or a menu stops everything at once\nPASS low confidence stops everything\nPASS bad coordinates stop everything\nPASS a long frame hitch does not jump the turn\nPASS a brief fist does not grab\nPASS a held fist grabs once, not repeatedly\nPASS opening and closing again grabs again\nPASS a fist while already holding does not grab again\nPASS a brief pinch does not open options\nPASS a held pinch opens options once\nPASS twist starts at zero when the object is grabbed\nPASS small twists are ignored (dead zone)\nPASS twisting right turns the placement right in 5\u00b0 steps: 70\nPASS twisting left turns it left\nPASS turn stays within \u00b1180\u00b0\nPASS no placement turn when not holding\nPASS roll: fingers up is 0, leaning right is positive\nPASS lost tracking restarts the fist hold (no grab from half a hold)\nPASS hold: old rule drops a wobbling hold (52 frames), new rule never does\nPASS hold: a 0.3 s tracking gap keeps the object\nPASS hold: a 1 s tracking gap releases once\nPASS hold: pausing releases at once\nPASS hold: opening the hand (gate open) releases\nPASS state: no hand = Idle\nPASS state: hand seen = Tracking\nPASS state: closed hand = ReadyToGrab\nPASS state: grab once\nPASS state: holding never re-fires the grab\nPASS state: gap while holding = TrackingLost\nPASS state: recovery keeps the same hold (no new grab)\nPASS state: release once\nPASS state: no duplicate release\nPASS state: lost then released never sticks\nPASS One Euro: rest jitter cut to under a quarter of raw (variance ratio 0.058)\nPASS One Euro: under 2 cm behind a 0.5 m/s hand (0.9 cm)\nPASS One Euro: bad sample ignored, bad time step resets\nPASS profile: reach rises with sensitivity\nPASS profile: steadier = lower cutoff\nPASS profile: out-of-range steps clamp\nPASS latency: empty store has no median\nPASS latency: median 50, p95 95 of 1..100\nPASS latency: bad samples ignored\nPASS latency: full store drops the oldest samples\nHAND LOCOMOTION TESTS PASSED: 57",
       "scope": "Production hand look/walk policy with fabricated palm positions; no camera or Unity"
     },
     {
@@ -89,7 +89,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.122s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.117s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -101,19 +101,19 @@
     {
       "name": "pointer-static-bindings",
       "passed": true,
-      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.005s\n\nOK",
+      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.006s\n\nOK",
       "scope": "Static runtime integration contracts; no native uGUI"
     },
     {
       "name": "deformation-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.010s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.007s\n\nOK",
       "scope": "Static integration contracts; no native Unity"
     },
     {
       "name": "grasp-static-bindings",
       "passed": true,
-      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.006s\n\nOK",
+      "result": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.004s\n\nOK",
       "scope": "Static source integration contracts; not runtime verification"
     },
     {

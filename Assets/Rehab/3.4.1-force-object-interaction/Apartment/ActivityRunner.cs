@@ -20,6 +20,7 @@ public sealed class ActivityRunner : MonoBehaviour {
  public ActivityKind Selected{get;private set;}=ActivityKind.Bookshelf;
  /// <summary>Last finished activity (probe and tests).</summary>
  public ActivityResult LastResult{get;private set;}
+ int assistedAtStart;SqueezableObject armedTool;
  public string Feedback{get;private set;}="";
  public float PlacementYaw{get;private set;}
  bool finished;float startedAt;Transform root;Material source;SqueezableObject[] savedObjects;
@@ -50,7 +51,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   foreach(var item in kitchen?choices.kitchenObjects:choices.livingObjects)item.gameObject.SetActive(false);
   baseForward=Vector3.zero;root=null;var facing=app.player.transform.forward;facing.y=0;baseForward=facing.normalized;baseYaw=app.player.transform.eulerAngles.y;
   root=new GameObject("Activity: "+ActivityRules.Title(kind)).transform;
-  Current=Activity.Create(kind,ActivityTuning.ForLevel(Level));finished=false;Feedback="";PlacementYaw=0;LastResult=null;
+  Current=Activity.Create(kind,ActivityTuning.ForLevel(Level));finished=false;Feedback="";PlacementYaw=0;LastResult=null;assistedAtStart=app.AssistedGrabs;
   Current.Build(this);
   savedObjects=app.objects;app.objects=savedObjects.Concat(Current.items.Select(i=>i.Item).Where(i=>i!=null)).ToArray();
   app.PresentationOffset=new Vector3(.14f,-.12f,0); // keep the held item low-right so the aim point stays visible
@@ -203,8 +204,13 @@ public sealed class ActivityRunner : MonoBehaviour {
    var target=aimed?AimedCollider():null;
    if(held.kind=="knife"){
     float chop=Current.tuning.chopNewtons;
+    // Picking up the knife arms the first cut: a camera hand already holds it with a normal grip, so waiting for a
+    // relaxed grip first left the first cut impossible (2026-11-02, camera activity probe). Later cuts re-arm on relaxing.
+    if(app.Held!=armedTool){armedTool=app.Held;chopArmed=true;}
     if(app.ForceNewtons<chop*.5f)chopArmed=true;
-    if(chopArmed&&app.ForceNewtons>=chop&&target!=null){chopArmed=false;var food=target.GetComponentInParent<CuttableFood>();if(food!=null)Current.Chop(this,food,point);Refresh();}
+    // A squeeze only uses the cut when aimed at food (2026-11-02): gripping the knife while looking at the board spent it.
+    var food=chopArmed&&app.ForceNewtons>=chop&&target!=null?target.GetComponentInParent<CuttableFood>():null;
+    if(food!=null){chopArmed=false;Current.Chop(this,food,point);Refresh();}
    } else if(app.ForceNewtons>=Current.tuning.stirNewtons&&target!=null)Current.Squeeze(this,held,target,Time.deltaTime);
   }
   Current.Tick(this,Time.deltaTime);
@@ -230,6 +236,8 @@ public sealed class ActivityRunner : MonoBehaviour {
   if(!Active||!Current.steps.Complete)return;
   finished=true;float seconds=Time.unscaledTime-startedAt;
   var result=Current.Result(Level,seconds);LastResult=result;
+  // Camera grabs made by aim assist (not a fingertip at the object) are recorded, so analysis can tell physical reach from help.
+  if(app.CameraMode)result.outcomes.Add(new OutcomeMetric{key="handling.assistedGrabs",label="Camera grabs with aim assist",unit="",value=app.AssistedGrabs-assistedAtStart});
   Feedback="Activity complete: "+result.score+"/100, "+ActivityRules.Stars(result.score)+" of 3 stars. K replays it, N picks the next one.";
   RehabAudio.Play(RehabSound.Complete);Refresh();
   StartCoroutine(Report(result));

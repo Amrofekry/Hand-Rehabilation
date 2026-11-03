@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-11-01T21:36:55.5311982Z",
+  "utc": "2026-11-03T16:45:14.3092379Z",
   "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
   "detail": "",
   "resolution": "1600x900",
@@ -17,7 +17,8 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.560341835021973,
+      "seconds": 7.753994464874268,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -65,7 +66,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.460000038146973
+          "value": 7.670000076293945
         },
         {
           "key": "bookshelf.firstTry",
@@ -104,7 +105,8 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.5872416496276855,
+      "seconds": 7.834622859954834,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -152,7 +154,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.46999979019165
+          "value": 7.71999979019165
         },
         {
           "key": "table.spacingErrorMm",
@@ -185,7 +187,8 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.560757160186768,
+      "seconds": 7.881165504455566,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -233,7 +236,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.239999771118164
+          "value": 7.820000171661377
         },
         {
           "key": "box.items",
@@ -272,7 +275,8 @@
       "actions": 8,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 18.572052001953125,
+      "seconds": 18.581525802612305,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -320,7 +324,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 18.469999313354492
+          "value": 18.18000030517578
         },
         {
           "key": "meal.stirSeconds",
@@ -359,7 +363,8 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 3.765530586242676,
+      "seconds": 3.7555792331695557,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -395,7 +400,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 3.6700000762939453
+          "value": 4.119999885559082
         },
         {
           "key": "cut.evenness",
@@ -434,7 +439,8 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.40140151977539,
+      "seconds": 13.670266151428223,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -482,7 +488,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.279999732971191
+          "value": 13.550000190734863
         },
         {
           "key": "level",
@@ -509,7 +515,8 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.040804862976074,
+      "seconds": 13.097902297973633,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -557,7 +564,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.09000015258789
+          "value": 13.149999618530273
         },
         {
           "key": "bookshelf.firstTry",
@@ -596,7 +603,8 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.0504789352417,
+      "seconds": 12.532622337341309,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -644,7 +652,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.119999885559082
+          "value": 12.550000190734863
         },
         {
           "key": "table.spacingErrorMm",
@@ -677,7 +685,8 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.048724174499512,
+      "seconds": 12.857593536376953,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -725,7 +734,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.069999694824219
+          "value": 13.109999656677246
         },
         {
           "key": "box.items",
@@ -764,7 +773,8 @@
       "actions": 12,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 29.912126541137695,
+      "seconds": 31.22307777404785,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -812,7 +822,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 29.969999313354492
+          "value": 31.200000762939453
         },
         {
           "key": "meal.stirSeconds",
@@ -851,7 +861,8 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 5.9900970458984375,
+      "seconds": 6.4762420654296875,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -887,7 +898,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 6.119999885559082
+          "value": 6.400000095367432
         },
         {
           "key": "cut.evenness",
@@ -926,7 +937,8 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.058075904846191,
+      "seconds": 13.966458320617676,
+      "notes": "",
       "outcomes": [
         {
           "key": "activity.id",
@@ -974,7 +986,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.109999656677246
+          "value": 14.199999809265137
         },
         {
           "key": "level",

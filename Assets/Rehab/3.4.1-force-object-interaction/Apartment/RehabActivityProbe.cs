@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using UnityEngine;
 
 namespace GripRehab
@@ -12,12 +15,15 @@ namespace GripRehab
     /// SYNTHETIC keyboard-demo input through the real path (look at the item, E-equivalent grab, look at the
     /// target, release; squeeze and chop with test force), and records completion, score, steps, errors and
     /// outcomes. Isolated acceptance storage, no camera, device or person.
+    /// With -activity-camera (2026-11-02) the same activities are played with the camera hand instead: SYNTHETIC
+    /// MediaPipe-shaped frames over the real vision port; the hand closes until the real gate closes to grab (aim assist picks
+    /// what is looked at), opens to place, and squeezes in a closed loop on the camera force, as a patient would.
     /// </summary>
     public sealed class RehabActivityProbe : MonoBehaviour
     {
         [Serializable] public sealed class Run
         {
-            public string activity; public int level, score, stepsDone, stepsTotal, errors, misses, actions, failedGrabs; public bool completed; public float seconds;
+            public string activity; public int level, score, stepsDone, stepsTotal, errors, misses, actions, failedGrabs; public bool completed; public float seconds; public string notes = "";
             public OutcomeView[] outcomes;
         }
         [Serializable] public sealed class OutcomeView { public string key, label, unit; public float value; }
@@ -28,6 +34,8 @@ namespace GripRehab
         readonly List<Run> runs = new List<Run>();
         readonly List<UiCheck> uiChecks = new List<UiCheck>();
         static bool UiOnly => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-ui-only") >= 0;
+        static bool Camera => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-camera") >= 0;
+        float closure; bool sending; long sequence;
         void Check(string name, bool passed, string value) => uiChecks.Add(new UiCheck { name = name, passed = passed, value = value });
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -43,7 +51,8 @@ namespace GripRehab
         IEnumerator Start()
         {
             Application.runInBackground = true;
-            var report = new Report { utc = DateTime.UtcNow.ToString("O"), scope = "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records" };
+            var report = new Report { utc = DateTime.UtcNow.ToString("O"), scope = Camera ? "SYNTHETIC camera-hand frames over the loopback vision port (closed-loop grip, aim assist) in the rendered Windows player; no webcam, device, person or records" : "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records" };
+            if (Camera) StartCoroutine(Stream());
             Exception failure = null; var routine = Play();
             while (true)
             {
@@ -70,6 +79,7 @@ namespace GripRehab
             shell.SetResearchIdentity(null);
             shell.openModuleButton.onClick.Invoke(); yield return new WaitForSecondsRealtime(1);
             app.SetHardware(false);
+            if (Camera) { app.SetCameraMode(); sending = true; closure = 0; }
             runner = app.GetComponent<ActivityRunner>();
             if (runner == null) throw new InvalidOperationException("Activity runner missing");
             yield return UiChecks(shell);
@@ -89,16 +99,29 @@ namespace GripRehab
                         if (++shot == 2 && level == 2) yield return Shot("activity-" + ((int)kind + 1) + "-" + kind + "-during");
                         if (runner.LastResult != null) break;
                     }
+                    // Camera hand: a patient who sees an item sticking out of the box picks it up and puts it back in the middle.
+                    for (int fix = 0; Camera && fix < 2 && runner.LastResult == null && activity is StorageBoxActivity box2; fix++)
+                    {
+                        yield return new WaitForSecondsRealtime(1);
+                        var problem = box2.LastInsideProblem; int cut = problem.IndexOf(" corner "); if (cut < 0) cut = problem.IndexOf(" moving ");
+                        var name = cut > 0 ? problem.Substring(0, cut) : problem;
+                        var item = activity.items.FirstOrDefault(a => a != null && a.name == name);
+                        if (item == null) break;
+                        run.notes += "corrected " + name + " (" + box2.LastInsideProblem + ") | ";
+                        yield return CameraAct(ProbeStep.Place(item, () => box2.BoxCentre), run);
+                    }
                     double wait = Time.realtimeSinceStartupAsDouble + 4;
                     while (runner.LastResult == null && Time.realtimeSinceStartupAsDouble < wait) yield return null;
                     if (level == 2) yield return Shot("activity-" + ((int)kind + 1) + "-" + kind + "-done");
                     var result = runner.LastResult;
                     run.completed = result != null; run.stepsDone = activity.steps.Current; run.stepsTotal = activity.steps.Count;
+                    if (result == null && activity is StorageBoxActivity box) run.notes += "box: " + box.LastInsideProblem + " | ";
                     run.errors = activity.errors; run.misses = activity.misses; run.seconds = (float)(Time.realtimeSinceStartupAsDouble - started);
                     if (result != null) { run.score = result.score; run.outcomes = result.outcomes.Select(o => new OutcomeView { key = o.key, label = o.label, unit = o.unit, value = o.value }).ToArray(); }
                     yield return new WaitForSecondsRealtime(3f); // the runner reports and tidies up after completion
                     runner.End(false); app.TestForce = 0;
                     if (shell.Research != null && !shell.Research.LiveSession) { shell.openModuleButton.onClick.Invoke(); yield return new WaitForSecondsRealtime(1); app.SetHardware(false); }
+                    if (Camera && !app.CameraMode) { app.SetCameraMode(); closure = 0; yield return new WaitForSecondsRealtime(.5f); }
                 }
             shell.ReturnHome();
         }
@@ -186,6 +209,7 @@ namespace GripRehab
 
         IEnumerator Act(ProbeStep step, Run run)
         {
+            if (Camera) { yield return CameraAct(step, run); yield break; }
             switch (step.kind)
             {
                 case ProbeStep.Kind.Place:
@@ -219,6 +243,133 @@ namespace GripRehab
                     break;
             }
         }
+
+        // ---- Camera hand (-activity-camera)
+        IEnumerator CameraAct(ProbeStep step, Run run)
+        {
+            switch (step.kind)
+            {
+                case ProbeStep.Kind.Place:
+                case ProbeStep.Kind.Grab:
+                    if (app.Held != step.item.Item)
+                    {
+                        // Open the hand first, as a patient does: after the game releases an object (activity end), a hand
+                        // that stays closed cannot grab again until it opens (intended; the status line says so).
+                        // Look at the item's centre; if something in front of it comes up instead, open and look at another
+                        // visible part (top, sides), as a patient shifts their gaze.
+                        var bounds = step.item.Item.GetComponentInChildren<Renderer>() != null ? step.item.Item.GetComponentInChildren<Renderer>().bounds : new Bounds(step.item.transform.position, Vector3.one * .05f);
+                        var looks = new[] { step.item.transform.position, bounds.center + Vector3.up * bounds.extents.y * .8f, bounds.center + Vector3.left * bounds.extents.x * .7f, bounds.center + Vector3.right * bounds.extents.x * .7f };
+                        foreach (var look in looks)
+                        {
+                            yield return OpenHand(); yield return new WaitForSecondsRealtime(.4f);
+                            app.player.LookAt(look); yield return new WaitForSecondsRealtime(.25f);
+                            yield return CloseUntilHeld(step.item.Item, 3f);
+                            if (app.Held == step.item.Item) break;
+                            if (app.Held != null) { var eye = app.player.view.transform.position; var surface = step.item.Item.ClosestSurface(eye);
+                                run.notes += "look shifted (got " + app.Held.displayName + ", reach=" + Diag(app, "CanReach", step.item.Item) + ", blocker=" + (Physics.Raycast(eye, (surface - eye).normalized, out var blockHit, Vector3.Distance(eye, surface) + .01f, ~(1 << 8), QueryTriggerInteraction.Ignore) ? blockHit.collider.name + "<" + (blockHit.collider.transform.parent != null ? blockHit.collider.transform.parent.name : "") + "> layer " + LayerMask.LayerToName(blockHit.collider.gameObject.layer) + " at " + blockHit.distance.ToString("0.00") + "/" + Vector3.Distance(eye, surface).ToString("0.00") : "none") + ") | "; }
+                        }
+                        if (app.Held != step.item.Item) { run.failedGrabs++; run.notes += "want=" + step.item.Item.displayName + " held=" + (app.Held != null ? app.Held.displayName : "none") + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed + " dist=" + Vector3.Distance(app.player.view.transform.position, step.item.transform.position).ToString("0.00") + " status=" + app.Status + " | "; yield break; }
+                        yield return new WaitForSecondsRealtime(.5f);
+                    }
+                    if (step.kind == ProbeStep.Kind.Place)
+                    {
+                        app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.35f);
+                        yield return OpenHand(); yield return new WaitForSecondsRealtime(1.1f);
+                    }
+                    break;
+                case ProbeStep.Kind.Release:
+                    app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.3f);
+                    yield return OpenHand(); yield return new WaitForSecondsRealtime(.9f);
+                    break;
+                case ProbeStep.Kind.Squeeze:
+                case ProbeStep.Kind.Chop:
+                    app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.3f);
+                    string seenArmed = ""; float peak = 0; yield return SqueezeTo(step.newtons, step.kind == ProbeStep.Kind.Chop ? .45f : step.seconds, f => { if (f > peak) { peak = f; seenArmed = DiagField(runner, "chopArmed") + " valid=" + app.ForceValid + " kind=" + (app.Held != null && app.Held.GetComponent<ActivityItem>() != null ? app.Held.GetComponent<ActivityItem>().kind : "-") + " step=" + runner.Current.steps.Current + " ray=" + Diag(runner, "AimedCollider"); } });
+                    run.notes += "[" + seenArmed + " fb=" + runner.Feedback + "] ";
+                    if (step.kind == ProbeStep.Kind.Chop) { yield return Relax(step.newtons * .3f); yield return new WaitForSecondsRealtime(.3f);  run.notes += relaxLog + " | relaxed: F=" + app.ForceNewtons.ToString("0.0") + " score=" + app.CameraGripScore.ToString("0.00") + " closure=" + closure.ToString("0.00") + " " + DiagField(runner, "chopArmed") + " | "; } // re-arms the next cut (force under half the chop level)
+                    run.notes += step.kind + " want=" + step.newtons.ToString("0") + "N peak=" + peak.ToString("0.0") + "N held=" + (app.Held != null ? app.Held.displayName : "none") + " ray=" + Diag(runner, "AimedCollider") + " | ";
+                    yield return new WaitForSecondsRealtime(step.kind == ProbeStep.Kind.Chop ? .45f : .4f);
+                    break;
+            }
+        }
+
+        // Close gently (no harder than the gate needs) until the object is held; the hold keeps a light grip.
+        IEnumerator CloseUntilHeld(SqueezableObject item, float timeout)
+        {
+            float end = Time.realtimeSinceStartup + timeout;
+            while (app.Held != item && Time.realtimeSinceStartup < end) { if (app.CameraGripScore < .66f) closure = Mathf.Min(1, closure + .03f); yield return null; }
+        }
+        IEnumerator OpenHand()
+        {
+            closure = 0; float end = Time.realtimeSinceStartup + 2;
+            while (app.Held != null && Time.realtimeSinceStartup < end) yield return null;
+        }
+        // Closed loop on the camera force, like a patient watching the force readout; never lets go (closure stays above the gate's open level).
+        IEnumerator SqueezeTo(float newtons, float seconds, Action<float> seen)
+        {
+            float end = Time.realtimeSinceStartup + seconds + .6f, hold = closure;
+            while (Time.realtimeSinceStartup < end) { closure = Mathf.Clamp(closure + Time.unscaledDeltaTime * .05f * (newtons - app.ForceNewtons), .45f, 1.4f); seen(app.ForceNewtons); yield return null; }
+            closure = Mathf.Max(.45f, hold);
+        }
+
+        // Diagnostics only: what a private aim helper returns right now (name of the collider/object, or its bool).
+        static string Diag(object target, string method, params object[] args)
+        {
+            var m = target.GetType().GetMethod(method, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+            if (m == null) return "?";
+            var r = m.Invoke(target, args);
+            return r is Component c ? c.name + "(" + LayerMask.LayerToName(c.gameObject.layer) + ")" : r == null ? "none" : r.ToString();
+        }
+
+        static string DiagField(object target, string field)
+        {
+            var f = target.GetType().GetField(field, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+            return f == null ? "?" : field + "=" + f.GetValue(target);
+        }
+
+        // Relax the grip until the force is low, without opening the hand far enough to drop what is held.
+        string relaxLog = "";
+        IEnumerator Relax(float newtons)
+        {
+            float end = Time.realtimeSinceStartup + 2; int frames = 0;
+            relaxLog = "entry F=" + app.ForceNewtons.ToString("0.0") + " target=" + newtons.ToString("0.0") + " score=" + app.CameraGripScore.ToString("0.00") + " closure=" + closure.ToString("0.00");
+            // Open while the force is high, but back off whenever the grasp score nears the gate's open level, so the tool is never dropped.
+            while (app.ForceNewtons > newtons && Time.realtimeSinceStartup < end) { closure = Mathf.Clamp(closure + (app.CameraGripScore > .32f ? -.01f : .01f), 0, 1.4f); frames++; yield return null; }
+            relaxLog += " frames=" + frames + " exit F=" + app.ForceNewtons.ToString("0.0") + " score=" + app.CameraGripScore.ToString("0.00") + " closure=" + closure.ToString("0.00");
+        }
+
+        IEnumerator Stream()
+        {
+            using (var udp = new UdpClient())
+            {
+                var target = new IPEndPoint(IPAddress.Loopback, 27817);
+                while (true)
+                {
+                    if (sending) { var bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(Frame(closure))); udp.Send(bytes, bytes.Length, target); }
+                    yield return new WaitForSecondsRealtime(1 / 30f);
+                }
+            }
+        }
+
+        // A right hand in the middle of the image (the free work zone), fingers curled by closure 0 (open) .. 1 (fist) .. 1.4 (tight fist).
+        LandmarkFrame Frame(float c)
+        {
+            var f = new LandmarkFrame { schemaVersion = 1, source = "mediapipe-test", handedness = "Right", confidence = .95f, sequence = ++sequence,
+                captureSeconds = Time.realtimeSinceStartupAsDouble, ageMs = 1, landmarks = new Vector3[21] };
+            float cx = .5f, wy = .58f;
+            f.landmarks[0] = new Vector3(cx, wy, 0);
+            for (int finger = 0; finger < 4; finger++)
+            {
+                int n = 5 + finger * 4; float x = cx + (finger - 1.5f) * .045f;
+                f.landmarks[n] = new Vector3(x, wy - .10f, 0);
+                f.landmarks[n + 1] = new Vector3(x, wy - .18f, 0);
+                f.landmarks[n + 2] = new Vector3(x, wy + Mathf.Lerp(-.26f, -.12f, c), 0);
+                f.landmarks[n + 3] = new Vector3(x, wy + Mathf.Lerp(-.34f, -.04f, c), 0);
+            }
+            for (int i = 1; i < 5; i++) f.landmarks[i] = new Vector3(cx - (.12f - i * .015f) - .04f, wy - .03f - i * .02f, 0);
+            return f;
+        }
+
 
         IEnumerator Shot(string name)
         {

@@ -277,8 +277,14 @@ public sealed class ApartmentExperience:MonoBehaviour {
  // Asset pivots need not lie on their usable surface; include child colliders.
  private bool CanReach(SqueezableObject item){
   if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.HasPickupCollider)return false;
-  var eye=player.view.transform.position;var point=item.ClosestSurface(eye);var direction=point-eye;
-  if(direction.magnitude>settings.reachMeters)return false;
+  var eye=player.view.transform.position;var point=item.ClosestSurface(eye);
+  if((point-eye).magnitude>settings.reachMeters)return false;
+  // 2026-11-02: visible if the closest point or the top of the object can be seen. The closest point alone was hidden
+  // behind a cutting board's edge while the bread on it was plainly visible (camera activity probe).
+  return Visible(item,eye,point)||Visible(item,eye,item.ClosestSurface(item.transform.position+Vector3.up));
+ }
+ bool Visible(SqueezableObject item,Vector3 eye,Vector3 point){
+  var direction=point-eye;
   // Stage 10: something the object rests on or in (a pan, a plate) touching its surface does not block it.
   return direction.sqrMagnitude<.000001f||!Physics.Raycast(eye,direction.normalized,out var hit,direction.magnitude+.01f,~(1<<8),QueryTriggerInteraction.Ignore)||hit.collider.GetComponentInParent<SqueezableObject>()==item||hit.distance>=direction.magnitude-.03f;
  }
@@ -347,26 +353,33 @@ public sealed class ApartmentExperience:MonoBehaviour {
   return true;
  }
  private SqueezableObject KeyboardTarget(out ApartmentDoor door){
-  door=null;var ray=player.view.ViewportPointToRay(new Vector3(.5f,.5f,0));
+  door=null;var ray=player.view.ViewportPointToRay(new Vector3(.5f,.5f,0));SqueezableObject direct=null;
   if(Physics.Raycast(ray,out var hit,settings.reachMeters,~(1<<8),QueryTriggerInteraction.Ignore)){
-   var direct=hit.collider.GetComponentInParent<SqueezableObject>();
-   if(CanReach(direct))return direct;
-   door=hit.collider.GetComponentInParent<ApartmentDoor>();if(door!=null)return null;
+   direct=hit.collider.GetComponentInParent<SqueezableObject>();
+   if(!CanReach(direct)){direct=null;door=hit.collider.GetComponentInParent<ApartmentDoor>();if(door!=null)return null;}
   }
-  SqueezableObject nearest=null;float best=float.PositiveInfinity;
+  // 2026-11-02: among reachable objects inside the aim cone, the one whose centre is nearest the view direction wins, so a
+  // knife lying on a plate or bread just behind a tomato is picked when you look at it, not the first collider the ray meets.
+  SqueezableObject nearest=null;float best=float.PositiveInfinity,bestCentre=float.PositiveInfinity;
   foreach(var item in objects){
    if(!CanReach(item))continue;
    float along=Vector3.Dot(item.transform.position-ray.origin,ray.direction);
    var point=item.ClosestSurface(ray.GetPoint(Mathf.Clamp(along,0,settings.reachMeters)));
    float score=GraspMotionPolicy.AimScore(ray.origin,ray.direction,point,settings.reachMeters,settings.pickupAssistDegrees);
-   if(score<best){nearest=item;best=score;}
+   if(float.IsInfinity(score)&&item!=direct)continue;
+   float centre=Vector3.Angle(ray.direction,item.transform.position-ray.origin);
+   if(centre<bestCentre||centre==bestCentre&&score<best){nearest=item;best=score;bestCentre=centre;}
   }
-  return nearest;
+  return nearest!=null?nearest:direct;
  }
  // Closing fingers near a visible object grabs it without E. A distant fist cannot pick it up.
  private void TryCameraGrab(){
   if(contactRig==null||contactRig.contactBones==null)return;
-  SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;
+  // Aim assist (default, a setting): the object you look at and close your hand on is the intent. A fingertip brushing a
+  // neighbour in a cluster (books, table settings) must not win over it (2026-11-02, camera activity probe: 9 of 12 runs
+  // grabbed the neighbour). Off: only a fingertip at an object grabs (physical reach), as before.
+  var aimed=HandLocomotion.AimAssist?KeyboardTarget(out _):null;
+  SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;bool aimedTouched=false;
   foreach(var item in objects){
    if(!CanReach(item))continue;
    foreach(var bone in contactRig.contactBones){
@@ -374,17 +387,20 @@ public sealed class ApartmentExperience:MonoBehaviour {
     var tip=bone.childCount>0?bone.GetChild(0).position:bone.position;
     float distance=Vector3.Distance(tip,item.ClosestSurface(tip));
     if(distance<best){best=distance;nearest=item;}
+    if(item==aimed&&distance<settings.cameraGrabRadiusMeters)aimedTouched=true;
    }
   }
-  if(nearest!=null&&TryGrab(nearest)){Status="Camera grip: holding "+nearest.displayName;return;}
-  // Aim assist (default, a setting): with no fingertip at an object, a closed hand takes what you look at within reach,
-  // like the E key. Counted separately so assisted pickups are never mistaken for physical reach.
-  if(!HandLocomotion.AimAssist)return;
-  var aimed=KeyboardTarget(out _);
-  if(aimed!=null&&TryGrab(aimed)){AssistedGrabs++;Status="Camera grip (aim assist): holding "+aimed.displayName;}
+  if(aimed!=null&&TryGrab(aimed)){
+   // Counted separately when no fingertip reached it, so assisted pickups are never mistaken for physical reach.
+   if(!aimedTouched){AssistedGrabs++;Status="Camera grip (aim assist): holding "+aimed.displayName;}else Status="Camera grip: holding "+aimed.displayName;
+   return;
+  }
+  if(nearest!=null&&TryGrab(nearest))Status="Camera grip: holding "+nearest.displayName;
  }
  /// <summary>Camera pickups made by aim assist rather than a fingertip at the object (2026-10-29).</summary>
  public int AssistedGrabs{get;private set;}
+ /// <summary>The camera closed-hand gate with hysteresis (what grabbing and holding use), for the HUD state.</summary>
+ public bool CameraGateClosed=>_cameraGrip.Closed;
  // G brings the station's selected object into the tracked hand without
  // changing input mode. The patient must close the hand within a short grace
  // period; tracking loss always releases immediately.

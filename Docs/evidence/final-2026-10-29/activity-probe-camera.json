@@ -1,0 +1,1056 @@
+{
+    "passed": false,
+    "utc": "2026-11-03T16:14:01.3962641Z",
+    "scope": "SYNTHETIC camera-hand frames over the loopback vision port (closed-loop grip, aim assist) in the rendered Windows player; no webcam, device, person or records",
+    "detail": "UI checks failed: input strip names the active input=INPUT  CAMERA  TRACKING, onboarding advances from real actions=1,2,2,2 showing=True",
+    "resolution": "1600x900",
+    "errors": 0,
+    "runs": [
+        {
+            "activity": "Organise the bookshelf",
+            "level": 2,
+            "score": 94,
+            "stepsDone": 1,
+            "stepsTotal": 1,
+            "errors": 0,
+            "misses": 0,
+            "actions": 3,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 9.605269432067871,
+            "notes": "",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 1: Organise the bookshelf",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 89.45999908447266
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 8.369999885559082
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 9.529999732971192
+                },
+                {
+                    "key": "bookshelf.firstTry",
+                    "label": "Right slot first time",
+                    "unit": "%",
+                    "value": 100.0
+                },
+                {
+                    "key": "bookshelf.books",
+                    "label": "Books",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 1.0
+                }
+            ]
+        },
+        {
+            "activity": "Set the coffee table",
+            "level": 2,
+            "score": 97,
+            "stepsDone": 1,
+            "stepsTotal": 1,
+            "errors": 0,
+            "misses": 0,
+            "actions": 3,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 9.541158676147461,
+            "notes": "",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 2: Set the coffee table",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 95.81999969482422
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 3.309999942779541
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 9.4399995803833
+                },
+                {
+                    "key": "table.spacingErrorMm",
+                    "label": "Spacing error",
+                    "unit": "mm",
+                    "value": 0.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 2.0
+                }
+            ]
+        },
+        {
+            "activity": "Pack the storage box",
+            "level": 2,
+            "score": 100,
+            "stepsDone": 1,
+            "stepsTotal": 1,
+            "errors": 0,
+            "misses": 0,
+            "actions": 3,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 9.608654975891114,
+            "notes": "",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 3: Pack the storage box",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 100.0
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 9.239999771118164
+                },
+                {
+                    "key": "box.items",
+                    "label": "Items packed",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "box.overlaps",
+                    "label": "Items pressed into each other",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 3.0
+                }
+            ]
+        },
+        {
+            "activity": "Cook a simple meal",
+            "level": 2,
+            "score": 100,
+            "stepsDone": 4,
+            "stepsTotal": 4,
+            "errors": 0,
+            "misses": 0,
+            "actions": 8,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 23.152559280395509,
+            "notes": "[chopArmed=True valid=True kind=spoon step=2 ray=Collider() fb=Cooked. Now put the food on the plate.] Squeeze want=15N peak=22.0N held=Spoon ray=Collider() | ",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 4: Cook a simple meal",
+                    "unit": "",
+                    "value": 4.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 99.41999816894531
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 4.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 10.100000381469727
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 23.09000015258789
+                },
+                {
+                    "key": "meal.stirSeconds",
+                    "label": "Stirring with grip",
+                    "unit": "s",
+                    "value": 2.3399999141693117
+                },
+                {
+                    "key": "meal.ingredients",
+                    "label": "Ingredients",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 6.0
+                }
+            ]
+        },
+        {
+            "activity": "Cut the vegetables",
+            "level": 2,
+            "score": 98,
+            "stepsDone": 2,
+            "stepsTotal": 2,
+            "errors": 0,
+            "misses": 0,
+            "actions": 3,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 6.4623589515686039,
+            "notes": "[chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 1 of 2.] entry F=22.0 target=5.4 score=0.76 closure=0.87 frames=82 exit F=5.1 score=0.27 closure=0.35 | relaxed: F=3.9 score=0.27 closure=0.35 chopArmed=True | Chop want=18N peak=22.0N held=none ray=Collider() | [chopArmed=True valid=True kind=- step=1 ray=Cucumber(Default) fb=Activity complete: 98/100, 3 of 3 stars. K replays it, N picks the next one.] entry F=10.8 target=5.4 score=0.76 closure=0.45 frames=20 exit F=5.0 score=0.31 closure=0.41 | relaxed: F=4.6 score=0.31 closure=0.41 chopArmed=False | Chop want=18N peak=22.0N held=Knife ray=Cucumber(Default) | ",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 5: Cut the vegetables",
+                    "unit": "",
+                    "value": 5.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 95.83999633789063
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 5.610000133514404
+                },
+                {
+                    "key": "cut.evenness",
+                    "label": "Even pieces",
+                    "unit": "%",
+                    "value": 95.83999633789063
+                },
+                {
+                    "key": "cut.cuts",
+                    "label": "Cuts",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 2.0
+                }
+            ]
+        },
+        {
+            "activity": "Prepare and serve",
+            "level": 2,
+            "score": 99,
+            "stepsDone": 5,
+            "stepsTotal": 5,
+            "errors": 0,
+            "misses": 0,
+            "actions": 7,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 17.825580596923829,
+            "notes": "[chopArmed=False valid=True kind=knife step=3 ray=Collider() fb=Halved. Put the tomato on the plate.] entry F=20.0 target=5.4 score=0.35 closure=0.54 frames=54 exit F=5.3 score=0.35 closure=0.48 | relaxed: F=5.1 score=0.35 closure=0.48 chopArmed=True | Chop want=18N peak=22.0N held=Knife ray=Collider() | ",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 6: Prepare and serve",
+                    "unit": "",
+                    "value": 6.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 98.52999877929688
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 5.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 5.610000133514404
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 17.739999771118165
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 5.0
+                }
+            ]
+        },
+        {
+            "activity": "Organise the bookshelf",
+            "level": 8,
+            "score": 88,
+            "stepsDone": 1,
+            "stepsTotal": 1,
+            "errors": 0,
+            "misses": 0,
+            "actions": 5,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 15.435505867004395,
+            "notes": "",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 1: Organise the bookshelf",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 79.62999725341797
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 8.40999984741211
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 15.489999771118164
+                },
+                {
+                    "key": "bookshelf.firstTry",
+                    "label": "Right slot first time",
+                    "unit": "%",
+                    "value": 100.0
+                },
+                {
+                    "key": "bookshelf.books",
+                    "label": "Books",
+                    "unit": "",
+                    "value": 5.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 8.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 1.0
+                }
+            ]
+        },
+        {
+            "activity": "Set the coffee table",
+            "level": 8,
+            "score": 95,
+            "stepsDone": 1,
+            "stepsTotal": 1,
+            "errors": 0,
+            "misses": 0,
+            "actions": 5,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 15.4160795211792,
+            "notes": "",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 2: Set the coffee table",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 91.55999755859375
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 1.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 3.4800000190734865
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 15.479999542236329
+                },
+                {
+                    "key": "table.spacingErrorMm",
+                    "label": "Spacing error",
+                    "unit": "mm",
+                    "value": 0.009999999776482582
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 8.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 4.0
+                }
+            ]
+        },
+        {
+            "activity": "Pack the storage box",
+            "level": 8,
+            "score": 0,
+            "stepsDone": 0,
+            "stepsTotal": 1,
+            "errors": 0,
+            "misses": 0,
+            "actions": 5,
+            "failedGrabs": 0,
+            "completed": false,
+            "seconds": 27.476173400878908,
+            "notes": "corrected Small book (Small book corner (-0.053, 0.010, -0.118) interior (-0.142, 0.008, -0.102)..(0.142, 0.100, 0.102)) | corrected Small book (Small book corner (-0.037, 0.010, -0.117) interior (-0.142, 0.008, -0.102)..(0.142, 0.100, 0.102)) | box: Small book corner (-0.037, 0.010, -0.117) interior (-0.142, 0.008, -0.102)..(0.142, 0.100, 0.102) | ",
+            "outcomes": []
+        },
+        {
+            "activity": "Cook a simple meal",
+            "level": 8,
+            "score": 100,
+            "stepsDone": 4,
+            "stepsTotal": 4,
+            "errors": 0,
+            "misses": 0,
+            "actions": 12,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 37.34715270996094,
+            "notes": "[chopArmed=True valid=True kind=spoon step=2 ray=Collider() fb=Cooked. Now put the food on the plate.] Squeeze want=22N peak=22.0N held=Spoon ray=Collider() | ",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 4: Cook a simple meal",
+                    "unit": "",
+                    "value": 4.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 99.33000183105469
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 4.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 11.84000015258789
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 37.40999984741211
+                },
+                {
+                    "key": "meal.stirSeconds",
+                    "label": "Stirring with grip",
+                    "unit": "s",
+                    "value": 4.340000152587891
+                },
+                {
+                    "key": "meal.ingredients",
+                    "label": "Ingredients",
+                    "unit": "",
+                    "value": 4.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 8.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 10.0
+                }
+            ]
+        },
+        {
+            "activity": "Cut the vegetables",
+            "level": 8,
+            "score": 97,
+            "stepsDone": 2,
+            "stepsTotal": 2,
+            "errors": 0,
+            "misses": 0,
+            "actions": 5,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 10.726408958435059,
+            "notes": "[chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 1 of 4.] entry F=22.0 target=7.4 score=0.88 closure=0.63 frames=51 exit F=7.3 score=0.32 closure=0.40 | relaxed: F=4.5 score=0.31 closure=0.40 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 2 of 4.] entry F=22.0 target=7.4 score=0.86 closure=0.45 frames=47 exit F=7.4 score=0.30 closure=0.42 | relaxed: F=4.7 score=0.32 closure=0.42 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 3 of 4.] entry F=22.0 target=7.4 score=0.85 closure=0.45 frames=49 exit F=7.2 score=0.31 closure=0.44 | relaxed: F=4.9 score=0.34 closure=0.44 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=2 ray=Cucumber(Default) fb=Activity complete: 97/100, 3 of 3 stars. K replays it, N picks the next one.] entry F=22.0 target=7.4 score=0.83 closure=0.45 frames=48 exit F=7.2 score=0.30 closure=0.43 | relaxed: F=4.8 score=0.33 closure=0.43 chopArmed=False | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | ",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 5: Cut the vegetables",
+                    "unit": "",
+                    "value": 5.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 94.30999755859375
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 2.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 9.760000228881836
+                },
+                {
+                    "key": "cut.evenness",
+                    "label": "Even pieces",
+                    "unit": "%",
+                    "value": 94.30999755859375
+                },
+                {
+                    "key": "cut.cuts",
+                    "label": "Cuts",
+                    "unit": "",
+                    "value": 4.0
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 8.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 1.0
+                }
+            ]
+        },
+        {
+            "activity": "Prepare and serve",
+            "level": 8,
+            "score": 98,
+            "stepsDone": 5,
+            "stepsTotal": 5,
+            "errors": 0,
+            "misses": 0,
+            "actions": 7,
+            "failedGrabs": 0,
+            "completed": true,
+            "seconds": 17.33576011657715,
+            "notes": "[chopArmed=False valid=True kind=knife step=3 ray=Collider() fb=Halved. Put the tomato on the plate.] entry F=22.0 target=7.4 score=0.87 closure=0.60 frames=48 exit F=7.0 score=0.26 closure=0.36 | relaxed: F=4.0 score=0.27 closure=0.36 chopArmed=True | Chop want=25N peak=22.0N held=none ray=Collider() | ",
+            "outcomes": [
+                {
+                    "key": "activity.id",
+                    "label": "Activity 6: Prepare and serve",
+                    "unit": "",
+                    "value": 6.0
+                },
+                {
+                    "key": "activity.accuracy",
+                    "label": "Placement accuracy",
+                    "unit": "%",
+                    "value": 97.18000030517578
+                },
+                {
+                    "key": "activity.steps",
+                    "label": "Steps completed",
+                    "unit": "",
+                    "value": 5.0
+                },
+                {
+                    "key": "activity.errors",
+                    "label": "Wrong placements",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.retries",
+                    "label": "Placements off target",
+                    "unit": "",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.positionErrorMm",
+                    "label": "Mean position error",
+                    "unit": "mm",
+                    "value": 5.610000133514404
+                },
+                {
+                    "key": "activity.angleErrorDeg",
+                    "label": "Mean turn error",
+                    "unit": "°",
+                    "value": 0.0
+                },
+                {
+                    "key": "activity.seconds",
+                    "label": "Time",
+                    "unit": "s",
+                    "value": 17.389999389648439
+                },
+                {
+                    "key": "level",
+                    "label": "Level",
+                    "unit": "",
+                    "value": 8.0
+                },
+                {
+                    "key": "stars",
+                    "label": "Stars",
+                    "unit": "",
+                    "value": 3.0
+                },
+                {
+                    "key": "handling.assistedGrabs",
+                    "label": "Camera grabs with aim assist",
+                    "unit": "",
+                    "value": 5.0
+                }
+            ]
+        }
+    ],
+    "uiChecks": [
+        {
+            "name": "options panel: no overlapping elements (1600x900)",
+            "value": "0",
+            "passed": true
+        },
+        {
+            "name": "options panel fits on screen (1600x900)",
+            "value": "178..722",
+            "passed": true
+        },
+        {
+            "name": "focus ring contrast >= 3:1, theme 0",
+            "value": "7.4 (KITCHEN)",
+            "passed": true
+        },
+        {
+            "name": "focus ring contrast >= 3:1, theme 1",
+            "value": "4.7 (LIVING ROOM)",
+            "passed": true
+        },
+        {
+            "name": "focus ring contrast >= 3:1, theme 2",
+            "value": "19.6 (LIVING ROOM)",
+            "passed": true
+        },
+        {
+            "name": "selected room has a marker, not colour alone",
+            "value": "True",
+            "passed": true
+        },
+        {
+            "name": "input strip covers no HUD text (1600x900)",
+            "value": "0",
+            "passed": true
+        },
+        {
+            "name": "HUD text and buttons stay on screen (1600x900)",
+            "value": "0",
+            "passed": true
+        },
+        {
+            "name": "input strip names the active input",
+            "value": "INPUT  CAMERA  TRACKING",
+            "passed": false
+        },
+        {
+            "name": "input strip shows a reported state",
+            "value": "VOICE  LISTENING",
+            "passed": true
+        },
+        {
+            "name": "onboarding advances from real actions",
+            "value": "1,2,2,2 showing=True",
+            "passed": false
+        }
+    ]
+}

@@ -23,6 +23,11 @@
   - Run `.local/scratch/block-j-cleanup.ps1` (about 14 GB; the classifier blocked me from running it).
   - With Claude and Unity closed, run `E:\GP\codex\Move-GameTo01.ps1`. It moves the game to `01_Game` and fixes the paths.
 
+- **2026-11-02/03 completion pass:**
+  - Latency meter `-vision-latency`: median 49.6 ms and p95 67 ms, capture to pose, on replayed real hand photos.
+  - Camera activity probe `--camera`: 3/12 → 11/12 after fixes F1–F5 (`Docs/HAND_CONTROL_REPORT.md` §10). Open: L8 storage box with the camera.
+  - Deferred review findings fixed; `handling.assistedGrabs` recorded.
+
 ## Done
 - Hand-first controls (2026-10-28): edge look, point to walk, fist grab, pinch options, twist placement; voice for special actions; console zero with MCP over stdio.
 - Stage 13 voice: offline keyword commands, spelling with review, confirmations, feedback; off by default. Offline router tests 140, voice probe 28/28 (SYNTHETIC). Free dictation Blocked (online-only; your choice).

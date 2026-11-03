@@ -24,6 +24,7 @@ def play(width, height, ui_only):
     if ui_only:
         command.append('-activity-ui-only')
     command.extend(a for a in sys.argv[1:] if a.startswith('-no-'))  # diagnostics switches pass through
+    if '--camera' in sys.argv: command.append('-activity-camera')  # play the activities with SYNTHETIC camera-hand frames
     with subprocess.Popen(command, cwd=ROOT) as process:
         try:
             code = process.wait(timeout=900)
