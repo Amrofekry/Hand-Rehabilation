@@ -28,7 +28,7 @@ Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diag
 | 5.1 | Patient dashboard | `Assets/ProductIntegration/ResearchPortalPages.cs` | Product tests with exact fixtures; journey | DONE |
 | 5.2 | Doctor dashboard (D1–D5) | `Assets/ProductIntegration/ResearchPortalPages.cs` | Product tests (roles, audit, no patient mixing) | DONE; clinician review NEEDS A PERSON |
 | 6.1 | Bluetooth integration | `Assets/Rehab/6.1-bluetooth-integration/` | SYNTHETIC replay; device-health tests (14); stale, disconnect and reconnect in the fault probe | Software DONE; real stream NEEDS HARDWARE |
-| 6.2 | Closed-loop testing | `Tools/run_*.py`, `tests/6.2-*` | Full regression (`Logs/final-m-regression.txt`) | DONE (software); physical loop NEEDS HARDWARE |
+| 6.2 | Closed-loop testing | `Tools/run_*.py`, `tests/6.2-*` | Full regression green in one run (`Logs/final-n-regression.txt`, 2026-11-06) | DONE (software); physical loop NEEDS HARDWARE |
 | 6.3 | Documentation and presentation | `Docs/README.md` index, guide, slides, demo video, installer | First-run check with the real webcam (MEASURED, this computer) | DONE; clean-machine install NEEDS A PERSON |
 
 ## What you need to do (the NEEDS rows)

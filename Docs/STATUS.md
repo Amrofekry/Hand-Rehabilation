@@ -8,7 +8,7 @@ Updated 2026-11-06 (release v1.0.5). The plan-by-plan audit is [RELEASE_AUDIT.md
 | Render / UI | URP 14.0.10, uGUI, TextMeshPro 3.0.6 |
 | AI runtime | Sentis 2.0.0 CPU, CNN model (GRU operator unsupported in Sentis) |
 | Main scene | `Assets/Scenes/GripRehab.unity` |
-| Branch / tag | `claude/final-release` = `3.4-upgrade-baseline`, tag `v1.0.5` (releases v1.0.0–v1.0.5; nothing pushed, no remote) |
+| Branch / tag | `claude/release-qa` (on top of `claude/final-release` = `3.4-upgrade-baseline` at v1.0.4), tag `v1.0.5` (releases v1.0.0–v1.0.5; nothing pushed, no remote) |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
 | Active plan | Final plan (2026-10-29), all blocks done; Stages 0–13, 15A, 16–19 done. Stages 14 (gaze) and 15 (voice assistant) became optional stages O1/O2 in [OPTIONAL_PLAN](OPTIONAL_PLAN.md). |
 
