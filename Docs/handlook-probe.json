@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-11-06T09:20:31.6407096Z",
+  "utc": "2026-11-06T09:47:47.3592409Z",
   "scope": "SYNTHETIC camera-hand frames over the loopback vision port in the rendered Windows player; no webcam or person",
   "detail": "",
   "errors": 0,
@@ -22,32 +22,32 @@
     },
     {
       "name": "hand at the right edge turns right",
-      "value": "114.7\u00b0 in 2 s",
+      "value": "115.1\u00b0 in 2 s",
       "passed": true
     },
     {
       "name": "turn speed stays under the cap",
-      "value": "114.7\u00b0 in 2 s (cap 75\u00b0/s)",
+      "value": "115.1\u00b0 in 2 s (cap 75\u00b0/s)",
       "passed": true
     },
     {
       "name": "hand at the left edge turns left",
-      "value": "-101.2\u00b0",
+      "value": "-100.9\u00b0",
       "passed": true
     },
     {
       "name": "hand at the top looks up",
-      "value": "-40.5\u00b0",
+      "value": "-39.9\u00b0",
       "passed": true
     },
     {
       "name": "hand at the bottom looks down",
-      "value": "-6.8\u00b0",
+      "value": "-7.5\u00b0",
       "passed": true
     },
     {
       "name": "pointing walks forward",
-      "value": "1.71 m in 2 s",
+      "value": "1.72 m in 2 s",
       "passed": true
     },
     {
