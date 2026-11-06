@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-11-06T09:47:47.3592409Z",
+  "utc": "2026-11-06T13:14:08.0082542Z",
   "scope": "SYNTHETIC camera-hand frames over the loopback vision port in the rendered Windows player; no webcam or person",
   "detail": "",
   "errors": 0,
@@ -22,12 +22,12 @@
     },
     {
       "name": "hand at the right edge turns right",
-      "value": "115.1\u00b0 in 2 s",
+      "value": "113.9\u00b0 in 2 s",
       "passed": true
     },
     {
       "name": "turn speed stays under the cap",
-      "value": "115.1\u00b0 in 2 s (cap 75\u00b0/s)",
+      "value": "113.9\u00b0 in 2 s (cap 75\u00b0/s)",
       "passed": true
     },
     {
@@ -37,17 +37,17 @@
     },
     {
       "name": "hand at the top looks up",
-      "value": "-39.9\u00b0",
+      "value": "-40.5\u00b0",
       "passed": true
     },
     {
       "name": "hand at the bottom looks down",
-      "value": "-7.5\u00b0",
+      "value": "-7.6\u00b0",
       "passed": true
     },
     {
       "name": "pointing walks forward",
-      "value": "1.72 m in 2 s",
+      "value": "1.71 m in 2 s",
       "passed": true
     },
     {
@@ -82,7 +82,7 @@
     },
     {
       "name": "twisting the hand turns the placement",
-      "value": "grabbed=True turned 60\u00b0 held=Cup twist=60 active=True score=0.76 status=Camera grip (aim assist): holding Cup",
+      "value": "grabbed=True turned 60\u00b0 held=Cup twist=60 active=True score=0.76 status=Camera grip: holding Cup [ray Table Top<> at 0.45 m; cup at 0.50 m; reach True; seated True eye (1.98, 1.09, -4.41); Cup pivot 29.2 com 29.2; Plate pivot 22.3 com 22.3]",
       "passed": true
     },
     {

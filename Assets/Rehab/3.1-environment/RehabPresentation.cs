@@ -56,8 +56,20 @@ namespace GripRehab
         void SoftenCandles()
         {
             foreach (var light in FindObjectsByType<Light>(FindObjectsSortMode.None))
-                if (light.type == LightType.Point && light.range < 1f && light.transform.parent != null && light.transform.parent.name == "Candle Flame")
+                if (light.type == LightType.Point && light.range < 1f && InCandle(light.transform))
                     light.enabled = false;
+        }
+
+        // Any ancestor named like a candle (the kit spells its group "CandelSetting"), so renaming the flame object does not
+        // bring the glare back.
+        static bool InCandle(Transform t)
+        {
+            for (int depth = 0; t != null && depth < 4; t = t.parent, depth++)
+            {
+                var n = t.name.ToLowerInvariant();
+                if (n.Contains("candle") || n.Contains("candel")) return true;
+            }
+            return false;
         }
 
         void AddReflectionProbes()

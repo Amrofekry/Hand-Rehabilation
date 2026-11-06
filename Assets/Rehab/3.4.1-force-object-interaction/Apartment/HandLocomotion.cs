@@ -18,7 +18,7 @@ public sealed class HandLocomotion : MonoBehaviour {
  /// <summary>Camera hand sensitivity (reach) and steadiness (filter), 0..2 each; see HandControlProfile.</summary>
  public static int Sensitivity{get=>Mathf.Clamp(PlayerPrefs.GetInt("GripRehab.HandSensitivity",1),0,2);set{PlayerPrefs.SetInt("GripRehab.HandSensitivity",Mathf.Clamp(value,0,2));profileVersion++;}}
  public static int Steadiness{get=>Mathf.Clamp(PlayerPrefs.GetInt("GripRehab.HandSteadiness",1),0,2);set{PlayerPrefs.SetInt("GripRehab.HandSteadiness",Mathf.Clamp(value,0,2));profileVersion++;}}
- static int profileVersion;int appliedVersion=-1; // the setters bump it, so prefs are read only when a setting changes
+ static int profileVersion;int appliedVersion=-1;float nextProfileCheck; // the setters bump it, so prefs are read only when a setting changes
  public readonly HandInteractionMachine Interaction=new HandInteractionMachine();
  HandInteraction lastState=HandInteraction.Idle;bool stateShown;int lastSens=-1,lastSteady=-1;
  public const float MaxPitch=60;
@@ -103,7 +103,8 @@ public sealed class HandLocomotion : MonoBehaviour {
  static string StateText(HandInteraction s)=>s==HandInteraction.Tracking?"CAMERA  TRACKING":s==HandInteraction.ReadyToGrab?"CAMERA  READY":s==HandInteraction.Holding?"CAMERA  HOLDING":s==HandInteraction.Releasing?"CAMERA  RELEASING":s==HandInteraction.TrackingLost?"CAMERA  LOST":"CAMERA  IDLE";
  // Settings change rarely: apply only when they do (no per-frame work or allocation).
  void ApplyProfile(){
-  if(appliedVersion==profileVersion)return;appliedVersion=profileVersion;
+  // Re-read at most once a second as well, so a reset that writes the prefs directly is picked up too.
+  if(appliedVersion==profileVersion&&Time.unscaledTime<nextProfileCheck)return;appliedVersion=profileVersion;nextProfileCheck=Time.unscaledTime+1;
   int sens=Sensitivity,steady=Steadiness;if(sens==lastSens&&steady==lastSteady)return;lastSens=sens;lastSteady=steady;
   Apply(app.rightHand,sens,steady);Apply(app.leftHand,sens,steady);
  }

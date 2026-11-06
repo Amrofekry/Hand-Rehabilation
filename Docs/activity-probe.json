@@ -1,7 +1,7 @@
 {
   "passed": true,
-  "utc": "2026-11-06T09:10:17.0481737Z",
-  "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
+  "utc": "2026-11-06T13:09:50.8955635Z",
+  "scope": "SYNTHETIC camera-hand frames over the loopback vision port (closed-loop grip, aim assist) in the rendered Windows player; no webcam, device, person or records",
   "detail": "",
   "resolution": "1600x900",
   "errors": 0,
@@ -17,7 +17,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.435138702392578,
+      "seconds": 9.587762832641602,
       "notes": "",
       "outcomes": [
         {
@@ -66,7 +66,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.380000114440918
+          "value": 9.5
         },
         {
           "key": "bookshelf.firstTry",
@@ -91,6 +91,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 1.0
         }
       ]
     },
@@ -105,7 +111,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.451005935668945,
+      "seconds": 9.780902862548828,
       "notes": "",
       "outcomes": [
         {
@@ -154,7 +160,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.409999847412109
+          "value": 9.680000305175781
         },
         {
           "key": "table.spacingErrorMm",
@@ -173,6 +179,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 2.0
         }
       ]
     },
@@ -187,8 +199,8 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.445510387420654,
-      "notes": "",
+      "seconds": 9.557374000549316,
+      "notes": "Can half 0.028 put at (2.309, 0.807, -4.536) via Collider<Storage box> into volume | Ball half 0.032 put at (2.312, 0.807, -4.659) via Collider<Storage box> into volume | Block half 0.025 put at (2.366, 0.807, -4.548) via Collider<Can> into volume | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -236,7 +248,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.21999979019165
+          "value": 9.239999771118164
         },
         {
           "key": "box.items",
@@ -261,6 +273,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 3.0
         }
       ]
     },
@@ -275,8 +293,8 @@
       "actions": 8,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 18.463464736938477,
-      "notes": "",
+      "seconds": 23.1362361907959,
+      "notes": "[chopArmed=True valid=True kind=spoon step=2 ray=Collider() fb=Cooked. Now put the food on the plate.] Squeeze want=15N peak=22.0N held=Spoon ray=Collider() | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -324,7 +342,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 18.399999618530273
+          "value": 23.030000686645508
         },
         {
           "key": "meal.stirSeconds",
@@ -349,6 +367,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 6.0
         }
       ]
     },
@@ -363,8 +387,8 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 3.6617023944854736,
-      "notes": "",
+      "seconds": 6.6078996658325195,
+      "notes": "[chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 1 of 2.] entry F=22.0 target=5.4 score=0.76 closure=0.72 frames=49 exit F=5.4 score=0.35 closure=0.43 | relaxed: F=4.8 score=0.33 closure=0.43 chopArmed=True | Chop want=18N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=2 ray=Cucumber(Default) fb=Activity complete: 98/100, 3 of 3 stars. K replays it, N picks the next one.] entry F=21.6 target=5.4 score=0.35 closure=0.45 frames=28 exit F=5.4 score=0.33 closure=0.39 | relaxed: F=4.3 score=0.30 closure=0.39 chopArmed=False | Chop want=18N peak=22.0N held=Knife ray=Cucumber(Default) | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -400,7 +424,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 3.619999885559082
+          "value": 5.449999809265137
         },
         {
           "key": "cut.evenness",
@@ -425,6 +449,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 1.0
         }
       ]
     },
@@ -439,8 +469,8 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.293661117553711,
-      "notes": "",
+      "seconds": 17.9254093170166,
+      "notes": "[chopArmed=False valid=True kind=knife step=3 ray=Collider() fb=Halved. Put the tomato on the plate.] entry F=15.2 target=5.4 score=0.76 closure=0.66 frames=62 exit F=5.2 score=0.35 closure=0.38 | relaxed: F=4.2 score=0.29 closure=0.38 chopArmed=True | Chop want=18N peak=22.0N held=Knife ray=Collider() | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -488,7 +518,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.229999542236328
+          "value": 17.829999923706055
         },
         {
           "key": "level",
@@ -501,6 +531,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 5.0
         }
       ]
     },
@@ -515,7 +551,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.024747848510742,
+      "seconds": 15.435879707336426,
       "notes": "",
       "outcomes": [
         {
@@ -564,7 +600,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.079999923706055
+          "value": 15.489999771118164
         },
         {
           "key": "bookshelf.firstTry",
@@ -589,6 +625,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 1.0
         }
       ]
     },
@@ -603,7 +645,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.028830528259277,
+      "seconds": 15.419440269470215,
       "notes": "",
       "outcomes": [
         {
@@ -652,7 +694,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.09000015258789
+          "value": 15.479999542236328
         },
         {
           "key": "table.spacingErrorMm",
@@ -671,6 +713,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 4.0
         }
       ]
     },
@@ -685,8 +733,8 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.039793014526367,
-      "notes": "",
+      "seconds": 15.359625816345215,
+      "notes": "Small book half 0.060 put at (2.337, 0.807, -4.565) via Collider<Storage box> into volume | Can half 0.028 put at (2.309, 0.807, -4.671) via Collider<Storage box> into volume | Ball half 0.031 put at (2.432, 0.807, -4.569) via Collider<Small book> into volume | Sponge half 0.040 put at (2.380, 0.807, -4.652) via Collider<Can> into volume | Block half 0.025 put at (2.351, 0.807, -4.713) via Collider<Storage box> into volume | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -734,7 +782,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.050000190734863
+          "value": 15.25
         },
         {
           "key": "box.items",
@@ -759,6 +807,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 5.0
         }
       ]
     },
@@ -773,8 +827,8 @@
       "actions": 12,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 29.868640899658203,
-      "notes": "",
+      "seconds": 37.40217590332031,
+      "notes": "[chopArmed=True valid=True kind=spoon step=2 ray=Collider() fb=Cooked. Now put the food on the plate.] Squeeze want=22N peak=22.0N held=Spoon ray=Collider() | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -822,13 +876,13 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 29.93000030517578
+          "value": 37.470001220703125
         },
         {
           "key": "meal.stirSeconds",
           "label": "Stirring with grip",
           "unit": "s",
-          "value": 4.340000152587891
+          "value": 4.329999923706055
         },
         {
           "key": "meal.ingredients",
@@ -847,6 +901,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 10.0
         }
       ]
     },
@@ -861,8 +921,8 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 5.968740940093994,
-      "notes": "",
+      "seconds": 10.862584114074707,
+      "notes": "[chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 1 of 4.] entry F=22.0 target=7.4 score=0.78 closure=0.69 frames=40 exit F=6.9 score=0.32 closure=0.39 | relaxed: F=4.3 score=0.30 closure=0.39 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 2 of 4.] entry F=22.0 target=7.4 score=0.84 closure=0.45 frames=43 exit F=7.0 score=0.27 closure=0.38 | relaxed: F=4.2 score=0.29 closure=0.38 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=1 ray=Cucumber(Default) fb=Cut 3 of 4.] entry F=22.0 target=7.4 score=0.85 closure=0.45 frames=42 exit F=7.4 score=0.35 closure=0.47 | relaxed: F=5.1 score=0.35 closure=0.47 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | [chopArmed=False valid=True kind=knife step=2 ray=Cucumber(Default) fb=Activity complete: 97/100, 3 of 3 stars. K replays it, N picks the next one.] entry F=22.0 target=7.4 score=0.88 closure=0.47 frames=49 exit F=7.3 score=0.30 closure=0.42 | relaxed: F=4.7 score=0.32 closure=0.42 chopArmed=False | Chop want=25N peak=22.0N held=Knife ray=Cucumber(Default) | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -898,7 +958,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 6.090000152587891
+          "value": 9.949999809265137
         },
         {
           "key": "cut.evenness",
@@ -923,6 +983,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 1.0
         }
       ]
     },
@@ -937,8 +1003,8 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.055451393127441,
-      "notes": "",
+      "seconds": 17.484020233154297,
+      "notes": "[chopArmed=False valid=True kind=knife step=3 ray=Collider() fb=Halved. Put the tomato on the plate.] entry F=22.0 target=7.4 score=0.80 closure=0.57 frames=55 exit F=7.0 score=0.34 closure=0.40 | relaxed: F=4.5 score=0.31 closure=0.40 chopArmed=True | Chop want=25N peak=22.0N held=Knife ray=Collider() | ",
       "outcomes": [
         {
           "key": "activity.id",
@@ -986,7 +1052,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.109999656677246
+          "value": 17.540000915527344
         },
         {
           "key": "level",
@@ -999,6 +1065,12 @@
           "label": "Stars",
           "unit": "",
           "value": 3.0
+        },
+        {
+          "key": "handling.assistedGrabs",
+          "label": "Camera grabs with aim assist",
+          "unit": "",
+          "value": 5.0
         }
       ]
     }

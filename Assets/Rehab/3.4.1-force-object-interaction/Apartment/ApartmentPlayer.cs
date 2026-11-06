@@ -7,6 +7,10 @@ public sealed class ApartmentPlayer:MonoBehaviour {
  public ApartmentSettings settings;
  public Camera view;
  public bool IsSeated{get;private set;}
+ // Automated runs (-apartment-* probes) drive the player themselves: the real mouse and movement keys of whoever is at the
+ // PC must not turn or move a focused test window (2026-11-06; normal play is unchanged).
+ static readonly bool Automated=Array.Exists(Environment.GetCommandLineArgs(),a=>a.StartsWith("-apartment-",StringComparison.Ordinal));
+ static float Axis(string name)=>Automated?0:Input.GetAxisRaw(name);
  public bool Paused{get;private set;}
  public CharacterController Controller{get;private set;}
  public Vector3 Spawn{get;private set;}
@@ -31,11 +35,11 @@ public sealed class ApartmentPlayer:MonoBehaviour {
   if(_shell!=null&&_shell.BlocksGameplay){if(!Paused)SetPaused(true);return;}
   if(RehabKeyboardGate.TogglePause(Input.GetKeyDown(KeyCode.Escape),Input.GetKeyDown(KeyCode.Tab),_shell!=null&&_shell.BlocksGameplay,RehabAppShell.TextEntryHasFocus(),InputFocused))SetPaused(!Paused);
   if(!GameplayInputAllowed)return;
-  transform.Rotate(0,Input.GetAxisRaw("Mouse X")*settings.mouseSensitivity,0);
-  _pitch=Mathf.Clamp(_pitch-Input.GetAxisRaw("Mouse Y")*settings.mouseSensitivity,-75,75);
+  transform.Rotate(0,Axis("Mouse X")*settings.mouseSensitivity,0);
+  _pitch=Mathf.Clamp(_pitch-Axis("Mouse Y")*settings.mouseSensitivity,-75,75);
   view.transform.localRotation=Quaternion.Euler(_pitch,0,0);
   if(!IsSeated) {
-   var motion=Vector3.ClampMagnitude(new Vector3(Input.GetAxisRaw("Horizontal"),0,Input.GetAxisRaw("Vertical")),1);
+   var motion=Vector3.ClampMagnitude(new Vector3(Axis("Horizontal"),0,Axis("Vertical")),1);
    if(Controller.isGrounded&&_vertical<0)_vertical=-2;
    _vertical=Mathf.Max(-15,_vertical-9.81f*Time.deltaTime);
    Controller.Move((transform.TransformDirection(motion)*settings.walkSpeed+Vector3.up*_vertical)*Time.deltaTime);

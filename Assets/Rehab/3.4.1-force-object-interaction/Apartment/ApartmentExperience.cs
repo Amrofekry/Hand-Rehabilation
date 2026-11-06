@@ -49,7 +49,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  private readonly Collider[] _clearanceOverlaps=new Collider[64];
  private readonly RaycastHit[] _clearanceHits=new RaycastHit[64];
  private Quaternion _heldRotationOffset;private Collider[] _playerColliders;
- private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime,_cameraValidAt,_cameraClosedFor,_cameraPowerScore;private bool _cameraReleaseBlocked;
+ private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime,_cameraValidAt,_cameraClosedFor,_cameraPowerScore,_nextCameraGrabTry;private bool _cameraReleaseBlocked;
  private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
  private ForceHoldTask _task=new ForceHoldTask(18,3,3);
  private long _contactTicks;
@@ -168,7 +168,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
     _holdCorrectionLocal=ActiveHand.transform.InverseTransformVector(correction);
    }
   } else {LastContact=default;_holdCorrectionLocal=Vector3.zero;_palmExtra=0;}
-  if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&_cameraClosedFor>=.15f&&Held==null)TryCameraGrab();
+  if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&_cameraClosedFor>=.15f&&Held==null&&Time.unscaledTime>=_nextCameraGrabTry)TryCameraGrab();
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
  }
  void UpdatePresentation(bool present,float handLift){
@@ -360,6 +360,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   }
   // 2026-11-02: among reachable objects inside the aim cone, the one whose centre is nearest the view direction wins, so a
   // knife lying on a plate or bread just behind a tomato is picked when you look at it, not the first collider the ray meets.
+  // Centres are rigidbody centres of mass, so an off-centre pivot (a pan's handle) does not lose the object being looked at.
   SqueezableObject nearest=null;float best=float.PositiveInfinity,bestCentre=float.PositiveInfinity;
   foreach(var item in objects){
    if(!CanReach(item))continue;
@@ -367,7 +368,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
    var point=item.ClosestSurface(ray.GetPoint(Mathf.Clamp(along,0,settings.reachMeters)));
    float score=GraspMotionPolicy.AimScore(ray.origin,ray.direction,point,settings.reachMeters,settings.pickupAssistDegrees);
    if(float.IsInfinity(score)&&item!=direct)continue;
-   float centre=Vector3.Angle(ray.direction,item.transform.position-ray.origin);
+   float centre=Vector3.Angle(ray.direction,(item.Body!=null?item.Body.worldCenterOfMass:item.transform.position)-ray.origin); // the body's centre, not the pivot
    if(centre<bestCentre||centre==bestCentre&&score<best){nearest=item;best=score;bestCentre=centre;}
   }
   return nearest!=null?nearest:direct;
@@ -395,7 +396,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
    if(!aimedTouched){AssistedGrabs++;Status="Camera grip (aim assist): holding "+aimed.displayName;}else Status="Camera grip: holding "+aimed.displayName;
    return;
   }
-  if(nearest!=null&&TryGrab(nearest))Status="Camera grip: holding "+nearest.displayName;
+  if(nearest!=null&&TryGrab(nearest)){Status="Camera grip: holding "+nearest.displayName;return;}
+  // Nothing grabbed: a closed empty hand retries at 10 Hz, not every frame (the look-target scan visits every object).
+  _nextCameraGrabTry=Time.unscaledTime+.1f;
  }
  /// <summary>Camera pickups made by aim assist rather than a fingertip at the object (2026-10-29).</summary>
  public int AssistedGrabs{get;private set;}

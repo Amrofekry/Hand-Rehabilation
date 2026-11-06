@@ -6,7 +6,8 @@
 - **v1.0.3:**
   - Camera activity run 12/12 (fixes F1-F6, `Docs/HAND_CONTROL_REPORT.md` §10); keyboard 12/12.
   - Checks green: smoke, EditMode 10/10, Python, console 0/0/0 with MCP.
-- **Intermittent, under watch:** hand-look probe "a held fist grabs the object". 1 failure in about 12 runs (2026-11-06), not reproduced in 5 reruns. The check now records status, score, gate, distance and fps when it fails.
+- **Hand-look probe, resolved 2026-11-06:** the intermittent fist-grab failure was test setup, not the game. The probe left the player wherever a timing-dependent point-walk ended, and the improvised teleports made it worse (table height, then into a chair). The probe now returns to the station via `SelectStation`, as a patient would, and makes the pinch-menu gesture while not aiming at an object (a pinch at an object is a grab, by design). It passes 6/6.
+- **Automated runs** (`-apartment-*`) now ignore the real mouse and movement keys (`ApartmentPlayer.Axis`).
 - **Still yours:** `.local/scratch/block-j-cleanup.ps1` and `E:\GP\codex\Move-GameTo01.ps1`.
 
 ## Resume here (2026-11-01, final release run)

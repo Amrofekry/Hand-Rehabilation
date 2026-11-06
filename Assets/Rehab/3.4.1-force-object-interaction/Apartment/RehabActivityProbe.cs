@@ -81,6 +81,7 @@ namespace GripRehab
             app.SetHardware(false);
             runner = app.GetComponent<ActivityRunner>();
             if (runner == null) throw new InvalidOperationException("Activity runner missing");
+            runner.RecordPlacement = true;
             yield return UiChecks(shell); // keyboard-mode UI and onboarding checks, before any camera switch
             if (UiOnly) { shell.ReturnHome(); yield break; }
             if (Camera) { app.SetCameraMode(); sending = true; closure = 0; yield return new WaitForSecondsRealtime(.5f); }

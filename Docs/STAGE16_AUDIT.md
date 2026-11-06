@@ -80,7 +80,7 @@ The journey suite (`run_ai_player_checks.py journey`) runs the whole data path i
 | Important | Real-hand camera feel and latency not measured | Needs a person and the webcam | `PHYSICAL_TEST_PROTOCOL.md` P5; add a latency meter |
 | Important | Monocular depth is a proxy | Hardware limit | O5 depth camera |
 | Important | A-OB1: intermittent activity grab failures in some earlier runs | Not reproduced in 7 keyboard runs since 2026-11-01; the camera run also passes 12/12 after fixes F1-F6 | Keep the 3-run activity check and the camera run in regression |
-| Important | Hand-look probe fist grab: 1 failure in about 12 runs (2026-11-06) | Not reproduced in 5 reruns; cause unknown | Diagnostics now recorded in the check; keep it in regression |
+| Resolved | Hand-look probe fist grab: intermittent (2026-11-06) | Test setup: player placement after a timing-dependent walk | Probe returns to the station via SelectStation; 6/6 passes |
 | Optional | Eye tracking, voice assistant, Arabic UI | See `OPTIONAL_PLAN.md` | O1, O2, O4 |
 | Future | Hybrid detector (YOLO26 + RF-DETR) | Training unfinished | O3 with an A/B |
 

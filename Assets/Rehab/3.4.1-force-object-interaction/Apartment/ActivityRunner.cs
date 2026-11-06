@@ -22,7 +22,9 @@ public sealed class ActivityRunner : MonoBehaviour {
  public ActivityResult LastResult{get;private set;}
  int assistedAtStart;
  /// <summary>What the last release did (diagnostics for the probes).</summary>
- public string LastPlacement{get;private set;}="";Collider lastAimCollider;bool lastAimVolume;SqueezableObject armedTool;
+ public string LastPlacement{get;private set;}="";
+ /// <summary>Set by the probes; normal play builds no diagnostic strings.</summary>
+ public bool RecordPlacement;Collider lastAimCollider;bool lastAimVolume;SqueezableObject armedTool;
  public string Feedback{get;private set;}="";
  public float PlacementYaw{get;private set;}
  bool finished;float startedAt;Transform root;Material source;SqueezableObject[] savedObjects;
@@ -100,7 +102,7 @@ public sealed class ActivityRunner : MonoBehaviour {
  void Released(SqueezableObject item){
   if(!Active||item==null)return;var a=item.GetComponent<ActivityItem>();if(a==null)return;
   bool aimed=Aim(item,out var point);if(aimed)Put(a,point);
-  LastPlacement=a.name+" half "+PlacedHalfWidth(item).ToString("F3")+(aimed?" put at "+point.ToString("F3")+" via "+(lastAimCollider!=null?lastAimCollider.name+"<"+(lastAimCollider.transform.parent!=null?lastAimCollider.transform.parent.name:"")+">":"?")+(lastAimVolume?" into volume":""):" not aimed");
+  if(RecordPlacement)LastPlacement=a.name+" half "+PlacedHalfWidth(item).ToString("F3")+(aimed?" put at "+point.ToString("F3")+" via "+(lastAimCollider!=null?lastAimCollider.name+"<"+(lastAimCollider.transform.parent!=null?lastAimCollider.transform.parent.name:"")+">":"?")+(lastAimVolume?" into volume":""):" not aimed");
   StartCoroutine(EvaluateLater(a));
  }
  /// <summary>Where the player is looking, ignoring the item itself; volumes (the box) redirect inside.</summary>
@@ -143,14 +145,17 @@ public sealed class ActivityRunner : MonoBehaviour {
  /// camera-held book measured narrow and was put 1.5 cm over the box wall.
  /// </summary>
  float PlacedHalfWidth(SqueezableObject item){
-  if(item==null)return 0;var a=item.GetComponent<ActivityItem>();var filter=item.GetComponentInChildren<MeshFilter>();
-  if(a==null||filter==null||filter.sharedMesh==null){float h=0;foreach(var c in item.GetComponentsInChildren<Collider>())if(c.enabled&&!c.isTrigger)h=Mathf.Max(h,Mathf.Max(c.bounds.extents.x,c.bounds.extents.z));return h;}
-  // Mesh corners in the item's own frame (the mesh may sit on a child), then turned to the placed rotation.
-  var b=filter.sharedMesh.bounds;var s=item.transform.lossyScale;var rotation=Quaternion.Euler(0,Yaw+PlacementYaw,0)*a.restRotation;float half=0;
-  for(int i=0;i<8;i++){
-   var corner=new Vector3((i&1)==0?b.min.x:b.max.x,(i&2)==0?b.min.y:b.max.y,(i&4)==0?b.min.z:b.max.z);
-   var local=item.transform.InverseTransformPoint(filter.transform.TransformPoint(corner));
-   var p=rotation*Vector3.Scale(local,s);half=Mathf.Max(half,Mathf.Max(Mathf.Abs(p.x),Mathf.Abs(p.z)));
+  if(item==null)return 0;var a=item.GetComponent<ActivityItem>();var filters=item.GetComponentsInChildren<MeshFilter>();
+  if(a==null||filters.Length==0){float h=0;foreach(var c in item.GetComponentsInChildren<Collider>())if(c.enabled&&!c.isTrigger)h=Mathf.Max(h,Mathf.Max(c.bounds.extents.x,c.bounds.extents.z));return h;}
+  // Every mesh's corners in the item's own frame (meshes may sit on children), then turned to the placed rotation.
+  var s=item.transform.lossyScale;var rotation=Quaternion.Euler(0,Yaw+PlacementYaw,0)*a.restRotation;float half=0;
+  foreach(var filter in filters){
+   if(filter.sharedMesh==null)continue;var b=filter.sharedMesh.bounds;
+   for(int i=0;i<8;i++){
+    var corner=new Vector3((i&1)==0?b.min.x:b.max.x,(i&2)==0?b.min.y:b.max.y,(i&4)==0?b.min.z:b.max.z);
+    var local=item.transform.InverseTransformPoint(filter.transform.TransformPoint(corner));
+    var p=rotation*Vector3.Scale(local,s);half=Mathf.Max(half,Mathf.Max(Mathf.Abs(p.x),Mathf.Abs(p.z)));
+   }
   }
   return half;
  }
@@ -258,7 +263,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   finished=true;float seconds=Time.unscaledTime-startedAt;
   var result=Current.Result(Level,seconds);LastResult=result;
   // Camera grabs made by aim assist (not a fingertip at the object) are recorded, so analysis can tell physical reach from help.
-  if(app.CameraMode)result.outcomes.Add(new OutcomeMetric{key="handling.assistedGrabs",label="Camera grabs with aim assist",unit="",value=app.AssistedGrabs-assistedAtStart});
+  if(app.CameraMode||app.AssistedGrabs!=assistedAtStart)result.outcomes.Add(new OutcomeMetric{key="handling.assistedGrabs",label="Camera grabs with aim assist",unit="",value=app.AssistedGrabs-assistedAtStart});
   Feedback="Activity complete: "+result.score+"/100, "+ActivityRules.Stars(result.score)+" of 3 stars. K replays it, N picks the next one.";
   RehabAudio.Play(RehabSound.Complete);Refresh();
   StartCoroutine(Report(result));

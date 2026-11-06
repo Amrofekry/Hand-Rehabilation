@@ -100,6 +100,30 @@ namespace GripRehab
             return f;
         }
 
+        static string AimFacts(ApartmentExperience app, SqueezableObject cup, SqueezableObject plate)
+        {
+            var ray = app.player.view.ViewportPointToRay(new Vector3(.5f, .5f, 0));
+            string A(SqueezableObject o) => o == null ? "-" : o.displayName + " pivot " + Vector3.Angle(ray.direction, o.transform.position - ray.origin).ToString("0.0") + " com " + Vector3.Angle(ray.direction, o.Body.worldCenterOfMass - ray.origin).ToString("0.0");
+            string hit = Physics.Raycast(ray, out var h, 3, ~(1 << 8), QueryTriggerInteraction.Ignore) ? h.collider.name + "<" + (h.collider.GetComponentInParent<SqueezableObject>() != null ? h.collider.GetComponentInParent<SqueezableObject>().displayName : "") + ">" : "nothing";
+            float d = Physics.Raycast(ray, out var h2, 3, ~(1 << 8), QueryTriggerInteraction.Ignore) ? h2.distance : -1;
+            var reach = typeof(ApartmentExperience).GetMethod("CanReach", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(app, new object[] { cup });
+            return "[ray " + hit + " at " + d.ToString("0.00") + " m; cup at " + Vector3.Distance(ray.origin, cup.transform.position).ToString("0.00") + " m; reach " + reach + "; seated " + app.player.IsSeated + " eye " + ray.origin.ToString("F2") + "; " + A(cup) + "; " + A(plate) + "]";
+        }
+
+        static string AimedName(ApartmentExperience app)
+        {
+            var args = new object[] { null };
+            var r = typeof(ApartmentExperience).GetMethod("KeyboardTarget", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(app, args) as SqueezableObject;
+            var view = app.player.view; var ray = view.ViewportPointToRay(new Vector3(.5f, .5f, 0)); var station = app.choices.SelectedObject;
+            string hit = Physics.Raycast(ray, out var h, app.settings.reachMeters, ~(1 << 8), QueryTriggerInteraction.Ignore) ? h.collider.name + "@" + h.distance.ToString("0.00") + " layer " + LayerMask.LayerToName(h.collider.gameObject.layer) : "nothing";
+            float along = Vector3.Dot(station.transform.position - ray.origin, ray.direction);
+            var point = station.ClosestSurface(ray.GetPoint(Mathf.Clamp(along, 0, app.settings.reachMeters)));
+            float score = GraspMotionPolicy.AimScore(ray.origin, ray.direction, point, app.settings.reachMeters, app.settings.pickupAssistDegrees);
+            var list = typeof(ApartmentExperience).GetField("objects", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public)?.GetValue(app) as System.Collections.IEnumerable;
+            bool inList = false; if (list != null) foreach (var o in list) if (ReferenceEquals(o, station)) inList = true;
+            return (r != null ? r.displayName : "none") + " [ray hits " + hit + "; ball score " + score.ToString("0.000") + " inList " + inList + " angle " + Vector3.Angle(ray.direction, station.transform.position - ray.origin).ToString("0.0") + "]";
+        }
+
         IEnumerator Hold(float x, float y, Shape s, float seconds, float roll = 0) { handX = x; handY = y; shape = s; handRoll = roll; sending = true; yield return new WaitForSecondsRealtime(seconds); }
         static float Signed(float from, float to) => Mathf.DeltaAngle(from, to);
 
@@ -155,12 +179,22 @@ namespace GripRehab
             // Fist grabs the station object (was G / E); opening the hand releases it (was Q).
             player.transform.Rotate(0, 180, 0); var station = app.choices.SelectedObject;
             player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f);
-            if (Vector3.Distance(player.transform.position, station.transform.position) > 1.6f) { player.Teleport(station.transform.position - player.transform.forward * 1.1f + Vector3.up * .05f, player.transform.rotation); yield return null; player.LookAt(station.transform.position); }
-            yield return Hold(.5f, .5f, Shape.Fist, 1f);
+            // Go back to the living-room station the way the game does (seated, facing its objects), as a patient would. The
+            // point-walk above ends at a timing-dependent spot; improvised teleports landed at table height or pushed a chair
+            // into the seated line of sight (2026-11-06).
+            app.choices.SelectStation(false); yield return new WaitForSecondsRealtime(.3f);
+            station = app.choices.SelectedObject; player.LookAt(station.transform.position);
+            string Off() => Vector3.Angle(player.view.transform.forward, station.transform.position - player.view.transform.position).ToString("0.0");
+            string Sample() { var loco2 = HandLocomotion.Instance; float pitch = player.view.transform.localEulerAngles.x; if (pitch > 180) pitch -= 360;
+                return "[off " + Off() + " yaw " + player.transform.eulerAngles.y.ToString("0.0") + " pitch " + pitch.ToString("0.0") + " pos " + player.transform.position.ToString("F2") +
+                    " yawRate " + (loco2 != null ? loco2.Policy.YawRate.ToString("0.0") : "-") + " pitchRate " + (loco2 != null ? loco2.Policy.PitchRate.ToString("0.0") : "-") + " walk " + (loco2 != null ? loco2.Policy.Walk.ToString("0.00") : "-") + " seated " + player.IsSeated + "]"; }
+            string trace = "after look " + Sample(); yield return null; trace += " +1f " + Sample(); yield return new WaitForSecondsRealtime(.2f); trace += " +0.2s " + Sample();
+            shape = Shape.Fist; yield return new WaitForSecondsRealtime(.3f); trace += " fist+0.3s " + Sample();
+            yield return Hold(.5f, .5f, Shape.Fist, .7f); trace += " fist+1s " + Sample();
             Add("a held fist grabs the object (no key)", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none") +
                 (app.Held == station ? "" : " status=" + app.Status + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed +
                 " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " active=" + station.gameObject.activeInHierarchy +
-                " broken=" + station.IsBroken + " paused=" + player.Paused + " fps=" + (1f / Mathf.Max(1e-4f, Time.smoothDeltaTime)).ToString("0")));
+                " broken=" + station.IsBroken + " paused=" + player.Paused + " reach=" + typeof(ApartmentExperience).GetMethod("CanReach", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(app, new object[] { station }) + " blocker=" + (Physics.Linecast(player.view.transform.position, station.ClosestSurface(player.view.transform.position), out var block, ~(1 << 8), QueryTriggerInteraction.Ignore) ? block.collider.name : "none") + " fps=" + (1f / Mathf.Max(1e-4f, Time.smoothDeltaTime)).ToString("0") + " aimed=" + AimedName(app) + " view(" + trace + ")" + " pivot=" + station.transform.position.ToString("F2") + " com=" + (station.Body != null ? station.Body.worldCenterOfMass.ToString("F2") : "-")));
             yield return Hold(.5f, .5f, Shape.Fist, 1f);
             Add("keeping the fist keeps holding", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none"));
             yield return Hold(.5f, .5f, Shape.Open, .8f);
@@ -168,6 +202,8 @@ namespace GripRehab
 
             // Pinch held opens the options panel (was TAB).
             int opened = loco.OptionsOpened;
+            // Look away from the objects first: a pinch aimed at an object within reach is a grab (by design), not the menu.
+            player.LookAt(player.view.transform.position + Vector3.up * 2 + player.transform.forward * .3f); yield return Hold(.5f, .5f, Shape.Open, .3f);
             yield return Hold(.5f, .5f, Shape.Pinch, 1.3f);
             Add("a held pinch opens the options panel", player.Paused && loco.OptionsOpened == opened + 1, "paused=" + player.Paused);
             player.SetPaused(false); yield return Hold(.5f, .5f, Shape.Open, .5f);
@@ -186,7 +222,7 @@ namespace GripRehab
                     yield return Hold(.5f, .5f, Shape.Fist, .8f, 0); bool grabbed = app.Held == cup;
                     yield return Hold(.5f, .5f, Shape.Fist, .6f, 40);
                     float turned = runner.PlacementYaw - yaw0p;
-                    Add("twisting the hand turns the placement", grabbed && turned > 30, "grabbed=" + grabbed + " turned " + turned.ToString("0") + "° held=" + (app.Held != null ? app.Held.displayName : "none") + " twist=" + loco.Actions.PlacementYaw + " active=" + loco.Active + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status);
+                    Add("twisting the hand turns the placement", grabbed && turned > 30, "grabbed=" + grabbed + " turned " + turned.ToString("0") + "° held=" + (app.Held != null ? app.Held.displayName : "none") + " twist=" + loco.Actions.PlacementYaw + " active=" + loco.Active + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status + " " + AimFacts(app, cup, runner.Current.items.Select(i => i.Item).FirstOrDefault(i => i != null && i.displayName == "Plate")));
                     yield return Hold(.5f, .5f, Shape.Fist, .6f, -40);
                     Add("twisting the other way turns it back", runner.PlacementYaw - yaw0p < -30, (runner.PlacementYaw - yaw0p).ToString("0") + "°");
                 }

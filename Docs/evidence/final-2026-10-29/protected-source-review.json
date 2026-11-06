@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "a6dacda62670808f177cca5e1f7e8d852e53a3cf2046ee2a2ba950fd81a9b257",
-      "reason": "User-authorized final release (2026-10-29). Hybrid camera hold; camera grab prefers the looked-at object; look target nearest centre; reach by closest point or top; CameraGateClosed."
+      "currentSha256": "83e98231090f6507d83146ecc66b9b722413013ead616225e55fd0f94113c15b",
+      "reason": "User-authorized final release (2026-10-29). Hybrid camera hold; camera grab prefers the looked-at object (empty closed hand retries at 10 Hz); look target nearest body centre; reach by closest point or top; CameraGateClosed."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
@@ -50,6 +50,11 @@
       "previousSha256": "28ee8f1e04f0648d20212f5fd71b584f593551fd6c1909a00f1206b395e78ff5",
       "currentSha256": "removed",
       "reason": "User-authorized final release (2026-10-29). Unity auto-recovery copies of the scene; not in build settings or referenced by code; deletion approved by the user (Block J)."
+    },
+    "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentPlayer.cs": {
+      "previousSha256": "54e7faf1407d5c5bda0da4613361a53bc88c287f3f02fd2ee78dd040bc30c8b1",
+      "currentSha256": "45ca2c3a0ea7627a3969d2ad268bda3fd4ed1dc911f44b9f2be9af62d2169c70",
+      "reason": "User-authorized final release (2026-10-29). Automated -apartment-* runs ignore the real mouse and movement keys, so a person using the PC cannot turn or move a focused test window; normal play unchanged."
     }
   }
 }
