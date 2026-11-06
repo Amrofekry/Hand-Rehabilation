@@ -19,3 +19,8 @@ Found by a read-only scan (`.local/scratch/unused.py`, `unused_assets.py`): a ty
 | `Assets/UI/HandMate/Images/back-arrow.png` | 10 KB |
 
 Keep `OFL.txt` (font licence) while any Montserrat or Orbitron font remains.
+
+## Removed later (2026-11-06, v1.0.7, with your OK)
+| File | Why |
+|---|---|
+| `Assets/Resources/Ultraleap Settings.asset` | Settings for the Ultraleap package, which is not installed; its script GUID resolves nowhere, so every build logged "Script attached to 'Ultraleap Settings'… is missing". Nothing referenced it. |
