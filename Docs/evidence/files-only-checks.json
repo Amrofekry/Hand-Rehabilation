@@ -1,11 +1,11 @@
 {
-  "utc": "2026-11-06T16:59:50.215515+00:00",
+  "utc": "2026-11-06T17:54:04.297760+00:00",
   "scope": "Offline compiler/metadata/domain checks only",
   "checks": [
     {
       "name": "metadata",
       "passed": true,
-      "count": 902
+      "count": 894
     },
     {
       "name": "assembly-graph",
@@ -19,8 +19,8 @@
         "GripRehab.Product.dll": "80682b9728171d49175d24a7e91979c6ec02e79d7f23eaa5cafd322e1a91f9f7",
         "GripRehab.Core.dll": "bc03ea56546bdff41367e59f960c692eb3bd97e156efd91d1b5bbb2b5eba5be4",
         "GripRehab.UI.dll": "fd4e9e7e657faea0777cf2e7d1c959a64531b81b9dd30493aadb121f9d151668",
-        "Assembly-CSharp.dll": "dadea7b35c738eed061ad7d3f81f5f454f2d1f2c688f53a5ead81c1cca03478b",
-        "Assembly-CSharp-Editor.dll": "8260e4a71ebd3ae48e5c00f9b735be08ff41f3fa38d8a86c0e61944b19dbde1c"
+        "Assembly-CSharp.dll": "f57ab42e970eecc50224cbb907ff565eac376447172017902f685ec592ed8abc",
+        "Assembly-CSharp-Editor.dll": "33c91da480558c85c18d479bf81bd245d47ecd9fcc1657a8cae7df0e057c60ff"
       }
     },
     {
@@ -30,7 +30,7 @@
         "GripRehab.Product.dll": "aa54b6a241f87196cab6919eecc1257c9865d1ec4dc2e9866c12d3e8d0dbf9a0",
         "GripRehab.Core.dll": "79754f3bb30da57af576c4fc24b6eca1e9d4008be2f9c7adc85327392f8e9046",
         "GripRehab.UI.dll": "232cdafe30e10412c4731420c3dabeb2ac2b7df8e6d02d1afd73f6fdaeb45da7",
-        "Assembly-CSharp.dll": "cb78df93cad63ec9bdfdf2a44885d82ed1aaa610595a30b309319bf850e1841f"
+        "Assembly-CSharp.dll": "f02a53f5934c353b86ab4c004aec8e1f59624b2085504454b98fc58e3bb1818c"
       }
     },
     {
@@ -89,7 +89,7 @@
     {
       "name": "hand-rig-static-bindings",
       "passed": true,
-      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.113s\n\nOK",
+      "result": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.130s\n\nOK",
       "scope": "Saved-scene/source wiring contracts; no native SDK"
     },
     {
@@ -101,7 +101,7 @@
     {
       "name": "pointer-static-bindings",
       "passed": true,
-      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.008s\n\nOK",
+      "result": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.007s\n\nOK",
       "scope": "Static runtime integration contracts; no native uGUI"
     },
     {
@@ -119,7 +119,7 @@
     {
       "name": "keyboard-static-bindings",
       "passed": true,
-      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.005s\n\nOK",
+      "result": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.003s\n\nOK",
       "scope": "Static integration contracts; not native runtime verification"
     }
   ],

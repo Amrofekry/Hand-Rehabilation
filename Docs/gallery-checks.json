@@ -2,7 +2,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-06T16:24:46.6838609Z",
+    "utc": "2026-11-06T17:19:21.8080777Z",
     "checks": [
       "Saved sandbox references resolve",
       "One EventSystem after scene transition",
@@ -98,7 +98,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-06T16:24:55.8640115Z",
+    "utc": "2026-11-06T17:19:30.4531978Z",
     "checks": [
       "Saved sandbox references resolve",
       "One EventSystem after scene transition",
@@ -194,7 +194,7 @@
   {
     "passed": true,
     "error": "",
-    "utc": "2026-11-06T16:25:04.4437824Z",
+    "utc": "2026-11-06T17:19:39.5209171Z",
     "checks": [
       "Saved sandbox references resolve",
       "One EventSystem after scene transition",
