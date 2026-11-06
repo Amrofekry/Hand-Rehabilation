@@ -128,9 +128,11 @@ The first run completed **3 of 12** (keyboard: 12 of 12). It exposed five real p
 | F4 | The first cut could never arm with a camera grip, and squeezing while looking at the board spent the cut (camera; keyboard for the second) | Picking up the knife arms the first cut; only a squeeze aimed at food uses it |
 | F5 | 25 N needed grip score 0.85, more than a real fist gives (benchmark mean 0.77), so level-8 tasks were out of reach (camera) | 25 N at score 0.80; an ordinary hold is still about 18 N; porcelain (40 N) only breaks on a deliberate hard squeeze |
 
-**Result after the fixes: 11 of 12.** Keyboard is still 12 of 12. Evidence: `Docs/evidence/final-2026-10-29/activity-probe-camera.json`.
+| F6 | Box placement sized the free spot from the item's held pose (world-aligned bounds). A camera-held book measured narrow and was put 1.5 cm over the wall (camera; keyboard by chance) | The spot is sized from the item's mesh at its placed rotation, so the grip can't change it |
 
-**Open finding:** level 8 "Pack the storage box" (5 items) with the camera hand. A camera release happens as the hand opens (the gate confirms over about 0.12 s), so the largest item (a 12 cm book) lands about 1.5 cm over the wall, even after two pick-up-and-replace corrections. The keyboard's instant release fits. Next step: snap a camera release to the placement preview the way the keyboard path does, or give the box a wider tolerance at high levels.
+**Result after the fixes: 12 of 12**, with no corrections needed. Keyboard: 12 of 12. Evidence: `Docs/evidence/final-2026-10-29/activity-probe-camera.json`.
+
+Method note: each cause was found by logging the game's own decision at the failing step (what was grabbed, the aim and reach results, the chop arming state, the placement point and footprint), never by loosening a check.
 
 ## 11. Next improvements (justified by the limits above)
 1. Run `-vision-latency` with a live hand on the webcam, and add camera exposure and display time with a photodiode or high-speed video.

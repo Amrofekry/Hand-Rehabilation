@@ -20,7 +20,9 @@ public sealed class ActivityRunner : MonoBehaviour {
  public ActivityKind Selected{get;private set;}=ActivityKind.Bookshelf;
  /// <summary>Last finished activity (probe and tests).</summary>
  public ActivityResult LastResult{get;private set;}
- int assistedAtStart;SqueezableObject armedTool;
+ int assistedAtStart;
+ /// <summary>What the last release did (diagnostics for the probes).</summary>
+ public string LastPlacement{get;private set;}="";Collider lastAimCollider;bool lastAimVolume;SqueezableObject armedTool;
  public string Feedback{get;private set;}="";
  public float PlacementYaw{get;private set;}
  bool finished;float startedAt;Transform root;Material source;SqueezableObject[] savedObjects;
@@ -97,7 +99,8 @@ public sealed class ActivityRunner : MonoBehaviour {
  }
  void Released(SqueezableObject item){
   if(!Active||item==null)return;var a=item.GetComponent<ActivityItem>();if(a==null)return;
-  if(Aim(item,out var point))Put(a,point);
+  bool aimed=Aim(item,out var point);if(aimed)Put(a,point);
+  LastPlacement=a.name+" half "+PlacedHalfWidth(item).ToString("F3")+(aimed?" put at "+point.ToString("F3")+" via "+(lastAimCollider!=null?lastAimCollider.name+"<"+(lastAimCollider.transform.parent!=null?lastAimCollider.transform.parent.name:"")+">":"?")+(lastAimVolume?" into volume":""):" not aimed");
   StartCoroutine(EvaluateLater(a));
  }
  /// <summary>Where the player is looking, ignoring the item itself; volumes (the box) redirect inside.</summary>
@@ -106,18 +109,19 @@ public sealed class ActivityRunner : MonoBehaviour {
   int n=Physics.RaycastNonAlloc(view.position,view.forward,hits,1.4f,~(1<<8),QueryTriggerInteraction.Ignore);
   float best=float.MaxValue;Collider found=null;
   for(int i=0;i<n;i++){var c=hits[i].collider;if(c==null||item!=null&&c.attachedRigidbody==item.Body)continue;if(hits[i].distance<best){best=hits[i].distance;point=hits[i].point;found=c;}}
+  lastAimCollider=found;lastAimVolume=false;
   if(found==null)return false;
   var volume=found.GetComponentInParent<PlacementVolume>();
   // Aiming at something already inside a box counts as aiming into the box.
   if(volume==null&&root!=null)foreach(var v in root.GetComponentsInChildren<PlacementVolume>()){var l=v.transform.InverseTransformPoint(point);var e=v.interior;e.Expand(.02f);if(e.Contains(l)){volume=v;break;}}
-  if(volume!=null)point=IntoVolume(volume,item,point);
+  if(volume!=null){point=IntoVolume(volume,item,point);lastAimVolume=true;}
   return true;
  }
  /// <summary>The free floor spot of a volume nearest the aim (a sphere the item's width sweeps down to the floor);
  /// if the floor is full, the top of whatever is below the aim.</summary>
  Vector3 IntoVolume(PlacementVolume volume,SqueezableObject item,Vector3 aim){
   var b=volume.interior;var tr=volume.transform;var aimLocal=tr.InverseTransformPoint(aim);
-  float half=.02f;if(item!=null)foreach(var c in item.GetComponentsInChildren<Collider>())if(c.enabled&&!c.isTrigger)half=Mathf.Max(half,Mathf.Max(c.bounds.extents.x,c.bounds.extents.z));
+  float half=Mathf.Max(.02f,PlacedHalfWidth(item));
   half=Mathf.Min(half*.9f,Mathf.Min(b.extents.x,b.extents.z)-.005f);
   Vector3 best=Vector3.zero;float bestDistance=float.MaxValue;
   for(float x=b.min.x+half;x<=b.max.x-half+1e-4f;x+=.015f)for(float z=b.min.z+half;z<=b.max.z-half+1e-4f;z+=.015f){
@@ -132,6 +136,23 @@ public sealed class ActivityRunner : MonoBehaviour {
   // Floor full: stack, but keep the whole item inside the walls.
   var over=tr.TransformPoint(new Vector3(Mathf.Clamp(aimLocal.x,b.min.x+half,b.max.x-half),b.max.y+.02f,Mathf.Clamp(aimLocal.z,b.min.z+half,b.max.z-half)));
   return Physics.Raycast(over,Vector3.down,out var support,b.size.y+.05f,~(1<<8),QueryTriggerInteraction.Ignore)?support.point:tr.TransformPoint(new Vector3(aimLocal.x,b.min.y,aimLocal.z));
+ }
+ /// <summary>
+ /// Half the item's horizontal footprint as it will be placed (rest pose turned by the placement yaw), from its mesh bounds.
+ /// 2026-11-02: this used the colliders' world bounds in the held pose, which change with how the hand holds the item; a
+ /// camera-held book measured narrow and was put 1.5 cm over the box wall.
+ /// </summary>
+ float PlacedHalfWidth(SqueezableObject item){
+  if(item==null)return 0;var a=item.GetComponent<ActivityItem>();var filter=item.GetComponentInChildren<MeshFilter>();
+  if(a==null||filter==null||filter.sharedMesh==null){float h=0;foreach(var c in item.GetComponentsInChildren<Collider>())if(c.enabled&&!c.isTrigger)h=Mathf.Max(h,Mathf.Max(c.bounds.extents.x,c.bounds.extents.z));return h;}
+  // Mesh corners in the item's own frame (the mesh may sit on a child), then turned to the placed rotation.
+  var b=filter.sharedMesh.bounds;var s=item.transform.lossyScale;var rotation=Quaternion.Euler(0,Yaw+PlacementYaw,0)*a.restRotation;float half=0;
+  for(int i=0;i<8;i++){
+   var corner=new Vector3((i&1)==0?b.min.x:b.max.x,(i&2)==0?b.min.y:b.max.y,(i&4)==0?b.min.z:b.max.z);
+   var local=item.transform.InverseTransformPoint(filter.transform.TransformPoint(corner));
+   var p=rotation*Vector3.Scale(local,s);half=Mathf.Max(half,Mathf.Max(Mathf.Abs(p.x),Mathf.Abs(p.z)));
+  }
+  return half;
  }
  /// <summary>Placement assist: upright, turned by the player's chosen yaw, resting on the aimed point.</summary>
  void Put(ActivityItem a,Vector3 point){

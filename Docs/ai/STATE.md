@@ -2,6 +2,13 @@
 
 **Branch:** `claude/final-release` (linear chain from `3.4-upgrade-baseline`). Not merged; nothing pushed.
 
+## Resume here (2026-11-06)
+- **v1.0.3:**
+  - Camera activity run 12/12 (fixes F1-F6, `Docs/HAND_CONTROL_REPORT.md` §10); keyboard 12/12.
+  - Checks green: smoke, EditMode 10/10, Python, console 0/0/0 with MCP.
+- **Intermittent, under watch:** hand-look probe "a held fist grabs the object". 1 failure in about 12 runs (2026-11-06), not reproduced in 5 reruns. The check now records status, score, gate, distance and fps when it fails.
+- **Still yours:** `.local/scratch/block-j-cleanup.ps1` and `E:\GP\codex\Move-GameTo01.ps1`.
+
 ## Resume here (2026-11-01, final release run)
 - **Plan:** `C:/Users/lenovo/.claude/plans/alaways-use-graphify-of-generic-yeti.md`. **Branch:** `claude/final-release`.
 - **Done:**
@@ -25,7 +32,7 @@
 
 - **2026-11-02/03 completion pass:**
   - Latency meter `-vision-latency`: median 49.6 ms and p95 67 ms, capture to pose, on replayed real hand photos.
-  - Camera activity probe `--camera`: 3/12 → 11/12 after fixes F1–F5 (`Docs/HAND_CONTROL_REPORT.md` §10). Open: L8 storage box with the camera.
+  - Camera activity probe `--camera`: 3/12 → 12/12 after fixes F1–F6 (`Docs/HAND_CONTROL_REPORT.md` §10).
   - Deferred review findings fixed; `handling.assistedGrabs` recorded.
 
 ## Done

@@ -157,7 +157,10 @@ namespace GripRehab
             player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f);
             if (Vector3.Distance(player.transform.position, station.transform.position) > 1.6f) { player.Teleport(station.transform.position - player.transform.forward * 1.1f + Vector3.up * .05f, player.transform.rotation); yield return null; player.LookAt(station.transform.position); }
             yield return Hold(.5f, .5f, Shape.Fist, 1f);
-            Add("a held fist grabs the object (no key)", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none"));
+            Add("a held fist grabs the object (no key)", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none") +
+                (app.Held == station ? "" : " status=" + app.Status + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed +
+                " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " active=" + station.gameObject.activeInHierarchy +
+                " broken=" + station.IsBroken + " paused=" + player.Paused + " fps=" + (1f / Mathf.Max(1e-4f, Time.smoothDeltaTime)).ToString("0")));
             yield return Hold(.5f, .5f, Shape.Fist, 1f);
             Add("keeping the fist keeps holding", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none"));
             yield return Hold(.5f, .5f, Shape.Open, .8f);

@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-11-03T16:45:14.3092379Z",
+  "utc": "2026-11-06T09:10:17.0481737Z",
   "scope": "SYNTHETIC keyboard-demo input in the rendered Windows player; no camera, device, person or records",
   "detail": "",
   "resolution": "1600x900",
@@ -17,7 +17,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.753994464874268,
+      "seconds": 7.435138702392578,
       "notes": "",
       "outcomes": [
         {
@@ -66,7 +66,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.670000076293945
+          "value": 7.380000114440918
         },
         {
           "key": "bookshelf.firstTry",
@@ -105,7 +105,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.834622859954834,
+      "seconds": 7.451005935668945,
       "notes": "",
       "outcomes": [
         {
@@ -154,7 +154,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.71999979019165
+          "value": 7.409999847412109
         },
         {
           "key": "table.spacingErrorMm",
@@ -179,7 +179,7 @@
     {
       "activity": "Pack the storage box",
       "level": 2,
-      "score": 100,
+      "score": 94,
       "stepsDone": 1,
       "stepsTotal": 1,
       "errors": 0,
@@ -187,7 +187,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 7.881165504455566,
+      "seconds": 7.445510387420654,
       "notes": "",
       "outcomes": [
         {
@@ -200,7 +200,7 @@
           "key": "activity.accuracy",
           "label": "Placement accuracy",
           "unit": "%",
-          "value": 100.0
+          "value": 90.0
         },
         {
           "key": "activity.steps",
@@ -236,7 +236,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 7.820000171661377
+          "value": 7.21999979019165
         },
         {
           "key": "box.items",
@@ -248,7 +248,7 @@
           "key": "box.overlaps",
           "label": "Items pressed into each other",
           "unit": "",
-          "value": 0.0
+          "value": 1.0
         },
         {
           "key": "level",
@@ -275,7 +275,7 @@
       "actions": 8,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 18.581525802612305,
+      "seconds": 18.463464736938477,
       "notes": "",
       "outcomes": [
         {
@@ -324,7 +324,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 18.18000030517578
+          "value": 18.399999618530273
         },
         {
           "key": "meal.stirSeconds",
@@ -363,7 +363,7 @@
       "actions": 3,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 3.7555792331695557,
+      "seconds": 3.6617023944854736,
       "notes": "",
       "outcomes": [
         {
@@ -400,7 +400,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 4.119999885559082
+          "value": 3.619999885559082
         },
         {
           "key": "cut.evenness",
@@ -439,7 +439,7 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.670266151428223,
+      "seconds": 13.293661117553711,
       "notes": "",
       "outcomes": [
         {
@@ -488,7 +488,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.550000190734863
+          "value": 13.229999542236328
         },
         {
           "key": "level",
@@ -515,7 +515,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.097902297973633,
+      "seconds": 12.024747848510742,
       "notes": "",
       "outcomes": [
         {
@@ -564,7 +564,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.149999618530273
+          "value": 12.079999923706055
         },
         {
           "key": "bookshelf.firstTry",
@@ -603,7 +603,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.532622337341309,
+      "seconds": 12.028830528259277,
       "notes": "",
       "outcomes": [
         {
@@ -652,7 +652,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 12.550000190734863
+          "value": 12.09000015258789
         },
         {
           "key": "table.spacingErrorMm",
@@ -677,7 +677,7 @@
     {
       "activity": "Pack the storage box",
       "level": 8,
-      "score": 100,
+      "score": 94,
       "stepsDone": 1,
       "stepsTotal": 1,
       "errors": 0,
@@ -685,7 +685,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 12.857593536376953,
+      "seconds": 12.039793014526367,
       "notes": "",
       "outcomes": [
         {
@@ -698,7 +698,7 @@
           "key": "activity.accuracy",
           "label": "Placement accuracy",
           "unit": "%",
-          "value": 100.0
+          "value": 90.0
         },
         {
           "key": "activity.steps",
@@ -734,7 +734,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 13.109999656677246
+          "value": 12.050000190734863
         },
         {
           "key": "box.items",
@@ -746,7 +746,7 @@
           "key": "box.overlaps",
           "label": "Items pressed into each other",
           "unit": "",
-          "value": 0.0
+          "value": 1.0
         },
         {
           "key": "level",
@@ -773,7 +773,7 @@
       "actions": 12,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 31.22307777404785,
+      "seconds": 29.868640899658203,
       "notes": "",
       "outcomes": [
         {
@@ -822,13 +822,13 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 31.200000762939453
+          "value": 29.93000030517578
         },
         {
           "key": "meal.stirSeconds",
           "label": "Stirring with grip",
           "unit": "s",
-          "value": 4.329999923706055
+          "value": 4.340000152587891
         },
         {
           "key": "meal.ingredients",
@@ -861,7 +861,7 @@
       "actions": 5,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 6.4762420654296875,
+      "seconds": 5.968740940093994,
       "notes": "",
       "outcomes": [
         {
@@ -898,7 +898,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 6.400000095367432
+          "value": 6.090000152587891
         },
         {
           "key": "cut.evenness",
@@ -937,7 +937,7 @@
       "actions": 7,
       "failedGrabs": 0,
       "completed": true,
-      "seconds": 13.966458320617676,
+      "seconds": 13.055451393127441,
       "notes": "",
       "outcomes": [
         {
@@ -986,7 +986,7 @@
           "key": "activity.seconds",
           "label": "Time",
           "unit": "s",
-          "value": 14.199999809265137
+          "value": 13.109999656677246
         },
         {
           "key": "level",

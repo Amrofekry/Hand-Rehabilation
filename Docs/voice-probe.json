@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "utc": "2026-11-03T16:50:21.3356406Z",
+  "utc": "2026-11-03T18:03:17.6105201Z",
   "scope": "SYNTHETIC transcripts through the real router and game actions in the rendered Windows player; recognizer start checked on this computer, no speech",
   "detail": "",
   "platform": "microphones=1 (Microphone (Realtek(R) Audio)), unavailable=none, recognizer running=True",
@@ -58,7 +58,7 @@
     },
     {
       "name": "move back walks, stop stops",
-      "value": "walked 1.28 m, after stop 0.000 m",
+      "value": "walked 1.64 m, after stop 0.000 m",
       "passed": true
     },
     {

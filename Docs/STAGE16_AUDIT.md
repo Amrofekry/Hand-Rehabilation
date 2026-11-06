@@ -79,7 +79,8 @@ The journey suite (`run_ai_player_checks.py journey`) runs the whole data path i
 | Blocker for clinical use | No patient or physical data | Outside the capstone | O6, then O7 |
 | Important | Real-hand camera feel and latency not measured | Needs a person and the webcam | `PHYSICAL_TEST_PROTOCOL.md` P5; add a latency meter |
 | Important | Monocular depth is a proxy | Hardware limit | O5 depth camera |
-| Important | A-OB1: intermittent activity grab failures in some earlier runs | Was not reproduced in the final runs; root cause not proven | Keep the 3-run activity check in regression |
+| Important | A-OB1: intermittent activity grab failures in some earlier runs | Not reproduced in 7 keyboard runs since 2026-11-01; the camera run also passes 12/12 after fixes F1-F6 | Keep the 3-run activity check and the camera run in regression |
+| Important | Hand-look probe fist grab: 1 failure in about 12 runs (2026-11-06) | Not reproduced in 5 reruns; cause unknown | Diagnostics now recorded in the check; keep it in regression |
 | Optional | Eye tracking, voice assistant, Arabic UI | See `OPTIONAL_PLAN.md` | O1, O2, O4 |
 | Future | Hybrid detector (YOLO26 + RF-DETR) | Training unfinished | O3 with an A/B |
 

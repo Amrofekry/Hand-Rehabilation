@@ -79,11 +79,11 @@ namespace GripRehab
             shell.SetResearchIdentity(null);
             shell.openModuleButton.onClick.Invoke(); yield return new WaitForSecondsRealtime(1);
             app.SetHardware(false);
-            if (Camera) { app.SetCameraMode(); sending = true; closure = 0; }
             runner = app.GetComponent<ActivityRunner>();
             if (runner == null) throw new InvalidOperationException("Activity runner missing");
-            yield return UiChecks(shell);
+            yield return UiChecks(shell); // keyboard-mode UI and onboarding checks, before any camera switch
             if (UiOnly) { shell.ReturnHome(); yield break; }
+            if (Camera) { app.SetCameraMode(); sending = true; closure = 0; yield return new WaitForSecondsRealtime(.5f); }
             foreach (int level in new[] { 2, 8 })
                 foreach (ActivityKind kind in Enum.GetValues(typeof(ActivityKind)))
                 {
@@ -274,7 +274,10 @@ namespace GripRehab
                     if (step.kind == ProbeStep.Kind.Place)
                     {
                         app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.35f);
+                        float yawBefore = runner.PlacementYaw;
                         yield return OpenHand(); yield return new WaitForSecondsRealtime(1.1f);
+                        if (runner.Current is StorageBoxActivity)
+                            run.notes += runner.LastPlacement + " | ";
                     }
                     break;
                 case ProbeStep.Kind.Release:
