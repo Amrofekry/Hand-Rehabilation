@@ -26,7 +26,7 @@ pres.defineSlideMaster({ title: 'DARK_TITLE', background: { color: C.text2 }, ob
   { placeholder: { options: { name: 'body', type: 'body', x: .6, y: 2.95, w: 8.8, h: 1.2, fontSize: 18, color: C.accent5, valign: 'top', align: 'left' }, text: '' } } ] });
 pres.defineSlideMaster({ title: 'CONTENT', background: { color: C.background1 }, slideNumber: { x: 9.2, y: 5.2, w: .5, h: .3, fontSize: 10, color: C.accent4 }, objects: [
   { placeholder: { options: { name: 'title', type: 'title', x: .5, y: .3, w: 9, h: .75, fontSize: 30, bold: true, color: C.text2, valign: 'middle' }, text: '' } },
-  { text: { text: 'GripRehab · v1.0.4', options: { x: .5, y: 5.2, w: 4, h: .3, fontSize: 10, color: C.accent4 } } } ] });
+  { text: { text: 'GripRehab · v1.0.5', options: { x: .5, y: 5.2, w: 4, h: .3, fontSize: 10, color: C.accent4 } } } ] });
 
 const T = (s, text, o) => s.addText(text, Object.assign({ isTextBox: true, fontSize: 14, color: C.text1, margin: 0 }, o));
 const card = (s, x, y, w, h, fill) => s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w, h, rectRadius: .08, fill: { color: fill || C.background2 }, line: { color: fill || C.background2 } });

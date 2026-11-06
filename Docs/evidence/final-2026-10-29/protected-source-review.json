@@ -55,6 +55,11 @@
       "previousSha256": "54e7faf1407d5c5bda0da4613361a53bc88c287f3f02fd2ee78dd040bc30c8b1",
       "currentSha256": "45ca2c3a0ea7627a3969d2ad268bda3fd4ed1dc911f44b9f2be9af62d2169c70",
       "reason": "User-authorized final release (2026-10-29). Automated -apartment-* runs ignore the real mouse and movement keys, so a person using the PC cannot turn or move a focused test window; normal play unchanged."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAppShell.cs": {
+      "previousSha256": "abed53ef48324287e007b412398a33791b9b5d187ca6e78023d068c6459e3058",
+      "currentSha256": "890acb690fd419a016751e53ab90a589379e66371ffe6d6cff6eea27f926b45c",
+      "reason": "User-authorized final release (2026-10-29). 6.2 release QA: profile-storage messages tell the patient files were kept and guest practice works, instead of pointing at the Console"
     }
   }
 }
