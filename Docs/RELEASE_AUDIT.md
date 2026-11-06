@@ -1,6 +1,8 @@
-# Release audit: plan against the built game (2026-11-06, v1.0.6)
+# Release audit: plan against the built game (2026-11-06, v1.0.7)
 
 Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diagram and Gantt chart (as-built versions in [STAGE16_AUDIT.md](STAGE16_AUDIT.md) §1–2). "Evidence" names the automated check or run; results are SYNTHETIC unless marked MEASURED, BY-EYE or PHYSICAL. Nothing here is a clinical or physical validation.
+
+**Folder layout:** game code is in `Assets/Rehab/<WBS>`; the four assembly layers are mapped to WBS IDs in [PROJECT_MAP](ai/PROJECT_MAP.md) (decision ADR-WBS-1). DONE.
 
 **Status key:** DONE (software built and checked) · NEEDS HARDWARE · NEEDS A PERSON. No software item is PARTIAL or MISSING.
 
@@ -37,5 +39,5 @@ Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diag
 | You | Hardware (2.1–2.4, 6.1, 6.2) | Follow [PHYSICAL_TEST_PROTOCOL.md](PHYSICAL_TEST_PROTOCOL.md) P1–P4: print the grips, assemble the circuit, calibrate with known loads in the wizard, stream into the game and read the device panel. |
 | You | Real hand (3.2, 3.4.1) | Protocol P5: play the six activities with the webcam; note grabs that fail and how the hand feels. |
 | You | Microphone and listening | `VOICE_COMMANDS.md` V-01, V-09, V-10; `AUDIO_DESIGN.md` S-07, S-09. |
-| You | Clean machine | Install `GripRehab-Setup-1.0.6.exe` on a PC without the project; run the first-run check. |
+| You | Clean machine | Install `GripRehab-Setup-1.0.7.exe` on a PC without the project; run the first-run check. |
 | You | Data and ethics (4.1–4.3) | Needs approval before any participant data. |
