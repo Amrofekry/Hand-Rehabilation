@@ -149,7 +149,7 @@ Branch `3.4-upgrade-baseline`, commits `d97f0c1`..`ee06fd5`. Evidence: `Docs/evi
 | A-007 | **Fixed**: stalled camera sleeps 20 ms per retry | Code review; bridges 8/8 |
 | A-012 | **Fixed**: `RehabEditModeTests` runs 4 native verifications through Unity Test Framework | `-runTests` EditMode 4/4 |
 | A-014 | **Blocked on you**: VirtualGrasp 1.7.0-free bakes grasps through Gleechi's online service (uploads object meshes, needs your Gleechi account) | — |
-| A-017 | **Left open**: `RehabApp.cs` is on the protected-file list; retiring it needs your explicit OK | — |
+| A-017 | **Closed 2026-11-06**: with your OK, `RehabApp.cs`, `RehabAction.cs` and `LocalPasswordHash.cs` removed; recorded as `removed` in `evidence/final-2026-10-29/protected-source-review.json` | v1.0.6 |
 
 New items found during Stage 2:
 

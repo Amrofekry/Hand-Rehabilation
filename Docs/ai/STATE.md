@@ -2,11 +2,11 @@
 
 **Branch:** `claude/final-release` (linear chain from `3.4-upgrade-baseline`). Not merged; nothing pushed.
 
-## Resume here (2026-11-06, release QA, v1.0.5)
+## Resume here (2026-11-06, release QA, v1.0.6)
 - **Branch:** `claude/release-qa`. Plan: `C:/Users/lenovo/.claude/plans/pasted-content-id-1744-role-act-gentle-lerdorf.md`.
 - **Audit:** `Docs/RELEASE_AUDIT.md`; every software WBS item DONE, the rest NEEDS HARDWARE or A PERSON.
 - **New:** fault probe `Tools/run_fault_probe.py` 15/15 (SYNTHETIC); camera HUD shows the failure reason; storage messages are patient-friendly; UI checks at 6 sizes incl. 1080p and 1440p.
-- **Waiting on your OK:** removing the dead code and unused assets in `Docs/history/unused-candidates.md`; `bundleVersion` in ProjectSettings is still 0.5.0.
+- **Done with your OK:** dead code and unused assets removed (`Docs/history/unused-candidates.md`); `bundleVersion` 1.0.6; baseline branches fast-forwarded.
 
 ## Resume here (2026-11-06)
 - **v1.0.3:**

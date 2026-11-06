@@ -32,8 +32,13 @@ class HandMateDesignTests(unittest.TestCase):
     def test_source_art_is_exact_and_only_design_was_imported(self):
         manifest = json.loads((ROOT/'Docs/evidence/handmate-design-import.json').read_text())
         self.assertEqual(len(manifest['assets']), 12)
+        final = json.loads((ROOT/'Docs/evidence/final-2026-10-29/protected-source-review.json').read_text())['changes']
         for item in manifest['assets']:
             self.assertRegex(item['path'], r'^Assets/UI/HandMate/(Images|Fonts)/')
+            removal = final.get(item['path'])
+            if removal and removal['currentSha256'] == 'removed':  # a reviewed, user-approved deletion of the exact imported file
+                self.assertEqual(removal['previousSha256'], item['sha256']); self.assertTrue(removal['reason'])
+                self.assertFalse((ROOT/item['path']).exists()); continue
             self.assertEqual(hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest(), item['sha256'])
         self.assertFalse(any((ROOT/'Assets/UI/HandMate').rglob('*.cs')))
 

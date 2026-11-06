@@ -60,6 +60,46 @@
       "previousSha256": "abed53ef48324287e007b412398a33791b9b5d187ca6e78023d068c6459e3058",
       "currentSha256": "890acb690fd419a016751e53ab90a589379e66371ffe6d6cff6eea27f926b45c",
       "reason": "User-authorized final release (2026-10-29). 6.2 release QA: profile-storage messages tell the patient files were kept and guest practice works, instead of pointing at the Console"
+    },
+    "Assets/Rehab/3.4-game-modules/RehabApp.cs": {
+      "previousSha256": "885bcec1eeb7d602e12ad72a7a187542c111d57a3403cc1ed1c1aeb5ba0efde3",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Legacy code in no scene, referenced only by other removed legacy code (audit A-017; Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/Rehab/3.4-game-modules/RehabAction.cs": {
+      "previousSha256": "0ceff09aa1478bb3b0fd689bec0fa9c1e733824525711f089bfa721e36a89622",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Legacy code in no scene, referenced only by other removed legacy code (audit A-017; Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/Rehab/3.4-game-modules/LocalPasswordHash.cs": {
+      "previousSha256": "90a7da725b624ce79596002f8c8823058906791d9b1035faba0b9a66b7226c6f",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Legacy code in no scene, referenced only by other removed legacy code (audit A-017; Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/UI/HandMate/Fonts/Montserrat-VariableFont_wght.ttf": {
+      "previousSha256": "498dc34d0fa45288e0ac5345bd385c98bf81c56ee70209aacfb4a22a6510697c",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Imported design file referenced by no scene, prefab, material or code (Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/UI/HandMate/Fonts/Montserrat-Italic-VariableFont_wght.ttf": {
+      "previousSha256": "225da7d3255aaac9ab6bef71bf27ccbfab0b65a58a6b0a3d5c14c26cdd988691",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Imported design file referenced by no scene, prefab, material or code (Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/UI/HandMate/Images/module2-locked.jpeg": {
+      "previousSha256": "0b5b4a0e82ed0561b42cd97e7a405623975d6cb2aac1feb408214440b43629c8",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Imported design file referenced by no scene, prefab, material or code (Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/UI/HandMate/Images/module3-locked.jpeg": {
+      "previousSha256": "4d20c4aa551d102fbbe9631b0c840648cdb0af6d4bb36b03807e0fd58e7bf260",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Imported design file referenced by no scene, prefab, material or code (Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
+    },
+    "Assets/UI/HandMate/Images/back-arrow.png": {
+      "previousSha256": "2e761a976f239a3f4262851ddbd1c32b204858092264fa0b4bd116cee161c4c9",
+      "currentSha256": "removed",
+      "reason": "User-authorized final release (2026-10-29). Imported design file referenced by no scene, prefab, material or code (Docs/history/unused-candidates.md); removal approved by the user 2026-11-06."
     }
   }
 }

@@ -1,11 +1,11 @@
 # Unused code and asset candidates (2026-11-06, release QA)
 
-Found by a read-only scan (`.local/scratch/unused.py`, `unused_assets.py`): a type nothing else names and no scene, prefab or asset uses by GUID, or a file whose GUID nothing references. Self-booting scripts (`RuntimeInitializeOnLoadMethod`), Editor `-executeMethod` tools, build hooks, tests and `Resources/` files were excluded. **Nothing was deleted.** Each removal waits for your OK.
+Found by a read-only scan (`.local/scratch/unused.py`, `unused_assets.py`): a type nothing else names and no scene, prefab or asset uses by GUID, or a file whose GUID nothing references. Self-booting scripts (`RuntimeInitializeOnLoadMethod`), Editor `-executeMethod` tools, build hooks, tests and `Resources/` files were excluded. **Removed 2026-11-06 with your OK (v1.0.6):** every file below, recorded as `removed` with its last hash in `Docs/evidence/final-2026-10-29/protected-source-review.json`.
 
 ## Code (dead at runtime)
 | File | Why it is unused | Note before removing |
 |---|---|---|
-| `Assets/Rehab/3.4-game-modules/RehabApp.cs` (668 lines) | Legacy controller. Not in any scene (audit A-017); only `RehabAction` names it | On the protected list in `Tools/test_handmate_design.py:53`; update that list and record it with `update_review.py` |
+| `Assets/Rehab/3.4-game-modules/RehabApp.cs` (668 lines) | Legacy controller. Not in any scene (audit A-017); only `RehabAction` names it | Pinned: recorded as `removed` in the review chain. `Tools/test_handmate_design.py:53` is a check of a historical review record and stays |
 | `Assets/Rehab/3.4-game-modules/RehabAction.cs` | Button helper for `RehabApp` only | Goes with `RehabApp.cs` |
 | `Assets/Rehab/3.4-game-modules/LocalPasswordHash.cs` | Superseded by `Assets/Product/PasswordKdf.cs`; nothing calls it | None |
 

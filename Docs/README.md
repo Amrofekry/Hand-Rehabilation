@@ -5,7 +5,7 @@ Start with **[STATUS.md](STATUS.md)** (what is done, with evidence) and the **[A
 ## Current: use these
 | Topic | Documents |
 |---|---|
-| Status and audit | [STATUS](STATUS.md), [RELEASE_AUDIT](RELEASE_AUDIT.md) (plan vs build, v1.0.5), [STAGE16_AUDIT](STAGE16_AUDIT.md) (as-built diagrams, Gantt, gaps), [REQUIREMENTS_CHECKLIST](REQUIREMENTS_CHECKLIST.md), [DECISIONS](DECISIONS.md), [BLOCKERS](BLOCKERS.md) |
+| Status and audit | [STATUS](STATUS.md), [RELEASE_AUDIT](RELEASE_AUDIT.md) (plan vs build, v1.0.6), [STAGE16_AUDIT](STAGE16_AUDIT.md) (as-built diagrams, Gantt, gaps), [REQUIREMENTS_CHECKLIST](REQUIREMENTS_CHECKLIST.md), [DECISIONS](DECISIONS.md), [BLOCKERS](BLOCKERS.md) |
 | Architecture | [architecture/index.html](architecture/index.html) (layers, pipelines, "where does X live"), [architecture/graph.html](architecture/graph.html) (dependency graph) |
 | Camera hand and controls | [HAND_CONTROL_REPORT](HAND_CONTROL_REPORT.md) (measurements, fixes F1–F6), [HAND_CONTROLS](HAND_CONTROLS.md), [HAND_POINTER](HAND_POINTER.md), [HANDS_AND_MEDIAPIPE_AR](HANDS_AND_MEDIAPIPE_AR.md), [VOICE_COMMANDS](VOICE_COMMANDS.md) |
 | Interaction and physics | [HAND_OBJECT_INTERACTION](HAND_OBJECT_INTERACTION.md), [CORE_INTERACTION_AR](CORE_INTERACTION_AR.md) |
@@ -24,7 +24,7 @@ Start with **[STATUS.md](STATUS.md)** (what is done, with evidence) and the **[A
 - `evidence/physical/`: physical test templates (empty until run on hardware).
 - `*.json` here: the latest output of each test runner (`Tools/run_*.py` writes them).
 - `history/results/`: outputs of retired runners, kept for the record.
-- `history/unused-candidates.md`: dead code and unused assets waiting for your OK to remove.
+- `history/unused-candidates.md`: dead code and unused assets, removed 2026-11-06 with your OK.
 - `fault-probe.json`: release fault probe results (SYNTHETIC).
 - `screenshots/`: UI gallery and player captures.
 
