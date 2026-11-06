@@ -15,7 +15,10 @@ namespace GripRehab
 #endif
         public bool Available { get; private set; }
         public string Status { get; private set; } = "ONNX model unavailable";
-        public ResearchAiRuntime()
+        public const string ModelResource = "ResearchAi/PROTOTYPE_PROXY_cnn";
+        public ResearchAiRuntime() : this(ModelResource) { }
+        /// <summary>modelResource: a Resources path. A missing model leaves Available false with a readable Status; the rule-based fatigue limits never depend on it.</summary>
+        public ResearchAiRuntime(string modelResource)
         {
             try {
                 var text = Resources.Load<TextAsset>("ResearchAi/scaler");
@@ -24,8 +27,8 @@ namespace GripRehab
                 if (scaler.mean == null || scaler.std == null || scaler.mean.Length != 8 || scaler.std.Length != 8) throw new ArgumentException("Scaler dimensions");
                 for (int i=0;i<8;i++) if ((float.IsNaN(scaler.mean[i]) || float.IsInfinity(scaler.mean[i])) || (float.IsNaN(scaler.std[i]) || float.IsInfinity(scaler.std[i])) || scaler.std[i] <= 0) throw new ArgumentException("Invalid scaler");
 #if GRIPREHAB_SENTIS
-                var asset = Resources.Load<ModelAsset>("ResearchAi/PROTOTYPE_PROXY_cnn");
-                if (asset == null) return;
+                var asset = Resources.Load<ModelAsset>(modelResource);
+                if (asset == null) { Status = "Fatigue model file missing; rule-based safety limits still apply"; return; }
                 worker = new Worker(ModelLoader.Load(asset), BackendType.CPU); Available = true;
                 Status = "PROTOTYPE-PROXY / public EMG; device use blocked";
 #else

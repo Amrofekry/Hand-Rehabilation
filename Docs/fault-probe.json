@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "utc": "2026-11-06T15:34:37.3854906Z",
+  "scope": "SYNTHETIC injected faults in the rendered Windows player; no webcam opened, throwaway storage",
+  "detail": "",
+  "logs": 0,
+  "logLines": [],
+  "checks": [
+    {
+      "name": "camera: absent camera reported as failed",
+      "value": "FAILED / Could not open camera/video. Check device access and index.",
+      "passed": true
+    },
+    {
+      "name": "camera: HUD tells the player why and what still works",
+      "value": "CAMERA: FAILED - Could not open camera/video. Check device access and index.. Keyboard and mouse still work  0 FPS  R:NO L:NO  OK:0 REJ:0",
+      "passed": true
+    },
+    {
+      "name": "camera: keyboard fallback takes over",
+      "value": "GRIP / REHAB  /  MODULE 01 KEYBOARD + MOUSE DEMO  |  WALKING SELECTED HAND: RIGHT DEMO",
+      "passed": true
+    },
+    {
+      "name": "hand stream: LIVE -> SEARCHING -> LIVE",
+      "value": "live=True searching=True back=True",
+      "passed": true
+    },
+    {
+      "name": "force: live samples accepted",
+      "value": "Synthetic BLE replay / Live",
+      "passed": true
+    },
+    {
+      "name": "force: silence marked stale within 1 s",
+      "value": "BLE sample stale (>500 ms) / Stale",
+      "passed": true
+    },
+    {
+      "name": "force: disconnect reason shown",
+      "value": "BLE disconnected; reconnecting",
+      "passed": true
+    },
+    {
+      "name": "force: reconnect recovers and is counted",
+      "value": "Synthetic BLE replay / reconnects 2",
+      "passed": true
+    },
+    {
+      "name": "microphone: missing device explained, nothing listening",
+      "value": "No microphone found. Connect one, or allow microphone access in Windows Settings > Privacy > Microphone.",
+      "passed": true
+    },
+    {
+      "name": "model: missing file reported, inference refused",
+      "value": "Fatigue model file missing; rule-based safety limits still apply",
+      "passed": true
+    },
+    {
+      "name": "model: rule-based fatigue limits still run",
+      "value": "warning level 1 / GripRehab.Product.FatigueSafetyDecision",
+      "passed": true
+    },
+    {
+      "name": "model: packaged model still loads",
+      "value": "PROTOTYPE-PROXY / public EMG; device use blocked",
+      "passed": true
+    },
+    {
+      "name": "save: one damaged copy recovered from the backup",
+      "value": "1 profile(s)",
+      "passed": true
+    },
+    {
+      "name": "save: two damaged copies refused, files kept",
+      "value": "Both protected copies require recovery. Original files retained.",
+      "passed": true
+    },
+    {
+      "name": "save: player told guest practice still works",
+      "value": "Profile storage unavailable \u2014 guest practice is available | Saved profiles could not be opened. Your files were kept unchanged; guest practice still works.",
+      "passed": true
+    }
+  ],
+  "exit": 0
+}

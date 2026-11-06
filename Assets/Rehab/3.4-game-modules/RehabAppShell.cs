@@ -251,7 +251,7 @@ namespace GripRehab
         {
             if (research != null && !research.CanCreateProfile) { research.Welcome(); return; }
             if (formError != null) formError.text = Store == null ?
-                "Cannot open protected profiles. Check the Console before continuing." :
+                "Saved profiles could not be opened. Your files were kept unchanged; guest practice still works." :
                 "Local prototype profile. Leave optional fields blank if preferred.";
             nameField.text = ageField.text = concernField.text = goalField.text = painField.text = "";
             genderPicker.value = 0; affectedPicker.value = 0; dominantPicker.value = 0;
@@ -279,7 +279,7 @@ namespace GripRehab
         void SaveProfile()
         {
             if (research != null && !research.CanCreateProfile) { research.Welcome(); return; }
-            if (Store == null) { formError.text = "Profile storage is unavailable. Check the Console."; return; }
+            if (Store == null) { formError.text = "Saved profiles could not be opened, so a new profile cannot be saved. Use guest practice."; return; }
             if (!int.TryParse(ageField.text.Trim(), out var age)) { formError.text = "Enter a valid age."; return; }
             int pain = -1;
             if (!string.IsNullOrWhiteSpace(painField.text) && !int.TryParse(painField.text.Trim(), out pain))

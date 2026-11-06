@@ -24,6 +24,8 @@ def run(width, height):
         raise RuntimeError('Player did not write fresh UI QA output; ensure current scripts were built')
     result = json.loads(result_path.read_text(encoding='utf-8-sig'))
     output = log.read_text(errors='replace')
+    if (result.get('width'), result.get('height')) != (width, height):
+        raise RuntimeError(f'Player rendered {result.get("width")}x{result.get("height")}, not the requested {width}x{height}')
     if code or not result['passed'] or '[UI_PRESENTATION] PASS' not in output:
         raise RuntimeError(f'UI check failed: {code}, {result.get("error", "")}')
     for marker in ('Exception', '[PROFILE]', 'Failed to store screen shot'):
@@ -45,8 +47,8 @@ def run(width, height):
     return result
 
 if __name__ == '__main__':
-    # Stage 11 (U-12): all four target resolutions, 4:3, 16:9 and 16:10.
-    results = [run(1024, 768), run(1280, 720), run(1280, 800), run(1600, 900)]
+    # Stage 11 (U-12): 4:3, 16:9 and 16:10, plus 1080p and 1440p (release QA 2026-11-06).
+    results = [run(1024, 768), run(1280, 720), run(1280, 800), run(1600, 900), run(1920, 1080), run(2560, 1440)]
     (ROOT / 'Docs/ui-player-checks.json').write_text(json.dumps(results, indent=2))
     print(json.dumps([{'size': f'{r["width"]}x{r["height"]}', 'checks': len(r['checks']),
                        'passed': r['passed']} for r in results], indent=2))

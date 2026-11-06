@@ -45,6 +45,8 @@ namespace GripRehab
             set { PlayerPrefs.SetInt(ModeKey, (int)value); if (instance != null) instance.ApplyMode(); }
         }
         public static string ModeName(VoiceMode m) => m == VoiceMode.Off ? "OFF" : m == VoiceMode.PushToTalk ? "HOLD CTRL TO TALK" : "ALWAYS ON";
+        /// <summary>Fault probe only (-apartment-faults): behave as if no microphone is connected.</summary>
+        public static bool SimulateNoMicrophone;
         /// <summary>Why voice cannot run on this computer, or null when it can.</summary>
         public string Unavailable { get; private set; }
         public bool RecognizerRunning { get; private set; }
@@ -103,7 +105,7 @@ namespace GripRehab
         {
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
             if (!PhraseRecognitionSystem.isSupported) return "Speech recognition is not supported on this computer.";
-            if (Microphone.devices == null || Microphone.devices.Length == 0) return "No microphone found. Connect one, or allow microphone access in Windows Settings > Privacy > Microphone.";
+            if (SimulateNoMicrophone || Microphone.devices == null || Microphone.devices.Length == 0) return "No microphone found. Connect one, or allow microphone access in Windows Settings > Privacy > Microphone.";
             return null;
 #else
             return "Voice commands need Windows.";
