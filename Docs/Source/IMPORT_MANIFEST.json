@@ -6,8 +6,11 @@
   "files": [
     {
       "path": "firmware/arduino-cli.yaml",
-      "bytes": 193,
-      "sha256": "94688ed8643ecd9c18a2fc0bd2ebccab476defb0fd5b1d632dd8de66310ad9ec"
+      "bytes": 239,
+      "sha256": "888a2b4134c9a8b86f9a7d9b5bdcc666aab1260269fdeaef6881462985945b03",
+      "imported_sha256": "94688ed8643ecd9c18a2fc0bd2ebccab476defb0fd5b1d632dd8de66310ad9ec",
+      "imported_bytes": 193,
+      "local_change": "0cafee6 (2026-11-01): Arduino caches moved into the game firmware folder"
     },
     {
       "path": "firmware/build.ps1",
@@ -356,23 +359,35 @@
     },
     {
       "path": "ai-engine/4.1-baseline-protocol/README.md",
-      "bytes": 125,
-      "sha256": "667c288697a6c44a9a679b5387d470188d274ea17b1a8e482cba189ffe16728c"
+      "bytes": 484,
+      "sha256": "d1bb973612045da9c684618714d12cefa5d4e4f15c9b8b48afc8882d667c8a1b",
+      "imported_sha256": "667c288697a6c44a9a679b5387d470188d274ea17b1a8e482cba189ffe16728c",
+      "imported_bytes": 125,
+      "local_change": "8799ab5 (2026-11-06): README rewritten to say where the implementation lives"
     },
     {
       "path": "ai-engine/4.2-data-collection/README.md",
-      "bytes": 123,
-      "sha256": "6cae20599b12137366f77cfa4cc515a154b4de37bc481378add00095c8aad463"
+      "bytes": 479,
+      "sha256": "21b281edb8cc15b9f331505af8cf7dcf1a29b70054bdd470323c01888cb344e2",
+      "imported_sha256": "6cae20599b12137366f77cfa4cc515a154b4de37bc481378add00095c8aad463",
+      "imported_bytes": 123,
+      "local_change": "8799ab5 (2026-11-06): README rewritten to say where the implementation lives"
     },
     {
       "path": "ai-engine/4.3-fatigue-model/README.md",
-      "bytes": 121,
-      "sha256": "0126c5bf09b1afd254047b1127f494b761f55c45c9f0868510ec6b4e27c572c3"
+      "bytes": 502,
+      "sha256": "e7b67b9f0902f8fa8efd466904a7884a21b366c893536f82b3b25f82f86c04c1",
+      "imported_sha256": "0126c5bf09b1afd254047b1127f494b761f55c45c9f0868510ec6b4e27c572c3",
+      "imported_bytes": 121,
+      "local_change": "8799ab5 (2026-11-06): README rewritten to say where the implementation lives"
     },
     {
       "path": "ai-engine/4.4-onnx-export/README.md",
-      "bytes": 119,
-      "sha256": "7d47189ed01d5cb48466c6c05fc3d8725707fb0d15915ccc2caeff9bc0500bf0"
+      "bytes": 553,
+      "sha256": "f8d6f30f3f209e7e0eeb1226c86a77ac011fd9b1b32bd812f484f614764c0b53",
+      "imported_sha256": "7d47189ed01d5cb48466c6c05fc3d8725707fb0d15915ccc2caeff9bc0500bf0",
+      "imported_bytes": 119,
+      "local_change": "8799ab5 (2026-11-06): README rewritten to say where the implementation lives"
     },
     {
       "path": "ai-engine/4.5-decision-policy/policy.py",
@@ -381,8 +396,11 @@
     },
     {
       "path": "ai-engine/4.5-decision-policy/README.md",
-      "bytes": 123,
-      "sha256": "92a41eac7deea6154dc8447c0f8b924c03ce93e7ca7fefc219233c72331a1949"
+      "bytes": 480,
+      "sha256": "981e77edd167b3d8f4791619e991b0daab6433c63f2243de638a1e9ae889a3b2",
+      "imported_sha256": "92a41eac7deea6154dc8447c0f8b924c03ce93e7ca7fefc219233c72331a1949",
+      "imported_bytes": 123,
+      "local_change": "8799ab5 (2026-11-06): README rewritten to say where the implementation lives"
     },
     {
       "path": "tests/2.1-mechanical/test_layout.py",

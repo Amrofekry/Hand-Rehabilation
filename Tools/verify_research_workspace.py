@@ -69,6 +69,7 @@ def main() -> int:
         ("mechanical", [sys.executable, "-m", "unittest", "discover", "-s", "tests/2.1-mechanical"]),
         ("feature-windows", [sys.executable, "-m", "unittest", "discover", "-s", "tests/4.2-data-schema"]),
         ("decision-policy", [sys.executable, "-m", "unittest", "discover", "-s", "tests/4.5-decision-policy"]),
+        ("bluetooth-integration", [sys.executable, "-m", "unittest", "discover", "-s", "tests/6.1-bluetooth-integration"]),
     ]
     for name, command in commands:
         result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, errors="replace")

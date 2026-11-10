@@ -12,6 +12,7 @@ Hand-grip rehabilitation game: the apartment and its activities, hand tracking b
   On a first compile, "could not be found" lines are harmless if the log ends in `Build Finished, Result: Success`.
 - **Offline C#:** `ai-engine/.venv-ai/Scripts/python.exe Tools/offline_verify.py --meta --compile --tests`
 - **Python:** `python -m unittest discover -s Tools -p "test_*.py"`. Run `cd ai-engine && .venv-ai/Scripts/python.exe -m pytest -q`.
+- **Full regression (Editor closed, about 75 min):** `ai-engine/.venv-ai/Scripts/python.exe Tools/run_full_regression.py` runs everything below in order and writes `Docs/full-regression.json`.
 - **Player suites** (one at a time; two players at once break the UDP ports):
   `Tools/run_ai_player_checks.py smoke|replay|journey`, `run_ui_checks.py`, `run_gallery_checks.py`, `run_perf_probe.py`, `run_contact_probe.py [--grip-lab|--material-lab]`, `run_activity_probe.py`
 - **EditMode:** `Unity.exe -batchmode -nographics -projectPath . -runTests -testPlatform EditMode -testResults Logs/editmode.xml`
