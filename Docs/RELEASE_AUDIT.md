@@ -1,4 +1,4 @@
-# Release audit: plan against the built game (2026-11-06, v1.0.7)
+# Release audit: plan against the built game (2026-11-10, v1.0.8)
 
 Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diagram and Gantt chart (as-built versions in [STAGE16_AUDIT.md](STAGE16_AUDIT.md) §1–2). "Evidence" names the automated check or run; results are SYNTHETIC unless marked MEASURED, BY-EYE or PHYSICAL. Nothing here is a clinical or physical validation.
 
@@ -30,7 +30,7 @@ Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diag
 | 5.1 | Patient dashboard | `Assets/ProductIntegration/ResearchPortalPages.cs` | Product tests with exact fixtures; journey | DONE |
 | 5.2 | Doctor dashboard (D1–D5) | `Assets/ProductIntegration/ResearchPortalPages.cs` | Product tests (roles, audit, no patient mixing) | DONE; clinician review NEEDS A PERSON |
 | 6.1 | Bluetooth integration | `Assets/Rehab/6.1-bluetooth-integration/` | SYNTHETIC replay; device-health tests (14); stale, disconnect and reconnect in the fault probe | Software DONE; real stream NEEDS HARDWARE |
-| 6.2 | Closed-loop testing | `Tools/run_*.py`, `tests/6.2-*` | Full regression green in one run (`Logs/final-n-regression.txt`, 2026-11-06) | DONE (software); physical loop NEEDS HARDWARE |
+| 6.2 | Closed-loop testing | `Tools/run_full_regression.py` (every `Tools/run_*.py` suite, EditMode, console zero, offline C#, Python, firmware C++, CAD, pytest) | Every suite passed in one run: [full-regression.json](full-regression.json) | DONE (software); physical loop NEEDS HARDWARE |
 | 6.3 | Documentation and presentation | `Docs/README.md` index, guide, slides, demo video, installer | First-run check with the real webcam (MEASURED, this computer) | DONE; clean-machine install NEEDS A PERSON |
 
 ## What you need to do (the NEEDS rows)
@@ -39,5 +39,5 @@ Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diag
 | You | Hardware (2.1–2.4, 6.1, 6.2) | Follow [PHYSICAL_TEST_PROTOCOL.md](PHYSICAL_TEST_PROTOCOL.md) P1–P4: print the grips, assemble the circuit, calibrate with known loads in the wizard, stream into the game and read the device panel. |
 | You | Real hand (3.2, 3.4.1) | Protocol P5: play the six activities with the webcam; note grabs that fail and how the hand feels. |
 | You | Microphone and listening | `VOICE_COMMANDS.md` V-01, V-09, V-10; `AUDIO_DESIGN.md` S-07, S-09. |
-| You | Clean machine | Install `GripRehab-Setup-1.0.7.exe` on a PC without the project; run the first-run check. |
+| You | Clean machine | Install `GripRehab-Setup-1.0.8.exe` on a PC without the project; run the first-run check. |
 | You | Data and ethics (4.1–4.3) | Needs approval before any participant data. |

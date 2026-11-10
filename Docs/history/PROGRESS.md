@@ -90,4 +90,4 @@ Graduation item 2 source now integrates account/profile/preparation/explicit qui
 
 
 ## WBS 4 AI work - 2026-10-22
-See [AI progress](../ai-engine/PROGRESS.md) and [measured report](../ai-engine/reports/FINAL_REPORT.md). Public EMG proxy models are not validated device-fatigue models. Existing hand, objects and scene are preserved.
+See [AI progress](../../ai-engine/PROGRESS.md) and [measured report](../../ai-engine/reports/FINAL_REPORT.md). Public EMG proxy models are not validated device-fatigue models. Existing hand, objects and scene are preserved.

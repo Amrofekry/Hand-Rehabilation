@@ -45,7 +45,7 @@ The baseline failures include six disagreements between image projection and est
 
 Tests execute production pure-source decisions with managed math and fabricated frames. Static contracts check wiring but do not execute uGUI raycasts, native click callbacks, rendering, actual focus events or webcam operation. **No live usability, FPS/latency target, native Play/Stop or fresh Windows build is claimed.**
 
-Evidence: [item2-pointer-checks.json](evidence/item2-pointer-checks.json), [item2-offline-checks.json](evidence/item2-offline-checks.json), [item2-negative-checks.json](evidence/item2-negative-checks.json). Logs: `Logs/offline/item2-pointer`, `Logs/offline/pointer-negative`, and standard `Logs/offline` test logs. Source backup: `Logs/item2-before-20261001-151614`.
+Evidence: [item2-pointer-checks.json](../evidence/item2-pointer-checks.json), [item2-offline-checks.json](../evidence/item2-offline-checks.json), [item2-negative-checks.json](../evidence/item2-negative-checks.json). Logs: `Logs/offline/item2-pointer`, `Logs/offline/pointer-negative`, and standard `Logs/offline` test logs. Source backup: `Logs/item2-before-20261001-151614`.
 
 Run from the project root:
 

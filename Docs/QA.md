@@ -1,38 +1,38 @@
 # Current QA — 6 October 2026
 
-[Current closeout](CLOSEOUT_2026_10_06.md) supersedes the pending native/build statements in the historical entries below. The repaired Windows build passes 168/169/168 gameplay checks, 60 UI checks at each of two resolutions and 87 gallery checks at each of three resolutions. Three Play/Stop cycles pass after the TMP font fix. Live human-camera and physical hardware trials remain unverified. Voice remains future task 7; UI remains English.
+[Current closeout](history/CLOSEOUT_2026_10_06.md) supersedes the pending native/build statements in the historical entries below. The repaired Windows build passes 168/169/168 gameplay checks, 60 UI checks at each of two resolutions and 87 gallery checks at each of three resolutions. Three Play/Stop cycles pass after the TMP font fix. Live human-camera and physical hardware trials remain unverified. Voice remains future task 7; UI remains English.
 
 ## 2026-10-02 menu input status
 
-Mouse, keyboard and the whole-hand MediaPipe pointer remain available. Five-second palm dwell and the managed-event cache repair are retained. Voice commands are not implemented; task 7 in [TASKS.md](TASKS.md) is future work. Earlier native/build evidence predates this removal; current file compilation and source-test evidence is separate.
+Mouse, keyboard and the whole-hand MediaPipe pointer remain available. Five-second palm dwell and the managed-event cache repair are retained. Voice commands are not implemented; task 7 in [TASKS.md](history/TASKS.md) is future work. Earlier native/build evidence predates this removal; current file compilation and source-test evidence is separate.
 
 # Latest item 6 checkpoint — 1 October 2026
 
-[HAND_RIG_ITEM_6.md](HAND_RIG_ITEM_6.md) and evidence/item6-hand-rig-checks.json record the current saved joint/SDK adapter revision. All 641 unique mixed-scope software checks and five Editor/four player cached-reference compilations passed. Four deliberately broken variants were rejected. Native VirtualGrasp execution, rendered skin/finger accuracy, live right/left camera behavior, contact/Play/Stop, performance and a fresh Windows build remain pending under the files-only instruction. SDK doubles establish adapter behavior only. Earlier runtime results below do not validate this revision.
+[HAND_RIG_ITEM_6.md](history/HAND_RIG_ITEM_6.md) and evidence/item6-hand-rig-checks.json record the current saved joint/SDK adapter revision. All 641 unique mixed-scope software checks and five Editor/four player cached-reference compilations passed. Four deliberately broken variants were rejected. Native VirtualGrasp execution, rendered skin/finger accuracy, live right/left camera behavior, contact/Play/Stop, performance and a fresh Windows build remain pending under the files-only instruction. SDK doubles establish adapter behavior only. Earlier runtime results below do not validate this revision.
 
 # Latest item 2 checkpoint — 1 October 2026
 
-[POINTER_ITEM_2.md](POINTER_ITEM_2.md) and evidence/item2-pointer-checks.json record the current saved pointer revision. 524 unique mixed-scope positive checks passed; five Editor/four player assemblies compiled; the exact old policy failed seven new checks and three deliberately broken variants were rejected. These are pure-source managed-math/static tests, not native uGUI or a live webcam trial. Native menu activation/occlusion, both-hand usability, focus/Play/Stop, performance and a fresh Windows build remain pending. Earlier pointer runtime results below are historical.
+[POINTER_ITEM_2.md](history/POINTER_ITEM_2.md) and evidence/item2-pointer-checks.json record the current saved pointer revision. 524 unique mixed-scope positive checks passed; five Editor/four player assemblies compiled; the exact old policy failed seven new checks and three deliberately broken variants were rejected. These are pure-source managed-math/static tests, not native uGUI or a live webcam trial. Native menu activation/occlusion, both-hand usability, focus/Play/Stop, performance and a fresh Windows build remain pending. Earlier pointer runtime results below are historical.
 
 # Latest item 5 checkpoint — 1 October 2026
 
-[DEFORMATION_ITEM_5.md](DEFORMATION_ITEM_5.md) and evidence/item5-deformation-checks.json record the saved deformation/fracture repair. 401 unique positive software checks and five Editor/four player cached-reference compilations passed; three isolated mutations were rejected. Python suites pass from the canonical project root. These are source/managed-math/static tests, not native PhysX/rendering. Live hand, material appearance, contact/collision behavior, Play/Stop and a fresh Windows build remain pending. Earlier runtime results below are historical and do not validate this revision.
+[DEFORMATION_ITEM_5.md](history/DEFORMATION_ITEM_5.md) and evidence/item5-deformation-checks.json record the saved deformation/fracture repair. 401 unique positive software checks and five Editor/four player cached-reference compilations passed; three isolated mutations were rejected. Python suites pass from the canonical project root. These are source/managed-math/static tests, not native PhysX/rendering. Live hand, material appearance, contact/collision behavior, Play/Stop and a fresh Windows build remain pending. Earlier runtime results below are historical and do not validate this revision.
 
 # Latest item 4 checkpoint — 1 October 2026
 
-[GRASP_ITEM_4.md](GRASP_ITEM_4.md) and evidence/item4-grasp-checks.json record the current grasp/release repair. 331 positive software/static checks and cached-reference compilation passed; two negative mutations were rejected. The collider-pair recorder is not PhysX. Native drop/clearance/recoil, Play/Stop, live hand behavior and a fresh Windows build remain pending. Earlier results below are historical; the immediate release-collision expectation is superseded by restoring pairs after separation.
+[GRASP_ITEM_4.md](history/GRASP_ITEM_4.md) and evidence/item4-grasp-checks.json record the current grasp/release repair. 331 positive software/static checks and cached-reference compilation passed; two negative mutations were rejected. The collider-pair recorder is not PhysX. Native drop/clearance/recoil, Play/Stop, live hand behavior and a fresh Windows build remain pending. Earlier results below are historical; the immediate release-collision expectation is superseded by restoring pairs after separation.
 
 # Latest item 3 checkpoint — 1 October 2026
 
-[KEYBOARD_ITEM_3.md](KEYBOARD_ITEM_3.md) records the current keyboard/mouse source repair and 256 positive software/static/regression checks. Compilation passed; native input/Play/Stop and the Windows rebuild remain pending. No Unity or Computer Use was launched for this revision. Earlier runtime results below do not verify this input revision.
+[KEYBOARD_ITEM_3.md](history/KEYBOARD_ITEM_3.md) records the current keyboard/mouse source repair and 256 positive software/static/regression checks. Compilation passed; native input/Play/Stop and the Windows rebuild remain pending. No Unity or Computer Use was launched for this revision. Earlier runtime results below do not verify this input revision.
 
 # Latest camera direction checkpoint — 1 October 2026
 
-[CAMERA_DIRECTION_FIX.md](CAMERA_DIRECTION_FIX.md) records the current file-only correction. Compilation and 130 managed pose-source / 37 domain / 8 Python checks passed. No native Unity or live-hand test was performed for this revision. Earlier results below are historical and do not verify the new direction/facing correction.
+[CAMERA_DIRECTION_FIX.md](history/CAMERA_DIRECTION_FIX.md) records the current file-only correction. Compilation and 130 managed pose-source / 37 domain / 8 Python checks passed. No native Unity or live-hand test was performed for this revision. Earlier results below are historical and do not verify the new direction/facing correction.
 
 # Current repair verification — 30 September 2026
 
-See [REPAIR_REPORT.md](REPAIR_REPORT.md): native Editor QA completed at 16:08:04 UTC; Windows build at 16:13:15 UTC; fresh normal/replay/rendered player runs passed 137/138/137 checks; two UI resolutions passed 60 checks each, and three gallery resolutions passed 79 checks each. A separate ordinary, non-fixture Editor startup and Start → Modules → Home navigation was observed with zero Console errors. No new features were added in this repair run. The following sections preserve earlier findings.
+See [REPAIR_REPORT.md](history/REPAIR_REPORT.md): native Editor QA completed at 16:08:04 UTC; Windows build at 16:13:15 UTC; fresh normal/replay/rendered player runs passed 137/138/137 checks; two UI resolutions passed 60 checks each, and three gallery resolutions passed 79 checks each. A separate ordinary, non-fixture Editor startup and Start → Modules → Home navigation was observed with zero Console errors. No new features were added in this repair run. The following sections preserve earlier findings.
 
 # Visible pointer / no click — 30 September 2026 (WBS 3.2 / 3.4)
 

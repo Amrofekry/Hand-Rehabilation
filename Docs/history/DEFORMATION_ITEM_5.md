@@ -30,7 +30,7 @@ The tests ran against the saved canonical files, without a staging override:
 
 **401 unique positive checks** passed across different software scopes. Repeated runs are not counted again. The tests exercise production pure-source logic with managed math/physics substitutes and static wiring, not Unity rendering, native PhysX, SDK behavior or physical sensors. New native acceptance fixtures compiled but were not executed.
 
-Evidence: [item5-deformation-checks.json](evidence/item5-deformation-checks.json), [item5-offline-checks.json](evidence/item5-offline-checks.json), [item5-negative-checks.json](evidence/item5-negative-checks.json). Logs are under `Logs/offline`.
+Evidence: [item5-deformation-checks.json](../evidence/item5-deformation-checks.json), [item5-offline-checks.json](../evidence/item5-offline-checks.json), [item5-negative-checks.json](../evidence/item5-negative-checks.json). Logs are under `Logs/offline`.
 
 Run from the project root:
 

@@ -1,4 +1,4 @@
-> 12 October 2026: restored the earlier VirtualGrasp prototype for Unity 2022.3.0f1 at the user's request. Later hand/contact/soft-body evidence below is historical. See [restoration report](ROLLBACK_2026_10_12.md) and [current 23 tasks](SOFTWARE_TASKS_23.md).
+> 12 October 2026: restored the earlier VirtualGrasp prototype for Unity 2022.3.0f1 at the user's request. Later hand/contact/soft-body evidence below is historical. See [restoration report](evidence/rollback-2026-10-12/) and [current 23 tasks](history/SOFTWARE_TASKS_23.md).
 
 # GripRehab current software delivery
 
@@ -49,4 +49,4 @@ The historical September 29 boundary checker still reports 16 later authorized O
 
 The game is a research prototype. Camera closure is an estimate, not measured force; physical material fidelity and clinical efficacy are unverified. The doctor screen remains a local preview and adaptive AI/product-portal ambitions remain separate future scope. Original Gantt/WBS dates were not changed.
 
-Default sandbox Git writes still failed; the reviewed elevated Git command successfully staged a narrow checkpoint. Only the owned UI font fix, its gallery regression and the current task/report documents are included; unrelated existing changes remain in the working tree. The verified commit identity is recorded separately after committing. [TASKS.md](TASKS.md) is the current numbered list; older progress entries remain historical.
+Default sandbox Git writes still failed; the reviewed elevated Git command successfully staged a narrow checkpoint. Only the owned UI font fix, its gallery regression and the current task/report documents are included; unrelated existing changes remain in the working tree. The verified commit identity is recorded separately after committing. [TASKS.md](history/TASKS.md) is the current numbered list; older progress entries remain historical.

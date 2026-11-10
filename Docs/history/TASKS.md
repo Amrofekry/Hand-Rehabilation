@@ -1,4 +1,4 @@
-> 12 October 2026: restored the earlier VirtualGrasp prototype for Unity 2022.3.0f1 at the user's request. Later hand/contact/soft-body evidence below is historical. See [restoration report](ROLLBACK_2026_10_12.md) and [current 23 tasks](SOFTWARE_TASKS_23.md).
+> 12 October 2026: restored the earlier VirtualGrasp prototype for Unity 2022.3.0f1 at the user's request. Later hand/contact/soft-body evidence below is historical. See [restoration report](../evidence/rollback-2026-10-12/) and [current 23 tasks](SOFTWARE_TASKS_23.md).
 
 # GripRehab task list
 

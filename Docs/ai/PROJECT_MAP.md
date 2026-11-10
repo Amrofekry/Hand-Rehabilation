@@ -68,7 +68,7 @@ Game code lives in `Assets/Rehab/<WBS>`. The four assembly layers (`Product`, `P
 | VirtualGrasp (vendor) | 43 |
 
 ## Outside Assets
-- `Tools/`: offline harness, player-suite runners, Python tests, vision worker.
+- `Tools/`: `run_full_regression.py` (every check in one command), offline harness, player-suite runners, Python tests, vision worker.
 - `ai-engine/`: ML model and its pytest suite.
 - `Docs/`: STATUS, AUDIT_LEDGER, REQUIREMENTS_CHECKLIST, plans, evidence.
 

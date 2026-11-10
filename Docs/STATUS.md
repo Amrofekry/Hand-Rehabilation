@@ -1,6 +1,6 @@
 # GripRehab status: single source of truth
 
-Updated 2026-11-06 (release v1.0.7). The plan-by-plan audit is [RELEASE_AUDIT.md](RELEASE_AUDIT.md). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history; [README.md](README.md) is the index.
+Updated 2026-11-06 (release v1.0.8). The plan-by-plan audit is [RELEASE_AUDIT.md](RELEASE_AUDIT.md). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history; [README.md](README.md) is the index.
 
 | Item | Current value |
 |---|---|
@@ -8,7 +8,7 @@ Updated 2026-11-06 (release v1.0.7). The plan-by-plan audit is [RELEASE_AUDIT.md
 | Render / UI | URP 14.0.10, uGUI, TextMeshPro 3.0.6 |
 | AI runtime | Sentis 2.0.0 CPU, CNN model (GRU operator unsupported in Sentis) |
 | Main scene | `Assets/Scenes/GripRehab.unity` |
-| Branch / tag | `claude/release-qa` = `claude/final-release` = `3.4-upgrade-baseline`, tag `v1.0.7` (releases v1.0.0–v1.0.7; nothing pushed, no remote) |
+| Branch / tag | `claude/final-release` = `3.4-upgrade-baseline`, tag `v1.0.8` (releases v1.0.0–v1.0.8; nothing pushed, no remote) |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
 | Active plan | Final plan (2026-10-29), all blocks done; Stages 0–13, 15A, 16–19 done. Stages 14 (gaze) and 15 (voice assistant) became optional stages O1/O2 in [OPTIONAL_PLAN](OPTIONAL_PLAN.md). |
 
@@ -41,7 +41,7 @@ Updated 2026-11-06 (release v1.0.7). The plan-by-plan audit is [RELEASE_AUDIT.md
 | 17 | Protected records, recovery, CSV (5.x) | Implemented: DPAPI store with backup recovery; damaged-save handling in the fault probe | DPAPI readback fixed and checked | Not a validated medical record system | FINAL_REPORT |
 | 18 | Phase 2 force envelope and BLE bridge (2.4/6.1) | Implemented in software; stale, disconnect and reconnect in the fault probe | Synthetic replay passed | **No Nano/HX711 hardware (B02)** | `BLE_INTEGRATION.md` |
 | 19 | English UI, controls, hand pointer (3.4) | Implemented: first-run tutorials, onboarding, design system, hand-first controls, settings for hand reach, steadiness and aim assist | UI checks at 6 sizes (1024×768 to 2560×1440, size verified) × 3 themes, gallery checks pass every regression | Human acceptance OPEN | `ui-player-checks.json`, `gallery-checks.json` |
-| 20 | Automated verification (6.2) | Implemented: player suites plus Stage 7 perf/soak/fault probe, rolling diagnostics log and copy-diagnostics page | Reference laptop, 1920×1080, SYNTHETIC input: ≥128 FPS at p95, ≤514 B/frame managed alloc, 2-hour soak with flat memory and 0 errors, loopback hand latency p95 4.2 ms; malformed UDP and busy ports handled (25 Oct); release fault probe 15/15 (2026-11-06): camera cannot open, hand stream lost, force sensor stale/disconnected/reconnected, no microphone, missing model, damaged saves, each explained on screen with 0 console lines | FPS with the camera worker and camera-to-hand latency not measured (needs the webcam) | `evidence/stage7-2026-10-25/` |
+| 20 | Automated verification (6.2) | Implemented: player suites plus Stage 7 perf/soak/fault probe, rolling diagnostics log and copy-diagnostics page | Reference laptop, 1920×1080, SYNTHETIC input: ≥128 FPS at p95, ≤514 B/frame managed alloc, 2-hour soak with flat memory and 0 errors, loopback hand latency p95 4.2 ms; malformed UDP and busy ports handled (25 Oct); release fault probe 15/15 (2026-11-06): camera cannot open, hand stream lost, force sensor stale/disconnected/reconnected, no microphone, missing model, damaged saves, each explained on screen with 0 console lines. One command runs every check, `Tools/run_full_regression.py` (2026-11-10): build, 20 player runs, EditMode, console zero, offline C#, Python, firmware C++, CAD, source fingerprints, camera models, pytest; result in `full-regression.json` | FPS with the camera worker and camera-to-hand latency not measured (needs the webcam) | `evidence/stage7-2026-10-25/` |
 | 21 | Documentation and evidence (6.3) | Implemented: index, Arabic guide (md/pdf/docx), architecture pages, Stage 16 audit, slides, demo video | n/a | n/a | [README.md](README.md) |
 | 22 | Voice commands | Implemented (Stage 13): offline Windows keyword commands for UI, apartment, activities and session; state-aware, confirmations, feedback; off by default | Offline router tests (140); SYNTHETIC player voice probe; recognizer start checked on this computer | Your microphone session pending | `VOICE_COMMANDS.md`, `AUDIT_LEDGER.md` §10f |
 | 23 | Eye/head pointer | Optional (O1 in OPTIONAL_PLAN): not needed for GP1; aim assist and the hand pointer already select targets | — | — | `OPTIONAL_PLAN.md` |
@@ -68,7 +68,7 @@ B02 physical device, B03 clinical data/ethics, B04 Obi/YOLO licences, B05 live h
 ## Issues found during Stage 0 (for the Stage 1 ledger)
 
 - ~~Absolute package paths in `Packages/manifest.json`~~: fixed in Stage 2 (A-006) with relative `file:../Tools/...` paths.
-- `ROLLBACK_2026_10_12.md` is linked from `TASKS.md` and `SOFTWARE_GRADUATION_PLAN.md` but does not exist. Rollback evidence exists only as JSON under `evidence/rollback-2026-10-12/`.
+- ~~Links to a missing `ROLLBACK_2026_10_12.md`~~: fixed 2026-11-10; they point at `evidence/rollback-2026-10-12/`, and `Tools/test_repo_hygiene.py` now checks every document link.
 - ~~UI/gallery results only from the Unity 6 build~~: re-run 23 Oct on the 2022.3.20f1 build and passing (60 checks at each of 2 resolutions, 87 at each of 3). See AUDIT_LEDGER §1.
 - ~~VirtualGrasp "No baked grasps found" warning~~: the console is 0 errors / 0 warnings / 0 logs (ConsoleZeroCheck, every regression since 2026-10-28).
-- Superseded docs (`TASKS.md`, `REPAIR_REPORT.md`, `CLOSEOUT_2026_10_06.md`, `FINAL_REPORT.md`, `PROGRESS.md`, item docs) were kept in place, not moved to `Docs/archive/`, so existing relative links keep working. Treat them as history.
+- ~~Superseded docs left in the `Docs/` root~~: 22 moved to `Docs/history/` on 2026-11-10 with their links rewritten ([README.md](README.md) lists them).

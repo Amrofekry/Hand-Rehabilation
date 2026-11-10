@@ -6,4 +6,4 @@ The cursor follows the palm centre (landmarks 0, 5, 9, 13 and 17). Hold it over 
 
 In Unity Editor, focus Game during Play. Background input, stale frames and invalid tracking cannot activate controls. The event cache reconstructs missing managed PointerEventData even when Unity's EventSystem reference is unchanged, preventing the previous repeated null-reference fault after script reload.
 
-Software fixtures do not establish real-hand usability. The current follow-up checklist is [TASKS.md](TASKS.md); native Editor and Windows validation must be rerun for the current source revision.
+Software fixtures do not establish real-hand usability. The current follow-up checklist is [TASKS.md](history/TASKS.md); native Editor and Windows validation must be rerun for the current source revision.
