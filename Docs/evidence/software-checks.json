@@ -1,8 +1,8 @@
 {
-  "generated_utc": "2026-09-28T18:01:36.807524+00:00",
+  "generated_utc": "2026-11-17T17:02:27.929217+00:00",
   "project": "E:\\GP\\codex\\GripRehab-Unity",
-  "python": "3.12.11",
-  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.16",
+  "platform": "Windows-11-10.0.26300-SP0",
   "scope": "software-only; Unity Editor/player, hardware and clinical tests not included",
   "passed": true,
   "checks": [
@@ -10,19 +10,19 @@
       "name": "vision",
       "status": "PASS",
       "exit_code": "0",
-      "last_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+      "last_output": "..................\n----------------------------------------------------------------------\nRan 18 tests in 0.010s\n\nOK\n"
     },
     {
       "name": "phase2-bridge",
       "status": "PASS",
       "exit_code": "0",
-      "last_output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.410s\n\nOK\n"
+      "last_output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.418s\n\nOK\n"
     },
     {
       "name": "firmware",
       "status": "PASS",
       "exit_code": "0",
-      "last_output": "t_valid_force_without_calibration_rejected) ... ok\ntest_archive_contains_exact_bytes (test_capture_delivery.DeliveryTests.test_archive_contains_exact_bytes) ... ok\ntest_escape_path_rejected (test_capture_delivery.DeliveryTests.test_escape_path_rejected) ... ok\ntest_failed_run_replaces_old_pass_receipt (test_capture_delivery.DeliveryTests.test_failed_run_replaces_old_pass_receipt) ... ok\ntest_missing_tracked_file_cannot_be_packaged (test_capture_delivery.DeliveryTests.test_missing_tracked_file_cannot_be_packaged) ... ok\ntest_backward_clock (test_protocol.Protocol.test_backward_clock) ... ok\ntest_faults (test_protocol.Protocol.test_faults) ... ok\ntest_golden (test_protocol.Protocol.test_golden) ... ok\ntest_length_version_reserved (test_protocol.Protocol.test_length_version_reserved) ... ok\ntest_metadata (test_protocol.Protocol.test_metadata) ... ok\ntest_rollover (test_protocol.Protocol.test_rollover) ... ok\ntest_sequence_loss_and_duplicates (test_protocol.Protocol.test_sequence_loss_and_duplicates) ... ok\ntest_stale_and_reconnect (test_protocol.Protocol.test_stale_and_reconnect) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 0.029s\n\nOK\n"
+      "last_output": "t_valid_force_without_calibration_rejected) ... ok\ntest_archive_contains_exact_bytes (test_capture_delivery.DeliveryTests.test_archive_contains_exact_bytes) ... ok\ntest_escape_path_rejected (test_capture_delivery.DeliveryTests.test_escape_path_rejected) ... ok\ntest_failed_run_replaces_old_pass_receipt (test_capture_delivery.DeliveryTests.test_failed_run_replaces_old_pass_receipt) ... ok\ntest_missing_tracked_file_cannot_be_packaged (test_capture_delivery.DeliveryTests.test_missing_tracked_file_cannot_be_packaged) ... ok\ntest_backward_clock (test_protocol.Protocol.test_backward_clock) ... ok\ntest_faults (test_protocol.Protocol.test_faults) ... ok\ntest_golden (test_protocol.Protocol.test_golden) ... ok\ntest_length_version_reserved (test_protocol.Protocol.test_length_version_reserved) ... ok\ntest_metadata (test_protocol.Protocol.test_metadata) ... ok\ntest_rollover (test_protocol.Protocol.test_rollover) ... ok\ntest_sequence_loss_and_duplicates (test_protocol.Protocol.test_sequence_loss_and_duplicates) ... ok\ntest_stale_and_reconnect (test_protocol.Protocol.test_stale_and_reconnect) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 0.017s\n\nOK\n"
     },
     {
       "name": "cad-r1",
@@ -40,19 +40,25 @@
       "name": "mechanical",
       "status": "PASS",
       "exit_code": "0",
-      "last_output": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.004s\n\nOK\n"
+      "last_output": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.002s\n\nOK\n"
     },
     {
       "name": "feature-windows",
       "status": "PASS",
       "exit_code": "0",
-      "last_output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n"
+      "last_output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.000s\n\nOK\n"
     },
     {
       "name": "decision-policy",
       "status": "PASS",
       "exit_code": "0",
-      "last_output": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.001s\n\nOK\n"
+      "last_output": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nOK\n"
+    },
+    {
+      "name": "bluetooth-integration",
+      "status": "PASS",
+      "exit_code": "0",
+      "last_output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.406s\n\nOK\n"
     },
     {
       "name": "source-provenance",

@@ -1,13 +1,13 @@
 {
   "passed": true,
-  "utc": "2026-10-22T07:01:56Z",
+  "utc": "2026-11-17T17:02:28Z",
   "consent_off_prevents_processing": true,
   "blank_frame_has_no_face": true,
   "expression_output_shape": [
     1,
     7
   ],
-  "expression_ms": 5.413800000042102,
+  "expression_ms": 3.410500000427419,
   "opencv": "5.0.0",
   "numpy": "2.5.3",
   "SYNTHETIC_rppg_bpm": 72.00000000000026,
