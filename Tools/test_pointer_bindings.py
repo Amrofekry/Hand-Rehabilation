@@ -15,9 +15,13 @@ class PointerBindings(unittest.TestCase):
         shell=(ROOT/'Assets/Rehab/3.4-game-modules/RehabAppShell.cs').read_text(encoding='utf-8')
         self.assertIn('GetComponent<RehabDwellPointer>() ?? gameObject.AddComponent<RehabDwellPointer>()', shell)
     def test_unfocused_app_cannot_dwell_or_launch_camera(self):
-        guard=self.pointer.index('if (!Application.isFocused) { Hide(); status.enabled = false; return; }')
+        # A real session pauses when unfocused. Automated -apartment-* runs (synthetic frames) may dwell unfocused,
+        # like ApartmentPlayer's acceptance input, but they never start the webcam, focused or not.
+        guard=self.pointer.index('if (!Application.isFocused && !AcceptanceInput) { Hide(); status.enabled = false; return; }')
         self.assertLess(guard,self.pointer.index('cameraLauncher.EnsureStarted()'))
         self.assertLess(guard,self.pointer.index('dwell.Step('))
+        self.assertIn('AcceptanceInput = System.Array.Exists(System.Environment.GetCommandLineArgs(), a => a.StartsWith("-apartment-", System.StringComparison.Ordinal));', self.pointer)
+        self.assertIn('if (!testNoCameraLaunch && !AcceptanceInput && !cameraLauncher.IsRunning', self.pointer)
     def test_hand_change_clears_cursor_smoothing_and_progress(self):
         change=self.pointer.split('if (lastLeft.HasValue && lastLeft.Value != left)',1)[1].split('lastLeft = left;',1)[0]
         for token in ['dwell.Reset()', 'rearm.Reset()', 'hasPosition = false', 'SetTarget(null)']:

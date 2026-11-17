@@ -40,6 +40,10 @@ namespace GripRehab
         float nextLaunch;
         bool hasPosition;
         bool startedForUi;
+        // Automated acceptance runs (-apartment-*) drive the pointer with synthetic hand frames, so, like ApartmentPlayer's
+        // input, they do not depend on which desktop window has focus, and they never start the webcam. A real session still
+        // pauses when unfocused.
+        static readonly bool AcceptanceInput = System.Array.Exists(System.Environment.GetCommandLineArgs(), a => a.StartsWith("-apartment-", System.StringComparison.Ordinal));
         // The acceptance runner injects loopback landmarks without opening a
         // physical webcam. This is never serialized into the authored scene.
         internal bool testNoCameraLaunch;
@@ -153,7 +157,7 @@ namespace GripRehab
                 startedForUi = false;
                 Hide(); if (status != null) status.enabled = false; return;
             }
-            if (!Application.isFocused) { Hide(); status.enabled = false; return; }
+            if (!Application.isFocused && !AcceptanceInput) { Hide(); status.enabled = false; return; }
             status.enabled = true;
             // Script reload can discard PointerEventData while retaining a Unity
             // object reference. Rebuild the pair whenever either cache is lost.
@@ -164,7 +168,7 @@ namespace GripRehab
             }
             if (screenWidth != Screen.width || screenHeight != Screen.height)
             { Hide(); screenWidth = Screen.width; screenHeight = Screen.height; }
-            if (!testNoCameraLaunch && !cameraLauncher.IsRunning && Time.unscaledTime >= nextLaunch)
+            if (!testNoCameraLaunch && !AcceptanceInput && !cameraLauncher.IsRunning && Time.unscaledTime >= nextLaunch)
             {
                 nextLaunch = Time.unscaledTime + 5f;
                 cameraLauncher.EnsureStarted();
