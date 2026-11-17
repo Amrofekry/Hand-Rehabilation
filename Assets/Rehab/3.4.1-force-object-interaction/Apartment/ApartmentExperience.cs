@@ -41,9 +41,22 @@ public sealed class ApartmentExperience:MonoBehaviour {
  Vector3 _presentRight,_presentLeft;Vector3 _requestedGrip;bool _hasRequestedGrip;
  /// <summary>Stage 10: view-space shift of the presented object (activities keep it low-right so the aim point shows).</summary>
  public Vector3 PresentationOffset;
- /// <summary>Tea activity: an extra world-space tilt of the held object about a point in its own space (the grip on a
- /// teapot handle, the rim of a cup), so pouring and drinking turn it the way a wrist does. Identity = no tilt.</summary>
- public Quaternion HeldTilt=Quaternion.identity;public Vector3 HeldTiltPivotLocal;
+ /// <summary>Tea activity: when HeldOriented, the held object takes this absolute rotation, turned about a point in its own
+ /// space (the grip on a teapot handle, the rim of a cup) so that point stays where the grip put it: pouring and drinking
+ /// turn it the way a wrist does. Set fresh each frame by the activity; no read-back of the (interpolated) transform.</summary>
+ public bool HeldOriented;public Quaternion HeldOrientation=Quaternion.identity;public Vector3 HeldTiltPivotLocal;
+ /// <summary>Tea, camera hand: while drinking, the tipping point (cup rim) is drawn to this world point (the lips) by
+ /// HeldPivotBlend 0..1; the activity adds the hand's own motion to it, so tremor still shakes the cup.</summary>
+ public Vector3 HeldPivotWorld;public float HeldPivotBlend;
+ /// <summary>How far (m) the presentation may carry the hand from rest; the tea activity reaches further to hold a teapot over a low cup.</summary>
+ public float PresentationReach=.35f;
+ /// <summary>How fast (m/s) the presentation carries the hand (keyboard mode); a full tea cup is carried slowly.</summary>
+ public float PresentationSpeed=.8f;
+ /// <summary>When above 0, the presentation eases the hand with this acceleration limit (m/s²) instead of a constant speed.</summary>
+ public float PresentationAccel;Vector3 _presentVelRight,_presentVelLeft;
+ /// <summary>When set, the presentation brings the held object's centre to this world point (tea: the teapot over the cup)
+ /// instead of the middle of the view.</summary>
+ public bool HasPresentationTarget;public Vector3 PresentationTarget;
  /// <summary>Stage 10: raised after a pickup succeeds and after a held object is let go (activity scoring and assist).</summary>
  public event Action<SqueezableObject> ObjectGrabbed,ObjectReleased;
  public GripDefinition HeldGrip=>Held!=null&&GraspContactSolver.Enabled?GraspContactSolver.PropOf(Held)?.Definition:null;
@@ -183,9 +196,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var renderer=Held.visual!=null?Held.visual.GetComponentInChildren<Renderer>():null;
   var bounds=renderer!=null?renderer.bounds:new Bounds(Held.transform.position,Vector3.one*Held.radius);
   float distance=Mathf.Clamp(.3f+bounds.extents.magnitude*2.2f,.32f,.7f);
-  var wantedWorld=player.view.transform.TransformPoint(new Vector3(0,-.03f,distance)+PresentationOffset);
+  var wantedWorld=HasPresentationTarget?PresentationTarget:player.view.transform.TransformPoint(new Vector3(0,-.03f,distance)+PresentationOffset);
   // Middle of the view, but never down into the table or counter under it (seated or standing).
-  if(Physics.Raycast(wantedWorld+Vector3.up*.6f,Vector3.down,out var support,1.2f,~((1<<8)|(1<<9)),QueryTriggerInteraction.Ignore))
+  if(!HasPresentationTarget&&Physics.Raycast(wantedWorld+Vector3.up*.6f,Vector3.down,out var support,1.2f,~((1<<8)|(1<<9)),QueryTriggerInteraction.Ignore))
    wantedWorld.y=Mathf.Max(wantedWorld.y,support.point.y+bounds.extents.y+.05f);
   var wanted=parent.InverseTransformPoint(wantedWorld);
   // Where the grip would put the object with the hand at rest: the requested pose (not the safety-clamped
@@ -193,9 +206,14 @@ public sealed class ApartmentExperience:MonoBehaviour {
   // from rest (exact even while the smoothed hand is still moving).
   var rest=(LeftSelected?_leftRest+Vector3.back*settings.leftWristSetbackMeters:_rightRest)+Vector3.up*handLift;
   var unpresented=parent.InverseTransformPoint(_requestedGrip+(bounds.center-Held.transform.position))-(ActiveHand.transform.localPosition-rest);
-  var target=Vector3.ClampMagnitude(wanted-unpresented,.35f);
+  var target=Vector3.ClampMagnitude(wanted-unpresented,PresentationReach);
   // A small dead band: the hand settles instead of hunting by a millimetre or two.
-  if((target-offset).sqrMagnitude>.003f*.003f)offset=Vector3.MoveTowards(offset,target,.8f*Time.deltaTime);
+  if(PresentationAccel>0){
+   // Eased carry: speed rises and falls at most PresentationAccel (m/s²), stopping on the target (no jerk at either end).
+   ref Vector3 vel=ref (LeftSelected?ref _presentVelLeft:ref _presentVelRight);var gap=target-offset;float dist=gap.magnitude;
+   var desired=dist<.001f?Vector3.zero:gap/dist*Mathf.Min(PresentationSpeed,Mathf.Sqrt(2*PresentationAccel*dist));
+   vel=Vector3.MoveTowards(vel,desired,PresentationAccel*Time.deltaTime);offset+=vel*Time.deltaTime;
+  } else if((target-offset).sqrMagnitude>.003f*.003f)offset=Vector3.MoveTowards(offset,target,PresentationSpeed*Time.deltaTime);
  }
  // Follow the only actively observed physical hand. When both are visible,
  // retain the selected side until its stream has stopped refreshing.
@@ -241,7 +259,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
   _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
   var heldRotation=_hasGripRotation?_gripRotation:GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset);
-  if(HeldTilt!=Quaternion.identity){var pivot=requested+heldRotation*HeldTiltPivotLocal;requested=pivot+HeldTilt*(requested-pivot);heldRotation=HeldTilt*heldRotation;}
+  if(HeldOriented){var pivot=requested+heldRotation*HeldTiltPivotLocal;if(HeldPivotBlend>0)pivot=Vector3.Lerp(pivot,HeldPivotWorld,HeldPivotBlend);heldRotation=HeldOrientation;requested=pivot-heldRotation*HeldTiltPivotLocal;}
   Held.MoveHeld(requested,heldRotation);
  }
  private Vector3 GripTarget(SqueezableObject item){

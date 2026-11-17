@@ -72,7 +72,9 @@ public sealed class HandLocomotion : MonoBehaviour {
   Policy.Step(px,py,pointing,usable,tracked?frame.confidence:0,dt);Active=usable;
   Act(gesture,roll,usable,dt);
   if(Policy.YawRate!=0){player.transform.Rotate(0,Policy.YawRate*dt,0);TurnedDegrees+=Mathf.Abs(Policy.YawRate*dt);}
-  if(Policy.PitchRate!=0){
+  // Holding the cup, a raised hand is the drink gesture (TeaPouring), not "look up": only looking up is held back.
+  var vessel=app.Held!=null?app.Held.GetComponent<PourVessel>():null;bool drinkPose=vessel!=null&&!vessel.teapot;
+  if(Policy.PitchRate!=0&&!(drinkPose&&Policy.PitchRate<0)){
    var view=player.view.transform;float pitch=view.localEulerAngles.x;if(pitch>180)pitch-=360;
    pitch=Mathf.Clamp(pitch+Policy.PitchRate*dt,-MaxPitch,MaxPitch);
    player.LookAt(view.position+Quaternion.Euler(pitch,player.transform.eulerAngles.y,0)*Vector3.forward);

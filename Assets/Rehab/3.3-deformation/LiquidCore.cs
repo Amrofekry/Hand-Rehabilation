@@ -148,18 +148,25 @@ public sealed class TremorEstimator {
  }
  int Index(int i)=>(head-count+i+t.Length)%t.Length;
  /// <summary>Measures the current window. False until it spans at least 1.5 s.</summary>
- public bool Measure(out float rmsMm,out float hz){
-  rmsMm=0;hz=0;if(count<16||Span<1.5)return false;
+ public bool Measure(out float rmsMm,out float hz)=>Measure(out rmsMm,out hz,out _);
+ /// <summary>
+ /// As Measure, and slowRangeMm: how far the slow (voluntary) path travelled in the window. Tremor is read while the hand
+ /// holds a position or pours, so callers skip windows with a large voluntary move (lifting the cup to the mouth).
+ /// </summary>
+ public bool Measure(out float rmsMm,out float hz,out float slowRangeMm){
+  rmsMm=0;hz=0;slowRangeMm=0;if(count<16||Span<1.5)return false;
+  double minX=double.MaxValue,maxX=double.MinValue,minY=double.MaxValue,maxY=double.MinValue;
   // Residual after a centred moving average (removes the slow voluntary path).
   double half=detrendSeconds/2,sum=0;int used=0;
   for(int i=0;i<count;i++){
    double ti=t[Index(i)],sx=0,sy=0;int n=0;
    for(int j=0;j<count;j++){double d=t[Index(j)]-ti;if(d>=-half&&d<=half){sx+=x[Index(j)];sy+=y[Index(j)];n++;}}
    rx[i]=(float)(x[Index(i)]-sx/n);ry[i]=(float)(y[Index(i)]-sy/n);
+   double mx=sx/n,my=sy/n;if(mx<minX)minX=mx;if(mx>maxX)maxX=mx;if(my<minY)minY=my;if(my>maxY)maxY=my;
    if(t[Index(i)]-t[Index(0)]>=half&&t[Index(count-1)]-t[Index(i)]>=half){sum+=rx[i]*rx[i]+ry[i]*ry[i];used++;}
   }
   if(used<8)return false;
-  rmsMm=(float)Math.Sqrt(sum/used);
+  rmsMm=(float)Math.Sqrt(sum/used);slowRangeMm=(float)Math.Sqrt((maxX-minX)*(maxX-minX)+(maxY-minY)*(maxY-minY));
   // Dominant frequency: power of the residual at 3-12 Hz in 0.25 Hz steps (timestamps need not be even).
   double best=-1;double t0=t[Index(0)];
   for(double f=3;f<=12.0001;f+=.25){

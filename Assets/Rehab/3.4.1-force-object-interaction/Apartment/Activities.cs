@@ -348,9 +348,9 @@ public sealed class TeaActivity:Activity {
  public ActivityItem teapot,cup;public TeaPouring tea;SnapTarget mat,saucer;int level=1;int spillErrors;bool overflowCounted;
  protected override void BuildProps(ActivityRunner r){
   level=r.Level;
-  var glaze=r.Paint(new Color(.93f,.92f,.88f),.85f);var knob=r.Paint(new Color(.42f,.3f,.2f),.5f);var china=r.Paint(new Color(.97f,.97f,.95f),.85f);var gold=r.Paint(new Color(.8f,.62f,.25f),.7f,.6f);
+  var glaze=r.Paint(new Color(.93f,.92f,.88f),.85f);var knob=r.Paint(new Color(.42f,.3f,.2f),.5f);var china=r.Paint(new Color(.97f,.97f,.95f),.55f);var gold=r.Paint(new Color(.8f,.62f,.25f),.7f,.6f);
   var y=r.Yaw;bool left=r.app.LeftSelected;float side=left?-1:1; // the teapot sits by the hand that holds it
-  var potAt=r.Surface(.42f,.2f*side);var cupAt=r.Surface(.44f,-.05f*side);
+  var potAt=r.Surface(.3f,.22f*side);var cupAt=r.Surface(.32f,-.02f*side);
   teapot=Add(ActivityProps.Item("Teapot","teapot",r.Root,potAt,y+(left?0:180),ActivityProps.Teapot(),new[]{glaze,knob},
    g=>{ActivityProps.CapsuleC(g,new Vector3(0,.052f,0),.066f,.11f,1);ActivityProps.BoxC(g,new Vector3(-.098f,.062f,0),new Vector3(.018f,.07f,.016f));},
    GripType.Power,Rigid("Ceramic"),.65f,TeaPouring.TeapotGrip,null,null,1));

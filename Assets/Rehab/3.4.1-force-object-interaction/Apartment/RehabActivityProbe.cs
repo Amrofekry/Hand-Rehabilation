@@ -34,10 +34,13 @@ namespace GripRehab
         readonly List<Run> runs = new List<Run>();
         readonly List<UiCheck> uiChecks = new List<UiCheck>();
         static bool UiOnly => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-ui-only") >= 0;
+        static string OnlyKind => Environment.GetCommandLineArgs().Where(a => a.StartsWith("-activity-kind=")).Select(a => a.Substring(15)).FirstOrDefault();
         static bool Camera => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-camera") >= 0;
         float closure; bool sending; long sequence;
         // Tea: the synthetic hand's wrist roll (degrees), lift toward the top of the image (0..1) and an injected tremor.
         float roll, lift, tremorMm, tremorHz = 6;
+        // Where the synthetic hand is in the image (offsets) and how big it looks (nearer = bigger: the game's depth cue).
+        float handDx, handDy, handScale = 1, wantDx, wantDy, wantScale = 1;
         readonly List<UiCheck> teaChecks = new List<UiCheck>();
         void TeaCheck(string name, bool passed, string value) => teaChecks.Add(new UiCheck { name = name, passed = passed, value = value });
         void Check(string name, bool passed, string value) => uiChecks.Add(new UiCheck { name = name, passed = passed, value = value });
@@ -68,7 +71,7 @@ namespace GripRehab
             }
             report.runs = runs.ToArray(); report.errors = errors; report.uiChecks = uiChecks.Concat(teaChecks).ToArray(); report.resolution = Screen.width + "x" + Screen.height;
             bool uiPassed = uiChecks.Count > 0 && uiChecks.All(c => c.passed);
-            report.passed = failure == null && errors == 0 && uiPassed && (UiOnly || runs.Count == 2 * Enum.GetValues(typeof(ActivityKind)).Length && runs.All(r => r.completed) && teaChecks.All(c => c.passed));
+            report.passed = failure == null && errors == 0 && uiPassed && (UiOnly || runs.Count == 2 * (OnlyKind != null ? 1 : Enum.GetValues(typeof(ActivityKind)).Length) && runs.All(r => r.completed) && teaChecks.All(c => c.passed));
             report.detail = failure != null ? failure.ToString() : errors > 0 ? errors + " error(s) logged" : !uiPassed ? "UI checks failed: " + string.Join(", ", uiChecks.Where(c => !c.passed).Select(c => c.name + "=" + c.value)) : runs.Any(r => !r.completed) ? "Not completed: " + string.Join(", ", runs.Where(r => !r.completed).Select(r => r.activity + " L" + r.level)) : "";
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/activity-probe.json", JsonUtility.ToJson(report, true));
@@ -92,6 +95,7 @@ namespace GripRehab
             foreach (int level in new[] { 2, 8 })
                 foreach (ActivityKind kind in Enum.GetValues(typeof(ActivityKind)))
                 {
+                    if (OnlyKind != null && kind.ToString() != OnlyKind) continue; // development only: one activity
                     var run = new Run { activity = ActivityRules.Title(kind), level = level }; runs.Add(run);
                     if (!runner.Begin(kind, level)) { run.activity += " (did not start: " + runner.Feedback + ")"; continue; }
                     app.player.SetPaused(false); app.TestForce = 0;
@@ -321,28 +325,93 @@ namespace GripRehab
             if (step.kind == ProbeStep.Kind.Pour)
             {
                 app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.4f);
+                // Bring the spout over the cup first (a person does not tip the pot until it is there). With the camera
+                // hand that is the hand's own position and depth, steered by sight.
+                if (Camera) yield return Steer(() => tea.SpoutTipWorld, () => tea.AimWant, .015f, 14, run);
+                float settle = Seconds() + 5; while (tea.AimError > .015f && Seconds() < settle) yield return null;
+                run.notes += "aim error before tipping " + (tea.AimError * 1000).ToString("0") + " mm | ";
+                if (run.level == 2) yield return Shot("activity-7-pourtea-aim" + (Camera ? "-camera" : ""));
                 if (Camera && run.level == 8) tremorMm = 1.5f; // a known 1.5 mm RMS, 6 Hz tremor while pouring and drinking
-                float end = Seconds() + 30, angle = 0;
+                float end = Seconds() + 30, angle = 0, nextNote = 0, nextFix = 0; bool midShot = false;
                 while (tea.CupMl < step.ml - 3 && tea.PotMl > 1 && Seconds() < end)
                 {
                     float left = step.ml - tea.CupMl;
                     float want = left > 40 ? 62 : left > 15 ? 48 : 40; // slower near the line
+                    if (tea.AimError > .03f) want = Mathf.Min(want, 15); // the spout drifted off the cup: tip back while it comes over again
+                    if (Camera && Seconds() > nextFix && tea.AimError > .008f) { nextFix = Seconds() + .12f; Correct(tea.AimWant - tea.SpoutTipWorld, .8f); }
                     angle = Mathf.MoveTowards(angle, want, 60 * Time.unscaledDeltaTime); tilt(angle); yield return null;
+                    if (run.level == 2 && !midShot && tea.CupMl > step.ml * .4f && tea.FlowMlPerSecond > 15) { midShot = true; yield return Shot("activity-7-pourtea-pouring" + (Camera ? "-camera" : "")); }
+                    if (Seconds() > nextNote) { nextNote = Seconds() + .6f; var e = tea.AimWant - tea.SpoutTipWorld; run.notes += "<a=" + angle.ToString("0") + " err=" + (e * 1000).ToString("F0") + " dx=" + handDx.ToString("0.00") + " dy=" + handDy.ToString("0.00") + " s=" + handScale.ToString("0.00") + " yaw=" + app.player.transform.eulerAngles.y.ToString("0.0") + " pitch=" + app.player.view.transform.localEulerAngles.x.ToString("0.0") + " flow=" + tea.FlowMlPerSecond.ToString("0") + "> "; }
                 }
                 tilt(0); yield return new WaitForSecondsRealtime(1.4f);
+                if (Camera) { wantDx = wantDy = 0; wantScale = 1; }
                 run.notes += "poured " + tea.PouredMl.ToString("0") + " ml, cup " + tea.CupMl.ToString("0") + "/" + step.ml.ToString("0") + " ml, spilled " + tea.SpilledMl.ToString("0.0") + " ml | ";
             }
             else
             {
-                mouth(true); float end = Seconds() + 4;
+                run.notes += "before mouth: carry spill " + tea.CarrySpillMl.ToString("0.0") + " ml, cup " + tea.CupMl.ToString("0") + " ml " + tea.SpillLog + " | ";
+                mouth(true); float end = Seconds() + 6;
+
                 while (!tea.AtMouth && Seconds() < end) yield return null;
-                run.notes += "at mouth=" + tea.AtMouth + " | ";
-                float angle = 0; end = Seconds() + 30;
-                while (tea.CupMl > 2 && Seconds() < end) { angle = Mathf.MoveTowards(angle, 95, 25 * Time.unscaledDeltaTime); tilt(angle); yield return null; }
-                tilt(0); yield return new WaitForSecondsRealtime(.8f); mouth(false); yield return new WaitForSecondsRealtime(1.2f);
+                run.notes += "at mouth=" + tea.AtMouth + " after " + (6 - (end - Seconds())).ToString("0.0") + " s (rim to lips " + (tea.MouthDistance * 1000).ToString("0") + " mm, carry spill so far " + tea.CarrySpillMl.ToString("0.0") + " ml) | ";
+                // Sip: tip while the cup is at the lips (never away from them), a little further as it empties.
+                float angle = 0, nextSip = 0; end = Seconds() + 40;
+                while (tea.CupMl > 2 && Seconds() < end)
+                {
+                    // Tip further only while the lips keep up (a person sips; tipping faster spills down the chin).
+                    float want = !tea.AtMouth ? 0 : tea.SipSaturated ? angle : 110;
+
+                    if (Seconds() > nextSip) { nextSip = Seconds() + 2; run.notes += "{a=" + angle.ToString("0") + " mouth=" + tea.AtMouth + " d=" + (tea.MouthDistance * 1000).ToString("0") + " cup=" + tea.CupMl.ToString("0") + " sat=" + tea.SipSaturated + " tilt=" + tea.CurrentTilt.ToString("0") + " po=" + app.PresentationOffset.z.ToString("0.00") + " blend=" + app.HeldPivotBlend.ToString("0.00") + " " + DiagField(tea, "raised") + " held=" + (app.Held != null ? app.Held.displayName : "none") + " lift=" + lift + "} "; }
+                    angle = Mathf.MoveTowards(angle, want, (tea.AtMouth ? 15 : 45) * Time.unscaledDeltaTime); tilt(angle); yield return null;
+                }
+                tilt(0); yield return new WaitForSecondsRealtime(.8f); mouth(false); if (Camera) { wantDx = wantDy = 0; wantScale = 1; } yield return new WaitForSecondsRealtime(1.2f);
                 tremorMm = 0;
                 run.notes += "drank " + tea.DrankMl.ToString("0") + " ml, left " + tea.CupMl.ToString("0.0") + " ml, carry spill " + tea.CarrySpillMl.ToString("0.0") + " ml | ";
             }
+        }
+
+        // ---- Steering the synthetic hand by sight: how does a point (spout tip, cup rim) move when the hand moves right,
+        // up or nearer? Measure that once, then correct toward the target in small steps, as a person adjusts by eye.
+        readonly Vector3[] jacobian = new Vector3[3];
+        IEnumerator Steer(Func<Vector3> point, Func<Vector3> target, float tolerance, float seconds, Run run, float minDy = -.3f, float maxDy = .3f)
+        {
+            float[] probe = { .03f, .03f, .08f };
+            yield return new WaitForSecondsRealtime(.6f);
+            for (int k = 0; k < 3; k++)
+            {
+                var before = point(); Nudge(k, probe[k]); yield return new WaitForSecondsRealtime(.7f);
+                jacobian[k] = (point() - before) / probe[k]; Nudge(k, -probe[k]); yield return new WaitForSecondsRealtime(.7f);
+            }
+            float end = Time.realtimeSinceStartup + seconds;
+            while (Time.realtimeSinceStartup < end && (target() - point()).magnitude > tolerance)
+            {
+                Correct(target() - point(), .7f, minDy, maxDy); yield return new WaitForSecondsRealtime(.35f);
+            }
+            run.notes += "steered to " + ((target() - point()).magnitude * 1000).ToString("0") + " mm (hand dx " + handDx.ToString("0.00") + " dy " + handDy.ToString("0.00") + " scale " + handScale.ToString("0.00") + ") | ";
+        }
+        void Nudge(int k, float d) { if (k == 0) wantDx += d; else if (k == 1) wantDy += d; else wantScale += d; }
+        // One damped least-squares step: hand change u minimising |J u - error|.
+        void Correct(Vector3 error, float gain, float minDy = -.3f, float maxDy = .3f)
+        {
+            var a = new float[3, 3]; var b = new float[3];
+            for (int i = 0; i < 3; i++) { b[i] = Vector3.Dot(jacobian[i], error); for (int j = 0; j < 3; j++) a[i, j] = Vector3.Dot(jacobian[i], jacobian[j]) + (i == j ? 1e-4f : 0); }
+            var u = Solve3(a, b);
+            // Small steps, and the hand stays clear of the image edges (where the hand-look would turn the view).
+            for (int i = 0; i < 3; i++) u[i] = Mathf.Clamp(gain * u[i], i == 2 ? -.05f : -.025f, i == 2 ? .05f : .025f);
+            wantDx = Mathf.Clamp(wantDx + u[0], -.2f, .2f); wantDy = Mathf.Clamp(wantDy + u[1], Mathf.Max(minDy, -.2f), Mathf.Min(maxDy, .2f)); wantScale = Mathf.Clamp(wantScale + u[2], .75f, 1.4f);
+        }
+        static float[] Solve3(float[,] a, float[] b)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+                int p = c; for (int r = c + 1; r < 3; r++) if (Mathf.Abs(a[r, c]) > Mathf.Abs(a[p, c])) p = r;
+                for (int k = 0; k < 3; k++) { var t = a[c, k]; a[c, k] = a[p, k]; a[p, k] = t; } { var t = b[c]; b[c] = b[p]; b[p] = t; }
+                if (Mathf.Abs(a[c, c]) < 1e-9f) return new float[3];
+                for (int r = c + 1; r < 3; r++) { float f = a[r, c] / a[c, c]; for (int k = c; k < 3; k++) a[r, k] -= f * a[c, k]; b[r] -= f * b[c]; }
+            }
+            var x = new float[3];
+            for (int r = 2; r >= 0; r--) { float s = b[r]; for (int k = r + 1; k < 3; k++) s -= a[r, k] * x[k]; x[r] = s / a[r, r]; }
+            return x;
         }
 
         void CheckTea(Run run, TeaPouring tea)
@@ -417,6 +486,7 @@ namespace GripRehab
                 var target = new IPEndPoint(IPAddress.Loopback, 27817);
                 while (true)
                 {
+                    handDx = Mathf.MoveTowards(handDx, wantDx, .45f / 30); handDy = Mathf.MoveTowards(handDy, wantDy, .45f / 30); handScale = Mathf.MoveTowards(handScale, wantScale, 1f / 30);
                     if (sending) { var bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(Frame(closure))); udp.Send(bytes, bytes.Length, target); }
                     yield return new WaitForSecondsRealtime(1 / 30f);
                 }
@@ -428,7 +498,7 @@ namespace GripRehab
         {
             var f = new LandmarkFrame { schemaVersion = 1, source = "mediapipe-test", handedness = "Right", confidence = .95f, sequence = ++sequence,
                 captureSeconds = Time.realtimeSinceStartupAsDouble, ageMs = 1, landmarks = new Vector3[21] };
-            float cx = .5f, wy = .58f - .36f * lift;
+            float cx = .5f + handDx, wy = .58f - .36f * lift + handDy;
             f.imageWidth = 640; f.imageHeight = 480;
             f.landmarks[0] = new Vector3(cx, wy, 0);
             for (int finger = 0; finger < 4; finger++)
@@ -446,6 +516,8 @@ namespace GripRehab
                 float a = roll * Mathf.Deg2Rad, cs = Mathf.Cos(a), sn = Mathf.Sin(a);
                 for (int i = 1; i < 21; i++) { var d = f.landmarks[i] - f.landmarks[0]; float px = d.x * 640, py = d.y * 480; f.landmarks[i] = f.landmarks[0] + new Vector3((px * cs - py * sn) / 640, (px * sn + py * cs) / 480, 0); }
             }
+            if (handScale != 1)
+                for (int i = 1; i < 21; i++) { var d = f.landmarks[i] - f.landmarks[0]; f.landmarks[i] = f.landmarks[0] + d * handScale; }
             if (tremorMm > 0)
             {
                 // TeaPouring scales pixels to millimetres by an 80 mm knuckle breadth; this hand's breadth in pixels sets the scale.

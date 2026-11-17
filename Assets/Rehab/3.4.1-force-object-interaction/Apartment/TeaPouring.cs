@@ -36,16 +36,29 @@ public sealed class TeaPouring : MonoBehaviour {
  public bool Pouring=>FlowMlPerSecond>.5f;
  public float CurrentTilt{get;private set;}
  public bool AtMouth{get;private set;}
+ public float MouthDistance{get;private set;}=float.PositiveInfinity;
+ /// <summary>True when the cup is tipped faster than the lips can take it (the rest runs over).</summary>
+ public bool SipSaturated{get;private set;}
+ public string SpillLog="";
  /// <summary>Probe override of the tilt in degrees (NaN = off).</summary>
  public float TestTilt=float.NaN;
  /// <summary>Probe override of the drink pose (null = from the hand or M).</summary>
  public bool? TestMouth;
- public float LevelSeconds{get;private set;} // how long the teapot has been level (no flow) since it last poured
+ public float LevelSeconds{get;private set;}
+ /// <summary>Diagnostics (probes): where the last stream landed, relative to the cup mouth, and the aim.</summary>
+ public string LastLanding{get;private set;}=""; public bool AimValid=>aimValid;
+ /// <summary>How far (m) the spout tip is from where it should be to pour onto the looked-at point (infinity when not aiming).</summary>
+ public float AimError{get;private set;}=float.PositiveInfinity;
+ /// <summary>Probes: where the spout tip should be to pour onto the looked-at point, and where it is.</summary>
+ public Vector3 AimWant{get;private set;}
+ public Vector3 SpoutTipWorld=>teapot.transform.TransformPoint(SpoutTip);
+ /// <summary>Probes: the cup's near rim (the point it tips about) and the lips.</summary>
+ public Vector3 RimWorld=>app.HeldOriented&&app.Held==cup.Item?cup.transform.TransformPoint(app.HeldTiltPivotLocal):cup.transform.TransformPoint(0,CupBottom+CupDepth,0);
+ public Vector3 Lips=>MouthPoint; // how long the teapot has been level (no flow) since it last poured
 
  readonly TremorEstimator estimator=new TremorEstimator();double lastFrameTime=-1;float nextTremor;
  OneEuroFilter rollFilter=new OneEuroFilter(1.2f,.02f);float rollBase=float.NaN;SqueezableObject rollFor;bool raised;float keyTilt;bool keyMouth;
- Quaternion appliedTilt=Quaternion.identity;
- Vector3 cupPrevPos,cupPrevVel,cupAccel;bool cupPrimed;
+ Vector3 cupPrevPos,cupPrevVel,cupAccel;bool cupPrimed,cupWasHeld;float handoverUntil;
 
  // ---- Visuals: cup liquid mesh, stream tube, droplets, puddles; audio.
  const int Around=32,StreamRings=18,StreamSides=8,PuddleCount=8;
@@ -54,20 +67,21 @@ public sealed class TeaPouring : MonoBehaviour {
  readonly RaycastHit[] hits=new RaycastHit[8];
  ParticleSystem drops;ParticleSystem.EmitParams emit;
  readonly Transform[] puddles=new Transform[PuddleCount];readonly float[] puddleMl=new float[PuddleCount],puddleShown=new float[PuddleCount];int nextPuddle;
- Material tea;float ripple;AudioSource pourSource,sipSource;
+ Material tea,film;float ripple;AudioSource pourSource,sipSource;
 
  public static TeaPouring Create(ActivityRunner r,ActivityItem teapot,ActivityItem cup,int level){
   var go=new GameObject("Tea");go.transform.SetParent(r.Root,false);
   var t=go.AddComponent<TeaPouring>();t.app=r.app;t.runner=r;t.teapot=teapot;t.cup=cup;t.level=level;
   t.cupLiquid=new VesselLiquid(CupInnerBottom,CupInnerTop,CupDepth);t.pot.Fill(LiquidMath.M3(StartMl));
-  t.Build();return t;
+  t.Build();t.app.ObjectGrabbed+=t.Grabbed;return t;
  }
 
  void Build(){
-  tea=runner.Paint(new Color(.55f,.27f,.08f,.78f),.92f);
-  if(tea.HasProperty("_Surface")){tea.SetFloat("_Surface",1);tea.SetFloat("_Blend",0);tea.SetOverrideTag("RenderType","Transparent");
-   tea.SetInt("_SrcBlend",(int)UnityEngine.Rendering.BlendMode.SrcAlpha);tea.SetInt("_DstBlend",(int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);tea.SetInt("_ZWrite",0);
-   tea.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");tea.renderQueue=(int)UnityEngine.Rendering.RenderQueue.Transparent;}
+  tea=runner.Paint(new Color(.55f,.27f,.08f,.78f),.92f);film=runner.Paint(new Color(.42f,.2f,.06f,.42f),.97f);
+  foreach(var m in new[]{tea,film})if(m.HasProperty("_Surface")){var mt=m;mt.SetFloat("_Surface",1);mt.SetFloat("_Blend",0);mt.SetOverrideTag("RenderType","Transparent");
+   mt.SetInt("_SrcBlend",(int)UnityEngine.Rendering.BlendMode.SrcAlpha);mt.SetInt("_DstBlend",(int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);mt.SetInt("_ZWrite",0);
+   mt.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");mt.renderQueue=(int)UnityEngine.Rendering.RenderQueue.Transparent;
+   if(mt.HasProperty("_Cull"))mt.SetFloat("_Cull",0);} // double-sided: the stream tube and the liquid walls show from any side
   // Liquid in the cup: a child of the cup so it moves with it; rebuilt in cup space each frame.
   var liquid=new GameObject("Tea in cup"){layer=cup.gameObject.layer};liquidTransform=liquid.transform;liquidTransform.SetParent(cup.Item.visual!=null?cup.Item.visual:cup.transform,false);
   liquidMesh=new Mesh{name="Tea surface"};liquidMesh.MarkDynamic();liquid.AddComponent<MeshFilter>().sharedMesh=liquidMesh;
@@ -78,8 +92,7 @@ public sealed class TeaPouring : MonoBehaviour {
    tris[k++]=1+i;tris[k++]=1+j;tris[k++]=1+Around+i;tris[k++]=1+j;tris[k++]=1+Around+j;tris[k++]=1+Around+i; // side
    tris[k++]=Around*2+1;tris[k++]=1+Around+i;tris[k++]=1+Around+j;}            // surface (center last)
   liquidMesh.vertices=liquidVerts;liquidMesh.triangles=tris;liquidRenderer.enabled=false;
-  // Stream: a tube along the falling path, in world space (this object stays at the origin).
-  transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
+  // Stream: a tube along the falling path, in world space.
   var stream=new GameObject("Tea stream");stream.transform.SetParent(transform,false);
   streamMesh=new Mesh{name="Tea stream"};streamMesh.MarkDynamic();stream.AddComponent<MeshFilter>().sharedMesh=streamMesh;
   streamRenderer=stream.AddComponent<MeshRenderer>();streamRenderer.sharedMaterial=tea;streamRenderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -98,7 +111,7 @@ public sealed class TeaPouring : MonoBehaviour {
   // Puddles: thin discs, scaled by what was spilled there.
   var disc=new MeshKit().Cylinder(0,MeshKit.At(Vector3.zero),1,.0016f,28,1).Build("Puddle");
   for(int i=0;i<PuddleCount;i++){var p=new GameObject("Tea puddle "+i);p.transform.SetParent(transform,false);p.AddComponent<MeshFilter>().sharedMesh=disc;
-   var pm=p.AddComponent<MeshRenderer>();pm.sharedMaterial=tea;pm.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;p.SetActive(false);puddles[i]=p.transform;}
+   var pm=p.AddComponent<MeshRenderer>();pm.sharedMaterial=film;pm.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;p.SetActive(false);puddles[i]=p.transform;}
   // Sounds, synthesised (ADR-AU-1): a filtered-noise pour whose pitch rises as the cup fills, and a sip.
   pourSource=Source("Pour",TeaSounds.Pour(),true);sipSource=Source("Sip",TeaSounds.Sip(),true);
  }
@@ -136,14 +149,15 @@ public sealed class TeaPouring : MonoBehaviour {
   mouth&=held==cup.Item;
   CurrentTilt=Mathf.MoveTowards(CurrentTilt,want,300*dt);
   // The drink pose brings the cup to the mouth, just under the eyes; otherwise the activity's low-right presentation.
-  app.PresentationOffset=mouth?new Vector3(0,-.07f,-.26f):new Vector3(.14f,-.12f,0);
+  if(held==cup.Item)app.PresentationOffset=mouth?new Vector3(0,-.07f,-.26f):new Vector3(.14f,-.12f,0);
+  else if(held!=teapot.Item)app.PresentationOffset=new Vector3(.14f,-.12f,0);
  }
 
  // ---------------- Simulation
  void Update(){
   if(app==null||teapot==null||cup==null)return;
   float dt=Mathf.Min(Time.deltaTime,.05f);if(dt<=0)return;
-  var held=app.Held;ReadInput(held,dt);
+  var held=app.Held;ReadInput(held,dt);Aim(held,dt);
   ApplyTilt(held);
   SampleTremor(held);
   Pour(dt);
@@ -153,18 +167,72 @@ public sealed class TeaPouring : MonoBehaviour {
 
  void ApplyTilt(SqueezableObject held){
   bool vessel=held!=null&&held.GetComponent<PourVessel>()!=null;
-  if(!vessel||CurrentTilt<.05f){if(app.HeldTilt!=Quaternion.identity)app.HeldTilt=Quaternion.identity;appliedTilt=Quaternion.identity;return;}
-  bool isPot=held==teapot.Item;
-  // The vessel's own facing without the tilt this script added: its spout (teapot) or the side toward the player (cup).
-  var baseRotation=Quaternion.Inverse(appliedTilt)*held.transform.rotation;
-  Vector3 dir;
-  if(isPot)dir=baseRotation*Vector3.right;
-  else {dir=app.player.view.transform.position-held.transform.position;}
+  if(!vessel){app.HeldOriented=false;app.HeldPivotBlend=0;return;}
+  bool isPot=held==teapot.Item;var view=app.player.view.transform;
+  // A held teapot or cup hangs upright from the hand, so the wrist's tilt is pure. The teapot's spout faces the point
+  // the player looks at (the cup, the mat); the cup keeps its handle to the side of the hand that holds it.
+  Vector3 facing=isPot&&aimValid?aimPoint-held.transform.position:isPot?view.forward:Vector3.Cross(Vector3.up,view.forward)*(app.LeftSelected?-1:1);
+  facing.y=0;if(facing.sqrMagnitude<1e-6f)facing=view.forward;facing.y=0;facing.Normalize();
+  var upright=Quaternion.Euler(0,Mathf.Atan2(-facing.z,facing.x)*Mathf.Rad2Deg,0); // local +X (spout, or cup handle) along 'facing'
+  Vector3 dir=isPot?facing:view.position-held.transform.position;
   dir.y=0;if(dir.sqrMagnitude<1e-6f)dir=Vector3.forward;dir.Normalize();
-  var axis=Vector3.Cross(Vector3.up,dir);
-  appliedTilt=Quaternion.AngleAxis(CurrentTilt,axis);app.HeldTilt=appliedTilt;
+  var tip=Quaternion.AngleAxis(CurrentTilt,Vector3.Cross(Vector3.up,dir));
+  app.HeldOrientation=tip*upright;app.HeldOriented=true;
   // Pivot: the grip on the teapot handle; the near rim of the cup (it tips about the lips).
-  app.HeldTiltPivotLocal=isPot?TeapotGrip:Quaternion.Inverse(baseRotation)*(dir*CupInnerTop)+Vector3.up*(CupBottom+CupDepth);
+  // The teapot tips about a point 60 % of the way from the handle to the spout: a pouring arm keeps the spout roughly where
+  // it was while the wrist tips, so the tip moves a little (the hand still corrects), not the whole handle-to-spout length.
+  app.HeldTiltPivotLocal=isPot?Vector3.Lerp(TeapotGrip,SpoutTip,.6f):Quaternion.Inverse(upright)*(dir*CupInnerTop)+Vector3.up*(CupBottom+CupDepth);
+ }
+
+ /// <summary>Drink pose: the cup's near rim is brought just under the eyes (the lips), wherever the hand rests.</summary>
+ void MouthAim(SqueezableObject held,float dt){
+  var view=app.player.view.transform;var renderer=held.visual!=null?held.visual.GetComponentInChildren<Renderer>():null;if(renderer==null)return;
+  if(app.CameraMode){
+   // Camera hand: raising the hand brings the rim to the lips over half a second (the hand is out of sight there); the
+   // hand's own motion since then is added, so a shaking hand still shakes the cup at the mouth.
+   // Only the hand's quick motion (tremor, a shake) is carried to the cup: the reference follows the hand slowly (0.4 s),
+   // so the raise itself and slow drift are absorbed.
+   var handNow=app.ActiveHand.transform.position;
+   mouthHandStart=app.HeldPivotBlend<=0?handNow:Vector3.Lerp(mouthHandStart,handNow,1-Mathf.Exp(-dt/.4f));
+   app.HeldPivotWorld=MouthPoint+(handNow-mouthHandStart);app.HeldPivotBlend=Mathf.MoveTowards(app.HeldPivotBlend,1,2*dt);
+   return;
+  }
+  // The near rim: the very point the cup tips about (ApplyTilt's pivot), so tipping never moves it off the lips.
+  var rim=app.HeldOriented?held.transform.TransformPoint(app.HeldTiltPivotLocal):held.transform.TransformPoint(0,CupBottom+CupDepth,0);
+  var lips=MouthPoint;
+  aimBias=Vector3.ClampMagnitude(aimBias+(lips-rim)*Mathf.Min(1,3*dt),.35f);
+  app.PresentationTarget=lips-(rim-renderer.bounds.center)+aimBias;app.HasPresentationTarget=true;
+ }
+ Vector3 mouthHandStart;
+ /// <summary>Where the lips are: a little in front of and below the eyes.</summary>
+ Vector3 MouthPoint{get{var v=app.player.view.transform;var f=v.forward;f.y=0;f=f.sqrMagnitude>1e-6f?f.normalized:v.forward;return v.position+f*.09f+Vector3.down*.075f;}}
+
+ // ---- Aim: like placement ("look where it goes"), the held teapot is brought over the point the player looks at, with
+ // its spout tip high enough above it and set back by the stream's sideways travel. The hand's own motion and tremor
+ // still move it (the presentation adds the hand), so where the tea lands still measures the hand.
+ Vector3 aimPoint;bool aimValid;Vector3 landingShift,aimBias;
+ void Aim(SqueezableObject held,float dt){
+  aimValid=false;AimError=float.PositiveInfinity;app.HasPresentationTarget=false;
+  app.PresentationReach=held!=null&&(held==teapot.Item||held==cup.Item)?.55f:.35f;
+  bool carryingTea=held!=null&&held==cup.Item&&cupLiquid.Volume>0;app.PresentationSpeed=carryingTea?.3f:.8f;app.PresentationAccel=carryingTea?1.2f:0;
+  if(held!=null&&held==cup.Item&&app.PresentationOffset.z<-.1f){MouthAim(held,dt);return;}
+  if(app.HeldPivotBlend>0){app.HeldPivotBlend=Mathf.MoveTowards(app.HeldPivotBlend,0,2*dt);if(app.HeldPivotBlend<=0)app.HasPresentationTarget=false;}
+  if(held==null||held!=teapot.Item){aimBias=Vector3.zero;return;}
+  var view=app.player.view.transform;
+  int hc=Physics.RaycastNonAlloc(view.position,view.forward,hits,2.5f,~(1<<8),QueryTriggerInteraction.Ignore);float best=float.MaxValue;
+  for(int i=0;i<hc;i++){var c=hits[i].collider;if(c==null||c.transform.IsChildOf(teapot.transform))continue;if(hits[i].distance<best){best=hits[i].distance;aimPoint=hits[i].point;}}
+  if(best==float.MaxValue)return;aimValid=true;
+  // Looking at the cup aims at its mouth (not the rim the ray happens to hit).
+  var ct=cup.transform;var mouth=ct.TransformPoint(0,CupBottom+CupDepth,0);var flat=aimPoint-mouth;flat.y=0;
+  if(flat.magnitude<CupR*1.6f&&aimPoint.y>mouth.y-CupDepth)aimPoint=mouth;
+  // The presentation brings the held object's bounds centre to a world point: put it where the spout tip lands on 'want'.
+  var renderer=held.visual!=null?held.visual.GetComponentInChildren<Renderer>():null;if(renderer==null)return;
+  var bounds=renderer.bounds;var tipNow=teapot.transform.TransformPoint(SpoutTip);
+  var want=aimPoint+Vector3.up*.08f-landingShift;AimError=Vector3.Distance(want,tipNow);AimWant=want;
+  // The presentation predicts the object from the hand's grip, not from the upright/tilted pose this script gives it about
+  // the handle, so a steady offset remains: an integral term removes it (and follows the tilt as it changes).
+  aimBias=Vector3.ClampMagnitude(aimBias+(want-tipNow)*Mathf.Min(1,3*dt),.35f);
+  app.PresentationTarget=want-(tipNow-bounds.center)+aimBias;app.HasPresentationTarget=true;
  }
 
  void SampleTremor(SqueezableObject held){
@@ -174,7 +242,9 @@ public sealed class TeaPouring : MonoBehaviour {
   // Millimetres per pixel from the knuckle breadth (index to little finger base), about 80 mm in an adult hand: an estimate.
   float px=new Vector2((p[17].x-p[5].x)*w,(p[17].y-p[5].y)*h).magnitude;if(px<8)return;float mm=80f/px;
   estimator.Add(f.captureSeconds,p[0].x*w*mm,p[0].y*h*mm);
-  if(Time.unscaledTime>=nextTremor){nextTremor=Time.unscaledTime+.5f;if(estimator.Measure(out float rms,out float hz))tremor.Add(rms,hz);}
+  // Only windows where the hand holds position or pours (slow path under 20 mm): lifting the cup or moving the pot is a
+  // voluntary move, not tremor.
+  if(Time.unscaledTime>=nextTremor){nextTremor=Time.unscaledTime+.5f;if(estimator.Measure(out float rms,out float hz,out float slow)&&slow<20)tremor.Add(rms,hz);}
  }
 
  void Pour(float dt){
@@ -199,6 +269,8 @@ public sealed class TeaPouring : MonoBehaviour {
    path[i]=p;var vel=v0+g*tt;pathRadius[i]=Mathf.Sqrt(q/(Mathf.PI*Mathf.Max(.2f,vel.magnitude)));n=i+1;
   }
   if(where==0){where=2;hitPoint=path[n-1];hitNormal=Vector3.up;}
+  if(runner.RecordPlacement){var m=cup.transform.TransformPoint(0,CupBottom+CupDepth,0);var e=path[n-1]-m;var tipE=tip-m;LastLanding=(where==1?"cup":(hitCollider!=null?hitCollider.name:"air"))+" land("+e.x.ToString("0.000")+","+e.y.ToString("0.000")+","+e.z.ToString("0.000")+") tip("+tipE.x.ToString("0.000")+","+tipE.y.ToString("0.000")+","+tipE.z.ToString("0.000")+") aim="+aimValid+" n="+n;}
+  var travel=path[n-1]-tip;travel.y=0;landingShift=Vector3.Lerp(landingShift,travel,.2f);
   if(where==1){
    float rest=cupLiquid.Add(out_);IntoCupMl+=ml-LiquidMath.Ml(rest);if(rest>0){Overflowed=true;Spill(cup.transform.position,LiquidMath.Ml(rest));}
    var kick=UnityEngine.Random.insideUnitCircle*Mathf.Min(.25f,ml*.02f);cupLiquid.Kick(kick.x,kick.y);ripple=Mathf.Min(1,ripple+ml*.08f);
@@ -226,18 +298,30 @@ public sealed class TeaPouring : MonoBehaviour {
   var ct=cup.transform;var pos=ct.position;
   if(!cupPrimed){cupPrevPos=pos;cupPrevVel=Vector3.zero;cupPrimed=true;}
   var vel=(pos-cupPrevPos)/dt;var acc=(vel-cupPrevVel)/dt;cupPrevPos=pos;cupPrevVel=vel;
-  cupAccel=Vector3.Lerp(cupAccel,Vector3.ClampMagnitude(acc,30),1-Mathf.Exp(-dt/.025f));
-  var up=ct.up;float tiltX=up.y>.05f?up.x/up.y:Mathf.Sign(up.x)*20,tiltZ=up.y>.05f?up.z/up.y:Mathf.Sign(up.z)*20;
+  // The assisted pickup and set-down move the cup between the table and the hand in a few frames: that is the game's
+  // help, not a hand motion, so it does not shake the tea (0.4 s after the cup changes hands).
+  bool nowHeld=held!=null&&held==cup.Item;if(nowHeld!=cupWasHeld){cupWasHeld=nowHeld;handoverUntil=Time.time+.4f;}
+  if(Time.time<handoverUntil)acc=Vector3.zero;
+  // Hand-like smoothing: a held cup is carried by a wrist and arm (~80 ms), not jerked between frames.
+  cupAccel=Vector3.Lerp(cupAccel,Vector3.ClampMagnitude(acc,8),1-Mathf.Exp(-dt/.08f));
+  // Lean as a slope (tan of the axis angle) along the lean direction; past 89 degrees the cup is emptying completely.
+  var up=ct.up;var lean=new Vector2(up.x,up.z);float leanAngle=Mathf.Acos(Mathf.Clamp(up.y,-1,1))*Mathf.Rad2Deg;
+  float slope=leanAngle>=89?1000:Mathf.Tan(leanAngle*Mathf.Deg2Rad);var leanDir=lean.sqrMagnitude>1e-8f?lean.normalized:Vector2.zero;
+  float tiltX=leanDir.x*slope,tiltZ=leanDir.y*slope;
   bool heldCup=held!=null&&held==cup.Item;
   // At the mouth, what the tipped cup cannot hold goes into the mouth (a gulp is capped, the rest runs down the chin).
-  AtMouth=heldCup&&app.PresentationOffset.z<-.1f&&Vector3.Distance(ct.TransformPoint(0,CupBottom+CupDepth,0),app.player.view.transform.position)<.26f;
+  MouthDistance=heldCup?Vector3.Distance(ct.TransformPoint(0,CupBottom+CupDepth,0),MouthPoint):float.PositiveInfinity;
+  AtMouth=heldCup&&app.PresentationOffset.z<-.1f&&MouthDistance<(AtMouth?.11f:.07f); // hysteresis: lips stay on the rim
   if(AtMouth&&cupLiquid.Volume>0){
    float keep=LiquidMath.RetainedVolume(cupLiquid.MeanRadius,cupLiquid.height,cupLiquid.SurfaceSlope(tiltX,tiltZ));
-   float drink=Mathf.Min(Mathf.Max(0,cupLiquid.Volume-keep),LiquidMath.M3(40)*dt);
+   float excess=Mathf.Max(0,cupLiquid.Volume-keep),drink=Mathf.Min(excess,LiquidMath.M3(40)*dt);SipSaturated=excess>drink+LiquidMath.M3(.5f);
    if(drink>0){DrankMl+=LiquidMath.Ml(cupLiquid.Remove(drink));DrinkSeconds+=dt;}
    SetLoop(sipSource,drink>0?.45f:0,1);
-  } else SetLoop(sipSource,0,1);
+  } else {SetLoop(sipSource,0,1);SipSaturated=false;}
+  // Lips on the rim hold back a surplus up to a mouthful; tipping further than that runs over (down the chin).
+  if(AtMouth&&cupLiquid.Volume-LiquidMath.RetainedVolume(cupLiquid.MeanRadius,cupLiquid.height,cupLiquid.SurfaceSlope(tiltX,tiltZ))<LiquidMath.M3(15)){tiltX=0;tiltZ=0;}
   float lost=cupLiquid.Step(dt,tiltX,tiltZ,cupAccel.x,cupAccel.z);
+  if(lost>0&&runner.RecordPlacement&&heldCup&&!AtMouth&&SpillLog.Length<600)SpillLog+="["+(Time.time-handoverUntil+.4f).ToString("0.00")+"s lean="+leanAngle.ToString("0")+" slosh="+new Vector2(cupLiquid.SloshX,cupLiquid.SloshZ).magnitude.ToString("0.00")+" acc="+cupAccel.magnitude.ToString("0.0")+" ml="+LiquidMath.Ml(lost).ToString("0.0")+"]";
   if(lost>0){
    float ml=LiquidMath.Ml(lost);if(heldCup&&!AtMouth)CarrySpillMl+=ml;
    // It leaves over the lowest point of the rim.
@@ -280,6 +364,8 @@ public sealed class TeaPouring : MonoBehaviour {
    float radius=r<n?Mathf.Clamp(pathRadius[i],.0008f,.006f)*(1+.07f*Mathf.Sin(wobble+r*1.7f)):0;
    for(int s=0;s<StreamSides;s++){float a=s*Mathf.PI*2/StreamSides;streamVerts[r*StreamSides+s]=c+(side*Mathf.Cos(a)+up*Mathf.Sin(a))*radius;}
   }
+  // World-space vertices: keep the tube at the world origin (the activity root is placed at its station after creation).
+  var st=streamRenderer.transform;if(st.position!=Vector3.zero||st.rotation!=Quaternion.identity)st.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
   streamMesh.vertices=streamVerts;streamMesh.RecalculateNormals();streamMesh.RecalculateBounds();streamRenderer.enabled=true;
  }
 
@@ -309,8 +395,20 @@ public sealed class TeaPouring : MonoBehaviour {
   /// <summary>Records the cup's fill when the pour step ends (the measured fill for the score).</summary>
  public void MarkFilled(){FilledMl=CupMl;}
  /// <summary>Levels the vessel (voice "stop pouring", the end of the activity).</summary>
- public void Level(){TestTilt=float.NaN;keyTilt=0;rollBase=float.NaN;CurrentTilt=0;app.HeldTilt=Quaternion.identity;appliedTilt=Quaternion.identity;}
- void OnDestroy(){if(app!=null){app.HeldTilt=Quaternion.identity;}}
+ public void Level(){TestTilt=float.NaN;keyTilt=0;rollBase=float.NaN;CurrentTilt=0;}
+ /// <summary>
+ /// The pickup places a vessel in its grip's own orientation; a teapot or cup is turned upright about the grip point in the
+ /// same frame, so it never tips (and spills) for the frames before the held orientation takes over.
+ /// </summary>
+ void Grabbed(SqueezableObject item){
+  if(item==null||item.GetComponent<PourVessel>()==null)return;
+  CurrentTilt=0;rollBase=float.NaN;ApplyTilt(item);if(!app.HeldOriented)return;
+  var body=item.Body;var pivot=item.transform.TransformPoint(app.HeldTiltPivotLocal);var rotation=app.HeldOrientation;
+  var position=pivot-rotation*app.HeldTiltPivotLocal;
+  if(body!=null){body.position=position;body.rotation=rotation;}item.transform.SetPositionAndRotation(position,rotation);
+  cupPrimed=false; // fresh motion history: the handover is not a hand acceleration
+ }
+ void OnDestroy(){if(app!=null){app.ObjectGrabbed-=Grabbed;app.HeldOriented=false;app.HeldPivotBlend=0;app.PresentationReach=.35f;app.PresentationSpeed=.8f;app.PresentationAccel=0;app.HasPresentationTarget=false;}}
 }
 
 /// <summary>Synthesised tea sounds (ADR-AU-1): no recordings.</summary>

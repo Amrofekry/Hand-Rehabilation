@@ -106,6 +106,12 @@ class LiquidTests
             Check(est.Measure(out float rms, out float trem), "a 5 s window gives a measurement");
             Check(Near(trem, 6, .3), "dominant tremor frequency 6 Hz (" + trem.ToString("0.00") + " Hz)");
             Check(Near(rms, 2, .2), "tremor amplitude 2 mm RMS within 10 % (" + rms.ToString("0.00") + " mm)");
+            est.Measure(out _, out _, out float slowRange);
+            Check(slowRange > 150 && slowRange < 250, "the slow (voluntary) path is reported apart from the tremor (" + slowRange.ToString("0") + " mm)");
+            est.Clear();
+            for (int i = 0; i < 150; i++) { double tt = i / 30.0; est.Add(tt, 0, (float)(Math.Sin(2 * Math.PI * 6 * tt) * 1.4)); }
+            est.Measure(out _, out _, out float holding);
+            Check(holding < 5, "a hand holding still (with tremor) has a small slow range (" + holding.ToString("0.0") + " mm)");
             est.Clear();
             for (int i = 0; i < 150; i++) { double tt = i / 30.0; est.Add(tt, (float)(30 * tt), (float)(5 * tt)); }
             est.Measure(out float still, out _);
