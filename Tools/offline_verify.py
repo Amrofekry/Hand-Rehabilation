@@ -184,6 +184,12 @@ def main():
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',health],OUTPUT/'device-health-tests.log')
             evidence['checks'].append(dict(name='device-health-tests',passed=True,result=result.stdout.strip(),
                 scope='Production device-status logic with injected packets, dropouts, stale gaps and reconnects; no BLE or Unity'))
+            liquid=OUTPUT/'LiquidTests.exe'
+            run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(liquid),
+                 *reference_flags,'Tools/Offline/LiquidTests.cs','Assets/Rehab/3.3-deformation/LiquidCore.cs'],OUTPUT/'liquid-tests-compile.log')
+            result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',liquid],OUTPUT/'liquid-tests.log')
+            evidence['checks'].append(dict(name='liquid-source-tests',passed=True,result=result.stdout.strip(),
+                scope='Production liquid core (volume, Torricelli outflow, sloshing, rim spill, tremor estimate, tea rules) with synthetic inputs; no Unity'))
             grasp=OUTPUT/'GraspTests.exe'
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(grasp),
                  *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),

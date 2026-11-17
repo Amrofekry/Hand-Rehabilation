@@ -36,6 +36,10 @@ namespace GripRehab
         static bool UiOnly => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-ui-only") >= 0;
         static bool Camera => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-camera") >= 0;
         float closure; bool sending; long sequence;
+        // Tea: the synthetic hand's wrist roll (degrees), lift toward the top of the image (0..1) and an injected tremor.
+        float roll, lift, tremorMm, tremorHz = 6;
+        readonly List<UiCheck> teaChecks = new List<UiCheck>();
+        void TeaCheck(string name, bool passed, string value) => teaChecks.Add(new UiCheck { name = name, passed = passed, value = value });
         void Check(string name, bool passed, string value) => uiChecks.Add(new UiCheck { name = name, passed = passed, value = value });
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -62,9 +66,9 @@ namespace GripRehab
                 if (!more) break;
                 yield return next;
             }
-            report.runs = runs.ToArray(); report.errors = errors; report.uiChecks = uiChecks.ToArray(); report.resolution = Screen.width + "x" + Screen.height;
+            report.runs = runs.ToArray(); report.errors = errors; report.uiChecks = uiChecks.Concat(teaChecks).ToArray(); report.resolution = Screen.width + "x" + Screen.height;
             bool uiPassed = uiChecks.Count > 0 && uiChecks.All(c => c.passed);
-            report.passed = failure == null && errors == 0 && uiPassed && (UiOnly || runs.Count == 12 && runs.All(r => r.completed));
+            report.passed = failure == null && errors == 0 && uiPassed && (UiOnly || runs.Count == 2 * Enum.GetValues(typeof(ActivityKind)).Length && runs.All(r => r.completed) && teaChecks.All(c => c.passed));
             report.detail = failure != null ? failure.ToString() : errors > 0 ? errors + " error(s) logged" : !uiPassed ? "UI checks failed: " + string.Join(", ", uiChecks.Where(c => !c.passed).Select(c => c.name + "=" + c.value)) : runs.Any(r => !r.completed) ? "Not completed: " + string.Join(", ", runs.Where(r => !r.completed).Select(r => r.activity + " L" + r.level)) : "";
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/activity-probe.json", JsonUtility.ToJson(report, true));
@@ -113,6 +117,7 @@ namespace GripRehab
                     }
                     double wait = Time.realtimeSinceStartupAsDouble + 4;
                     while (runner.LastResult == null && Time.realtimeSinceStartupAsDouble < wait) yield return null;
+                    if (activity is TeaActivity teaActivity) CheckTea(run, teaActivity.tea); // before the runner tidies the props away
                     if (level == 2) yield return Shot("activity-" + ((int)kind + 1) + "-" + kind + "-done");
                     var result = runner.LastResult;
                     run.completed = result != null; run.stepsDone = activity.steps.Current; run.stepsTotal = activity.steps.Count;
@@ -242,6 +247,10 @@ namespace GripRehab
                     app.TestForce = step.newtons; yield return new WaitForSecondsRealtime(.45f);
                     app.TestForce = 0; yield return new WaitForSecondsRealtime(.45f);
                     break;
+                case ProbeStep.Kind.Pour:
+                case ProbeStep.Kind.Drink:
+                    yield return Tea(step, run, d => { var t = Tea(); if (t != null) t.TestTilt = d; }, m => { var t = Tea(); if (t != null) t.TestMouth = m; });
+                    break;
             }
         }
 
@@ -294,7 +303,66 @@ namespace GripRehab
                     run.notes += step.kind + " want=" + step.newtons.ToString("0") + "N peak=" + peak.ToString("0.0") + "N held=" + (app.Held != null ? app.Held.displayName : "none") + " ray=" + Diag(runner, "AimedCollider") + " | ";
                     yield return new WaitForSecondsRealtime(step.kind == ProbeStep.Kind.Chop ? .45f : .4f);
                     break;
+                case ProbeStep.Kind.Pour:
+                case ProbeStep.Kind.Drink:
+                    // Hand roll R maps to tilt (R - 6) * 1.25 after the dead band, so roll = tilt / 1.25 + 6.
+                    yield return Tea(step, run, d => roll = d <= 0 ? 0 : d / 1.25f + 6, m => lift = m ? 1 : 0);
+                    break;
             }
+        }
+
+        TeaPouring Tea() => runner != null && runner.Current is TeaActivity t ? t.tea : null;
+
+        // Pour or drink the way a patient watches the cup: tip, slow down near the line, level off; raise the cup, tip, sip.
+        IEnumerator Tea(ProbeStep step, Run run, Action<float> tilt, Action<bool> mouth)
+        {
+            var tea = Tea(); if (tea == null) { run.notes += "no tea | "; yield break; }
+            float Seconds() => Time.realtimeSinceStartup;
+            if (step.kind == ProbeStep.Kind.Pour)
+            {
+                app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.4f);
+                if (Camera && run.level == 8) tremorMm = 1.5f; // a known 1.5 mm RMS, 6 Hz tremor while pouring and drinking
+                float end = Seconds() + 30, angle = 0;
+                while (tea.CupMl < step.ml - 3 && tea.PotMl > 1 && Seconds() < end)
+                {
+                    float left = step.ml - tea.CupMl;
+                    float want = left > 40 ? 62 : left > 15 ? 48 : 40; // slower near the line
+                    angle = Mathf.MoveTowards(angle, want, 60 * Time.unscaledDeltaTime); tilt(angle); yield return null;
+                }
+                tilt(0); yield return new WaitForSecondsRealtime(1.4f);
+                run.notes += "poured " + tea.PouredMl.ToString("0") + " ml, cup " + tea.CupMl.ToString("0") + "/" + step.ml.ToString("0") + " ml, spilled " + tea.SpilledMl.ToString("0.0") + " ml | ";
+            }
+            else
+            {
+                mouth(true); float end = Seconds() + 4;
+                while (!tea.AtMouth && Seconds() < end) yield return null;
+                run.notes += "at mouth=" + tea.AtMouth + " | ";
+                float angle = 0; end = Seconds() + 30;
+                while (tea.CupMl > 2 && Seconds() < end) { angle = Mathf.MoveTowards(angle, 95, 25 * Time.unscaledDeltaTime); tilt(angle); yield return null; }
+                tilt(0); yield return new WaitForSecondsRealtime(.8f); mouth(false); yield return new WaitForSecondsRealtime(1.2f);
+                tremorMm = 0;
+                run.notes += "drank " + tea.DrankMl.ToString("0") + " ml, left " + tea.CupMl.ToString("0.0") + " ml, carry spill " + tea.CarrySpillMl.ToString("0.0") + " ml | ";
+            }
+        }
+
+        void CheckTea(Run run, TeaPouring tea)
+        {
+            if (tea == null) return;
+            string id = (Camera ? "camera" : "keyboard") + " level " + run.level + ": ";
+            float tol = TeaRules.Tolerance(run.level);
+            TeaCheck(id + "cup filled to the line", Mathf.Abs(tea.FilledMl - tea.TargetMl) <= tea.TargetMl * tol, tea.FilledMl.ToString("0") + " of " + tea.TargetMl.ToString("0") + " ml (tolerance " + (tol * 100).ToString("0") + " %)");
+            TeaCheck(id + "volume conserved", Mathf.Abs(TeaPouring.StartMl - tea.PotMl - (tea.CupMl + tea.SpilledMl + tea.DrankMl)) < 1, (TeaPouring.StartMl - tea.PotMl).ToString("0.0") + " ml out of the pot = " + (tea.CupMl + tea.SpilledMl + tea.DrankMl).ToString("0.0") + " ml");
+            TeaCheck(id + "a careful pour keeps the tea in the cup", TeaRules.PourAccuracy(tea.IntoCupMl, tea.PouredMl) >= .95f, (100 * TeaRules.PourAccuracy(tea.IntoCupMl, tea.PouredMl)).ToString("0") + " % in the cup");
+            TeaCheck(id + "the cup was drunk empty", tea.CupMl < 3 && tea.DrankMl > tea.FilledMl * .8f, tea.DrankMl.ToString("0") + " ml drunk, " + tea.CupMl.ToString("0.0") + " ml left");
+            if (Camera && run.level == 8)
+            {
+                TeaCheck(id + "injected tremor measured (1.5 mm RMS, 6 Hz)", tea.tremor.Samples > 0 && Mathf.Abs(tea.tremor.MeanRmsMm - 1.5f) <= .45f && Mathf.Abs(tea.tremor.DominantHz - 6) <= .75f,
+                    tea.tremor.Samples + " windows, " + tea.tremor.MeanRmsMm.ToString("0.00") + " mm, " + tea.tremor.DominantHz.ToString("0.00") + " Hz");
+            }
+            else if (Camera)
+                TeaCheck(id + "a steady hand reads as small tremor", tea.tremor.Samples > 0 && tea.tremor.MeanRmsMm < .6f, tea.tremor.MeanRmsMm.ToString("0.00") + " mm");
+            else
+                TeaCheck(id + "keyboard runs report no tremor", tea.tremor.Samples == 0, tea.tremor.Samples + " windows");
         }
 
         // Close gently (no harder than the gate needs) until the object is held; the hold keeps a light grip.
@@ -360,7 +428,8 @@ namespace GripRehab
         {
             var f = new LandmarkFrame { schemaVersion = 1, source = "mediapipe-test", handedness = "Right", confidence = .95f, sequence = ++sequence,
                 captureSeconds = Time.realtimeSinceStartupAsDouble, ageMs = 1, landmarks = new Vector3[21] };
-            float cx = .5f, wy = .58f;
+            float cx = .5f, wy = .58f - .36f * lift;
+            f.imageWidth = 640; f.imageHeight = 480;
             f.landmarks[0] = new Vector3(cx, wy, 0);
             for (int finger = 0; finger < 4; finger++)
             {
@@ -371,6 +440,19 @@ namespace GripRehab
                 f.landmarks[n + 3] = new Vector3(x, wy + Mathf.Lerp(-.34f, -.04f, c), 0);
             }
             for (int i = 1; i < 5; i++) f.landmarks[i] = new Vector3(cx - (.12f - i * .015f) - .04f, wy - .03f - i * .02f, 0);
+            // Wrist roll in the image (pixels, so the angle is true on a 640x480 frame), then the tremor shake.
+            if (roll != 0)
+            {
+                float a = roll * Mathf.Deg2Rad, cs = Mathf.Cos(a), sn = Mathf.Sin(a);
+                for (int i = 1; i < 21; i++) { var d = f.landmarks[i] - f.landmarks[0]; float px = d.x * 640, py = d.y * 480; f.landmarks[i] = f.landmarks[0] + new Vector3((px * cs - py * sn) / 640, (px * sn + py * cs) / 480, 0); }
+            }
+            if (tremorMm > 0)
+            {
+                // TeaPouring scales pixels to millimetres by an 80 mm knuckle breadth; this hand's breadth in pixels sets the scale.
+                float breadth = new Vector2((f.landmarks[17].x - f.landmarks[5].x) * 640, (f.landmarks[17].y - f.landmarks[5].y) * 480).magnitude;
+                float px = tremorMm * Mathf.Sqrt(2) * breadth / 80f * Mathf.Sin(2 * Mathf.PI * tremorHz * (float)f.captureSeconds);
+                for (int i = 0; i < 21; i++) f.landmarks[i] += new Vector3(px / 640, 0, 0);
+            }
             return f;
         }
 

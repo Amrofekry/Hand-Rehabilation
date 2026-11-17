@@ -147,6 +147,29 @@ public static class ActivityProps {
  public static Mesh Cucumber(float length,float r)=>new MeshKit().Lathe(0,MeshKit.At(Vector3.zero,new Vector3(0,0,-90)),new[]{new Vector2(0,-length*.5f),new Vector2(r*.55f,-length*.48f),new Vector2(r,-length*.4f),new Vector2(r,length*.4f),new Vector2(r*.55f,length*.48f),new Vector2(0,length*.5f)},20).Build("Cucumber");
  public static Mesh Round(float r,float squash=1)=>new MeshKit().Sphere(0,Vector3.zero,new Vector3(r,r*squash,r),14,22).Build("Food");
  public static Mesh Slab(Vector3 size)=>new MeshKit().Box(0,MeshKit.At(Vector3.zero),size,4).Build("Slab");
+ /// <summary>
+ /// Teapot for the tea activity (spout toward +X, handle toward -X; material 0 glaze, 1 lid knob). The body's inner
+ /// radius and height, the spout outlet and the grip match TeaPouring's physics constants.
+ /// </summary>
+ public static Mesh Teapot(){
+  var kit=new MeshKit();
+  kit.Lathe(0,MeshKit.At(Vector3.zero),new[]{new Vector2(0,0),new Vector2(.05f,0),new Vector2(.058f,.006f),new Vector2(.066f,.03f),new Vector2(.068f,.055f),
+   new Vector2(.064f,.08f),new Vector2(.052f,.098f),new Vector2(.042f,.104f),new Vector2(.04f,.1f),new Vector2(0,.1f)},36);
+  kit.Lathe(0,MeshKit.At(new Vector3(0,.1f,0)),new[]{new Vector2(0,.016f),new Vector2(.02f,.014f),new Vector2(.036f,.007f),new Vector2(.044f,.002f),new Vector2(.044f,0),new Vector2(0,0)},30);
+  kit.Sphere(1,new Vector3(0,.122f,0),new Vector3(.009f,.008f,.009f),8,14);
+  // Spout: a tapered tube from the belly up to the outlet (TeaPouring.SpoutTip), along TeaPouring.SpoutDirection.
+  var from=new Vector3(.052f,.03f,0);var to=TeaPouring.SpoutTip;var d=to-from;float len=d.magnitude;
+  float tilt=Mathf.Atan2(d.x,d.y)*Mathf.Rad2Deg;
+  kit.Lathe(0,MeshKit.At(from,new Vector3(0,0,-tilt)),new[]{new Vector2(0,0),new Vector2(.017f,0),new Vector2(.012f,len*.45f),new Vector2(.0075f,len*.92f),new Vector2(.0068f,len),new Vector2(.0052f,len),new Vector2(0,len)},16);
+  // Handle: a loop on the far side, gripped at TeaPouring.TeapotGrip.
+  kit.Torus(0,MeshKit.At(new Vector3(-.068f,.062f,0),new Vector3(0,180,0)),.034f,.0065f,-80,80,16,8);
+  return kit.Build("Teapot");
+ }
+ /// <summary>Tea cup with an inner cavity of TeaPouring's cup dimensions (and a handle).</summary>
+ public static Mesh TeaCup()=>Cup(TeaPouring.CupR,TeaPouring.CupH);
+ public static Mesh Saucer(float r)=>new MeshKit().Lathe(0,MeshKit.At(Vector3.zero),new[]{new Vector2(0,0),new Vector2(r*.55f,0),new Vector2(r*.6f,.003f),new Vector2(r,.012f),new Vector2(r*.95f,.014f),new Vector2(r*.58f,.006f),new Vector2(0,.006f)},36).Build("Saucer");
+ /// <summary>A thin ring for the fill line inside the cup (height h on a wall of radius r).</summary>
+ public static Mesh FillLine(float r,float h)=>new MeshKit().Torus(0,MeshKit.At(new Vector3(0,h,0),new Vector3(90,0,0)),r,.0007f,0,360,40,4).Build("Fill line");
  public static Mesh Can(float r,float h)=>new MeshKit().Cylinder(0,MeshKit.At(new Vector3(0,h*.5f,0)),r,h,22,3).Build("Can");
 }
 }

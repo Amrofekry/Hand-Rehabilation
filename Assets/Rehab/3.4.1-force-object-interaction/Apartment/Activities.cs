@@ -6,8 +6,10 @@ using UnityEngine;
 namespace GripRehab {
 /// <summary>One scripted action of the activity probe (SYNTHETIC input through the real grab/aim/release path).</summary>
 public sealed class ProbeStep {
- public enum Kind { Place, Grab, Release, Squeeze, Chop }
+ public enum Kind { Place, Grab, Release, Squeeze, Chop, Pour, Drink }
  public Kind kind;public ActivityItem item;public Func<Vector3> aim;public float seconds,newtons;
+ /// <summary>Pour: millilitres wanted in the cup.</summary>
+ public float ml;
  public static ProbeStep Place(ActivityItem item,Func<Vector3> aim)=>new ProbeStep{kind=Kind.Place,item=item,aim=aim};
  public static ProbeStep Grab(ActivityItem item)=>new ProbeStep{kind=Kind.Grab,item=item};
 }
@@ -30,6 +32,7 @@ public abstract class Activity {
    case ActivityKind.StorageBox:a=new StorageBoxActivity();break;
    case ActivityKind.SimpleMeal:a=new SimpleMealActivity();break;
    case ActivityKind.Cutting:a=new CuttingActivity();break;
+   case ActivityKind.PourTea:a=new TeaActivity();break;
    default:a=new PrepareServeActivity();break;
   }
   a.kind=kind;a.tuning=tuning;return a;
@@ -338,5 +341,86 @@ sealed class PrepareServeActivity:Activity {
   if(food.Cut(food.transform.position,.01f)){steps.Advance();r.Say("Halved. Put the tomato on the plate.");}
  }
  public override string PraiseFor(ActivityItem item,SnapTarget target)=>target.id=="serve"?"Served!":"Done: "+item.kind+" on the "+target.label+".";
+}
+
+// ---------------- 7. Living room: pour a cup of tea and drink it (liquid: TeaPouring on LiquidCore)
+public sealed class TeaActivity:Activity {
+ public ActivityItem teapot,cup;public TeaPouring tea;SnapTarget mat,saucer;int level=1;int spillErrors;bool overflowCounted;
+ protected override void BuildProps(ActivityRunner r){
+  level=r.Level;
+  var glaze=r.Paint(new Color(.93f,.92f,.88f),.85f);var knob=r.Paint(new Color(.42f,.3f,.2f),.5f);var china=r.Paint(new Color(.97f,.97f,.95f),.85f);var gold=r.Paint(new Color(.8f,.62f,.25f),.7f,.6f);
+  var y=r.Yaw;bool left=r.app.LeftSelected;float side=left?-1:1; // the teapot sits by the hand that holds it
+  var potAt=r.Surface(.42f,.2f*side);var cupAt=r.Surface(.44f,-.05f*side);
+  teapot=Add(ActivityProps.Item("Teapot","teapot",r.Root,potAt,y+(left?0:180),ActivityProps.Teapot(),new[]{glaze,knob},
+   g=>{ActivityProps.CapsuleC(g,new Vector3(0,.052f,0),.066f,.11f,1);ActivityProps.BoxC(g,new Vector3(-.098f,.062f,0),new Vector3(.018f,.07f,.016f));},
+   GripType.Power,Rigid("Ceramic"),.65f,TeaPouring.TeapotGrip,null,null,1));
+  teapot.gameObject.AddComponent<PourVessel>().teapot=true;
+  cup=Add(ActivityProps.Item("Tea cup","cup",r.Root,cupAt+Vector3.up*.006f,y,ActivityProps.TeaCup(),new[]{china},
+   g=>ActivityProps.Octagon(g,new Vector3(0,TeaPouring.CupH*.5f,0),TeaPouring.CupR,TeaPouring.CupH),GripType.Cupped,DeformationMaterial.Porcelain(),.22f,new Vector3(0,TeaPouring.CupH*.5f,0),null,null,1));
+  cup.gameObject.AddComponent<PourVessel>();
+  // Saucer under the cup (a static prop the cup rests on) and the gold fill line inside the cup.
+  var saucerGo=new GameObject("Saucer");saucerGo.transform.SetParent(r.Root,true);saucerGo.transform.SetPositionAndRotation(cupAt,Quaternion.Euler(0,y,0));
+  saucerGo.AddComponent<MeshFilter>().sharedMesh=ActivityProps.Saucer(.075f);saucerGo.AddComponent<MeshRenderer>().sharedMaterial=china;
+  var sc=saucerGo.AddComponent<BoxCollider>();sc.center=new Vector3(0,.003f,0);sc.size=new Vector3(.13f,.006f,.13f);
+  float r0=TeaPouring.CupInnerBottom,r1=TeaPouring.CupInnerTop,depth=TeaPouring.CupDepth;
+  float lineH=LiquidMath.FrustumLevel(r0,r1,depth,LiquidMath.FrustumVolume(r0,r1,depth,depth)*TeaRules.TargetFraction);
+  var line=new GameObject("Fill line");line.transform.SetParent(cup.Item.visual,false);
+  line.AddComponent<MeshFilter>().sharedMesh=ActivityProps.FillLine(r0+(r1-r0)*lineH/depth,TeaPouring.CupBottom+lineH);line.AddComponent<MeshRenderer>().sharedMaterial=gold;
+  mat=Target(r,"mat","teapot mat",potAt,y,new Vector3(.17f,0,.17f),a=>a.kind=="teapot",1);
+  saucer=Target(r,"saucer","saucer",cupAt+Vector3.up*.006f,y,new Vector3(.12f,0,.12f),a=>a.kind=="cup",1);
+  tea=TeaPouring.Create(r,teapot,cup,level);
+  steps.Add("Pick up the teapot by its handle");
+  steps.Add("Tip the teapot to pour tea into the cup, up to the gold line ("+tea.TargetMl.ToString("0")+" ml), then level it");
+  steps.Add("Put the teapot back on its mat");
+  steps.Add("Pick up the cup");
+  steps.Add("Raise the cup to your mouth and tip it to drink, until it is empty");
+  steps.Add("Put the cup back on its saucer");
+ }
+ public override void Grabbed(ActivityItem item){
+  if(item==teapot&&steps.Current==0)steps.Advance();
+  else if(item==cup&&steps.Current==3)steps.Advance();
+ }
+ // Putting things down never undoes a step (the steps are a sequence, not a count of placed items).
+ public override void Removed(ActivityItem item,SnapTarget target){}
+ public override void Placed(ActivityItem item,SnapTarget target,PlacementResult result){
+  if(item==teapot&&steps.Current==2||item==cup&&steps.Current==5){placements.Add(result);steps.Advance();}
+ }
+ public override string PraiseFor(ActivityItem item,SnapTarget target)=>
+  item==cup&&steps.Current<=4&&tea.CupMl>3?"The cup is on its saucer. Pick it up again to drink the rest.":
+  item==teapot?"The teapot is back on its mat.":"The cup is back on its saucer.";
+ public override void Tick(ActivityRunner r,float dt){
+  if(tea==null)return;
+  // Errors: tea over the rim of a full cup, and every few millilitres spilled (more forgiving at low levels).
+  if(tea.Overflowed&&!overflowCounted){overflowCounted=true;errors++;}
+  int spills=Mathf.Min(5,Mathf.FloorToInt(tea.SpilledMl/TeaRules.SpillErrorMl(level)));if(spills>spillErrors){errors+=spills-spillErrors;spillErrors=spills;}
+  if(steps.Current==1){
+   bool enough=tea.CupMl>=tea.TargetMl*(1-TeaRules.Tolerance(level))||tea.PotMl<1;
+   if(enough&&tea.LevelSeconds>=.8f&&!tea.Pouring){tea.MarkFilled();steps.Advance();if(teapot.snappedTo==mat)steps.Advance();}
+  } else if(steps.Current==4){
+   if(tea.CupMl<3&&tea.DrankMl>0){steps.Advance();if(cup.snappedTo==saucer)steps.Advance();}
+  }
+ }
+ protected override float Accuracy=>tea==null?0:TeaRules.Accuracy(TeaRules.FillAccuracy(tea.FilledMl,tea.TargetMl,level),TeaRules.PourAccuracy(tea.IntoCupMl,tea.PouredMl));
+ public int Level=>level;
+ public override IEnumerable<ProbeStep> Solution(){
+  yield return ProbeStep.Grab(teapot);
+  yield return new ProbeStep{kind=ProbeStep.Kind.Pour,item=teapot,ml=tea.TargetMl,aim=()=>cup.transform.position};
+  yield return ProbeStep.Place(teapot,At(mat,.002f));
+  yield return ProbeStep.Grab(cup);
+  yield return new ProbeStep{kind=ProbeStep.Kind.Drink,item=cup};
+  yield return ProbeStep.Place(cup,At(saucer,.002f));
+ }
+ protected override void AddOutcomes(List<OutcomeMetric> o){
+  if(tea==null)return;
+  o.Add(M("tea.targetMl","Fill target","ml",tea.TargetMl));o.Add(M("tea.fillMl","Tea in the cup","ml",tea.FilledMl));
+  o.Add(M("tea.fillErrorPct","Off the fill line","%",tea.TargetMl>0?100*Mathf.Abs(tea.FilledMl-tea.TargetMl)/tea.TargetMl:0));
+  o.Add(M("tea.pourAccuracyPct","Tea kept in the cup","%",100*TeaRules.PourAccuracy(tea.IntoCupMl,tea.PouredMl)));
+  o.Add(M("tea.spillMl","Tea spilled","ml",tea.SpilledMl));o.Add(M("tea.carrySpillMl","Spilled while holding the cup","ml",tea.CarrySpillMl));
+  o.Add(M("tea.pourSeconds","Pouring time","s",tea.PourSeconds));o.Add(M("tea.flowCv","Pour steadiness (flow CV)","",tea.flow.Cv));
+  o.Add(M("tea.tiltSdDeg","Pour angle steadiness (SD)","°",tea.tilt.Sd));
+  o.Add(M("tea.drankMl","Tea drunk","ml",tea.DrankMl));o.Add(M("tea.drinkSeconds","Drinking time","s",tea.DrinkSeconds));
+  // Tremor only from the camera hand: a keyboard run has no hand to measure, so nothing is reported (never a made-up 0).
+  if(tea.tremor.Samples>0){o.Add(M("tea.tremorRmsMm","Hand tremor (camera estimate)","mm",tea.tremor.MeanRmsMm));o.Add(M("tea.tremorHz","Tremor frequency (camera estimate)","Hz",tea.tremor.DominantHz));}
+ }
 }
 }

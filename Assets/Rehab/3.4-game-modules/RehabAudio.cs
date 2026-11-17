@@ -43,6 +43,7 @@ namespace GripRehab
         public static int ClipCount => instance != null ? instance.clips.Count + (instance.bank != null ? instance.bank.ClipCount : 0) : 0;
         public static bool HasMixer => instance != null && instance.mixer != null;
         public static AudioMixerGroup VoiceGroup => instance != null ? instance.voiceGroup : null;
+        public static AudioMixerGroup SfxGroup => instance != null ? instance.sfxGroup : null;
         /// <summary>Last material sound for checks: family, event, gain and position.</summary>
         public static (SoundFamily family, SoundEvent sound, float gain, Vector3 at, int count) LastMaterialSound { get; private set; }
         public static float StrainLevel => instance != null && instance.strain != null ? instance.strain.volume : 0;

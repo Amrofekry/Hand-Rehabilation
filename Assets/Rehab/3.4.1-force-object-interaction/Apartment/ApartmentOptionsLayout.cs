@@ -21,20 +21,28 @@ public static class ApartmentOptionsLayout {
   y=Section(label01,new Button[]{c.livingButton,c.kitchenButton,c.labButton,c.materialLabButton},ChipHeight,14,y,w,presentation);
   y=Section(label02,c.objectButtons,ButtonHeight,16,y,w,presentation);
   y=Section(label03,new[]{c.inputButton,c.handButton},ChipHeight+4,15,y,w,presentation);
+  activityRowY=y-(label04!=null?LabelHeight+8:0);
   y=Section(label04,activities,ChipHeight+4,15,y,w,presentation);
   y-=4;
   Row(new[]{c.resumeButton},ResumeHeight,17,y,w,presentation);y-=ResumeHeight+Pad;
   panel.sizeDelta=new Vector2(panel.sizeDelta.x,-y);
+ }
+ static float activityRowY=float.NaN;
+ /// <summary>Lays out the activity row again after a room change shows or hides a button (only the shown ones share the row).</summary>
+ public static void LayoutActivities(ApartmentChoices c,Button[] activities){
+  if(float.IsNaN(activityRowY)||c==null||c.inputButton==null)return;
+  var panel=(RectTransform)c.inputButton.transform.parent;float w=panel.rect.width>10?panel.rect.width:panel.sizeDelta.x;
+  Row(activities,ChipHeight+4,15,activityRowY,w,Object.FindAnyObjectByType<GripRehab.UI.GripUiThemeController>());
  }
  static float Section(Text label,Button[] row,float height,int font,float y,float w,GripRehab.UI.GripUiThemeController presentation){
   if(label!=null){Place(label.rectTransform,Pad,y,w-2*Pad,LabelHeight,true);label.alignment=TextAnchor.LowerLeft;label.resizeTextForBestFit=false;if(presentation!=null)presentation.SetBaseFontSize(label,13);else label.fontSize=13;y-=LabelHeight+8;}
   Row(row,height,font,y,w,presentation);return y-height-SectionGap;
  }
  static void Row(Button[] row,float height,int font,float y,float w,GripRehab.UI.GripUiThemeController presentation){
-  int n=0;foreach(var b in row)if(b!=null)n++;if(n==0)return;
+  int n=0;foreach(var b in row)if(b!=null&&b.gameObject.activeSelf)n++;if(n==0)return;
   float bw=(w-2*Pad-(n-1)*Gap)/n;int i=0;
   foreach(var b in row){
-   if(b==null)continue;
+   if(b==null||!b.gameObject.activeSelf)continue;
    Place((RectTransform)b.transform,Pad+i*(bw+Gap),y,bw,height,true);i++;
    GripRehab.UI.GripUiControlFeedback.Attach(Object.FindAnyObjectByType<GripRehab.UI.GripUiAccessibility>(),b);
    var t=b.GetComponentInChildren<Text>(true);if(t==null)continue;

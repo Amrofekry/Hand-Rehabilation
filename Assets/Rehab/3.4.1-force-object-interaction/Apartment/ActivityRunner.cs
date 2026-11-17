@@ -256,7 +256,7 @@ public sealed class ActivityRunner : MonoBehaviour {
  public void SetPlacementYaw(float degrees){if(float.IsNaN(degrees)||float.IsInfinity(degrees)||Mathf.Approximately(degrees,PlacementYaw))return;PlacementYaw=Mathf.Repeat(degrees+180,360)-180;Refresh();}
  /// <summary>Next activity in this room (key N, voice "next activity").</summary>
  public void NextActivity(){Selected=NextInRoom(Active?Current.kind:Selected);if(Active)Begin(Selected);else Refresh();}
- ActivityKind NextInRoom(ActivityKind kind){int first=ActivityRules.Kitchen(kind)?3:0;return (ActivityKind)(first+((int)kind-first+1)%3);}
+ ActivityKind NextInRoom(ActivityKind kind)=>ActivityRules.NextInRoom(kind);
 
  void CheckDone(){
   if(!Active||!Current.steps.Complete)return;
@@ -297,13 +297,14 @@ public sealed class ActivityRunner : MonoBehaviour {
   var t=go.GetComponent<Text>();t.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");t.fontSize=font;t.fontStyle=style;t.alignment=TextAnchor.UpperLeft;t.color=new Color(.9f,.96f,1);t.raycastTarget=false;
   return t;
  }
- // Stage 11: section 04 of the options panel holds the three activities of the current room;
+ // Stage 11: section 04 of the options panel holds the activities of the current room (four in the living room,
+ // three in the kitchen: the spare button hides and the row is laid out again);
  // pressing one starts it (fewer steps than choose-then-start). K restarts, N picks the next.
  void BuildOptionButtons(){
   if(choices==null||choices.inputButton==null)return;
   var parent=(RectTransform)choices.inputButton.transform.parent;
-  activityButtons=new Button[3];
-  for(int i=0;i<3;i++){
+  activityButtons=new Button[ActivityRules.LivingRoom.Length];
+  for(int i=0;i<activityButtons.Length;i++){
    int slot=i;var b=Instantiate(choices.inputButton,parent);b.name="ACTIVITY "+(i+1);b.onClick=new Button.ButtonClickedEvent();
    b.onClick.AddListener(()=>{var kind=RoomKinds()[slot];Selected=kind;if(Begin(kind))choices.experience.player.SetPaused(false);});
    activityButtons[i]=b;
@@ -313,21 +314,23 @@ public sealed class ActivityRunner : MonoBehaviour {
   ApartmentOptionsLayout.Apply(choices,activityButtons,presentation);
   RefreshButtons();
  }
- static readonly ActivityKind[] livingKinds={ActivityKind.Bookshelf,ActivityKind.CoffeeTable,ActivityKind.StorageBox};
- static readonly ActivityKind[] kitchenKinds={ActivityKind.SimpleMeal,ActivityKind.Cutting,ActivityKind.PrepareAndServe};
  public static string ShortName(ActivityKind k)=>k==ActivityKind.PrepareAndServe?"PREPARE & SERVE":System.Text.RegularExpressions.Regex.Replace(k.ToString(),"(?<=[a-z])(?=[A-Z])"," ").ToUpperInvariant();
- ActivityKind[] RoomKinds()=>choices!=null&&choices.Kitchen?kitchenKinds:livingKinds;
+ ActivityKind[] RoomKinds()=>choices!=null&&choices.Kitchen?ActivityRules.KitchenRoom:ActivityRules.LivingRoom;
  int buttonsState=-1;
  int ButtonsState=>(choices.Kitchen?1:0)+(choices.Lab?2:0)+(Active?4+8*(int)Current.kind:0);
  void RefreshButtons(){
   if(activityButtons==null)return;
   bool lab=choices.Lab;var kinds=RoomKinds();
-  buttonsState=ButtonsState;
-  for(int i=0;i<3;i++){
-   var b=activityButtons[i];b.interactable=!lab;
+  buttonsState=ButtonsState;bool shownChanged=false;
+  for(int i=0;i<activityButtons.Length;i++){
+   var b=activityButtons[i];bool shown=lab?i<3:i<kinds.Length;
+   if(b.gameObject.activeSelf!=shown){b.gameObject.SetActive(shown);shownChanged=true;}
+   if(!shown)continue;
+   b.interactable=!lab;
    b.GetComponentInChildren<Text>().text=lab?"-":ShortName(kinds[i]);
    choices.PaintChoice(b,!lab&&Active&&Current.kind==kinds[i]);
   }
+  if(shownChanged)ApartmentOptionsLayout.LayoutActivities(choices,activityButtons);
  }
  void Show(bool on){if(panel!=null&&panel.activeSelf!=on)panel.SetActive(on);}
  void Refresh(){
@@ -338,7 +341,8 @@ public sealed class ActivityRunner : MonoBehaviour {
   title.text="ACTIVITY  -  "+ActivityRules.Title(Current.kind).ToUpperInvariant()+"  (level "+Level+")";
   body.text=(finished?"":"Step "+(s.Current+1)+" of "+s.Count+": "+s.Instruction+(s.CurrentNeeded>1?"  ("+s.CurrentDone+"/"+s.CurrentNeeded+")":"")+"\n")+
    (string.IsNullOrEmpty(Feedback)?"":Feedback+"\n")+
-   "E pick up  -  look where it goes  -  Q place  -  , . turn ("+PlacementYaw.ToString("0")+"°)  -  K restart  -  N next";
+   (Current.kind==ActivityKind.PourTea?"Camera: close the hand to hold, roll the wrist to tip, raise the hand to drink.  Keys: E pick up  -  hold T tip  -  M cup to mouth  -  Q place  -  K restart  -  N next"
+    :"E pick up  -  look where it goes  -  Q place  -  , . turn ("+PlacementYaw.ToString("0")+"°)  -  K restart  -  N next");
   ((RectTransform)fill.transform).sizeDelta=new Vector2(600*s.Progress,0);
  }
 }

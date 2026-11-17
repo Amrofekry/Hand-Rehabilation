@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace GripRehab {
-/// <summary>Stage 10's six multi-step environmental activities (living room 1-3, kitchen 4-6).</summary>
-public enum ActivityKind { Bookshelf, CoffeeTable, StorageBox, SimpleMeal, Cutting, PrepareAndServe }
+/// <summary>
+/// The multi-step environmental activities: Stage 10's six (living room 1-3, kitchen 4-6) and pouring tea (living room, 7).
+/// New kinds go at the end: the number is saved with every session (task = 2 + kind).
+/// </summary>
+public enum ActivityKind { Bookshelf, CoffeeTable, StorageBox, SimpleMeal, Cutting, PrepareAndServe, PourTea }
 
 /// <summary>Difficulty of an activity at a level (1-10, the same scale as ExerciseTuning).</summary>
 public struct ActivityTuning {
@@ -34,10 +37,17 @@ public static class ActivityRules {
    case ActivityKind.StorageBox:return "Pack the storage box";
    case ActivityKind.SimpleMeal:return "Cook a simple meal";
    case ActivityKind.Cutting:return "Cut the vegetables";
+   case ActivityKind.PourTea:return "Pour and drink tea";
    default:return "Prepare and serve";
   }
  }
- public static bool Kitchen(ActivityKind kind)=>kind>=ActivityKind.SimpleMeal;
+ public static bool Kitchen(ActivityKind kind)=>kind==ActivityKind.SimpleMeal||kind==ActivityKind.Cutting||kind==ActivityKind.PrepareAndServe;
+ /// <summary>The activities of each room, in menu order.</summary>
+ public static readonly ActivityKind[] LivingRoom={ActivityKind.Bookshelf,ActivityKind.CoffeeTable,ActivityKind.StorageBox,ActivityKind.PourTea};
+ public static readonly ActivityKind[] KitchenRoom={ActivityKind.SimpleMeal,ActivityKind.Cutting,ActivityKind.PrepareAndServe};
+ public static ActivityKind[] Room(ActivityKind kind)=>Kitchen(kind)?KitchenRoom:LivingRoom;
+ /// <summary>The next activity in the same room, wrapping round.</summary>
+ public static ActivityKind NextInRoom(ActivityKind kind){var room=Room(kind);return room[(Array.IndexOf(room,kind)+1)%room.Length];}
  /// <summary>Module 1 task number used for saved sessions (task 0 = force rounds).</summary>
  public static int Task(ActivityKind kind)=>2+(int)kind;
 

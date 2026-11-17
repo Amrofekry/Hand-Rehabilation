@@ -380,7 +380,7 @@ static class ProductTests
         Test("Stage 10 activity sessions keep their named outcomes for the dashboards", () => {
             var f = new Fixture(); f.Login();
             Reject<ArgumentException>(() => f.repo.Begin(2, 2, true));
-            Reject<ArgumentException>(() => f.repo.Begin(1, 8, true));
+            Reject<ArgumentException>(() => f.repo.Begin(1, 9, true)); // task 8 is the tea activity (2026-11-17)
             var s = f.repo.Begin(1, 4, true); s.durationSeconds = 42; s.state = RecordState.Completed; s.score = 96; s.level = 3;
             s.outcomes = new System.Collections.Generic.List<OutcomeMetric> {
                 new OutcomeMetric { key = "activity.id", label = "Activity 3: Pack the storage box", unit = "", value = 3 },
@@ -398,6 +398,12 @@ static class ProductTests
         Test("Dashboards show missing data as a dash, never 0", () => {
             var r = Seeded(); r.SignIn(DashboardFixtures.Alpha, DashboardFixtures.Password);
             Check(ProgressSummary.Cards(new SessionRecord[0]).All(c => c.missing && c.value == ProgressSummary.Missing), "No sessions: every card is a dash");
+            var tea = new SessionRecord { id = "tea", module = 1, task = 8, state = RecordState.Completed, startedUtc = "2026-11-17T10:00:00Z", endedUtc = "2026-11-17T10:03:00Z",
+                outcomes = new System.Collections.Generic.List<OutcomeMetric> { new OutcomeMetric { key = "tea.pourAccuracyPct", label = "Tea kept in the cup", unit = "%", value = 92 },
+                                                    new OutcomeMetric { key = "tea.tremorRmsMm", label = "Hand tremor (camera estimate)", unit = "mm", value = 1.4f } } };
+            var teaCards = ProgressSummary.Cards(new[] { tea });
+            Check(teaCards.Single(c => c.label == "Tremor").value == "1.4 mm" && teaCards.Single(c => c.label == "Accuracy").value == "92 %", "Tea activity fills the Tremor and Accuracy cards");
+            Check(CatalogValidation.MaxTask(1) == 8, "Module 1 accepts the tea activity (task 8)");
             var stopped = r.Sessions(r.Current.id).Single(s => s.state == RecordState.SafetyStopped);
             Check(ProgressSummary.ScoreText(stopped) == ProgressSummary.Missing && ProgressSummary.StateLabel(stopped).StartsWith("STOPPED"), "Stopped attempt has no score and is marked");
             Check(ProgressSummary.BaselineComparison(new SessionRecord[0], null).StartsWith(ProgressSummary.Missing), "No baseline is a dash");

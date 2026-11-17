@@ -94,7 +94,8 @@ public sealed class HandLocomotion : MonoBehaviour {
   pinchGrabbed=gesture==HandGesture.Pinch&&(pinchGrabbed||app.Held!=null);
   if(Actions.OptionsRequested&&!app.player.Paused&&app.Held==null&&!pinchGrabbed){app.player.SetPaused(true);OptionsOpened++;}
   if(runner==null)runner=app.GetComponent<ActivityRunner>();
-  bool turning=holding&&runner!=null&&runner.Active&&!float.IsNaN(Actions.PlacementYaw)&&app.Held.GetComponent<ActivityItem>()!=null;
+  // A teapot or cup turns with the wrist to pour and drink (TeaPouring reads the same roll), never to the placement yaw.
+  bool turning=holding&&runner!=null&&runner.Active&&!float.IsNaN(Actions.PlacementYaw)&&app.Held.GetComponent<ActivityItem>()!=null&&app.Held.GetComponent<PourVessel>()==null;
   if(!turning){twistStarted=false;return;}
   if(!twistStarted){twistStarted=true;twistBase=runner.PlacementYaw;}
   runner.SetPlacementYaw(twistBase+Actions.PlacementYaw);

@@ -93,7 +93,7 @@ namespace GripRehab.Product
             return new SummaryCard { label = label, value = o.value.ToString(format, CultureInfo.InvariantCulture) + (string.IsNullOrEmpty(unit) ? "" : " " + unit), source = o.label };
         }
 
-        /// <summary>The five patient summary cards from the latest completed attempts.</summary>
+        /// <summary>The six patient summary cards from the latest completed attempts (Tremor comes from the camera-hand tea activity).</summary>
         public static List<SummaryCard> Cards(IEnumerable<SessionRecord> sessions)
         {
             var list = sessions?.ToList() ?? new List<SessionRecord>();
@@ -103,7 +103,8 @@ namespace GripRehab.Product
                 Card("Endurance", Latest(list, "force.enduranceSeconds"), "0.0"),
                 Card("Stability", Latest(list, "force.stabilityCv"), "0.000", "CV"),
                 Card("Reaction time", Latest(list, "force.reactionSeconds", "memory.reactionSeconds"), "0.00"),
-                Card("Accuracy", Latest(list, "trace.accuracy", "memory.accuracy", "maze.efficiency", "assembly.pathEfficiency"), "0")
+                Card("Accuracy", Latest(list, "trace.accuracy", "memory.accuracy", "maze.efficiency", "assembly.pathEfficiency", "tea.pourAccuracyPct"), "0"),
+                Card("Tremor", Latest(list, "tea.tremorRmsMm"), "0.0")
             };
         }
 

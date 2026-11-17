@@ -12,7 +12,7 @@ namespace GripRehab
         Next, Previous, Select, Back, OpenSettings, Confirm, Cancel, Help,
         // In-game
         MoveForward, MoveBack, MoveLeft, MoveRight, Stop, LookAtObject, GrabObject, ReleaseObject, OpenInventory,
-        StartBookshelf, StartCoffeeTable, StartStorageBox, StartMeal, StartCutting, StartServe,
+        StartBookshelf, StartCoffeeTable, StartStorageBox, StartMeal, StartCutting, StartServe, StartTea, StopPouring,
         // Special actions that were keys only (2026-10-28): F, R, N, B, C and , .
         SitDown, StandUp, ResetObjects, NextActivity, CameraMode, KeyboardMode, RecenterHand, RotateLeft, RotateRight,
         // Session
@@ -61,7 +61,7 @@ namespace GripRehab
             ["release"] = VoiceCommand.ReleaseObject, ["let go"] = VoiceCommand.ReleaseObject, ["put down"] = VoiceCommand.ReleaseObject,
             ["open inventory"] = VoiceCommand.OpenInventory, ["inventory"] = VoiceCommand.OpenInventory, ["options"] = VoiceCommand.OpenInventory,
             ["start bookshelf"] = VoiceCommand.StartBookshelf, ["start coffee table"] = VoiceCommand.StartCoffeeTable, ["start storage box"] = VoiceCommand.StartStorageBox,
-            ["start simple meal"] = VoiceCommand.StartMeal, ["start cutting"] = VoiceCommand.StartCutting, ["start prepare and serve"] = VoiceCommand.StartServe,
+            ["start simple meal"] = VoiceCommand.StartMeal, ["start cutting"] = VoiceCommand.StartCutting, ["start prepare and serve"] = VoiceCommand.StartServe, ["start pouring tea"] = VoiceCommand.StartTea, ["stop pouring"] = VoiceCommand.StopPouring,
             ["restart"] = VoiceCommand.Restart, ["pause"] = VoiceCommand.Pause, ["resume"] = VoiceCommand.Resume, ["continue"] = VoiceCommand.Resume,
             ["instructions"] = VoiceCommand.Instructions, ["main menu"] = VoiceCommand.MainMenu,
             ["stop listening"] = VoiceCommand.StopListening, ["start listening"] = VoiceCommand.StartListening,
@@ -158,10 +158,12 @@ namespace GripRehab
                 case VoiceCommand.Resume:
                     return x.inGame && x.paused ? null : "Nothing to resume.";
                 case VoiceCommand.StartBookshelf: case VoiceCommand.StartCoffeeTable: case VoiceCommand.StartStorageBox:
-                case VoiceCommand.StartMeal: case VoiceCommand.StartCutting: case VoiceCommand.StartServe:
+                case VoiceCommand.StartMeal: case VoiceCommand.StartCutting: case VoiceCommand.StartServe: case VoiceCommand.StartTea:
                     return x.inGame ? (x.activityRunning ? "An activity is running. Finish it or say restart." : null) : "Activities start in the apartment.";
                 case VoiceCommand.Restart:
                     return x.inGame && x.activityRunning ? null : "Restart works during an activity.";
+                case VoiceCommand.StopPouring:
+                    return x.inGame && x.activityRunning && x.holding ? null : "Stop pouring works while you hold the teapot or cup.";
                 case VoiceCommand.SitDown: case VoiceCommand.StandUp: case VoiceCommand.ResetObjects: case VoiceCommand.CameraMode: case VoiceCommand.KeyboardMode: case VoiceCommand.RecenterHand:
                     return x.inGame ? null : "That works in the apartment.";
                 case VoiceCommand.NextActivity:

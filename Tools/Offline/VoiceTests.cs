@@ -37,6 +37,8 @@ class VoiceTests
             Check(Say("start bookshelf", Menu()).outcome == VoiceOutcome.Rejected, "menu: activities start in the apartment");
             Check(Say("start bookshelf", Game()).outcome == VoiceOutcome.Execute, "apartment: launch an activity");
             Check(Say("start cutting", Game(activity: true)).outcome == VoiceOutcome.Rejected, "one activity at a time");
+            Check(Say("start pouring tea", Game()).outcome == VoiceOutcome.Execute && Say("start pouring tea", Game()).command == VoiceCommand.StartTea, "apartment: start pouring tea");
+            Check(Say("stop pouring", Game(activity: true, holding: true)).outcome == VoiceOutcome.Execute && Say("stop pouring", Game()).outcome == VoiceOutcome.Rejected, "stop pouring levels a held vessel during an activity only");
 
             // V-03 in-game.
             Check(Say("move forward", Game()).command == VoiceCommand.MoveForward && Say("move forward", Game()).outcome == VoiceOutcome.Execute, "move forward");

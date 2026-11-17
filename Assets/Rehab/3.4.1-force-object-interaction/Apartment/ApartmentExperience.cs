@@ -41,6 +41,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
  Vector3 _presentRight,_presentLeft;Vector3 _requestedGrip;bool _hasRequestedGrip;
  /// <summary>Stage 10: view-space shift of the presented object (activities keep it low-right so the aim point shows).</summary>
  public Vector3 PresentationOffset;
+ /// <summary>Tea activity: an extra world-space tilt of the held object about a point in its own space (the grip on a
+ /// teapot handle, the rim of a cup), so pouring and drinking turn it the way a wrist does. Identity = no tilt.</summary>
+ public Quaternion HeldTilt=Quaternion.identity;public Vector3 HeldTiltPivotLocal;
  /// <summary>Stage 10: raised after a pickup succeeds and after a held object is let go (activity scoring and assist).</summary>
  public event Action<SqueezableObject> ObjectGrabbed,ObjectReleased;
  public GripDefinition HeldGrip=>Held!=null&&GraspContactSolver.Enabled?GraspContactSolver.PropOf(Held)?.Definition:null;
@@ -237,7 +240,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(GraspContactSolver.Enabled)requested=ContactGeometry.Follow(_lastHeld,requested,HeldFollowSpeed,Time.fixedDeltaTime);
   _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
   _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
-  Held.MoveHeld(requested,_hasGripRotation?_gripRotation:GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset));
+  var heldRotation=_hasGripRotation?_gripRotation:GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset);
+  if(HeldTilt!=Quaternion.identity){var pivot=requested+heldRotation*HeldTiltPivotLocal;requested=pivot+HeldTilt*(requested-pivot);heldRotation=HeldTilt*heldRotation;}
+  Held.MoveHeld(requested,heldRotation);
  }
  private Vector3 GripTarget(SqueezableObject item){
   // Stage 8 grip chart: the object's grip point sits at the grip's anchor (palm, finger tips, thumb and
