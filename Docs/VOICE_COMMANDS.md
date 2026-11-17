@@ -56,7 +56,7 @@ Each command has its phrases, where it works, what it does (the same action as t
 | In game | grab / pick up / select object | apartment, empty hand, object in reach | the same path as E | ✅ | ✅ |
 | In game | release / let go / put down | holding | releases | ✅ | ✅ |
 | In game | open inventory / inventory / options | apartment, not paused | opens the session options panel | ✅ | ✅ |
-| In game | start bookshelf, start coffee table, start storage box, start simple meal, start cutting, start prepare and serve | apartment, no activity running | starts the activity | ✅ | ✅ bookshelf |
+| In game | start bookshelf, start coffee table, start storage box, start simple meal, start cutting, start prepare and serve, start pouring tea (2026-11-18) | apartment, no activity running | starts the activity | ✅ | ✅ bookshelf |
 | Session | pause; resume / continue | apartment | pauses or resumes | ✅ | ✅ |
 | Session | instructions | apartment | reads the current activity step, or replays onboarding | ✅ | ✅ "Step 1 of 1…" |
 | Session | restart | during an activity | **asks to confirm**, then restarts | ✅ | ✅ |
@@ -90,3 +90,9 @@ Each command has its phrases, where it works, what it does (the same action as t
 - **Recognition accuracy with your voice and your room noise.** The probe feeds SYNTHETIC transcripts; it only checks that the real recognizer starts on this computer. Your microphone session is a human check, recorded only when you do it.
 - **Push-to-talk timing.** The probe bypasses the Ctrl gate for its transcripts, so hold-to-talk needs your hands-on check.
 - **Language.** The recognizer is en-US only. Arabic commands are not available: no ar-EG recognizer is installed.
+
+## Tea activity (2026-11-18)
+| Phrase | When | Does |
+|---|---|---|
+| start pouring tea | apartment, no activity running | starts the tea activity |
+| stop pouring | during an activity, holding the teapot or cup | levels it at once (voice never pours or drinks) |

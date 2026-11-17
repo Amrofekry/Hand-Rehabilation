@@ -30,6 +30,8 @@ The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measu
 | Open the hand | Release (place) the held object | Hysteresis: a wobbling fist does not drop the object; a tracking gap under 0.6 s keeps it |
 | Close the hand harder | Squeeze (force from grip score) | Existing camera behaviour |
 | Twist the hand like a dial while holding an activity item | Turn the placement | 10° dead zone, 5° steps, at most ±180° |
+| Roll the wrist while holding the teapot or the cup | Tip it: pour, or drink at the mouth | Tea activity (2026-11-18): the tilt follows the knuckle line's roll from its angle at the pickup (6° dead band); a teapot or cup never turns the placement |
+| Raise the hand high while holding the cup | Bring the cup to the lips (the drink pose) | Then roll the wrist to drink; while holding the cup, a raised hand does not look up |
 | Pinch, held 0.8 s | Open the options panel | Then use the hand pointer (dwell) to choose a room, object or activity, or RESUME |
 
 **Safety:** lost or low-confidence tracking, a menu or pause stops looking and walking at once.
@@ -46,6 +48,8 @@ The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measu
 | TAB, Esc options or pause | Pinch held | "pause", "options", "resume" | ✅ |
 | Mouse click in menus | Hand pointer (dwell) | "next", "previous", "select", "back" | ✅ (existing) |
 | , and . turn placement | Twist while holding | "rotate left / right" | ✅ |
+| T tip the teapot or cup (tea) | Roll the wrist while holding it | "stop pouring" levels it (voice never pours) | ✅ |
+| M cup to the mouth (tea) | Raise the hand while holding the cup | — | ✅ |
 | K restart activity | Options → activity button (pointer) | "restart" (confirmed) | ✅ |
 | N next activity | Options → activity buttons (pointer) | "next activity" | ✅ |
 | F sit / stand | — | "sit down", "stand up" | ✅ voice (occasional) |
@@ -78,3 +82,15 @@ The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measu
   - Lost tracking, pause, setting off and keyboard mode stop it.
   - The controls hint shows.
 - **Not verified:** how it feels with your real hand and camera (comfort, speed, reach). That is your check, recorded separately.
+
+## Tea activity (living room, 2026-11-18)
+- **Pick up the teapot** by its handle (close the hand). It hangs upright from your hand, spout toward where you look.
+- **Pour:** bring the spout over the cup with your hand, then roll the wrist. The more you tip, the faster it pours
+  (Torricelli flow from the tea left in the pot). Tea that misses the cup splashes and spreads on the table.
+- **Level the pot** to stop; fill up to the gold line. Put the teapot back on its mat (open the hand over it).
+- **Pick up the cup** and raise your hand: the cup comes to your lips. Roll the wrist to sip; tipping faster than you
+  can drink (about 40 ml/s) spills down. A shaking hand shakes the tea at any time, and can spill it over the rim.
+- **Keyboard:** E pick up, look at the cup, hold T to tip, M cup to mouth, Q place. Voice: "start pouring tea", "stop pouring".
+- **Measured** (game measures; tremor is a camera estimate, never clinical): fill and its error, tea kept in the cup,
+  spills, pour time, flow and angle steadiness, drunk volume, and hand tremor amplitude and frequency while the hand
+  holds still or pours.

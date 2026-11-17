@@ -1,6 +1,6 @@
 # GripRehab status: single source of truth
 
-Updated 2026-11-06 (release v1.0.8). The plan-by-plan audit is [RELEASE_AUDIT.md](RELEASE_AUDIT.md). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history; [README.md](README.md) is the index.
+Updated 2026-11-18 (release v1.1.0). The plan-by-plan audit is [RELEASE_AUDIT.md](RELEASE_AUDIT.md). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history; [README.md](README.md) is the index.
 
 | Item | Current value |
 |---|---|
@@ -8,7 +8,7 @@ Updated 2026-11-06 (release v1.0.8). The plan-by-plan audit is [RELEASE_AUDIT.md
 | Render / UI | URP 14.0.10, uGUI, TextMeshPro 3.0.6 |
 | AI runtime | Sentis 2.0.0 CPU, CNN model (GRU operator unsupported in Sentis) |
 | Main scene | `Assets/Scenes/GripRehab.unity` |
-| Branch / tag | `claude/final-release` = `3.4-upgrade-baseline`, tag `v1.0.8` (releases v1.0.0–v1.0.8; nothing pushed, no remote) |
+| Branch / tag | `claude/final-release` = `3.4-upgrade-baseline`, tag `v1.1.0` (releases v1.0.0–v1.1.0; nothing pushed, no remote) |
 | Backup | `E:\GP\backups\GripRehab-2026-10-23.zip` (excludes Library, Builds, Logs, venvs) |
 | Active plan | Final plan (2026-10-29), all blocks done; Stages 0–13, 15A, 16–19 done. Stages 14 (gaze) and 15 (voice assistant) became optional stages O1/O2 in [OPTIONAL_PLAN](OPTIONAL_PLAN.md). |
 
@@ -60,6 +60,7 @@ Updated 2026-11-06 (release v1.0.8). The plan-by-plan audit is [RELEASE_AUDIT.md
 | 36 | Pipeline, block diagram and Gantt audit (1.1, 6.3) | Done: Stage 16, refreshed for v1.0.5 | n/a | n/a | `STAGE16_AUDIT.md`, `RELEASE_AUDIT.md` |
 | 37 | Next-stage research proposal (1.1) | Done: Stage 17 | n/a | n/a | `STAGE17_RESEARCH.md` |
 | 38 | Fault handling and release QA (6.2) | Implemented: camera failure reason on the HUD, plain storage messages, fault probe; dead legacy code (`RehabApp`, audit A-017) and 5 unused design files removed (v1.0.6); orphaned Ultraleap settings asset removed, WBS → code map (ADR-WBS-1), app version 1.0.7 | Fault probe 15/15 (SYNTHETIC) | — | `fault-probe.json`, `history/unused-candidates.md` |
+| 39 | Pour and drink tea, living room (3.4.1, 3.3) | Implemented (2026-11-18): code-built teapot, cup and saucer; simulated tea (volume, Torricelli flow, slosh, stream, splashes, puddles, rim spill, drinking); wrist-roll pouring and raise-to-drink with the camera hand, T and M keys, voice start and stop; 13 outcomes including a camera tremor estimate; dashboard Tremor card | Offline liquid tests 34; SYNTHETIC activity probe keyboard and camera (levels 2 and 8): filled to the line, about 96–100 % in the cup, cup drunk empty; an injected 1.5 mm, 6 Hz tremor read about 1.5 mm, 5.4 Hz | Your hand and the webcam (feel, real tremor) OPEN; tremor is an estimate, not clinical | `HAND_CONTROLS.md` (tea section) |
 
 ## Open blockers
 

@@ -124,3 +124,10 @@ These are digital levels of the clips, not a measured sound pressure level in a 
   - fracture (Wood);
   - every active object tracked.
 - **Not done:** listening by a person (S-09). How the sounds feel, whether anything is annoying, and the balance on real speakers are yours to judge. They are recorded as human-verified only after you listen.
+
+## Tea sounds (2026-11-18)
+Synthesised like every other game sound (ADR-AU-1), routed to the SFX group, 3D at the cup:
+- **Pour:** a seamless loop of band-passed noise with a slow gurgle; its volume follows the flow and its pitch rises
+  as the cup fills (the air column above the tea shortens, as with a real cup).
+- **Sip:** a soft low swallow loop while tea goes to the lips.
+Listening review (S-07, S-09) is still yours.

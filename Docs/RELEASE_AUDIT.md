@@ -1,4 +1,4 @@
-# Release audit: plan against the built game (2026-11-10, v1.0.8)
+# Release audit: plan against the built game (2026-11-18, v1.1.0)
 
 Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diagram and Gantt chart (as-built versions in [STAGE16_AUDIT.md](STAGE16_AUDIT.md) §1–2). "Evidence" names the automated check or run; results are SYNTHETIC unless marked MEASURED, BY-EYE or PHYSICAL. Nothing here is a clinical or physical validation.
 
@@ -19,7 +19,7 @@ Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diag
 | 3.2 | Vision (MediaPipe hand, gestures; YOLO) | `Assets/Rehab/3.2-vision/`, `Tools/Vision/mediapipe_bridge.py` | Hand benchmark; camera activity run 12/12; latency MEASURED on replayed photos (median 49.6 ms); hand-loss checked by the fault probe | DONE for MediaPipe. YOLO is optional O3 (decision G06). Live hand trial NEEDS A PERSON |
 | 3.3 | Deformation (Obi replaced by in-house solver) | `Assets/Rehab/3.3-deformation/`, Stage 9 material lab | Material-lab probe (15 objects); contact probes ×3 | DONE (game-scale model, not FEM) |
 | 3.4 | Game-module framework | `Assets/Rehab/3.4-game-modules/` | Journey suite; EditMode 10/10 | DONE |
-| 3.4.1 | Module 1 force–object task and six activities | `Assets/Rehab/3.4.1-force-object-interaction/` | Player checks; activity probe ×3 keyboard + camera, 12/12 each | DONE; hands-on playtest NEEDS A PERSON |
+| 3.4.1 | Module 1 force–object task and seven activities (tea added 2026-11-18) | `Assets/Rehab/3.4.1-force-object-interaction/` | Player checks; activity probe ×3 keyboard + camera, 12/12 each; tea activity keyboard and camera, levels 2 and 8 | DONE; hands-on playtest NEEDS A PERSON |
 | 3.4.2 | Module 2 cognitive (GP2 in the plan) | `Assets/Rehab/3.4.2-cognitive-performance/`, `RehabExerciseSuite.cs` | EditMode and build hand-play checks | DONE (ahead of plan) |
 | 3.4.3 | Module 3 visuomotor (GP2 in the plan) | `Assets/Rehab/3.4.3-visuomotor-coordination/`, `RehabExerciseSuite.cs` | EditMode and build hand-play checks | DONE (ahead of plan) |
 | 4.1 | Baseline protocol | `ai-engine/4.1-*`, coached 54 s baseline in the product | Journey suite runs the baseline; fixtures | DONE; participant protocol NEEDS A PERSON |
@@ -39,5 +39,5 @@ Every WBS item in `../PROJECT_PLAN.md`, checked against the pipeline, block diag
 | You | Hardware (2.1–2.4, 6.1, 6.2) | Follow [PHYSICAL_TEST_PROTOCOL.md](PHYSICAL_TEST_PROTOCOL.md) P1–P4: print the grips, assemble the circuit, calibrate with known loads in the wizard, stream into the game and read the device panel. |
 | You | Real hand (3.2, 3.4.1) | Protocol P5: play the six activities with the webcam; note grabs that fail and how the hand feels. |
 | You | Microphone and listening | `VOICE_COMMANDS.md` V-01, V-09, V-10; `AUDIO_DESIGN.md` S-07, S-09. |
-| You | Clean machine | Install `GripRehab-Setup-1.0.8.exe` on a PC without the project; run the first-run check. |
+| You | Clean machine | Install `GripRehab-Setup-1.1.0.exe` on a PC without the project; run the first-run check. |
 | You | Data and ethics (4.1–4.3) | Needs approval before any participant data. |

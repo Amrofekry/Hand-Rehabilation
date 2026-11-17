@@ -10,9 +10,9 @@ Last scan: 2026-11-06 (v1.0.7)
 |---|---|
 | `Rehab/3.1-environment` | Apartment environment, presentation |
 | `Rehab/3.2-vision` | Camera hand: UDP receiver, filters, gestures, camera worker launcher |
-| `Rehab/3.3-deformation` | `GripDeformation.cs`; the Stage 9 solver sits beside the apartment in 3.4.1 |
+| `Rehab/3.3-deformation` | `GripDeformation.cs`, `LiquidCore.cs` (tea liquid physics, Unity-free); the Stage 9 solver sits beside the apartment in 3.4.1 |
 | `Rehab/3.4-game-modules` | App shell, profiles, voice, diagnostics, probes (incl. the fault probe) |
-| `Rehab/3.4.1-force-object-interaction` | Apartment, grasp, contact, deformation, the six activities (`Apartment/`) |
+| `Rehab/3.4.1-force-object-interaction` | Apartment, grasp, contact, deformation, the seven activities (`Apartment/`, tea: `TeaPouring.cs`) |
 | `Rehab/3.4.2-cognitive-performance` | Memory and assembly tasks |
 | `Rehab/3.4.3-visuomotor-coordination` | Maze and tracing tasks |
 | `Rehab/6.1-bluetooth-integration` | BLE force state, receiver, device health panel |
