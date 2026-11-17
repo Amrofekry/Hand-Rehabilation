@@ -61,6 +61,8 @@ namespace GripRehab
         public bool RigReady { get; private set; }
         private Quaternion _rootRest, _cameraPalmReference;
         private Vector3 _wristReference;
+        /// <summary>Distance between two normalised image points with x scaled by the image aspect (equal pixels per unit).</summary>
+        internal static float ImageDistance(Vector3 a, Vector3 b, float aspect) { float dx = (a.x - b.x) * aspect, dy = a.y - b.y; return Mathf.Sqrt(dx * dx + dy * dy); }
         private float _palmWidthReference, _palmLengthReference, _clock, _lastTrackedAt = -10;
         private bool _referencesValid;
         private OneEuroFilter _fx, _fy, _fz;
@@ -155,9 +157,12 @@ namespace GripRehab
                 PalmNormal = Vector3.Cross(palmSide, palmUp).normalized;
 
                 var wristImage = HandKinematics.ToCameraSpace(frame.landmarks[0]);
-                var width = Vector3.Distance(frame.landmarks[5], frame.landmarks[17]);
+                // Palm size in image units with x scaled by the aspect (x is normalised by width, y by height): a hand that
+                // only rotates in the image (a wrist roll to pour) keeps its size, so the depth estimate does not jump.
+                float aspect = frame.imageWidth > 0 && frame.imageHeight > 0 ? frame.imageWidth / (float)frame.imageHeight : 4f / 3f;
+                var width = ImageDistance(frame.landmarks[5], frame.landmarks[17], aspect);
                 // Two palm-size measures (palm width and wrist-to-middle-knuckle length) averaged: half the noise of either alone.
-                var length = Vector3.Distance(frame.landmarks[0], frame.landmarks[9]);
+                var length = ImageDistance(frame.landmarks[0], frame.landmarks[9], aspect);
                 HandKinematics.TryPalmBasis(palmSide, palmUp, out var currentBasis);
                 if (!_anchored)
                 {

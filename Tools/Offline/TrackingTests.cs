@@ -225,6 +225,14 @@ class TrackingTests
     }
     static int Main()
     {
+        // A wrist roll rotates the hand in the image: its palm size (the depth cue) must not change, on a 640x480 frame.
+        {
+            var a=new Vector3(.4325f,.48f,0); var b=new Vector3(.5675f,.48f,0); float px=(b.x-a.x)*640;
+            double angle=60*System.Math.PI/180; var rb=a+new Vector3((float)(px*System.Math.Cos(angle))/640,(float)(px*System.Math.Sin(angle))/480,0);
+            float before=GripRehab.FingerPoseDriver.ImageDistance(a,b,640f/480), after=GripRehab.FingerPoseDriver.ImageDistance(a,rb,640f/480);
+            Check(System.Math.Abs(after-before)<1e-4f,"palm size is unchanged by an in-image rotation (wrist roll): "+before.ToString("0.0000")+" vs "+after.ToString("0.0000"));
+            Check(System.Math.Abs(Vector3.Distance(a,rb)-Vector3.Distance(a,b))>.02f,"(the unscaled normalised distance does change: the bug this guards against)");
+        }
         try
         {
             // Independent known-axis expectations also check the managed shim.
