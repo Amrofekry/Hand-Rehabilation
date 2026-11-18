@@ -73,6 +73,7 @@ public sealed class TeaPouring : MonoBehaviour {
   var go=new GameObject("Tea");go.transform.SetParent(r.Root,false);
   var t=go.AddComponent<TeaPouring>();t.app=r.app;t.runner=r;t.teapot=teapot;t.cup=cup;t.level=level;
   t.cupLiquid=new VesselLiquid(CupInnerBottom,CupInnerTop,CupDepth);t.pot.Fill(LiquidMath.M3(StartMl));
+  t.pourFacing=cup.transform.position-teapot.transform.position;t.pourFacing.y=0;t.pourFacing=t.pourFacing.sqrMagnitude>1e-6f?t.pourFacing.normalized:Vector3.right;
   t.Build();t.app.ObjectGrabbed+=t.Grabbed;return t;
  }
 
@@ -169,9 +170,10 @@ public sealed class TeaPouring : MonoBehaviour {
   bool vessel=held!=null&&held.GetComponent<PourVessel>()!=null;
   if(!vessel){app.HeldOriented=false;app.HeldPivotBlend=0;return;}
   bool isPot=held==teapot.Item;var view=app.player.view.transform;
-  // A held teapot or cup hangs upright from the hand, so the wrist's tilt is pure. The teapot's spout faces the point
-  // the player looks at (the cup, the mat); the cup keeps its handle to the side of the hand that holds it.
-  Vector3 facing=isPot&&aimValid?aimPoint-held.transform.position:isPot?view.forward:Vector3.Cross(Vector3.up,view.forward)*(app.LeftSelected?-1:1);
+  // A held teapot or cup hangs upright from the hand, so the wrist's tilt is pure. The teapot's spout keeps one direction,
+  // from its mat toward the cup; the cup keeps its handle to the side of the hand that holds it.
+  // (A spout turned toward the aim from the pot's own position would swing as the pot moves, and the pot would circle the cup.)
+  Vector3 facing=isPot?pourFacing:Vector3.Cross(Vector3.up,view.forward)*(app.LeftSelected?-1:1);
   facing.y=0;if(facing.sqrMagnitude<1e-6f)facing=view.forward;facing.y=0;facing.Normalize();
   var upright=Quaternion.Euler(0,Mathf.Atan2(-facing.z,facing.x)*Mathf.Rad2Deg,0); // local +X (spout, or cup handle) along 'facing'
   Vector3 dir=isPot?facing:view.position-held.transform.position;
@@ -203,7 +205,7 @@ public sealed class TeaPouring : MonoBehaviour {
   aimBias=Vector3.ClampMagnitude(aimBias+(lips-rim)*Mathf.Min(1,3*dt),.35f);
   app.PresentationTarget=lips-(rim-renderer.bounds.center)+aimBias;app.HasPresentationTarget=true;
  }
- Vector3 mouthHandStart;
+ Vector3 mouthHandStart,pourFacing=Vector3.right;
  /// <summary>Where the lips are: a little in front of and below the eyes.</summary>
  Vector3 MouthPoint{get{var v=app.player.view.transform;var f=v.forward;f.y=0;f=f.sqrMagnitude>1e-6f?f.normalized:v.forward;return v.position+f*.09f+Vector3.down*.075f;}}
 

@@ -1,6 +1,6 @@
 # State (2026-11-18, release v1.1.0)
 
-**Branch:** `claude/tea-activity`; `claude/final-release` and `3.4-upgrade-baseline` point at the same commit, tag `v1.1.0`. No remote; nothing pushed.
+**Branch:** `claude/tea-fix`; `claude/final-release` and `3.4-upgrade-baseline` point at the same commit, tag `v1.1.0`. Remote `origin` (GitHub) exists; the assistant pushes nothing without your OK.
 
 ## Where things stand
 - **Software:** every WBS item is built ([RELEASE_AUDIT](../RELEASE_AUDIT.md)). Nothing is in progress.
