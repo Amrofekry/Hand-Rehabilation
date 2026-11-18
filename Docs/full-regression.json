@@ -1,186 +1,102 @@
 {
-  "passed": true,
-  "complete": true,
-  "utc": "2026-11-17T17:02:42Z",
-  "commit": "95988ff",
+  "passed": false,
+  "complete": false,
+  "utc": "2026-11-17T22:46:34Z",
+  "commit": "6025180",
   "uncommittedSourceChanges": [],
   "buildSkipped": false,
   "scope": "SYNTHETIC input in the Windows build and offline tests; no webcam, device or person",
-  "suites": 29,
+  "suites": 15,
   "results": [
     {
       "suite": "build",
       "passed": true,
-      "seconds": 43.0,
+      "seconds": 57.5,
       "detail": "Success"
     },
     {
       "suite": "run_player_checks.py",
       "passed": true,
-      "seconds": 123.5,
+      "seconds": 129.9,
       "detail": ""
     },
     {
       "suite": "run_ai_player_checks.py smoke",
       "passed": true,
-      "seconds": 39.5,
+      "seconds": 42.3,
       "detail": ""
     },
     {
       "suite": "run_ai_player_checks.py replay",
       "passed": true,
-      "seconds": 39.7,
+      "seconds": 44.6,
       "detail": ""
     },
     {
       "suite": "run_ai_player_checks.py rendered",
       "passed": true,
-      "seconds": 43.5,
+      "seconds": 46.3,
       "detail": ""
     },
     {
       "suite": "run_ai_player_checks.py journey",
       "passed": true,
-      "seconds": 67.3,
+      "seconds": 71.1,
       "detail": ""
     },
     {
       "suite": "run_ui_checks.py",
       "passed": true,
-      "seconds": 58.4,
+      "seconds": 77.8,
       "detail": ""
     },
     {
       "suite": "run_gallery_checks.py",
-      "passed": true,
-      "seconds": 23.2,
-      "detail": ""
+      "passed": false,
+      "seconds": 100.5,
+      "detail": "subprocess.TimeoutExpired: Command '['E:\\\\GP\\\\codex\\\\GripRehab-Unity\\\\Builds\\\\Windows\\\\GripRehab.exe', '-apartment-gallery-smoke', '-force-d3d11', '-screen-fullscreen', '0', '-screen-width', '1280', '"
     },
     {
       "suite": "run_perf_probe.py",
       "passed": true,
-      "seconds": 91.6,
+      "seconds": 93.8,
       "detail": ""
     },
     {
       "suite": "run_contact_probe.py",
       "passed": true,
-      "seconds": 404.0,
+      "seconds": 437.4,
       "detail": ""
     },
     {
       "suite": "run_contact_probe.py --grip-lab",
       "passed": true,
-      "seconds": 171.4,
+      "seconds": 177.8,
       "detail": ""
     },
     {
       "suite": "run_contact_probe.py --material-lab",
       "passed": true,
-      "seconds": 243.3,
+      "seconds": 254.9,
       "detail": ""
     },
     {
       "suite": "run_activity_probe.py",
-      "passed": true,
-      "seconds": 212.6,
-      "detail": ""
+      "passed": false,
+      "seconds": 319.5,
+      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Pour and drink tea L2, Pour and drink tea L8"
     },
     {
       "suite": "run_activity_probe.py",
-      "passed": true,
-      "seconds": 210.6,
-      "detail": ""
+      "passed": false,
+      "seconds": 310.6,
+      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Pour and drink tea L2, Pour and drink tea L8"
     },
     {
       "suite": "run_activity_probe.py",
-      "passed": true,
-      "seconds": 213.5,
-      "detail": ""
-    },
-    {
-      "suite": "run_activity_probe.py --camera",
-      "passed": true,
-      "seconds": 264.6,
-      "detail": ""
-    },
-    {
-      "suite": "run_handlook_probe.py",
-      "passed": true,
-      "seconds": 41.8,
-      "detail": ""
-    },
-    {
-      "suite": "run_hand_benchmark.py after",
-      "passed": true,
-      "seconds": 46.3,
-      "detail": ""
-    },
-    {
-      "suite": "run_voice_probe.py",
-      "passed": true,
-      "seconds": 27.1,
-      "detail": ""
-    },
-    {
-      "suite": "run_audio_probe.py",
-      "passed": true,
-      "seconds": 31.0,
-      "detail": ""
-    },
-    {
-      "suite": "run_fault_probe.py",
-      "passed": true,
-      "seconds": 38.4,
-      "detail": ""
-    },
-    {
-      "suite": "EditMode",
-      "passed": true,
-      "seconds": 34.4,
-      "detail": "10/10 passed"
-    },
-    {
-      "suite": "console zero",
-      "passed": true,
-      "seconds": 59.9,
-      "detail": "startup 0,0,0, after play 0,0,0, MCP True"
-    },
-    {
-      "suite": "offline C# (meta, compile, tests)",
-      "passed": true,
-      "seconds": 96.3,
-      "detail": ""
-    },
-    {
-      "suite": "python: Tools",
-      "passed": true,
-      "seconds": 2.4,
-      "detail": "OK"
-    },
-    {
-      "suite": "python: tests/2.3-calibration",
-      "passed": true,
-      "seconds": 0.2,
-      "detail": "OK"
-    },
-    {
-      "suite": "workspace: verify_research_workspace.py",
-      "passed": true,
-      "seconds": 14.1,
-      "detail": ""
-    },
-    {
-      "suite": "camera models: check_research_camera_models.py",
-      "passed": true,
-      "seconds": 0.5,
-      "detail": ""
-    },
-    {
-      "suite": "pytest: ai-engine",
-      "passed": true,
-      "seconds": 13.5,
-      "detail": "32 passed in 12.24s"
+      "passed": false,
+      "seconds": 310.3,
+      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Pour and drink tea L2, Pour and drink tea L8"
     }
   ]
 }
