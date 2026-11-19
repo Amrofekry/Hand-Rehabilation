@@ -18,13 +18,17 @@ class HandLocomotionTests
         {
             Check(Run(.5f, .5f, false, 2).YawRate == 0 && Run(.5f, .5f, false, 2).PitchRate == 0, "centre: no turning");
             Check(Run(.68f, .65f, false, 2).YawRate == 0 && Run(.68f, .65f, false, 2).PitchRate == 0, "anywhere in the work zone: no turning (reach and grab freely)");
-            Check(Run(.85f, .5f, false, 2).YawRate > 0, "hand to the right: turn right");
-            Check(Run(.15f, .5f, false, 2).YawRate < 0, "hand to the left: turn left");
-            Check(Run(.5f, .1f, false, 2).PitchRate < 0 && Run(.5f, .9f, false, 2).PitchRate > 0, "hand up looks up, down looks down");
-            Check(Run(.8f, .5f, false, 2).YawRate < Run(.92f, .5f, false, 2).YawRate, "further out turns faster");
+            Check(Run(.85f, .70f, false, 2).YawRate == 0 && Run(.15f, .30f, false, 2).YawRate == 0 && Run(.85f, .70f, false, 2).PitchRate == 0 && Run(.15f, .30f, false, 2).PitchRate == 0,
+                "a reach anywhere on the screen (the hand mapping reaches the screen edge at 0.36 sideways, 0.21 up-down from the resting palm) does not turn the view");
+            Check(Run(.97f, .5f, false, .3f).YawRate == 0, "a quick reach to the very edge (0.3 s) does not turn the view");
+            Check(Run(.97f, .5f, false, .4f).YawRate == 0 && Run(.97f, .5f, false, .75f).YawRate > 0, "holding the hand at the edge for half a second turns the view");
+            Check(Run(.97f, .5f, false, 2).YawRate > 0, "hand at the right edge: turn right");
+            Check(Run(.03f, .5f, false, 2).YawRate < 0, "hand at the left edge: turn left");
+            Check(Run(.5f, .05f, false, 2).PitchRate < 0 && Run(.5f, .95f, false, 2).PitchRate > 0, "hand at the top looks up, at the bottom looks down");
+            Check(Run(.94f, .5f, false, 2).YawRate < Run(.99f, .5f, false, 2).YawRate, "further out turns faster");
             var p = new HandLocomotionPolicy();
             Check(Math.Abs(Run(1.05f, .5f, false, 3).YawRate - p.maxYawDegPerSec) < .5f && Run(1.05f, .5f, false, 3).YawRate <= p.maxYawDegPerSec, "turn rate is capped");
-            var ease = Run(.95f, .5f, false, 1 / 30f);
+            var ease = Run(.95f, .5f, false, .5f + 1 / 30f);
             Check(ease.YawRate > 0 && ease.YawRate < .5f * p.maxYawDegPerSec, "turning eases in, no jerk");
             var back = Run(.95f, .5f, false, 2); Run(.5f, .5f, false, 1 / 30f, back);
             Check(back.YawRate > 0, "turning eases out"); Run(.5f, .5f, false, 1.5f, back);
@@ -34,7 +38,7 @@ class HandLocomotionTests
             Check(walk.Walk == 1, "a held point walks at full speed");
             Run(.5f, .5f, false, .25f, walk);
             Check(!walk.Walking, "any other hand shape stops walking quickly");
-            var both = Run(.9f, .5f, true, 1.5f);
+            var both = Run(.97f, .5f, true, 1.5f);
             Check(both.Walking && both.YawRate > 0, "walk and turn together");
             var lost = Run(.9f, .5f, true, 1.5f); lost.Step(.9f, .5f, true, false, .9f, 1 / 30f);
             Check(lost.YawRate == 0 && lost.Walk == 0, "lost tracking or a menu stops everything at once");

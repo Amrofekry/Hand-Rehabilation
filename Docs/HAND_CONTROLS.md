@@ -23,16 +23,17 @@ The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measu
 
 | Hand | Does | Notes |
 |---|---|---|
+| Move the hand left, right, up or down | The virtual hand moves to the same place on the screen and sits just above whatever is under it (automatic depth) | 2026-11-19, measured in the Hand Lab: a comfortable sweep (wrist x 0.12-0.88, y 0.50-0.95 of a laptop webcam image) covers the view; the resting hand (low in the image) maps to the view centre. Moving the hand toward or away from the camera adds at most 6 cm. A depth jump at an edge is followed only once it lasts (0.35 s away, 0.12 s toward) |
 | Palm in the middle of the camera view | Nothing: a free work zone | Reach and grab without the view moving |
-| Palm toward the left, right, top or bottom edge | The view turns that way; the further out, the faster | Eases in and out; capped at 75°/s turning and 45°/s up/down; thin bars at the screen edge show the turn |
+| Palm held at the far left, right, top or bottom edge for 0.5 s | The view turns that way; the further out, the faster | Eases in and out; capped at 75°/s turning and 45°/s up/down; thin bars at the screen edge show the turn. The 0.5 s hold (2026-11-19) stops a reach toward an object from turning the view |
 | Point with the index finger | Walk forward where you look | Starts after 0.25 s and stops quickly when the hand changes |
-| Close the hand (fist or pinch) | Grab: the object at your fingertips, else (aim assist) the object at the centre of the view within reach | One grab path (2026-11-01); the gate closes at score .55 and opens at .28; aim-assisted grabs are counted separately |
+| Close the hand (fist or pinch) | Grab: the object under the hand, else the object at your fingertips, else (aim assist) the looked-at object if the hand is within 12 cm of it | One grab path (2026-11-01; object under the hand first since 2026-11-19); the gate closes at score .55 and opens at .28; aim-assisted grabs are counted separately. A pinch over an object, or a closed fist, never opens the options |
 | Open the hand | Release (place) the held object | Hysteresis: a wobbling fist does not drop the object; a tracking gap under 0.6 s keeps it |
 | Close the hand harder | Squeeze (force from grip score) | Existing camera behaviour |
 | Twist the hand like a dial while holding an activity item | Turn the placement | 10° dead zone, 5° steps, at most ±180° |
 | Roll the wrist while holding the teapot or the cup | Tip it: pour, or drink at the mouth | Tea activity (2026-11-18): the tilt follows the knuckle line's roll from its angle at the pickup (6° dead band); a teapot or cup never turns the placement |
 | Raise the hand high while holding the cup | Bring the cup to the lips (the drink pose) | Then roll the wrist to drink; while holding the cup, a raised hand does not look up |
-| Pinch, held 0.8 s | Open the options panel | Then use the hand pointer (dwell) to choose a room, object or activity, or RESUME |
+| OK sign (thumb on the index tip, other fingers out), held 0.8 s, with no object under the hand | Open the options panel | Since 2026-11-19 a fist with the thumb on the index tip no longer counts (a missed grab paused the game). Then use the hand pointer (dwell) to choose a room, object or activity, or RESUME |
 
 **Safety:** lost or low-confidence tracking, a menu or pause stops looking and walking at once.
 

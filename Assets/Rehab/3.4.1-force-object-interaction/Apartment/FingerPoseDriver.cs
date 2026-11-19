@@ -56,6 +56,14 @@ namespace GripRehab
         /// <summary>Hand Lab diagnostics: the camera-mode hand target before filtering, and the palm size relative to its reference.</summary>
         public Vector3 LastTargetLocal { get; private set; }
         public float LastPalmSize { get; private set; }
+        /// <summary>
+        /// Camera hand mapping set by the caller (2026-11-19, from a real-hand Hand Lab session): when HasOverrideTarget,
+        /// the hand goes to OverrideTargetLocal (still One Euro filtered, at position settings) instead of the built-in
+        /// image-delta and palm-size mapping. LastImageDelta is the wrist's image offset from the centre (camera space).
+        /// </summary>
+        public bool HasOverrideTarget;
+        public Vector3 OverrideTargetLocal;
+        public Vector3 LastImageDelta { get; private set; }
 
         private readonly Quaternion[] _rest = new Quaternion[15];
         private readonly Transform[] _cachedJoints = new Transform[15];
@@ -193,12 +201,16 @@ namespace GripRehab
                     // Camera mode: One Euro filtered position (steady at rest, little lag when moving) and a filtered depth.
                     float size = .5f * (width / _palmWidthReference + (_palmLengthReference > 0 ? length / _palmLengthReference : width / _palmWidthReference));
                     _fx.minCutoff = _fy.minCutoff = positionMinCutoff; _fx.beta = _fy.beta = positionBeta; _fx.dCutoff = _fy.dCutoff = 1f;
-                    _fz.minCutoff = depthMinCutoff; _fz.beta = depthBeta; _fz.dCutoff = 1f;
+                    // The caller's mapping is already smooth in depth (it eases the reach): filter it like position, not 0.3 Hz.
+                    bool reach = HasOverrideTarget;
+                    _fz.minCutoff = reach ? positionMinCutoff : depthMinCutoff; _fz.beta = reach ? positionBeta : depthBeta; _fz.dCutoff = 1f;
                     float rx = float.IsFinite(reachX) ? Mathf.Clamp(reachX, .05f, .6f) : .30f, ry = float.IsFinite(reachY) ? Mathf.Clamp(reachY, .05f, .6f) : .26f;
                     var target = restingPosition + new Vector3(
                         Mathf.Clamp(delta.x * travelMeters, -rx, rx),
                         Mathf.Clamp(delta.y * travelMeters, -ry, ry),
                         Mathf.Clamp((size - 1f) * .75f, -.20f, .65f));
+                    LastImageDelta = delta;
+                    if (HasOverrideTarget && HandRigRules.Finite(OverrideTargetLocal)) target = OverrideTargetLocal;
                     LastTargetLocal = target; LastPalmSize = size; // Hand Lab: the mapping before the filters
                     if (!_fx.Primed) { _fx.Step(transform.localPosition.x, dt); _fy.Step(transform.localPosition.y, dt); _fz.Step(transform.localPosition.z, dt); }
                     transform.localPosition = new Vector3(_fx.Step(target.x, dt), _fy.Step(target.y, dt), _fz.Step(target.z, dt));

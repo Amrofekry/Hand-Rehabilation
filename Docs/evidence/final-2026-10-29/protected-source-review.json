@@ -3,13 +3,13 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "140079f202b858f0a898ff0ac0ccf83c557a572a8a0900c2c3288e58b02bbc88",
-      "reason": "User-authorized final release (2026-10-29). 3.4.1 tea activity: absolute held orientation about a pivot (HeldOriented), pivot drawn to the lips for camera drinking (HeldPivotWorld/Blend), presentation reach, speed, eased acceleration and a world target (keyboard pouring and drinking); defaults leave every other activity unchanged"
+      "currentSha256": "371cf0affc4302fc995d567a04b6e197ba78e560f2a5a323162093dd1d9a210d",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Hand mapping (2026-11-19, Hand Lab on a real hand): automatic depth along the eye-to-hand line with edge-jump hysteresis and a 0.8 m/s cap, screen mapping centred on the measured resting wrist, the object under the hand is the grab target."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
-      "currentSha256": "a14a62f75eba978225bf9a25f70783bb2ffc9cbfd40b7d216fcec3fe5d030642",
-      "reason": "User-authorized final release (2026-10-29). 3.2 camera hand: palm size (the depth cue) measured with x scaled by the image aspect, so a wrist roll that only rotates the hand in the image no longer moves the hand up to 19 cm in depth (found while testing the tea pour)"
+      "currentSha256": "3ef0681630cd6cf9ddc16c94a887b9e7fe5e1f4aa1fb79227d0f359894402a01",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Hand mapping (2026-11-19, Hand Lab on a real hand): HasOverrideTarget/OverrideTargetLocal let the caller place the camera hand (automatic depth), still One Euro filtered; LastImageDelta exposes the wrist image offset."
     },
     "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs": {
       "previousSha256": "ea2faf1c7d6e8e89e5f1887bfd524dbc2fd5a39c7bf5965548bd88014eadb5de",
@@ -105,6 +105,11 @@
       "previousSha256": "ab65c26512b06dd217a6f141429a2e08c56ba5c8a62a8c2662664faf1614837f",
       "currentSha256": "da6eea5189a1c40784c6980972b9e34190f5d1e00e94c431b4bd310fae57f43a",
       "reason": "User-authorized final release (2026-10-29). 3.4.1 tea activity: Module 1 accepts task 8 (pouring tea); task 9 is still refused"
+    },
+    "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs": {
+      "previousSha256": "72f983f608eafb5e88b772cb630c5adf80fab5460dfc43f84b07716a6fbd1f80",
+      "currentSha256": "422473ab8037fecdb4a548ab5d867fcb4df3335c2deebf8bad058853ae092a32",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Hand Lab (2026-11-19): RecordPath passes --record to the MediaPipe bridge so a guided real-hand session saves landmark numbers and timings (never images)."
     }
   }
 }

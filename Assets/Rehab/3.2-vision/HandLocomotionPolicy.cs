@@ -17,7 +17,13 @@ namespace GripRehab
     public sealed class HandLocomotionPolicy
     {
         // Work zone half-sizes (fraction of the image from its centre) and the outer edge where speed is full.
-        public float deadZoneX = .30f, deadZoneY = .26f, fullAt = .46f; // 2026-10-29: wider work zone, so reaching for an object does not turn the view
+        // 2026-11-19 (Hand Lab, a real hand on a laptop webcam): a comfortable reach used 0.1-0.9 of the image width, so the
+        // old 0.30 zone turned the view whenever the hand reached sideways and the hand chased a moving view. The work zone
+        // now ends where the camera hand reaches the screen edge (ApartmentExperience.HandRange*), and the hand must stay
+        // beyond it for edgeDwellSeconds before the view turns. palmY comes in already centred on the resting hand (the
+        // caller shifts it), and the comfortable up-down range is narrower than left-right, so Y has its own zone.
+        public float deadZoneX = .36f, deadZoneY = .21f, fullAt = .48f, fullAtY = .33f;
+        public float edgeDwellSeconds = .5f;
         public float maxYawDegPerSec = 75f, maxPitchDegPerSec = 45f;
         /// <summary>Seconds for the turn rate to follow the hand (eases in and out).</summary>
         public float turnSmoothing = .18f;
@@ -30,9 +36,9 @@ namespace GripRehab
         /// <summary>0..1 share of walking speed.</summary>
         public float Walk { get; private set; }
         public bool Walking => Walk > 0.001f;
-        float pointHeld;
+        float pointHeld, edgeHeld;
 
-        public void Reset() { YawRate = PitchRate = Walk = 0; pointHeld = 0; }
+        public void Reset() { YawRate = PitchRate = Walk = 0; pointHeld = edgeHeld = 0; }
 
         /// <summary>Target turn rate for one axis: 0 inside the work zone, rising smoothly to max at fullAt.</summary>
         public static float Rate(float offset, float deadZone, float fullAt, float max)
@@ -55,7 +61,10 @@ namespace GripRehab
             bool ok = usable && confidence >= minConfidence && IsFinite(palmX) && IsFinite(palmY) && palmX >= -.1f && palmX <= 1.1f && palmY >= -.1f && palmY <= 1.1f;
             if (!ok) { Reset(); return; } // stop at once: never keep turning or walking on stale data
             float yaw = Rate(palmX - .5f, deadZoneX, fullAt, maxYawDegPerSec);
-            float pitch = Rate(palmY - .5f, deadZoneY, fullAt, maxPitchDegPerSec);
+            float pitch = Rate(palmY - .5f, deadZoneY, fullAtY, maxPitchDegPerSec);
+            // A reach to the side passes through the edge zone; only a hand that stays there turns the view.
+            edgeHeld = yaw != 0 || pitch != 0 ? edgeHeld + dt : 0;
+            if (edgeHeld < edgeDwellSeconds) { yaw = 0; pitch = 0; }
             float k = turnSmoothing > 0 ? 1 - (float)Math.Exp(-dt / turnSmoothing) : 1;
             YawRate += (yaw - YawRate) * k; PitchRate += (pitch - PitchRate) * k;
             if (Math.Abs(YawRate) < .05f && yaw == 0) YawRate = 0;

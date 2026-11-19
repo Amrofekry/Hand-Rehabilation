@@ -76,6 +76,21 @@ def lag_ms(rows, a, b, max_ms=600):
     return best_k * 10
 
 
+def highpass_std(rows, key, window=.25):
+    """Std of a signal minus its centred moving average (seconds wide): the fast jitter only."""
+    pts = [(r['t'], r[key]) for r in rows if r['t'] is not None and r[key] is not None]
+    if len(pts) < 3:
+        return 0.0
+    out, j0, j1 = [], 0, 0
+    for t, v in pts:
+        while pts[j0][0] < t - window / 2:
+            j0 += 1
+        while j1 + 1 < len(pts) and pts[j1 + 1][0] <= t + window / 2:
+            j1 += 1
+        out.append(v - statistics.fmean(p[1] for p in pts[j0:j1 + 1]))
+    return statistics.pstdev(out)
+
+
 def step_rows(rows, s):
     return [r for r in rows if r['step'] == s]
 
@@ -103,8 +118,13 @@ def analyse(path: Path):
     # Steady hand: jitter of the virtual hand and of the depth estimate while holding still.
     still = [r for r in step_rows(rows, STEP['still']) if r['tracked']]
     if still:
+        # The settled last 3 s (the hand is still coming into view at first), high-passed against a 0.25 s moving
+        # average so a slow drift of the real hand is not counted as jitter.
+        end = still[-1]['t']
+        settled = [r for r in still if r['t'] is not None and r['t'] > end - 3] or still
         report['still'] = {
-            'handJitterMm': {ax: round(1000 * statistics.pstdev([r['hand' + ax] for r in still]), 2) for ax in ('X', 'Y', 'Z')},
+            'handJitterMm': {ax: round(1000 * highpass_std(settled, 'hand' + ax), 2) for ax in ('X', 'Y', 'Z')},
+            'handDriftMm': {ax: round(1000 * statistics.pstdev([r['hand' + ax] for r in settled]), 2) for ax in ('X', 'Y', 'Z')},
             'palmSizeNoisePercent': round(100 * statistics.pstdev([r['size'] for r in still if r['size']]) / max(1e-6, statistics.fmean([r['size'] for r in still if r['size']])), 2),
             'restTarget': [round(statistics.median([r['target' + ax] for r in still]), 4) for ax in ('X', 'Y', 'Z')],
         }
@@ -150,7 +170,20 @@ def analyse(path: Path):
                       'wrongObjects': wrong, 'handClosings': closes, 'closestCm': round(100 * min(dists), 1) if dists else None,
                       'maxScore': round(max((r['score'] or 0) for r in rs), 2), 'trackingLostPercent': round(100 * sum(1 for r in rs if not r['tracked']) / len(rs), 1)})
     report['grabs'] = grabs
+    if rows and 'paused' in rows[0]:
+        report['pausedPercent'] = round(100 * sum(1 for r in rows if r.get('paused') == '1') / len(rows), 1)
+        report['optionsOpenings'] = sum(1 for a, b in zip(rows, rows[1:]) if b.get('paused') == '1' and a.get('paused') != '1')
     report['grabSuccess'] = f"{sum(g['grabbed'] for g in grabs)}/{len(grabs)}"
+    if rows and 'viewYaw' in rows[0]:
+        # How far the view turned in each step (edge look); a steady hand should not turn it.
+        turned = {}
+        for s in range(10):
+            ys = [num(r.get('viewYaw')) for r in step_rows(rows, s)]
+            ys = [y for y in ys if y is not None]
+            if len(ys) > 1:
+                total = sum(abs(((b - a) + 180) % 360 - 180) for a, b in zip(ys, ys[1:]))
+                turned[str(s)] = round(total, 1)
+        report['viewTurnDeg'] = turned
     return report
 
 
@@ -164,10 +197,14 @@ def markdown(rep):
         lines += [f"- Estimated delay, camera frame to virtual hand: about {e['positionMedian']} ms sideways/up-down, {e['depth']} ms toward/away ({e['note']})"]
     if 'still' in rep:
         s = rep['still']
-        lines += [f"- Holding still: hand jitter X {s['handJitterMm']['X']} / Y {s['handJitterMm']['Y']} / Z {s['handJitterMm']['Z']} mm; palm-size noise {s['palmSizeNoisePercent']} %"]
+        lines += [f"- Holding still (last 3 s): fast jitter X {s['handJitterMm']['X']} / Y {s['handJitterMm']['Y']} / Z {s['handJitterMm']['Z']} mm; slow drift X {s['handDriftMm']['X']} / Y {s['handDriftMm']['Y']} / Z {s['handDriftMm']['Z']} mm; palm-size noise {s['palmSizeNoisePercent']} %"]
     lines += ['', '| Axis | Filter delay (ms) | Hand range (cm) | Image range | Clamped at limit (%) |', '|---|---|---|---|---|']
     for name, a in rep.get('axes', {}).items():
         lines.append(f"| {name} | {a.get('filterLagMs')} | {a.get('handRangeCm')} | {a.get('imageRange')} | {a.get('clampedPercent', '-')} |")
+    if 'viewTurnDeg' in rep:
+        lines += ['- View turned (deg, per step): ' + ', '.join(f"{k}: {v}" for k, v in rep['viewTurnDeg'].items())]
+    if 'pausedPercent' in rep:
+        lines += [f"- Game paused (options opened) {rep['optionsOpenings']} times, {rep['pausedPercent']} % of the session"]
     lines += ['', f"Grabs: {rep.get('grabSuccess')}", '', '| Target | Grabbed | Seconds | Wrong objects | Hand closings | Closest (cm) | Max grip score | Tracking lost (%) |', '|---|---|---|---|---|---|---|---|']
     for g in rep.get('grabs', []):
         lines.append(f"| {g['target']} | {g['grabbed']} | {g['secondsToGrab']} | {', '.join(g['wrongObjects']) or '-'} | {g['handClosings']} | {g['closestCm']} | {g['maxScore']} | {g['trackingLostPercent']} |")

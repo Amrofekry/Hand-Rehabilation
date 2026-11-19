@@ -80,18 +80,36 @@ namespace GripRehab
             app.player.LookAt(centre); yield return new WaitForSecondsRealtime(.6f);
             var ordered = items.OrderBy(i => view != null ? view.WorldToScreenPoint(i.transform.position).x : 0).ToList();
             if (ordered.Count >= 3) { targets[0] = ordered[0]; targets[1] = ordered[ordered.Count / 2]; targets[2] = ordered[ordered.Count - 1]; }
+            var starts = items.Select(i => (item: i, pos: i.transform.position, rot: i.transform.rotation)).ToList();
             Show("Show your hand to the camera to begin");
             File.WriteAllText(Path.Combine(dir, "ready"), "waiting for the hand"); // the replay starts sending now
             float showUntil = Time.realtimeSinceStartup + (Replay ? 30 : 90);
             while (!(app.vision.RightValid || app.vision.LeftValid) && Time.realtimeSinceStartup < showUntil) yield return null;
             csv = new StreamWriter(Path.Combine(dir, "game.csv"));
-            csv.WriteLine("t,step,seq,capture,ageMs,hand,valid,wristX,wristY,palm,tracked,targetX,targetY,targetZ,handX,handY,handZ,size,score,gate,held,targetName,targetDist,fps");
+            csv.WriteLine("t,step,seq,capture,ageMs,hand,valid,wristX,wristY,palm,tracked,targetX,targetY,targetZ,handX,handY,handZ,size,score,gate,held,targetName,targetDist,fps,paused,reach,rayTarget,viewYaw,viewPitch");
             for (step = 0; step < Steps.Length; step++)
             {
                 stepStarted = Time.realtimeSinceStartup;
                 var s = Steps[step]; string name = s.target >= 0 && targets[s.target] != null ? targets[s.target].displayName : "";
+                int shot = 0;
+                // Each grab starts from the same view (the sweeps before may have turned it), so the three targets stay on screen.
+                // ... and from the same table: items moved by an earlier grab go back where they started.
+                if (s.target >= 0)
+                {
+                    if (app.Held != null) app.Release();
+                    foreach (var (item, pos, rot) in starts)
+                    {
+                        if (item == null) continue;
+                        if (item.Body != null) { if (!item.Body.isKinematic) { item.Body.velocity = Vector3.zero; item.Body.angularVelocity = Vector3.zero; } item.Body.position = pos; item.Body.rotation = rot; }
+                        item.transform.SetPositionAndRotation(pos, rot);
+                    }
+                    app.player.LookAt(centre);
+                }
                 while (Time.realtimeSinceStartup - stepStarted < s.seconds)
                 {
+                    // Replay only: a few screenshots per step (the game view, never the camera image) to see the hand.
+                    if (Replay && (step == 1 || step >= 6 && step <= 8) && Time.realtimeSinceStartup - stepStarted > 2 + shot * 3 && shot < 4)
+                    { shot++; ScreenCapture.CaptureScreenshot(Path.GetFullPath(Path.Combine(dir, "step" + step + "-" + shot + ".png"))); }
                     Show((step + 1) + " / " + Steps.Length + "   " + s.text + (name.Length > 0 ? "  (" + name + ")" : "") + "\n" + Mathf.CeilToInt(s.seconds - (Time.realtimeSinceStartup - stepStarted)) + " s");
                     yield return null;
                 }
@@ -123,7 +141,10 @@ namespace GripRehab
                 .Append(hand.LastPalmSize.ToString("0.0000", C)).Append(',').Append(app.CameraGripScore.ToString("0.000", C)).Append(',').Append(app.CameraGateClosed ? 1 : 0).Append(',')
                 .Append(app.Held != null ? app.Held.displayName.Replace(',', ' ') : "").Append(',').Append(target != null ? target.displayName.Replace(',', ' ') : "").Append(',')
                 .Append(target != null ? Vector3.Distance(hand.transform.position, target.transform.position).ToString("0.0000", C) : "").Append(',')
-                .Append(app.cameraLauncher != null ? app.cameraLauncher.FramesPerSecond.ToString("0.0", C) : "");
+                .Append(app.cameraLauncher != null ? app.cameraLauncher.FramesPerSecond.ToString("0.0", C) : "").Append(',')
+                .Append(app.player.Paused ? 1 : 0).Append(',').Append(float.IsFinite(app.CameraReach) ? app.CameraReach.ToString("0.000", C) : "").Append(',')
+                .Append(app.HandRayTarget != null ? app.HandRayTarget.displayName.Replace(',', ' ') : "").Append(',')
+                .Append(app.player.view.transform.eulerAngles.y.ToString("0.0", C)).Append(',').Append(app.player.view.transform.eulerAngles.x.ToString("0.0", C));
             csv.WriteLine(line.ToString()); frames++;
         }
 

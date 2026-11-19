@@ -69,8 +69,13 @@ public sealed class HandLocomotion : MonoBehaviour {
    if(st!=lastState||!stateShown){lastState=st;stateShown=true;ApartmentGuide.Set(ApartmentGuide.Channel.Input,st!=HandInteraction.Idle,StateText(st));}
   } else if(stateShown){stateShown=false;lastState=HandInteraction.Idle;ApartmentGuide.Clear(ApartmentGuide.Channel.Input);}
   float dt=Time.deltaTime;
-  Policy.Step(px,py,pointing,usable,tracked?frame.confidence:0,dt);Active=usable;
-  Act(gesture,roll,usable,dt);
+  // The resting hand sits low in a laptop webcam image (ApartmentExperience.HandCentreY, a wrist row; the palm centre is
+  // about 0.08 above the wrist): edge look is measured from the resting palm, so up and down are both within reach.
+  Policy.Step(px,py-(ApartmentExperience.HandCentreY-.58f),pointing,usable,tracked?frame.confidence:0,dt);Active=usable;
+  // The options pinch is an OK sign: thumb on the index tip with at least two of the other fingers out. A closed fist often
+  // has the thumb on the index tip too (Hand Lab 2026-11-19: a missed grab opened the options), and it never opens them.
+  bool okPinch=false;if(gesture==HandGesture.Pinch){var lm=frame.landmarks;int outN=0;for(int k=1;k<4;k++){int pip=6+k*4,tip=8+k*4;if(((Vector2)(lm[tip]-lm[0])).sqrMagnitude>((Vector2)(lm[pip]-lm[0])).sqrMagnitude*1.21f)outN++;}okPinch=outN>=2;}
+  Act(gesture,okPinch,roll,usable,dt);
   if(Policy.YawRate!=0){player.transform.Rotate(0,Policy.YawRate*dt,0);TurnedDegrees+=Mathf.Abs(Policy.YawRate*dt);}
   // Holding the cup, a raised hand is the drink gesture (TeaPouring), not "look up": only looking up is held back.
   var vessel=app.Held!=null?app.Held.GetComponent<PourVessel>():null;bool drinkPose=vessel!=null&&!vessel.teapot;
@@ -88,13 +93,16 @@ public sealed class HandLocomotion : MonoBehaviour {
  }
 
  /// <summary>Camera actions that replace keys: fist grabs (G/E), pinch opens options (TAB), a twist turns the placement (, .).</summary>
- void Act(HandGesture gesture,float roll,bool usable,float dt){
+ void Act(HandGesture gesture,bool okPinch,float roll,bool usable,float dt){
   bool holding=app.Held!=null;
-  Actions.Step(gesture==HandGesture.Fist,gesture==HandGesture.Pinch,holding,roll,usable,dt);
+  Actions.Step(gesture==HandGesture.Fist,okPinch,holding,roll,usable,dt);
   // Grabbing is the single camera path in ApartmentExperience (closed-hand gate + reach or aim assist), so it is not repeated here.
   // A pinch that picked something up is a grab, never the options gesture (both use the pinch).
   pinchGrabbed=gesture==HandGesture.Pinch&&(pinchGrabbed||app.Held!=null);
-  if(Actions.OptionsRequested&&!app.player.Paused&&app.Held==null&&!pinchGrabbed){app.player.SetPaused(true);OptionsOpened++;}
+  // A grab that catches nothing often looks like a pinch: the options pinch counts only with no object under the hand
+  // (2026-11-19, Hand Lab: a missed grab opened the options and paused the game, so the hand seemed dead). The grip gate is
+  // not a guard: a pinch closes it too.
+  if(Actions.OptionsRequested&&!app.player.Paused&&app.Held==null&&!pinchGrabbed&&app.HandRayTarget==null){app.player.SetPaused(true);OptionsOpened++;}
   if(runner==null)runner=app.GetComponent<ActivityRunner>();
   // A teapot or cup turns with the wrist to pour and drink (TeaPouring reads the same roll), never to the placement yaw.
   bool turning=holding&&runner!=null&&runner.Active&&!float.IsNaN(Actions.PlacementYaw)&&app.Held.GetComponent<ActivityItem>()!=null&&app.Held.GetComponent<PourVessel>()==null;

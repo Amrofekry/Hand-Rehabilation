@@ -3,10 +3,10 @@ import json
 from types import SimpleNamespace
 
 if __package__:
-    from .mediapipe_bridge import make_payload
+    from .mediapipe_bridge import HandednessFilter, make_payload
     from .replay_vision import hand_points
 else:
-    from mediapipe_bridge import make_payload
+    from mediapipe_bridge import HandednessFilter, make_payload
     from replay_vision import hand_points
 
 
@@ -25,6 +25,23 @@ class VisionBridgeContractTest(unittest.TestCase):
             self.assertEqual(payload["schemaVersion"], 1)
             self.assertEqual(payload["ageMs"], 0)
             self.assertEqual(len(payload["landmarks"]), 21)
+
+    def test_handedness_filter_ignores_short_flips_of_one_hand(self):
+        f = HandednessFilter(frames=6, forget=0.5)
+        labels = ["Right"] * 10 + ["Left"] * 3 + ["Right"] * 5
+        out = [f.update(l, i / 30) for i, l in enumerate(labels)]
+        self.assertEqual(set(out), {"Right"})
+        # A label that holds for six frames is taken.
+        out = [f.update("Left", (20 + i) / 30) for i in range(6)]
+        self.assertEqual(out[-1], "Left")
+        self.assertEqual(out[0], "Right")
+
+    def test_handedness_filter_passes_two_hands_and_a_new_hand(self):
+        f = HandednessFilter()
+        f.update("Right", 0.0)
+        self.assertEqual(f.update("Left", 0.03, hands=2), "Left")
+        f.update("Right", 0.06)
+        self.assertEqual(f.update("Left", 2.0), "Left")  # the hand was gone: a new hand keeps its own label
 
     def test_label_swap_and_invalid_label(self):
         point = SimpleNamespace(x=0.5, y=0.5, z=0.0)

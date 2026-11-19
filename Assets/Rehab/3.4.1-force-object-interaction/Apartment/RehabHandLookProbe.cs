@@ -83,7 +83,7 @@ namespace GripRehab
             for (int finger = 0; finger < 4; finger++)
             {
                 int n = 5 + finger * 4; float x = cx + (finger - 1.5f) * .045f;
-                bool straight = s == Shape.Open || s == Shape.Point && finger == 0;
+                bool straight = s == Shape.Open || s == Shape.Point && finger == 0 || s == Shape.Pinch && finger > 0; // pinch = OK sign
                 f.landmarks[n] = new Vector3(x, wy - .10f, 0);
                 f.landmarks[n + 1] = new Vector3(x, wy - .18f, 0);
                 f.landmarks[n + 2] = new Vector3(x, wy + (straight ? -.26f : -.12f), 0);
@@ -158,7 +158,7 @@ namespace GripRehab
             yield return Hold(.5f, .5f, Shape.Open, .6f); float pitch0 = Pitch();
             yield return Hold(.5f, .08f, Shape.Open, 1.2f); float upDelta = Pitch() - pitch0;
             Add("hand at the top looks up", upDelta < -10, upDelta.ToString("0.0") + "°");
-            yield return Hold(.5f, .92f, Shape.Open, 1.2f); float downDelta = Pitch() - pitch0;
+            yield return Hold(.5f, .97f, Shape.Open, 1.2f); float downDelta = Pitch() - pitch0;
             Add("hand at the bottom looks down", downDelta > upDelta + 10, downDelta.ToString("0.0") + "°");
             yield return Hold(.5f, .5f, Shape.Open, .6f);
             player.LookAt(player.view.transform.position + player.transform.forward); // level view again
@@ -216,14 +216,16 @@ namespace GripRehab
                 var cup = runner.Current.items.Select(i => i.Item).FirstOrDefault(i => i != null && i.displayName == "Cup");
                 if (cup != null)
                 {
-                    player.LookAt(cup.transform.position); yield return Hold(.5f, .5f, Shape.Open, .4f);
+                    // The resting hand row (ApartmentExperience.HandCentreY) points the camera hand at the view centre.
+                    float rest = ApartmentExperience.HandCentreY;
+                    player.LookAt(cup.transform.position); yield return Hold(.5f, rest, Shape.Open, .4f);
                     // Grab the way a patient does: close the hand on the cup (camera gate + aim assist), not TryGrab with an open hand.
                     float yaw0p = runner.PlacementYaw;
-                    yield return Hold(.5f, .5f, Shape.Fist, .8f, 0); bool grabbed = app.Held == cup;
-                    yield return Hold(.5f, .5f, Shape.Fist, .6f, 40);
+                    yield return Hold(.5f, rest, Shape.Fist, .8f, 0); bool grabbed = app.Held == cup;
+                    yield return Hold(.5f, rest, Shape.Fist, .6f, 40);
                     float turned = runner.PlacementYaw - yaw0p;
                     Add("twisting the hand turns the placement", grabbed && turned > 30, "grabbed=" + grabbed + " turned " + turned.ToString("0") + "° held=" + (app.Held != null ? app.Held.displayName : "none") + " twist=" + loco.Actions.PlacementYaw + " active=" + loco.Active + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status + " " + AimFacts(app, cup, runner.Current.items.Select(i => i.Item).FirstOrDefault(i => i != null && i.displayName == "Plate")));
-                    yield return Hold(.5f, .5f, Shape.Fist, .6f, -40);
+                    yield return Hold(.5f, rest, Shape.Fist, .6f, -40);
                     Add("twisting the other way turns it back", runner.PlacementYaw - yaw0p < -30, (runner.PlacementYaw - yaw0p).ToString("0") + "°");
                 }
                 else Add("twisting the hand turns the placement", false, "no cup in the coffee-table activity");

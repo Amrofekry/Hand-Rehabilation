@@ -31,6 +31,30 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+class HandednessFilter:
+    """Steady left/right label for a single visible hand. MediaPipe flips the label on a few frames (a real-hand Hand Lab
+    session, 2026-11-19: 41 'Left' among 2550 'Right' frames of one right hand), and every flip moved the game to the other
+    hand. With one hand in view, a new label is taken only after it holds for `frames` frames in a row; when the hand is
+    gone for `forget` seconds, or two hands are in view, the labels pass through unchanged."""
+
+    def __init__(self, frames: int = 6, forget: float = 0.5):
+        self.frames, self.forget = frames, forget
+        self.label, self.pending, self.count, self.seen = None, None, 0, -1e9
+
+    def update(self, label: str, now: float, hands: int = 1) -> str:
+        if hands != 1 or self.label is None or now - self.seen > self.forget:
+            self.label, self.pending, self.count = label, None, 0
+        elif label != self.label:
+            self.count = self.count + 1 if label == self.pending else 1
+            self.pending = label
+            if self.count >= self.frames:
+                self.label, self.pending, self.count = label, None, 0
+        else:
+            self.pending, self.count = None, 0
+        self.seen = now
+        return self.label
+
+
 def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool,
                  age_ms: float = 0, *, world_hand=None, image_width: int = 0, image_height: int = 0) -> dict:
     label = category.category_name
@@ -123,6 +147,7 @@ def main() -> None:
         print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':0,'detections':0,'fps':0}), flush=True)
         # Hand Lab recording: landmark numbers and timings only, never an image (the face is not stored).
         record = open(args.record, "w", encoding="utf-8") if args.record else None
+        handedness_filter = HandednessFilter()
         try:
             while args.seconds <= 0 or time.monotonic() - started < args.seconds:
                 ok, frame = capture.read()
@@ -157,7 +182,9 @@ def main() -> None:
                     sequence += 1
                     payload = make_payload(hand, handedness[0], captured, sequence,
                                            mp.__version__, args.swap_handedness,
-                                           max(0.0, (time.monotonic() - captured) * 1000))
+                                           max(0.0, (time.monotonic() - captured) * 1000),
+                                           image_width=int(frame.shape[1]), image_height=int(frame.shape[0]))
+                    payload["handedness"] = handedness_filter.update(payload["handedness"], captured, len(result.hand_landmarks))
                     sock.sendto(json.dumps(payload, separators=(",", ":")).encode("utf-8"),
                                 ("127.0.0.1", args.port))
                     if record is not None:

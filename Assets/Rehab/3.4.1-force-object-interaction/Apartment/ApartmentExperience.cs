@@ -64,6 +64,54 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public string Status{get;private set;}="Ready";
  private readonly Collider[] _clearanceOverlaps=new Collider[64];
  private readonly RaycastHit[] _clearanceHits=new RaycastHit[64];
+ // ---- Camera hand, automatic depth (2026-11-19; Hand Lab, real hand: palm-size depth was noise-led). The active hand keeps
+ // its on-screen place from the camera image; its distance is eased to just short of what lies under it (the line from the
+ // eye through the hand), and the object under the hand is the one a closing hand picks up.
+ private readonly RaycastHit[] _reachHits=new RaycastHit[16];private float _reach=float.NaN,_heldReach,_reachGoal=float.NaN,_reachPending,_reachPendingFor;private SqueezableObject _reachHeldFor;
+ /// <summary>Camera hand screen mapping, measured on a real hand with a laptop webcam (Hand Lab 2026-11-19): a comfortable
+ /// sweep used wrist x 0.12-0.88 and y 0.50-0.95 of the image (y down), and the resting wrist sat at y 0.73, not 0.5.
+ /// HandCentreY is the image row (y down) that maps to the view centre; HandRange* is the offset from it that reaches the edge.</summary>
+ public static float HandRangeX=.36f,HandRangeY=.25f,HandCentreY=.70f;
+ /// <summary>The distance (m) from the eye at which the camera hand sits now (NaN outside camera mode).</summary>
+ public float CameraReach=>_reach;
+ /// <summary>The object under the camera hand (on the eye-to-hand line or within 10 cm of where it meets a surface); null if none.</summary>
+ public SqueezableObject HandRayTarget{get;private set;}
+ /// <summary>Where the eye-to-hand line meets the first surface (valid when HandRayHit).</summary>
+ public Vector3 HandRayPoint{get;private set;}public bool HandRayHit{get;private set;}
+ private void UpdateReach(float dt){
+  var hand=ActiveHand;var other=LeftSelected?rightHand:leftHand;other.HasOverrideTarget=false;
+  if(!CameraMode||hand==null){if(hand!=null)hand.HasOverrideTarget=false;_reach=_reachGoal=float.NaN;HandRayTarget=null;HandRayHit=false;return;}
+  var parent=hand.transform.parent;var view=player.view.transform;var eye=view.position;
+  // Screen mapping: the wrist's comfortable image range covers the view (image centre a little below the view centre).
+  var cam=player.view;float tanV=Mathf.Tan(cam.fieldOfView*.5f*Mathf.Deg2Rad)*.92f,tanH=tanV*cam.aspect;
+  var imageDelta=hand.LastImageDelta;float u=Mathf.Clamp(imageDelta.x/HandRangeX,-1.05f,1.05f),v=Mathf.Clamp((imageDelta.y+HandCentreY-.5f)/HandRangeY,-1.05f,1.05f);
+  var dir=view.TransformDirection(new Vector3(u*tanH,v*tanV-.05f,1)).normalized;
+  var restLocal=LeftSelected?_leftRest:_rightRest;float rest=Mathf.Clamp(Vector3.Distance(eye,parent!=null?parent.TransformPoint(restLocal):restLocal),.25f,.6f);
+  int count=Physics.RaycastNonAlloc(eye,dir,_reachHits,1.1f,~(1<<8),QueryTriggerInteraction.Ignore);float nearest=float.MaxValue;Collider hit=null;
+  for(int i=0;i<count;i++){var c=_reachHits[i].collider;if(c==null||c.transform.IsChildOf(player.transform)||Held!=null&&c.transform.IsChildOf(Held.transform))continue;
+   if(_reachHits[i].distance<nearest){nearest=_reachHits[i].distance;hit=c;}}
+  HandRayHit=hit!=null;HandRayPoint=HandRayHit?eye+dir*nearest:eye+dir*rest;
+  // The object under the hand: the one the line meets, else the nearest within 10 cm of where it meets the table.
+  SqueezableObject under=hit!=null?hit.GetComponentInParent<SqueezableObject>():null;
+  if(under!=null&&System.Array.IndexOf(objects,under)<0)under=null;
+  if(under==null&&HandRayHit){float best=.10f;foreach(var item in objects){if(item==null||item==Held||!item.gameObject.activeInHierarchy)continue;float d=Vector3.Distance(HandRayPoint,item.ClosestSurface(HandRayPoint));if(d<best){best=d;under=item;}}}
+  HandRayTarget=Held==null?under:null;
+  if(Held!=_reachHeldFor){_reachHeldFor=Held;_heldReach=float.IsFinite(_reach)?_reach:rest;}
+  // Holding: the distance stays where the pickup happened (the palm-size push still moves it a little).
+  float want=Held!=null?_heldReach:HandRayHit?Mathf.Clamp(nearest-.03f,.2f,1f):Mathf.Clamp(rest,.2f,1f);
+  // Nothing under the hand (the line slips past an edge): keep the last depth and drift to rest slowly, not a 20 cm jump.
+  if(Held==null&&!HandRayHit&&float.IsFinite(_reachGoal))want=_reachGoal+(want-_reachGoal)*(1-Mathf.Exp(-dt/.8f));
+  // A depth jump (the line crossing a table edge or an object's rim) is followed only once it lasts (0.35 s away from the
+  // eye, 0.12 s toward it so the hand never sinks into what is in front): a still hand whose line grazed an edge swung
+  // 20 cm (Hand Lab replay 2026-11-19). Small changes follow at once; the reach moves at most 0.8 m/s.
+  if(!float.IsFinite(_reachGoal)||Held!=null||Mathf.Abs(want-_reachGoal)<.05f){_reachGoal=want;_reachPendingFor=0;}
+  else{if(Mathf.Abs(want-_reachPending)>.05f){_reachPending=want;_reachPendingFor=0;}_reachPendingFor+=dt;if(_reachPendingFor>=(want>_reachGoal?.35f:.12f)){_reachGoal=want;_reachPendingFor=0;}}
+  _reach=float.IsFinite(_reach)?_reach+Mathf.Clamp((_reachGoal-_reach)*(1-Mathf.Exp(-dt/.1f)),-.8f*dt,.8f*dt):_reachGoal;
+  // Palm size only adds a small push (6 % dead band, at most 6 cm): reaching in a little is still possible.
+  float grow=hand.LastPalmSize-1f;grow=Mathf.Sign(grow)*Mathf.Max(0,Mathf.Abs(grow)-.06f);
+  var world=eye+dir*(_reach+Mathf.Clamp(grow*.3f,-.06f,.06f));
+  hand.OverrideTargetLocal=parent!=null?parent.InverseTransformPoint(world):world;hand.HasOverrideTarget=true;
+ }
  private Quaternion _heldRotationOffset;private Collider[] _playerColliders;
  private Vector3 _lastHeld;private Vector3 _velocity;private Vector3 _manualRight,_manualLeft;private bool _leftDemoSelected;private float _summonGraceUntil,_lastMotionTime,_cameraValidAt,_cameraClosedFor,_cameraPowerScore,_nextCameraGrabTry;private bool _cameraReleaseBlocked;
  private int _generation,_lastSamples;private long _lastMs;private Vector3 _rightRest,_leftRest;
@@ -158,6 +206,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   otherHand.HasDemoRotation=twoHands&&GraspContactSolver.TryViewRotation(otherHand,player.view.transform,grip.view,!LeftSelected,out otherPresented);
   otherHand.DemoRotation=otherPresented;
   UpdatePresentation(grip!=null&&!(LeftSelected?leftTracked:rightTracked),handLift);
+  UpdateReach(Time.deltaTime);
   rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,LeftSelected?(twoHands?closure:0):closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+_presentRight+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
   float leftDemo=LeftSelected||twoHands?closure:0;
   leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+_presentLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
@@ -402,7 +451,10 @@ public sealed class ApartmentExperience:MonoBehaviour {
   // Aim assist (default, a setting): the object you look at and close your hand on is the intent. A fingertip brushing a
   // neighbour in a cluster (books, table settings) must not win over it (2026-11-02, camera activity probe: 9 of 12 runs
   // grabbed the neighbour). Off: only a fingertip at an object grabs (physical reach), as before.
-  var aimed=HandLocomotion.AimAssist?KeyboardTarget(out _):null;
+  // Camera hand: the object under the hand is the intent (2026-11-19: a real-hand session reaching for the plate on the
+  // left picked up the cup in the middle of the view). The looked-at object helps only when the hand is within 12 cm of it.
+  var looked=HandLocomotion.AimAssist?KeyboardTarget(out _):null;
+  var aimed=HandRayTarget!=null?HandRayTarget:looked!=null&&HandRayHit&&Vector3.Distance(HandRayPoint,looked.ClosestSurface(HandRayPoint))<.12f?looked:HandRayHit?null:looked;
   SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;bool aimedTouched=false;
   foreach(var item in objects){
    if(!CanReach(item))continue;
