@@ -22,6 +22,8 @@ namespace GripRehab
         [Range(-10, 0)] public float manualExposure = -5;
 
         public string State { get; private set; } = "OFF";
+        /// <summary>Hand Lab: when set before EnsureStarted, the worker also records landmark numbers and timings (no images) here.</summary>
+        public string RecordPath;
         public string LastError { get; private set; } = "";
         public float FramesPerSecond { get; private set; }
         public int DetectedHandsPerSecond { get; private set; }
@@ -64,7 +66,7 @@ namespace GripRehab
                     Arguments = "-u " + Quote(script) + " --camera " + cameraIndex + " --model " + Quote(model) +
                                 (mirror ? " --mirror" : "") + (swapHandedness ? " --swap-handedness" : "") +
                                 (lowLatencyCapture ? " --low-latency --exposure " + manualExposure.ToString(System.Globalization.CultureInfo.InvariantCulture) : "") +
-                                " --preview-port 27819",
+                                " --preview-port 27819" + (string.IsNullOrEmpty(RecordPath) ? "" : " --record " + Quote(RecordPath)),
                     WorkingDirectory = projectRoot,
                     UseShellExecute = false,
                     CreateNoWindow = true,

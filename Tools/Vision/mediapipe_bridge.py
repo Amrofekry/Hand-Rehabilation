@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mirror", action="store_true", help="Mirror image before inference, for a selfie camera")
     parser.add_argument("--swap-handedness", action="store_true", help="Swap left/right labels if camera mounting reverses them")
     parser.add_argument("--self-test", action="store_true", help="Initialize model on blank image; no camera")
+    parser.add_argument("--record", type=Path, help="Hand Lab: also write every frame and hand packet (no images) to this JSONL file")
     return parser.parse_args()
 
 
@@ -120,6 +121,8 @@ def main() -> None:
         status_at = started
         interval_frames = interval_detections = 0
         print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':0,'detections':0,'fps':0}), flush=True)
+        # Hand Lab recording: landmark numbers and timings only, never an image (the face is not stored).
+        record = open(args.record, "w", encoding="utf-8") if args.record else None
         try:
             while args.seconds <= 0 or time.monotonic() - started < args.seconds:
                 ok, frame = capture.read()
@@ -140,7 +143,12 @@ def main() -> None:
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
                 result = landmarker.detect_for_video(image, timestamp_ms)
+                detected = time.monotonic()
                 frames += 1
+                if record is not None:
+                    record.write(json.dumps({"kind": "frame", "frame": frames, "captured": captured, "inferMs": (detected - captured) * 1000,
+                                             "width": int(frame.shape[1]), "height": int(frame.shape[0]), "hands": len(result.hand_landmarks)},
+                                            separators=(",", ":")) + "\n")
                 interval_frames += 1
                 # No detection packet: Unity expires that hand independently after 500 ms.
                 for hand, handedness in zip(result.hand_landmarks, result.handedness):
@@ -152,6 +160,13 @@ def main() -> None:
                                            max(0.0, (time.monotonic() - captured) * 1000))
                     sock.sendto(json.dumps(payload, separators=(",", ":")).encode("utf-8"),
                                 ("127.0.0.1", args.port))
+                    if record is not None:
+                        index = list(result.hand_landmarks).index(hand)
+                        world = result.hand_world_landmarks[index] if index < len(result.hand_world_landmarks) else None
+                        record.write(json.dumps({"kind": "hand", "sent": time.monotonic(), "payload": payload,
+                                                 "width": int(frame.shape[1]), "height": int(frame.shape[0]),
+                                                 "world": [[p.x, p.y, p.z] for p in world] if world is not None else None},
+                                                separators=(",", ":")) + "\n")
                     detections += 1
                     interval_detections += 1
                 now = time.monotonic()
@@ -184,6 +199,8 @@ def main() -> None:
         except KeyboardInterrupt:
             pass
         finally:
+            if record is not None:
+                record.close()
             research_camera.close()
             capture.release()
             sock.close()

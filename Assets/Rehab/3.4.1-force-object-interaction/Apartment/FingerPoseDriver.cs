@@ -53,6 +53,9 @@ namespace GripRehab
         public bool HasDemoRotation;
         public Quaternion DemoRotation = Quaternion.identity;
         public long LastPoseSequence { get; private set; }
+        /// <summary>Hand Lab diagnostics: the camera-mode hand target before filtering, and the palm size relative to its reference.</summary>
+        public Vector3 LastTargetLocal { get; private set; }
+        public float LastPalmSize { get; private set; }
 
         private readonly Quaternion[] _rest = new Quaternion[15];
         private readonly Transform[] _cachedJoints = new Transform[15];
@@ -196,6 +199,7 @@ namespace GripRehab
                         Mathf.Clamp(delta.x * travelMeters, -rx, rx),
                         Mathf.Clamp(delta.y * travelMeters, -ry, ry),
                         Mathf.Clamp((size - 1f) * .75f, -.20f, .65f));
+                    LastTargetLocal = target; LastPalmSize = size; // Hand Lab: the mapping before the filters
                     if (!_fx.Primed) { _fx.Step(transform.localPosition.x, dt); _fy.Step(transform.localPosition.y, dt); _fz.Step(transform.localPosition.z, dt); }
                     transform.localPosition = new Vector3(_fx.Step(target.x, dt), _fy.Step(target.y, dt), _fz.Step(target.z, dt));
                 }
