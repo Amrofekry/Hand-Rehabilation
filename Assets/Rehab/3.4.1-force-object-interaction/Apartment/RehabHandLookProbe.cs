@@ -178,7 +178,7 @@ namespace GripRehab
 
             // Fist grabs the station object (was G / E); opening the hand releases it (was Q).
             player.transform.Rotate(0, 180, 0); var station = app.choices.SelectedObject;
-            player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f);
+            player.LookAt(station.transform.position); yield return Hold(.5f, ApartmentExperience.HandCentreY - .08f, Shape.Open, .5f);
             // Go back to the living-room station the way the game does (seated, facing its objects), as a patient would. The
             // point-walk above ends at a timing-dependent spot; improvised teleports landed at table height or pushed a chair
             // into the seated line of sight (2026-11-06).
@@ -190,14 +190,14 @@ namespace GripRehab
                     " yawRate " + (loco2 != null ? loco2.Policy.YawRate.ToString("0.0") : "-") + " pitchRate " + (loco2 != null ? loco2.Policy.PitchRate.ToString("0.0") : "-") + " walk " + (loco2 != null ? loco2.Policy.Walk.ToString("0.00") : "-") + " seated " + player.IsSeated + "]"; }
             string trace = "after look " + Sample(); yield return null; trace += " +1f " + Sample(); yield return new WaitForSecondsRealtime(.2f); trace += " +0.2s " + Sample();
             shape = Shape.Fist; yield return new WaitForSecondsRealtime(.3f); trace += " fist+0.3s " + Sample();
-            yield return Hold(.5f, .5f, Shape.Fist, .7f); trace += " fist+1s " + Sample();
+            yield return Hold(.5f, ApartmentExperience.HandCentreY - .08f, Shape.Fist, .7f); trace += " fist+1s " + Sample();
             Add("a held fist grabs the object (no key)", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none") +
                 (app.Held == station ? "" : " status=" + app.Status + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed +
                 " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " active=" + station.gameObject.activeInHierarchy +
                 " broken=" + station.IsBroken + " paused=" + player.Paused + " reach=" + typeof(ApartmentExperience).GetMethod("CanReach", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(app, new object[] { station }) + " blocker=" + (Physics.Linecast(player.view.transform.position, station.ClosestSurface(player.view.transform.position), out var block, ~(1 << 8), QueryTriggerInteraction.Ignore) ? block.collider.name : "none") + " fps=" + (1f / Mathf.Max(1e-4f, Time.smoothDeltaTime)).ToString("0") + " aimed=" + AimedName(app) + " view(" + trace + ")" + " pivot=" + station.transform.position.ToString("F2") + " com=" + (station.Body != null ? station.Body.worldCenterOfMass.ToString("F2") : "-")));
-            yield return Hold(.5f, .5f, Shape.Fist, 1f);
+            yield return Hold(.5f, ApartmentExperience.HandCentreY - .08f, Shape.Fist, 1f);
             Add("keeping the fist keeps holding", app.Held == station, "held=" + (app.Held != null ? app.Held.displayName : "none"));
-            yield return Hold(.5f, .5f, Shape.Open, .8f);
+            yield return Hold(.5f, ApartmentExperience.HandCentreY - .08f, Shape.Open, .8f);
             Add("opening the hand releases it", app.Held == null, "held=" + (app.Held != null ? app.Held.displayName : "none"));
 
             // Pinch held opens the options panel (was TAB).
@@ -216,8 +216,9 @@ namespace GripRehab
                 var cup = runner.Current.items.Select(i => i.Item).FirstOrDefault(i => i != null && i.displayName == "Cup");
                 if (cup != null)
                 {
-                    // The resting hand row (ApartmentExperience.HandCentreY) points the camera hand at the view centre.
-                    float rest = ApartmentExperience.HandCentreY;
+                    // The resting wrist row (ApartmentExperience.HandCentreY) points the camera hand at the view centre; Hold takes
+                    // the palm centre, 0.08 above the wrist.
+                    float rest = ApartmentExperience.HandCentreY - .08f;
                     player.LookAt(cup.transform.position); yield return Hold(.5f, rest, Shape.Open, .4f);
                     // Grab the way a patient does: close the hand on the cup (camera gate + aim assist), not TryGrab with an open hand.
                     float yaw0p = runner.PlacementYaw;

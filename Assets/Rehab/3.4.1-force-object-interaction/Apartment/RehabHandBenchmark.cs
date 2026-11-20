@@ -101,6 +101,8 @@ namespace GripRehab
             Application.Quit(failure == null ? 0 : 1);
         }
 
+        /// <summary>Palm row of a resting real hand (the camera hand then points at the view centre); Hold takes the palm centre.</summary>
+        static float Rest => ApartmentExperience.HandCentreY - .08f;
         IEnumerator Hold(float x, float y, Shape s, float seconds, float sigma = 0, float yaw = 0) { hx = x; hy = y; shape = s; noise = sigma; turn = yaw; sending = true; yield return new WaitForSecondsRealtime(seconds); }
 
         IEnumerator Run(Result r)
@@ -110,19 +112,25 @@ namespace GripRehab
             shell.SetResearchIdentity(null); shell.openModuleButton.onClick.Invoke(); yield return new WaitForSecondsRealtime(1);
             app.SetCameraMode(); player.SetPaused(false); if (player.IsSeated) player.Stand();
             var station = app.choices.SelectedObject; player.LookAt(station.transform.position);
-            yield return Hold(.5f, .5f, Shape.Open, 1.5f);
+            // Within reach the way the game does it (seated at the station, facing its objects): the camera grab no longer
+            // picks up a looked-at object from across the room (2026-11-20), so a start 1.5 m away could not grab.
+            if (Vector3.Distance(player.view.transform.position, station.transform.position) > .9f)
+            { app.choices.SelectStation(false); yield return new WaitForSecondsRealtime(.3f); station = app.choices.SelectedObject; player.LookAt(station.transform.position); }
+            var stationStart = station.transform.position; float eyeStart = Vector3.Distance(player.view.transform.position, stationStart);
+            yield return Hold(.5f, Rest, Shape.Open, 1.5f);
+            r.detail += "start: eye-to-station " + eyeStart.ToString("0.00") + " m, station moved " + Vector3.Distance(stationStart, station.transform.position).ToString("0.00") + " m during the open hold | ";
             var hand = app.ActiveHand.transform;
 
             // 0. Pinch picks up the station object, from the starting spot (within reach).
             int optionsBefore0 = HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0;
-            yield return Hold(.5f, .5f, Shape.Pinch, 1.5f);
+            yield return Hold(.5f, Rest, Shape.Pinch, 1.5f);
             r.pinchGrab = app.Held == station;
             r.detail += "pinch@start: optionsOpened=" + ((HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0) - optionsBefore0) + " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " held=" + (app.Held != null ? app.Held.displayName : "none") + " | ";
-            yield return Hold(.5f, .5f, Shape.Open, 1.2f); if (app.Held != null) app.Release(); player.SetPaused(false);
-            app.ResetObjects(); player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Open, .8f);
+            yield return Hold(.5f, Rest, Shape.Open, 1.2f); if (app.Held != null) app.Release(); player.SetPaused(false);
+            app.ResetObjects(); player.LookAt(station.transform.position); yield return Hold(.5f, Rest, Shape.Open, .8f);
 
             // 1. Rest jitter with noisy input.
-            yield return Hold(.5f, .5f, Shape.Open, .8f, .004f);
+            yield return Hold(.5f, Rest, Shape.Open, .8f, .004f);
             var rest = new List<Vector3>();
             for (float t = 0; t < 3; t += Time.unscaledDeltaTime) { rest.Add(hand.localPosition); yield return null; }
             var mean = rest.Aggregate(Vector3.zero, (a, b) => a + b) / rest.Count;
@@ -134,21 +142,21 @@ namespace GripRehab
             var steps = rest.Skip(1).Select((p, i) => (p - rest[i]).magnitude * 1000).OrderBy(v => v).ToList(); r.restStepMm = steps[steps.Count / 2];
 
             // 2. Sideways sweep (no noise): RMS from the straight path and settle time.
-            yield return Hold(.4f, .5f, Shape.Open, 1.5f); var start = hand.localPosition;
-            yield return Hold(.6f, .5f, Shape.Open, 1.5f); var end = hand.localPosition;
-            yield return Hold(.4f, .5f, Shape.Open, 1.5f);
+            yield return Hold(.4f, Rest, Shape.Open, 1.5f); var start = hand.localPosition;
+            yield return Hold(.6f, Rest, Shape.Open, 1.5f); var end = hand.localPosition;
+            yield return Hold(.4f, Rest, Shape.Open, 1.5f);
             float sweep = .6f, err = 0; int n = 0; shape = Shape.Open; noise = 0; turn = 0;
             for (float t = 0; t < sweep; t += Time.unscaledDeltaTime) { hx = Mathf.Lerp(.4f, .6f, t / sweep); var ideal = Vector3.Lerp(start, end, t / sweep); err += (hand.localPosition - ideal).sqrMagnitude; n++; yield return null; }
             hx = .6f; float settle = 0; while ((hand.localPosition - end).magnitude > .005f && settle < 2) { settle += Time.unscaledDeltaTime; yield return null; }
             r.sweepRmsMm = Mathf.Sqrt(err / Mathf.Max(1, n)) * 1000; r.settleMs = settle * 1000;
 
             // 3. Palm turned 50° sideways without moving: depth should not change.
-            yield return Hold(.5f, .5f, Shape.Open, 1.2f); float z0 = hand.localPosition.z;
-            yield return Hold(.5f, .5f, Shape.Open, 1.2f, 0, 50); r.turnDepthMm = Mathf.Abs(hand.localPosition.z - z0) * 1000;
-            yield return Hold(.5f, .5f, Shape.Open, 1f);
+            yield return Hold(.5f, Rest, Shape.Open, 1.2f); float z0 = hand.localPosition.z;
+            yield return Hold(.5f, Rest, Shape.Open, 1.2f, 0, 50); r.turnDepthMm = Mathf.Abs(hand.localPosition.z - z0) * 1000;
+            yield return Hold(.5f, Rest, Shape.Open, 1f);
 
             // 4. Hold with a noisy, partly open fist.
-            player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Fist, .6f);
+            player.LookAt(station.transform.position); yield return Hold(.5f, Rest, Shape.Fist, .6f);
             if (app.Held == null) app.TryGrab(station);
             int drops = 0; bool was = app.Held != null; float min = 1, sum = 0; int count = 0;
             hx = .5f; hy = .5f; shape = Shape.NoisyFist; noise = .004f; turn = 0;
@@ -160,33 +168,33 @@ namespace GripRehab
             r.holdDrops = drops; r.gripScoreMin = min; r.gripScoreMean = sum / Mathf.Max(1, count);
 
             // 5. A 0.25 s tracking gap while holding.
-            yield return Hold(.5f, .5f, Shape.Fist, .6f); if (app.Held == null) app.TryGrab(station); yield return Hold(.5f, .5f, Shape.Fist, .5f);
-            sending = false; yield return new WaitForSecondsRealtime(.7f); // longer than the receiver's 0.5 s freshness window yield return Hold(.5f, .5f, Shape.Fist, .5f);
+            yield return Hold(.5f, Rest, Shape.Fist, .6f); if (app.Held == null) app.TryGrab(station); yield return Hold(.5f, Rest, Shape.Fist, .5f);
+            sending = false; yield return new WaitForSecondsRealtime(.7f); // longer than the receiver's 0.5 s freshness window yield return Hold(.5f, Rest, Shape.Fist, .5f);
             r.blipHeld = app.Held != null;
-            yield return Hold(.5f, .5f, Shape.Open, 1.2f); if (app.Held != null) app.Release();
+            yield return Hold(.5f, Rest, Shape.Open, 1.2f); if (app.Held != null) app.Release();
 
             // 6. Pointing at the object must not pick it up.
-            player.LookAt(station.transform.position); yield return Hold(.5f, .5f, Shape.Point, 1.5f);
+            player.LookAt(station.transform.position); yield return Hold(.5f, Rest, Shape.Point, 1.5f);
             r.pointFalseGrab = app.Held != null; if (app.Held != null) app.Release();
-            yield return Hold(.5f, .5f, Shape.Open, 1f);
+            yield return Hold(.5f, Rest, Shape.Open, 1f);
 
             // 7. Pinch picks up the station object (objects restored first so it is within reach again).
-            app.ResetObjects(); player.SetPaused(false); yield return Hold(.5f, .5f, Shape.Open, .8f);
+            app.ResetObjects(); player.SetPaused(false); yield return Hold(.5f, Rest, Shape.Open, .8f);
             int optionsBefore = HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0;
             player.LookAt(station.transform.position);
-            if (Vector3.Distance(player.view.transform.position, station.transform.position) > 1.2f) { player.Teleport(station.transform.position - player.transform.forward * 1.0f + Vector3.up * .05f, player.transform.rotation); yield return null; player.LookAt(station.transform.position); }
-            yield return Hold(.5f, .5f, Shape.Open, .4f);
-            yield return Hold(.5f, .5f, Shape.Pinch, 1.5f);
-            r.detail += "pinch-late (after other tests, not scored): optionsOpened=" + ((HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0) - optionsBefore) + " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " paused=" + player.Paused + " assisted=" + app.AssistedGrabs + " camera=" + app.CameraMode + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status + " | "; yield return Hold(.5f, .5f, Shape.Open, 1.2f); if (app.Held != null) app.Release();
+            if (Vector3.Distance(player.view.transform.position, station.transform.position) > .9f) { app.choices.SelectStation(false); yield return new WaitForSecondsRealtime(.3f); station = app.choices.SelectedObject; player.LookAt(station.transform.position); }
+            yield return Hold(.5f, Rest, Shape.Open, .4f);
+            yield return Hold(.5f, Rest, Shape.Pinch, 1.5f);
+            r.detail += "pinch-late (after other tests, not scored): optionsOpened=" + ((HandLocomotion.Instance != null ? HandLocomotion.Instance.OptionsOpened : 0) - optionsBefore) + " dist=" + Vector3.Distance(player.view.transform.position, station.transform.position).ToString("0.00") + " paused=" + player.Paused + " assisted=" + app.AssistedGrabs + " camera=" + app.CameraMode + " score=" + app.CameraGripScore.ToString("0.00") + " status=" + app.Status + " | "; yield return Hold(.5f, Rest, Shape.Open, 1.2f); if (app.Held != null) app.Release();
 
             // 8. Camera grab of an activity item with no key press.
             var runner = app.GetComponent<ActivityRunner>();
             if (runner.Begin(ActivityKind.CoffeeTable, 2))
             {
-                player.SetPaused(false); yield return Hold(.5f, .5f, Shape.Open, 1f);
+                player.SetPaused(false); yield return Hold(.5f, Rest, Shape.Open, 1f);
                 var cup = runner.Current.items.Select(i => i.Item).FirstOrDefault(i => i != null && i.displayName == "Cup");
-                if (cup != null) { player.LookAt(cup.transform.position); yield return Hold(.5f, .5f, Shape.Open, .5f); yield return Hold(.5f, .5f, Shape.Fist, 1.5f); r.activityCameraGrab = app.Held == cup; r.detail += "activity: dist=" + Vector3.Distance(player.view.transform.position, cup.transform.position).ToString("0.00") + " paused=" + player.Paused + " assisted=" + app.AssistedGrabs + " camera=" + app.CameraMode + " score=" + app.CameraGripScore.ToString("0.00") + " held=" + (app.Held != null ? app.Held.displayName : "none") + " status=" + app.Status + " | "; }
-                yield return Hold(.5f, .5f, Shape.Open, 1f); if (app.Held != null) app.Release(); runner.End(false);
+                if (cup != null) { player.LookAt(cup.transform.position); yield return Hold(.5f, Rest, Shape.Open, .5f); yield return Hold(.5f, Rest, Shape.Fist, 1.5f); r.activityCameraGrab = app.Held == cup; r.detail += "activity: dist=" + Vector3.Distance(player.view.transform.position, cup.transform.position).ToString("0.00") + " paused=" + player.Paused + " assisted=" + app.AssistedGrabs + " camera=" + app.CameraMode + " score=" + app.CameraGripScore.ToString("0.00") + " held=" + (app.Held != null ? app.Held.displayName : "none") + " status=" + app.Status + " | "; }
+                yield return Hold(.5f, Rest, Shape.Open, 1f); if (app.Held != null) app.Release(); runner.End(false);
             }
             sending = false; shell.ReturnHome(); yield return new WaitForSecondsRealtime(.5f);
         }

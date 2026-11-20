@@ -70,8 +70,10 @@ public sealed class ApartmentExperience:MonoBehaviour {
  private readonly RaycastHit[] _reachHits=new RaycastHit[16];private float _reach=float.NaN,_heldReach,_reachGoal=float.NaN,_reachPending,_reachPendingFor;private SqueezableObject _reachHeldFor;
  /// <summary>Camera hand screen mapping, measured on a real hand with a laptop webcam (Hand Lab 2026-11-19): a comfortable
  /// sweep used wrist x 0.12-0.88 and y 0.50-0.95 of the image (y down), and the resting wrist sat at y 0.73, not 0.5.
- /// HandCentreY is the image row (y down) that maps to the view centre; HandRange* is the offset from it that reaches the edge.</summary>
- public static float HandRangeX=.36f,HandRangeY=.25f,HandCentreY=.70f;
+ /// HandCentreY is the image row (y down) that maps to the view centre; HandRange* is the offset from it that reaches the edge.
+ /// The resting row differs per sitting (0.73 and 0.78 in two sessions), so HandCentreY follows where the hand works: a slow
+ /// average (20 s) of the tracked wrist row, kept within 0.55-0.85.</summary>
+ public static float HandRangeX=.36f,HandRangeY=.25f,HandCentreY=.75f;
  /// <summary>The distance (m) from the eye at which the camera hand sits now (NaN outside camera mode).</summary>
  public float CameraReach=>_reach;
  /// <summary>The object under the camera hand (on the eye-to-hand line or within 10 cm of where it meets a surface); null if none.</summary>
@@ -84,7 +86,8 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var parent=hand.transform.parent;var view=player.view.transform;var eye=view.position;
   // Screen mapping: the wrist's comfortable image range covers the view (image centre a little below the view centre).
   var cam=player.view;float tanV=Mathf.Tan(cam.fieldOfView*.5f*Mathf.Deg2Rad)*.92f,tanH=tanV*cam.aspect;
-  var imageDelta=hand.LastImageDelta;float u=Mathf.Clamp(imageDelta.x/HandRangeX,-1.05f,1.05f),v=Mathf.Clamp((imageDelta.y+HandCentreY-.5f)/HandRangeY,-1.05f,1.05f);
+  var imageDelta=hand.LastImageDelta;
+  if(hand.TrackingUsed&&float.IsFinite(imageDelta.y))HandCentreY=Mathf.Clamp(HandCentreY+(.5f-imageDelta.y-HandCentreY)*(1-Mathf.Exp(-dt/20f)),.55f,.85f);float u=Mathf.Clamp(imageDelta.x/HandRangeX,-1.05f,1.05f),v=Mathf.Clamp((imageDelta.y+HandCentreY-.5f)/HandRangeY,-1.05f,1.05f);
   var dir=view.TransformDirection(new Vector3(u*tanH,v*tanV-.05f,1)).normalized;
   var restLocal=LeftSelected?_leftRest:_rightRest;float rest=Mathf.Clamp(Vector3.Distance(eye,parent!=null?parent.TransformPoint(restLocal):restLocal),.25f,.6f);
   int count=Physics.RaycastNonAlloc(eye,dir,_reachHits,1.1f,~(1<<8),QueryTriggerInteraction.Ignore);float nearest=float.MaxValue;Collider hit=null;
@@ -188,7 +191,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(!ForceValid){_filter.Reset();ContactForceNewtons=0;}
   else if(!Hardware)ContactForceNewtons=_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);
   else if(_filteredSamples!=forceReceiver.State.SampleCount){_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples++;ContactForceNewtons=_sessionValidSamples<2?0:_filter.Push(ForceNewtons,Time.deltaTime,settings.forceSmoothingSeconds,settings.isolatedSpikeNewtons,settings.maxForceSlewNewtonsPerSecond);}
-  if(Held!=null&&Held.IsBroken){Held=null;Status="Virtual brittle object fractured — R to reset";}
+  if(Held!=null&&Held.IsBroken){Held=null;if(CameraMode)_cameraReleaseBlocked=true;Status="Virtual brittle object fractured — R to reset";}
   if(Held!=null&&ForceValid){
    if(!Hardware&&!CameraMode)_task.Step(new ForceReading(ForceNewtons,Time.realtimeSinceStartupAsDouble,true,true),Time.deltaTime);
    else if(Hardware&&_lastSamples!=forceReceiver.State.SampleCount){_task.Step(forceReceiver.Latest,Mathf.Min(.1f,(uint)((uint)forceReceiver.State.SampleMs-(uint)_lastMs)/1000f));_lastSamples=forceReceiver.State.SampleCount;_lastMs=forceReceiver.State.SampleMs;}
@@ -300,7 +303,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   double elapsed=(System.Diagnostics.Stopwatch.GetTimestamp()-before)*1000.0/System.Diagnostics.Stopwatch.Frequency;
   _contactTicks++;ContactMeanMs+= (elapsed-ContactMeanMs)/_contactTicks;ContactMaxMs=Math.Max(ContactMaxMs,elapsed);
   if(Held==null)return;
-  if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;_velocity=Vector3.zero;_task.Reset();return;}
+  // Ended elsewhere (placed by an activity, deactivated): a still-closed camera hand must open before it grabs again (live
+  // Hand Lab 2026-11-19: the cup was placed and the closed hand at once picked up the tray under it).
+  if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;if(CameraMode)_cameraReleaseBlocked=true;_velocity=Vector3.zero;_task.Reset();return;}
 
   if(!TrySafeGripTarget(Held,out var requested)){_velocity=Vector3.zero;return;}
   // Stage 8: a fast hand cannot make the held object jump, snap or tunnel.
@@ -454,7 +459,10 @@ public sealed class ApartmentExperience:MonoBehaviour {
   // Camera hand: the object under the hand is the intent (2026-11-19: a real-hand session reaching for the plate on the
   // left picked up the cup in the middle of the view). The looked-at object helps only when the hand is within 12 cm of it.
   var looked=HandLocomotion.AimAssist?KeyboardTarget(out _):null;
-  var aimed=HandRayTarget!=null?HandRayTarget:looked!=null&&HandRayHit&&Vector3.Distance(HandRayPoint,looked.ClosestSurface(HandRayPoint))<.12f?looked:HandRayHit?null:looked;
+  // Live Hand Lab 2026-11-19: with nothing under the hand, the looked-at tray was picked up from across the table; the
+  // looked-at object now needs the virtual hand itself within 12 cm.
+  var palmAt=ActiveHand!=null?ActiveHand.transform.position:HandRayPoint;
+  var aimed=HandRayTarget!=null?HandRayTarget:looked!=null&&Vector3.Distance(palmAt,looked.ClosestSurface(palmAt))<.12f?looked:null;
   SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;bool aimedTouched=false;
   foreach(var item in objects){
    if(!CanReach(item))continue;

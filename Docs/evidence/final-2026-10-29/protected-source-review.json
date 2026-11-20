@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "371cf0affc4302fc995d567a04b6e197ba78e560f2a5a323162093dd1d9a210d",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Hand mapping (2026-11-19, Hand Lab on a real hand): automatic depth along the eye-to-hand line with edge-jump hysteresis and a 0.8 m/s cap, screen mapping centred on the measured resting wrist, the object under the hand is the grab target."
+      "currentSha256": "aa6de7daed3fbbd24a79f62c815f7f37365be79a19ff1d730e458ef395e72f67",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Hand mapping (2026-11-20, second live Hand Lab session): the centre row follows where the hand works (20 s average), the looked-at object is grabbed only with the virtual hand within 12 cm, and a hold ended by an activity or a break needs the hand opened before the next grab."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
