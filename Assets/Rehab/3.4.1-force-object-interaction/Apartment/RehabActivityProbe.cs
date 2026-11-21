@@ -46,6 +46,7 @@ namespace GripRehab
         static float IntentTremor => Intent ? Arg("-intent-tremor", .008f) : 0f;
         static bool HandReach => Camera;
         readonly System.Random shake = new System.Random(7);
+        SqueezableObject swapped; // intent mode: the equal item actually held for this step
         float closure; bool sending; long sequence;
         // Tea: the synthetic hand's wrist roll (degrees), lift toward the top of the image (0..1) and an injected tremor.
         float roll, lift, tremorMm, tremorHz = 6;
@@ -275,6 +276,8 @@ namespace GripRehab
             {
                 case ProbeStep.Kind.Place:
                 case ProbeStep.Kind.Grab:
+                    swapped = null;
+                    if (Intent && step.item.snappedTo != null && app.Held == null) { run.notes += step.item.Item.displayName + " already placed (an equal choice earlier): step done | "; break; }
                     if (app.Held != step.item.Item)
                     {
                         // Open the hand first, as a patient does: after the game releases an object (activity end), a hand
@@ -293,7 +296,7 @@ namespace GripRehab
                             if (app.Held != null) { var eye = app.player.view.transform.position; var surface = step.item.Item.ClosestSurface(eye);
                                 run.notes += "look shifted (got " + app.Held.displayName + ", intent=" + (app.Intent.TargetId >= 0 ? app.Intent.TargetId.ToString() : "-") + " conf " + app.Intent.Confidence.ToString("0.00") + " under=" + (app.HandRayTarget != null ? app.HandRayTarget.displayName : "-") + ", reach=" + Diag(app, "CanReach", step.item.Item) + ", blocker=" + (Physics.Raycast(eye, (surface - eye).normalized, out var blockHit, Vector3.Distance(eye, surface) + .01f, ~(1 << 8), QueryTriggerInteraction.Ignore) ? blockHit.collider.name + "<" + (blockHit.collider.transform.parent != null ? blockHit.collider.transform.parent.name : "") + "> layer " + LayerMask.LayerToName(blockHit.collider.gameObject.layer) + " at " + blockHit.distance.ToString("0.00") + "/" + Vector3.Distance(eye, surface).ToString("0.00") : "none") + ") | "; }
                         }
-                        if (app.Held != step.item.Item) { run.failedGrabs++; run.notes += "want=" + step.item.Item.displayName + " held=" + (app.Held != null ? app.Held.displayName : "none") + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed + " dist=" + Vector3.Distance(app.player.view.transform.position, step.item.transform.position).ToString("0.00") + " status=" + app.Status + " | "; yield break; }
+                        if (app.Held != step.item.Item && !(swapped != null && app.Held == swapped)) { run.failedGrabs++; run.notes += "want=" + step.item.Item.displayName + " held=" + (app.Held != null ? app.Held.displayName : "none") + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed + " dist=" + Vector3.Distance(app.player.view.transform.position, step.item.transform.position).ToString("0.00") + " status=" + app.Status + " | "; yield break; }
                         yield return new WaitForSecondsRealtime(.5f);
                     }
                     if (step.kind == ProbeStep.Kind.Place && HandReach)
@@ -347,6 +350,10 @@ namespace GripRehab
         Vector3 ActivityCentre() { var items = runner.Current.items.Where(i => i != null).ToList(); return items.Count == 0 ? app.player.view.transform.position + app.player.view.transform.forward : items.Aggregate(Vector3.zero, (a, i) => a + i.transform.position) / items.Count; }
         IEnumerator IntentReachTo(Vector3 world, Run run)
         {
+            // Far targets: a patient steps closer first (point-walk), to about 1 m.
+            var eye0 = app.player.view.transform.position; var flat = world - eye0; flat.y = 0;
+            if (flat.magnitude > 1.1f) run.notes += "far " + flat.magnitude.ToString("0.00") + " m seated=" + app.player.IsSeated + " | ";
+            if (flat.magnitude > 1.25f && !app.player.IsSeated) { app.player.Teleport(app.player.transform.position + flat.normalized * (flat.magnitude - 1f), app.player.transform.rotation); yield return new WaitForSecondsRealtime(.2f); run.notes += "stepped closer | "; }
             // The view rests between the activity and the target, so the target is off-centre (a real reach, not a look).
             app.player.LookAt(Vector3.Lerp(ActivityCentre(), world, .5f)); yield return new WaitForSecondsRealtime(.3f);
             var cam = app.player.view; float tanV = Mathf.Tan(cam.fieldOfView * .5f * Mathf.Deg2Rad) * .92f, tanH = tanV * cam.aspect;
@@ -362,10 +369,19 @@ namespace GripRehab
         }
         IEnumerator IntentGrab(SqueezableObject item, Run run)
         {
+            if (item.GetComponent<ActivityItem>() is ActivityItem placed && placed.snappedTo != null && Intent) { run.notes += item.displayName + " already placed (an equal choice earlier) | "; yield break; }
             yield return OpenHand(); yield return new WaitForSecondsRealtime(.4f);
             yield return IntentReachTo(item.transform.position, run);
+            run.notes += "before close: intent=" + (app.IntentItem != null ? app.IntentItem.displayName : "-") + " conf " + app.Intent.Confidence.ToString("0.00") + " under=" + (app.HandRayTarget != null ? app.HandRayTarget.displayName : "-") + " | ";
             yield return CloseUntilHeld(item, 3f);
-            if (app.Held != null && app.Held != item) run.notes += "intent WRONG GRAB " + app.Held.displayName + " for " + item.displayName + " | ";
+            if (app.Held != null && app.Held != item)
+            {
+                // An equal choice (another vegetable for the same pan) is a valid move for the activity, not a wrong grab.
+                var want = item.GetComponent<ActivityItem>(); var got = app.Held.GetComponent<ActivityItem>();
+                bool equal = Intent && want != null && got != null && got.snappedTo == null && runner.Current.targets.Any(t => t.accepts != null && t.accepts(want) && t.accepts(got) && !t.Full && runner.Current.Allows(got, t));
+                run.notes += (equal ? "equal choice " : "intent WRONG GRAB ") + app.Held.displayName + " for " + item.displayName + " | ";
+                if (equal) { swapped = app.Held; yield break; }
+            }
             wantDx = wantDy = 0;
         }
 

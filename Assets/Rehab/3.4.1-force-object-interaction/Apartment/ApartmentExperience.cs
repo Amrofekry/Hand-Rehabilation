@@ -94,7 +94,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  Activity _volumesFor;PlacementVolume[] _volumes=new PlacementVolume[0];SnapTarget[] _volumePlaces=new SnapTarget[0];
  readonly SnapTarget _pourPlace=new SnapTarget{id="pour",label="cup",capacity=int.MaxValue};
  // Place assist on the object itself (2026-11-21): while the assist is set on a place (Medium, High), the held object is
- // moved by its remaining error to it (eased over 0.15 s, at most 35 cm), since a held object goes exactly where it is
+ // moved by its remaining error to it (eased over 0.15 s, at most 50 cm), since a held object goes exactly where it is
  // requested each physics step. Steering it through the hand fell 8-25 cm short (depth lag, how it hangs in the hand).
  Vector3 _placeOffset;SqueezableObject _placeOffsetFor;
  // The held object's remaining error to the intended place (the teapot: its spout's error to the cup).
@@ -118,6 +118,14 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public void CountAssistedPlacement(){IntentAssistedPlacements++;}
  // Candidate screen point in the hand mapping's units (u, v: -1..1 at the view edges); false when behind or far off screen.
  bool ScreenPoint(Transform view,Vector3 world,float tanH,float tanV,out float u,out float v){var l=view.InverseTransformPoint(world);u=v=0;if(l.z<.08f)return false;u=l.x/(l.z*tanH);v=(l.y/l.z+.05f)/tanV;return Mathf.Abs(u)<1.4f&&Mathf.Abs(v)<1.4f;}
+ // What the activity needs now weighs the guess: an item with a place the rules accept now is likely next (3), one with
+ // places that are not open yet is unlikely (.3), a tool with no place is neutral (1), one already on its place rare (.25).
+ static float ItemPrior(Activity act,ActivityItem a){
+  bool any=false; // an open place the rules accept now comes first, even for an item already on a place (plate to serve)
+  for(int i=0;i<act.targets.Count;i++){var t=act.targets[i];if(t==null||t==a.snappedTo||t.accepts!=null&&!t.accepts(a))continue;any=true;if(!t.Full&&act.Allows(a,t))return 3f;}
+  return a.snappedTo!=null?.25f:any?.3f:1f;}
+ /// <summary>The assist's best guess of the object wanted, even below the confidence that engages it (null if none).</summary>
+ public SqueezableObject IntentBestItem=>Held==null&&Intent.Target>=0&&Intent.TargetId>=0&&Intent.TargetId<IntentAssist.MaxCandidates?_intentItems[Intent.TargetId]:null;
  void FeedIntent(Transform view,float tanH,float tanV){
   // Placing: every listed place accepts the held object, so the nearest is never a wrong choice (bookshelf slots).
   // Placing is judged to a few centimetres, so near a confident place the pull completes from farther (snap radius).
@@ -128,7 +136,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
    // Objects to pick up: an activity's items (unplaced ones first), else the room's objects within reach.
    int n=0;
    if(act!=null){for(int i=0;i<act.items.Count&&n<IntentAssist.MaxCandidates;i++){var a=act.items[i];if(a==null)continue;var it=a.Item;if(it==null||!it.gameObject.activeInHierarchy||it.IsBroken)continue;
-     if(ScreenPoint(view,it.transform.position,tanH,tanV,out float cu,out float cv)){_intentItems[n]=it;Intent.AddCandidate(n,cu,cv,a.snappedTo==null?2f:.4f);n++;}}}
+     if(ScreenPoint(view,it.transform.position,tanH,tanV,out float cu,out float cv)){_intentItems[n]=it;Intent.AddCandidate(n,cu,cv,ItemPrior(act,a));n++;}}}
    else{for(int i=0;i<objects.Length&&n<IntentAssist.MaxCandidates;i++){var it=objects[i];if(it==null||!it.gameObject.activeInHierarchy||it.IsBroken||Vector3.Distance(eye,it.transform.position)>1.3f)continue;
      if(ScreenPoint(view,it.transform.position,tanH,tanV,out float cu,out float cv)){_intentItems[n]=it;Intent.AddCandidate(n,cu,cv,1f);n++;}}}
   } else if(act is TeaActivity tea&&tea.tea!=null&&Held.GetComponent<PourVessel>() is PourVessel pot&&pot.teapot&&tea.tea.CupMl<tea.tea.TargetMl*.9f){
@@ -159,6 +167,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  }
  /// <summary>The object under the camera hand (on the eye-to-hand line or within 10 cm of where it meets a surface); null if none.</summary>
  public SqueezableObject HandRayTarget{get;private set;}
+ SqueezableObject _underPending;float _underSince,_underSeen;
  /// <summary>Where the eye-to-hand line meets the first surface (valid when HandRayHit).</summary>
  public Vector3 HandRayPoint{get;private set;}public bool HandRayHit{get;private set;}
  private void UpdateReach(float dt){
@@ -185,7 +194,13 @@ public sealed class ApartmentExperience:MonoBehaviour {
   SqueezableObject under=hit!=null?hit.GetComponentInParent<SqueezableObject>():null;
   if(under!=null&&System.Array.IndexOf(objects,under)<0)under=null;
   if(under==null&&HandRayHit){float best=.10f;foreach(var item in objects){if(item==null||item==Held||!item.gameObject.activeInHierarchy)continue;float d=Vector3.Distance(HandRayPoint,item.ClosestSurface(HandRayPoint));if(d<best){best=d;under=item;}}}
-  HandRayTarget=Held==null?under:null;
+  // Hysteresis: tremor flicks the line between neighbours (a tomato and a mushroom); a new object counts as under the
+  // hand once it stays there 0.2 s, or at once when nothing was (intent probe 2026-11-21: the mushroom was picked up).
+  if(Held!=null){HandRayTarget=null;_underPending=null;}
+  else if(under==HandRayTarget){_underPending=null;}
+  else if(HandRayTarget==null||under==null&&Time.unscaledTime-_underSeen>.25f){HandRayTarget=under;_underPending=null;}
+  else if(under!=null){if(under!=_underPending){_underPending=under;_underSince=Time.unscaledTime;}else if(Time.unscaledTime-_underSince>=.2f){HandRayTarget=under;_underPending=null;}}
+  if(under!=null&&under==HandRayTarget)_underSeen=Time.unscaledTime;
   if(Held!=_reachHeldFor){_reachHeldFor=Held;_heldReach=float.IsFinite(_reach)?_reach:rest;}
   // Holding: the distance stays where the pickup happened (the palm-size push still moves it a little).
   var place=IntentPlace;
@@ -403,15 +418,23 @@ public sealed class ApartmentExperience:MonoBehaviour {
   // Hand Lab 2026-11-19: the cup was placed and the closed hand at once picked up the tray under it).
   if(!Held.gameObject.activeInHierarchy||!Held.IsHeld){Held=null;if(CameraMode)_cameraReleaseBlocked=true;_velocity=Vector3.zero;_task.Reset();return;}
 
-  if(!TrySafeGripTarget(Held,out var requested)){_velocity=Vector3.zero;return;}
-  // Stage 8: a fast hand cannot make the held object jump, snap or tunnel.
-  if(GraspContactSolver.Enabled)requested=ContactGeometry.Follow(_lastHeld,requested,HeldFollowSpeed,Time.fixedDeltaTime);
-  _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
-  _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
   if(_placeOffsetFor!=Held){_placeOffsetFor=Held;_placeOffset=Vector3.zero;} // a new hold starts with no offset (no jump)
   var placing=IntentPlace;
-  if(placing!=null&&Intent.Level>=AssistLevel.Medium&&(placing!=_pourPlace||_intentRunner!=null&&_intentRunner.Current is TeaActivity pr&&pr.tea!=null&&float.IsFinite(pr.tea.AimError))){
-   _placeOffset=Vector3.ClampMagnitude(_placeOffset+PlaceError(placing)*(1-Mathf.Exp(-Time.fixedDeltaTime/.15f)),.35f);requested+=_placeOffset;
+  bool assisting=placing!=null&&Intent.Level>=AssistLevel.Medium&&(placing!=_pourPlace||_intentRunner!=null&&_intentRunner.Current is TeaActivity pr&&pr.tea!=null&&float.IsFinite(pr.tea.AimError));
+  bool direct=false;
+  if(!TrySafeGripTarget(Held,out var requested)){
+   // The hand's own target is unsafe (inside the stove at full reach): while placing with the assist, the object moves
+   // from where it is toward the place instead of stopping (intent probe 2026-11-21: the pan froze 26 cm off the burner).
+   if(!assisting){_velocity=Vector3.zero;return;}
+   direct=true;_placeOffset=Vector3.zero;requested=Held.transform.position+Vector3.ClampMagnitude(PlaceError(placing)*(1-Mathf.Exp(-Time.fixedDeltaTime/.15f)),.6f*Time.fixedDeltaTime);
+  }
+  // Stage 8: a fast hand cannot make the held object jump, snap or tunnel.
+  else if(GraspContactSolver.Enabled)requested=ContactGeometry.Follow(_lastHeld,requested,HeldFollowSpeed,Time.fixedDeltaTime);
+  _velocity=GraspMotionPolicy.ReleaseVelocity(_lastHeld,requested,Time.fixedDeltaTime,settings.releaseVelocityGain,settings.maximumReleaseSpeed,settings.maximumReleaseStep);
+  _lastHeld=requested;_lastMotionTime=Time.unscaledTime;
+  if(direct){} // already moved toward the place above
+  else if(assisting){
+   _placeOffset=Vector3.ClampMagnitude(_placeOffset+PlaceError(placing)*(1-Mathf.Exp(-Time.fixedDeltaTime/.15f)),.5f);requested+=_placeOffset;
   } else if(_placeOffset!=Vector3.zero){_placeOffset=Vector3.MoveTowards(_placeOffset,Vector3.zero,.6f*Time.fixedDeltaTime);requested+=_placeOffset;}
   var heldRotation=_hasGripRotation?_gripRotation:GraspMotionPolicy.HeldRotation(ActiveHand.transform.rotation,_heldRotationOffset);
   if(HeldOriented){var pivot=requested+heldRotation*HeldTiltPivotLocal;if(HeldPivotBlend>0)pivot=Vector3.Lerp(pivot,HeldPivotWorld,HeldPivotBlend);heldRotation=HeldOrientation;requested=pivot-heldRotation*HeldTiltPivotLocal;}
@@ -453,6 +476,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   return target;
  }
  // Asset pivots need not lie on their usable surface; include child colliders.
+ // The assist's intent needs only distance: its candidates are already on screen, and a tomato half behind the knife
+ // failed the eye's visibility test, so the knife under the hand was picked up instead (intent probe 2026-11-21).
+ bool InReach(SqueezableObject item)=>item!=null&&item.gameObject.activeInHierarchy&&!item.IsBroken&&item.HasPickupCollider&&(item.ClosestSurface(player.view.transform.position)-player.view.transform.position).magnitude<=settings.reachMeters;
  private bool CanReach(SqueezableObject item){
   if(item==null||!item.gameObject.activeInHierarchy||item.IsBroken||!item.HasPickupCollider)return false;
   var eye=player.view.transform.position;var point=item.ClosestSurface(eye);
@@ -566,9 +592,13 @@ public sealed class ApartmentExperience:MonoBehaviour {
   // Live Hand Lab 2026-11-19: with nothing under the hand, the looked-at tray was picked up from across the table; the
   // looked-at object now needs the virtual hand itself within 12 cm.
   var palmAt=ActiveHand!=null?ActiveHand.transform.position:HandRayPoint;
-  var intent=IntentItem!=null&&CanReach(IntentItem)?IntentItem:null;
+  var intent=IntentItem!=null&&InReach(IntentItem)?IntentItem:null;
   // A confident intent (from the whole reach) wins over whatever the hand stopped above; otherwise the object under the hand.
-  var aimed=intent!=null&&Intent.Confidence>=.6f?intent:HandRayTarget!=null?HandRayTarget:intent!=null?intent:looked!=null&&Vector3.Distance(palmAt,looked.ClosestSurface(palmAt))<.12f?looked:null;
+  // An object already set on its place (a plate on its mat) is rarely the next one wanted: a weaker intent wins over it.
+  var underPlaced=HandRayTarget!=null&&HandRayTarget.GetComponent<ActivityItem>() is ActivityItem placedItem&&placedItem.snappedTo!=null;
+  var guess=IntentBestItem!=null&&IntentBestItem!=HandRayTarget&&InReach(IntentBestItem)&&Intent.TargetDistance<=Intent.captureRadius?IntentBestItem:null;
+  if(intent==null&&underPlaced&&guess!=null&&Intent.Confidence>=.35f)intent=guess;
+  var aimed=intent!=null&&(Intent.Confidence>=.6f||underPlaced&&Intent.Confidence>=.35f)?intent:HandRayTarget!=null?HandRayTarget:intent!=null?intent:looked!=null&&Vector3.Distance(palmAt,looked.ClosestSurface(palmAt))<.12f?looked:null;
   bool intentHelped=aimed!=null&&aimed==intent&&(Intent.Pulling||Intent.CloseFactor<1f||HandRayTarget==null);
   SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;bool aimedTouched=false;
   foreach(var item in objects){
@@ -581,7 +611,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
     if(item==aimed&&distance<settings.cameraGrabRadiusMeters)aimedTouched=true;
    }
   }
-  if(aimed!=null&&TryGrab(aimed)){
+  if(aimed!=null&&TryGrab(aimed,aimed==intent||aimed==HandRayTarget)){
    // Counted separately when no fingertip reached it, so assisted pickups are never mistaken for physical reach.
    if(intentHelped)IntentAssistedGrabs++;
    if(!aimedTouched){AssistedGrabs++;Status="Camera grip (aim assist): holding "+aimed.displayName;}else Status="Camera grip: holding "+aimed.displayName;
@@ -626,9 +656,12 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(door==null)return false;
   door.Toggle();return true;
  }
- public bool TryGrab(SqueezableObject item){
+ public bool TryGrab(SqueezableObject item)=>TryGrab(item,false);
+ /// <summary>onScreen: the object is the assist's choice or under the camera hand, so distance alone decides reach (the
+ /// eye's visibility test refused a half-hidden tomato and the fingertip fallback took its neighbour).</summary>
+ public bool TryGrab(SqueezableObject item,bool onScreen){
   if(item==null||Held!=null||item.IsBroken||player.Paused||Hardware&&!forceReceiver.Latest.Valid||CameraMode&&!ForceValid)return false;
-  if(!CanReach(item)||!BeginGrab(item,false))return false;
+  if(!(onScreen?InReach(item):CanReach(item))||!BeginGrab(item,false))return false;
   var grip=HeldGrip;
   Status="Holding "+item.displayName+(grip!=null?"  -  "+grip.number+". "+grip.name+" ("+grip.fingers+")":"")+
    (item.Material!=null?"  -  "+item.Material.name+", "+ApartmentChoices.ClassName(item.Material.materialClass)+", "+item.Material.result.ToString().ToLowerInvariant():"");return true;

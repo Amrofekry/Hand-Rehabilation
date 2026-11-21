@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "6b9f08212559c50b05593b74aae3b632d527d64f67a1f151ae03e98c70ca8656",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Movement assist (2026-11-21): IntentAssist candidates (items, rule-accepted places, box, teapot pour), pull and depth, partial-close grab, confident intent over the hand's stop point, object-level place correction, camera hand reach = game reach, assisted grabs and placements counted apart."
+      "currentSha256": "a3f76027645025e904e8607b741d60c75c0d8b976e6654c1722207079f835134",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Movement assist (2026-11-21): needs-now priors, best-guess over an already-placed object, under-hand hysteresis, on-screen grabs use distance only, placing continues when the hand target is unsafe, 50 cm place cap."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
