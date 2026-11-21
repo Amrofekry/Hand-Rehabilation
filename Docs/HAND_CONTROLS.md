@@ -15,6 +15,16 @@
 - HAND REACH: LOW / NORMAL / HIGH.
 - HAND STEADINESS: RESPONSIVE / BALANCED / STEADY.
 - AIM ASSIST: ON (default) / OFF.
+- MOVEMENT ASSIST (CAMERA): OFF / LOW / MEDIUM (default) / HIGH, also by voice ("assist off / low / medium / high"). 2026-11-21.
+  - **What it reads:** where the hand is heading, how near it is, and what the activity accepts now. From these it predicts the object or the place the hand is going for.
+  - **When it is confident and the hand is near, it helps finish the move:**
+    - pulls the hand the rest of the way;
+    - sets front/back depth automatically;
+    - grabs with a partial close;
+    - sets the held object onto the place, and releases with a partial opening (within 5 / 12 / 20 cm at Low / Medium / High; High also turns it to match);
+    - for the teapot, brings the spout over the cup.
+  - **Smaller real movements** cover the screen on Medium and High.
+  - **Records:** assisted grabs and placements are counted apart from the patient's own reach, with the level, in every activity result.
 - RECALIBRATE CAMERA HAND: also the C key or voice "recenter hand".
 
 The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measurements are in `Docs/HAND_CONTROL_REPORT.md`.
