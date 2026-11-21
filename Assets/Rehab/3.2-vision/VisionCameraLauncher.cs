@@ -18,14 +18,21 @@ namespace GripRehab
         public bool usePhone;
         public string phoneFacing = "back", phoneSize = "1280x720";
         [Range(15, 240)] public int phoneFps = 60;
-        /// <summary>Saved camera choice: 0 laptop webcam, 1 phone over USB, 2 phone through Windows Phone Link (2026-11-21).</summary>
+        /// <summary>Saved camera choice: 0 laptop webcam, 1 phone over USB, 2 phone through Windows Phone Link (2026-11-21),
+        /// 3 phone through the Camo app, the default (2026-11-21, the user's choice; the laptop webcam takes over when Camo is not
+        /// connected, so a PC without Camo plays with its webcam).</summary>
         public const string PhonePrefKey = "GripRehab.CameraSource.Phone";
-        public static readonly string[] SourceNames = { "LAPTOP WEBCAM", "PHONE (USB)", "PHONE (PHONE LINK)" };
-        public static int SavedSource { get => Mathf.Clamp(PlayerPrefs.GetInt(PhonePrefKey, 0), 0, 2); set => PlayerPrefs.SetInt(PhonePrefKey, Mathf.Clamp(value, 0, 2)); }
-        public bool PhoneSelected => usePhone || HasArg("-vision-phone") || SavedSource == 1;
-        public bool PhoneLinkSelected => !PhoneSelected && (HasArg("-vision-phone-link") || SavedSource == 2);
+        public static readonly string[] SourceNames = { "LAPTOP WEBCAM", "PHONE (USB)", "PHONE (PHONE LINK)", "PHONE (CAMO)" };
+        public static int SavedSource { get => Mathf.Clamp(PlayerPrefs.GetInt(PhonePrefKey, 3), 0, 3); set => PlayerPrefs.SetInt(PhonePrefKey, Mathf.Clamp(value, 0, 3)); }
+        /// <summary>Tests that need a given camera index (the fault probe's missing camera 9) set this to ignore the saved choice.</summary>
+        public bool forceCameraIndex;
+        public bool PhoneSelected => !forceCameraIndex && (usePhone || HasArg("-vision-phone") || SavedSource == 1);
+        public bool PhoneLinkSelected => !forceCameraIndex && !PhoneSelected && !CamoSelected && (HasArg("-vision-phone-link") || SavedSource == 2);
+        public bool CamoSelected => !forceCameraIndex && !PhoneSelected && (HasArg("-vision-camo") || SavedSource == 3 && !HasArg("-vision-phone-link"));
         [Tooltip("Part of the Windows camera name of the phone's connected camera in Phone Link.")]
         public string phoneLinkCameraName = "Windows Virtual Camera";
+        [Tooltip("Part of the Windows camera name of the Camo virtual camera (Reincubate Camo).")]
+        public string camoCameraName = "Camo";
         [Tooltip("Mirror a front-facing webcam before MediaPipe so Right/Left match the patient.")]
         public bool mirror = true;
         [Tooltip("Swap MediaPipe RIGHT/LEFT labels when this webcam reports the opposite physical hand. Enabled for the current laptop camera.")]
@@ -61,6 +68,7 @@ namespace GripRehab
         {
             if (IsRunning) return;
             StopWorker();
+            if (CamoSelected) StartCamoApp(); // Camo's camera streams only while its PC app runs
             projectRoot = FindProjectRoot();
             if (projectRoot == null) { Fail("Tools/Vision not found next to the project/build"); return; }
             var python = Path.Combine(projectRoot, ".venv", "Scripts", "python.exe");
@@ -149,8 +157,10 @@ namespace GripRehab
         string SourceArguments()
         {
             var c = System.Globalization.CultureInfo.InvariantCulture;
+            if (CamoSelected)
+                return " --camera-name " + Quote(SafeName(camoCameraName)) + " --fallback-webcam --fallback-camera " + cameraIndex;
             if (PhoneLinkSelected)
-                return " --camera-name " + Quote(System.Text.RegularExpressions.Regex.Replace(phoneLinkCameraName ?? "", "[^A-Za-z0-9 ()_.-]", ""));
+                return " --camera-name " + Quote(SafeName(phoneLinkCameraName));
             if (!PhoneSelected)
                 return " --camera " + cameraIndex + (lowLatencyCapture ? " --low-latency --exposure " + manualExposure.ToString(c) : "");
             // Only safe values reach the command line (they are passed to the phone's shell by the bridge, which checks again).
@@ -158,6 +168,50 @@ namespace GripRehab
             string size = System.Text.RegularExpressions.Regex.IsMatch(phoneSize ?? "", @"^[1-9]\d{1,4}x[1-9]\d{1,4}$") ? phoneSize : "1280x720";
             return " --phone --phone-facing " + facing + " --phone-size " + size + " --phone-fps " + Mathf.Clamp(phoneFps, 15, 240).ToString(c);
         }
+        static string SafeName(string name) => System.Text.RegularExpressions.Regex.Replace(name ?? "", "[^A-Za-z0-9 ()_.-]", "");
+
+        /// <summary>Camo: the PC app (Camo Studio) must run for its camera to stream; start it if it is installed and not running.</summary>
+        public static bool StartCamoApp()
+        {
+            try
+            {
+                foreach (var p in Process.GetProcesses())
+                {
+                    string n; try { n = p.ProcessName; } catch { continue; } finally { p.Dispose(); }
+                    if (n.IndexOf("Camo", StringComparison.OrdinalIgnoreCase) >= 0) return true;
+                }
+                var exe = FindCamoApp();
+                if (exe == null) return false;
+                Process.Start(new ProcessStartInfo { FileName = exe, UseShellExecute = true, WindowStyle = ProcessWindowStyle.Minimized });
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
+        static string FindCamoApp()
+        {
+            string[] roots = { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs") };
+            foreach (var root in roots)
+            {
+                if (string.IsNullOrEmpty(root) || !Directory.Exists(root)) continue;
+                foreach (var vendor in new[] { "Reincubate", "Camo", "camo" })
+                {
+                    var dir = Path.Combine(root, vendor);
+                    if (!Directory.Exists(dir)) continue;
+                    try
+                    {
+                        foreach (var file in Directory.GetFiles(dir, "Camo*.exe", SearchOption.AllDirectories))
+                        {
+                            var name = Path.GetFileNameWithoutExtension(file);
+                            if (name.IndexOf("uninst", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("update", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("helper", StringComparison.OrdinalIgnoreCase) < 0) return file;
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+            return null;
+        }
+
         void OnDisable() { StopWorker(); }
         void OnApplicationQuit() { StopWorker(); }
         void Fail(string reason) { State = "FAILED"; LastError = reason; UnityEngine.Debug.LogError("[VISION_CAMERA] " + reason); }

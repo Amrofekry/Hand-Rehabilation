@@ -19,6 +19,9 @@ def parse_args() -> argparse.Namespace:
     source.add_argument("--camera", type=int, default=0, help="Local camera index (default: 0)")
     source.add_argument("--video", type=Path, help="Local video file instead of a camera")
     source.add_argument("--camera-name", help="Pick the camera whose Windows name contains this text, e.g. 'Windows Virtual Camera' (the phone through Phone Link)")
+    parser.add_argument("--fallback-webcam", action="store_true", help="If no camera matches --camera-name, use --camera (the laptop webcam) instead of stopping")
+    parser.add_argument("--fallback-camera", type=int, default=0, help="Webcam index used by --fallback-webcam")
+    parser.add_argument("--camera-fps", type=int, default=30, help="Frame rate requested from a camera picked by name")
     source.add_argument("--phone", action="store_true", help="Android phone camera over USB (adb + scrcpy-server); see phone_camera.py")
     parser.add_argument("--phone-facing", default="back", choices=("back", "front", "external"))
     parser.add_argument("--phone-size", default="1280x720", help="Phone camera size WxH")
@@ -145,17 +148,19 @@ def main() -> None:
             except Exception as error:  # a plain reason for the game's camera message (no phone, not authorised, ...)
                 print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':-1,'detail':str(error)}), flush=True)
                 raise SystemExit(f"Phone camera: {error}")
-        elif args.camera_name:
-            # Phone Link's connected camera (or any camera) by name, so the index never has to be guessed.
-            index = find_camera(args.camera_name)
-            if index is None:
-                print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':-1,'detail':f"No camera named '{args.camera_name}': open Phone Link and turn on the phone's connected camera."}), flush=True)
-                raise SystemExit(f"No camera named {args.camera_name}")
+        elif args.camera_name and (index := find_camera(args.camera_name)) is not None:
+            # A phone app's camera (Camo, Phone Link) by name, so the index never has to be guessed.
             capture = cv2.VideoCapture(index, cv2.CAP_DSHOW)
             capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
             capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-            capture.set(cv2.CAP_PROP_FPS, 30)
+            capture.set(cv2.CAP_PROP_FPS, max(15, min(60, args.camera_fps)))
+        elif args.camera_name and not args.fallback_webcam:
+            print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':-1,'detail':f"No camera named '{args.camera_name}': start the phone camera app (Camo or Phone Link) on the phone and the PC."}), flush=True)
+            raise SystemExit(f"No camera named {args.camera_name}")
         else:
+            if args.camera_name:  # not connected: the laptop webcam keeps the game playable
+                print(f"VISION_NOTE no camera named '{args.camera_name}': using the laptop webcam", flush=True)
+                args.camera_name = None; args.camera = args.fallback_camera
             # DirectShow avoids the long MSMF startup/stall seen on some Windows webcams.
             capture = (cv2.VideoCapture(str(args.video)) if args.video else
                        cv2.VideoCapture(args.camera, cv2.CAP_DSHOW if __import__("sys").platform == "win32" else cv2.CAP_ANY))

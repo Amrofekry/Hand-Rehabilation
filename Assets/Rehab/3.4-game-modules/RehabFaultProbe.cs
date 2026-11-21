@@ -83,7 +83,7 @@ namespace GripRehab
         IEnumerator CameraCannotOpen()
         {
             var launcher = app.cameraLauncher; float t0 = Time.unscaledTime;
-            app.SetCameraMode(); launcher.cameraIndex = 9; launcher.EnsureStarted();
+            app.SetCameraMode(); launcher.cameraIndex = 9; launcher.forceCameraIndex = true; launcher.EnsureStarted();
             float end = Time.realtimeSinceStartup + 40;
             while (Time.realtimeSinceStartup < end && launcher.State != "FAILED") yield return null;
             yield return new WaitForSecondsRealtime(.5f);

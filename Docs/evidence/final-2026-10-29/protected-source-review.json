@@ -108,8 +108,8 @@
     },
     "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs": {
       "previousSha256": "72f983f608eafb5e88b772cb630c5adf80fab5460dfc43f84b07716a6fbd1f80",
-      "currentSha256": "b9c2e6c23fe8d5c74c68db615c3ea490d8cec84376d9b305bfedda891acbb9c7",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Phone Link camera (2026-11-21): third camera source PHONE (PHONE LINK), passed to the bridge by camera name (filtered characters)."
+      "currentSha256": "a06da5826c9404a13827d35a8604ca00b2cbc260917b84bb6c54860a3ac7f701",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-21: Camo is the default camera choice, laptop webcam fallback by index option"
     }
   }
 }
