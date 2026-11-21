@@ -25,6 +25,20 @@
     - for the teapot, brings the spout over the cup.
   - **Smaller real movements** cover the screen on Medium and High.
   - **Records:** assisted grabs and placements are counted apart from the patient's own reach, with the level, in every activity result.
+  - **Tools by themselves (Medium, High):**
+    - the knife held over the cucumber cuts the next even slice every 0.8 s;
+    - the knife by the tomato cuts it in half;
+    - the spoon over the pan stirs until cooked.
+
+    No squeeze or chopping motion is needed; these are counted as assisted tool actions.
+- HAND DEPTH (CAMERA): MOVE TOWARD / AWAY FROM THE CAMERA (default) / AUTOMATIC. 2026-11-21.
+  - **What it does:** bring the hand nearer the camera and the virtual hand moves forward (up to 55 cm); move it away and the virtual hand comes back (15 cm).
+  - **How:** the depth is how big the hand looks. Palm size and MediaPipe's 3D bone lengths are combined, so a tilted hand fools it less. It is smoothed, and it holds while the hand sweeps across the picture.
+  - **Limits:** surfaces still stop the hand 3 cm short. When the assist is sure of an object, depth moves most of the way to it.
+  - **AUTOMATIC:** keeps the hand on whatever is under it.
+- CAMERA: LAPTOP WEBCAM / PHONE (USB) / PHONE (PHONE LINK).
+  - **Phone Link:** uses the phone's connected camera through Windows Phone Link, with no cable. Turn on the connected camera in Phone Link on the phone first.
+  - **Details:** [PHONE_CAMERA](PHONE_CAMERA.md).
 - RECALIBRATE CAMERA HAND: also the C key or voice "recenter hand".
 
 The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measurements are in `Docs/HAND_CONTROL_REPORT.md`.
