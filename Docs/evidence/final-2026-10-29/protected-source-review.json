@@ -8,8 +8,8 @@
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
-      "currentSha256": "3ef0681630cd6cf9ddc16c94a887b9e7fe5e1f4aa1fb79227d0f359894402a01",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Hand mapping (2026-11-19, Hand Lab on a real hand): HasOverrideTarget/OverrideTargetLocal let the caller place the camera hand (automatic depth), still One Euro filtered; LastImageDelta exposes the wrist image offset."
+      "currentSha256": "16e3c7f5837d89a756386268360caab3d8e22502c19acbe27b7e593506212ccf",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-22: camera hand takes the measured orientation unlimited (a 180 degree limit path was ambiguous)"
     },
     "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs": {
       "previousSha256": "ea2faf1c7d6e8e89e5f1887bfd524dbc2fd5a39c7bf5965548bd88014eadb5de",

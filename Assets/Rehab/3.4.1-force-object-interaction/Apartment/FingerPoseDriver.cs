@@ -26,6 +26,10 @@ namespace GripRehab
         public Vector3 spreadAxis = Vector3.up;
         [Range(0, 1)] public float palmRotationWeight = 1f;
         [Range(0, 180)] public float maxPalmRotationDegrees = 160;
+        // Camera hand (2026-11-22): the virtual hand takes the measured orientation, unlimited (a palm-up hand is 180 degrees
+        // from upright, where a limit has no single shortest path and turned the hand onto its side). Smoothing (frame to
+        // frame) still removes the tracker's jitter.
+        [Range(0, 1)] public float cameraPalmRotationWeight = 1f;
         [Header("Tracking loss")]
         [Tooltip("If false, blend to the visible demo/rest pose when this hand disappears.")]
         public bool holdLastTrackedPoseOnLoss = false;
@@ -231,10 +235,23 @@ namespace GripRehab
                     ? Quaternion.AngleAxis(180f, Vector3.up) *
                       Quaternion.AngleAxis(180f, Vector3.forward) * _rootRest
                     : _rootRest;
-                var measured = currentBasis * Quaternion.Inverse(_cameraPalmReference) * poseRest;
-                var limited = Quaternion.RotateTowards(poseRest, measured, float.IsFinite(maxPalmRotationDegrees)?Mathf.Clamp(maxPalmRotationDegrees,0,180):160);
-                transform.localRotation = Quaternion.Slerp(transform.localRotation,
-                    Quaternion.Slerp(poseRest, limited, float.IsFinite(palmRotationWeight)?Mathf.Clamp01(palmRotationWeight):1), alpha);
+                // Camera mode: absolute orientation (2026-11-22, live Camo test: the hand looked sideways and showed its palm). The
+                // pose points are already in the patient's frame (mirrored x = their right, -z = toward the camera = forward), so
+                // the reference is fixed: fingers up, palm toward the camera, seen from behind the hand (back of the hand toward
+                // the eyes; index-to-little-finger points to the patient's left for a right hand). The old reference was the pose
+                // the hand happened to have when it first appeared, so a hand that entered tilted stayed tilted.
+                var reference = _cameraPalmReference;
+                if (absoluteImageSpace && HandKinematics.TryPalmBasis(new Vector3(HandKinematics.IsLeft(frame) ? 1f : -1f, 0, 0), Vector3.up, out var upright)) reference = upright;
+                var measured = currentBasis * Quaternion.Inverse(reference) * poseRest;
+                Quaternion want;
+                if (absoluteImageSpace && float.IsFinite(cameraPalmRotationWeight) && cameraPalmRotationWeight >= .999f) want = measured;
+                else
+                {
+                    float weight = absoluteImageSpace ? cameraPalmRotationWeight : palmRotationWeight;
+                    var limited = Quaternion.RotateTowards(poseRest, measured, float.IsFinite(maxPalmRotationDegrees)?Mathf.Clamp(maxPalmRotationDegrees,0,180):160);
+                    want = Quaternion.Slerp(poseRest, limited, float.IsFinite(weight)?Mathf.Clamp01(weight):1);
+                }
+                if (HandRigRules.TryRotation(want, out var safeWant)) transform.localRotation = Quaternion.Slerp(transform.localRotation, safeWant, alpha);
             }
             else
             {

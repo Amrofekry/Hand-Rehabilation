@@ -110,6 +110,8 @@ namespace GripRehab
                     // Replay only: a few screenshots per step (the game view, never the camera image) to see the hand.
                     if (Replay && (step == 1 || step >= 6 && step <= 8) && Time.realtimeSinceStartup - stepStarted > 2 + shot * 3 && shot < 4)
                     { shot++; ScreenCapture.CaptureScreenshot(Path.GetFullPath(Path.Combine(dir, "step" + step + "-" + shot + ".png"))); }
+                    // Replay only: a screenshot on request (Tools/hand_pose_check.py writes <name>.shot; the game view only).
+                    if (Replay && Time.realtimeSinceStartup >= nextShotLook) { nextShotLook = Time.realtimeSinceStartup + .2f; foreach (var req in Directory.GetFiles(dir, "*.shot")) { ScreenCapture.CaptureScreenshot(Path.ChangeExtension(Path.GetFullPath(req), ".png")); File.Delete(req); } }
                     Show((step + 1) + " / " + Steps.Length + "   " + s.text + (name.Length > 0 ? "  (" + name + ")" : "") + "\n" + Mathf.CeilToInt(s.seconds - (Time.realtimeSinceStartup - stepStarted)) + " s");
                     yield return null;
                 }
@@ -117,6 +119,7 @@ namespace GripRehab
             Finish("complete");
         }
 
+        float nextShotLook;
         void LateUpdate()
         {
             if (csv == null || step < 0 || step >= Steps.Length || app == null) return;

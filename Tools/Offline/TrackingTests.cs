@@ -72,7 +72,9 @@ class TrackingTests
             Check(d.JointAngles[finger*3+1]>60&&others,side+" finger "+finger+" remains independent");
         }
         var recentered=Frame(left,Quaternion.AngleAxis(65,Vector3.forward));d.RecenterTracking();Settle(d,recentered);
-        Check(Quaternion.Angle(d.transform.localRotation,neutral)<.1f,side+" recalibration returns to corrected rest");
+        // 2026-11-22: camera orientation is absolute (seen from behind the hand), so recentering keeps a tilted hand tilted.
+        {var q65=Quaternion.AngleAxis(65,Vector3.forward);var turned=d.transform.localRotation*Quaternion.Inverse(neutral);
+         Check(Vector3.Distance(turned*Vector3.up,q65*Vector3.up)<.001f&&Vector3.Distance(turned*Vector3.forward,q65*Vector3.forward)<.001f,side+" recentering keeps the real tilt (absolute orientation)");}
         var bad=Frame(left,Quaternion.identity);Array.Clear(bad.worldLandmarks,0,21);Settle(d,bad);
         Check(!d.TrackingUsed,side+" collapsed palm is rejected");
         d.Pose(open,false,0,.05f,.045f,new Vector3(),.85f,true);
