@@ -45,6 +45,14 @@ class TrackingTests
     {
         string side=left?"Left":"Right";var d=Driver(authoredRest);var open=Frame(left,Quaternion.identity);
         Settle(d,open);var neutral=d.transform.localRotation;
+        // 2026-11-22 absolute orientation: a hand that first appears tilted shows upright as soon as it is upright (the old
+        // relative reference kept it tilted), and palm up (180 degrees from upright) is a clean half turn, not a sideways one.
+        {var e=Driver(authoredRest);Settle(e,Frame(left,Quaternion.AngleAxis(70,Vector3.forward)));Settle(e,open);
+         Check(Quaternion.Angle(e.transform.localRotation,neutral)<.5f,side+" a hand that enters tilted shows upright once upright: "+Quaternion.Angle(e.transform.localRotation,neutral).ToString("0.0"));
+         var palmUp=Quaternion.AngleAxis(180,Vector3.forward)*Quaternion.AngleAxis(90,Vector3.right);
+         for(int k=1;k<=10;k++)Settle(e,Frame(left,Quaternion.Slerp(Quaternion.identity,palmUp,k/10f)));
+         var turned=e.transform.localRotation*Quaternion.Inverse(neutral);
+         Check(Vector3.Distance(turned*Vector3.up,palmUp*Vector3.up)<.01f&&Vector3.Distance(turned*Vector3.forward,palmUp*Vector3.forward)<.01f,side+" palm up (a 180 degree turn) is followed fully");}
         var oldFacing=Quaternion.AngleAxis(180,Vector3.forward)*authoredRest;
         Check(Vector3.Distance(neutral*Vector3.forward,new Vector3(-(oldFacing*Vector3.forward).x,(oldFacing*Vector3.forward).y,-(oldFacing*Vector3.forward).z))<.001f,side+" turns palm/back facing over around upright Y");
         Check(Vector3.Distance(neutral*Vector3.up,new Vector3(-(oldFacing*Vector3.up).x,(oldFacing*Vector3.up).y,-(oldFacing*Vector3.up).z))<.001f,side+" rest facing retains vertical finger component");

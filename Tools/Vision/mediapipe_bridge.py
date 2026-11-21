@@ -198,6 +198,8 @@ def main() -> None:
         # waits behind an older one, and "captured" is when the frame arrived, not when tracking started on it.
         from phone_camera import LatestFrameReader
         reader = None if args.video else LatestFrameReader(capture)
+        dark_check_at, dark_since = 0.0, None
+        dark_detail = "The camera picture is black: unlock the phone and open the camera app on it (Camo or Phone Link), or check the lens."
         try:
             while args.seconds <= 0 or time.monotonic() - started < args.seconds:
                 if reader is not None:
@@ -213,6 +215,14 @@ def main() -> None:
                         status_at = time.monotonic()
                     time.sleep(0.02)  # A stalled camera must not spin a CPU core (audit A-007).
                     continue
+                # A phone camera app that pauses (Camo or Phone Link with the phone locked) still sends frames, all black: say
+                # so instead of silently finding no hand (2026-11-22, Camo test). Checked twice a second on a coarse grid.
+                if captured >= dark_check_at:
+                    dark_check_at = captured + .5
+                    if float(frame[::24, ::24].mean()) < 6:
+                        dark_since = dark_since if dark_since is not None else captured
+                    else:
+                        dark_since = None
                 if args.mirror:
                     frame = cv2.flip(frame, 1)
                 research_camera.submit(frame, captured)
@@ -280,7 +290,8 @@ def main() -> None:
                         preview_sock.sendto(jpeg.tobytes(), ("127.0.0.1", args.preview_port))
                     next_preview = now + .2
                 if now - status_at >= 1:
-                    print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':frames,'detections':detections,'fps':round(interval_frames/(now-status_at),1),'hands':interval_detections}), flush=True)
+                    dark = dark_since is not None and now - dark_since >= 2
+                    print('VISION_STATUS '+json.dumps({'state':'camera_open','camera':args.camera,'frames':frames,'detections':detections,'fps':round(interval_frames/(now-status_at),1),'hands':interval_detections,'detail':dark_detail if dark else ''}), flush=True)
                     status_at = now
                     interval_frames = interval_detections = 0
         except KeyboardInterrupt:

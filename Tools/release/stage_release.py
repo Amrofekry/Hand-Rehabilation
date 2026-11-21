@@ -23,7 +23,7 @@ SITE = ROOT / '.venv' / 'Lib' / 'site-packages'
 ISCC = ROOT / '.local' / 'innosetup' / 'ISCC.exe'
 SKIP = shutil.ignore_patterns('__pycache__', '*.pyc', '.pytest_cache', 'test_*.py')  # project sources only
 RAW = shutil.ignore_patterns('__pycache__', '*.pyc', '*_BurstDebugInformation_DoNotShip')  # build and site-packages: keep every module
-DOCS = ['GUIDE_AR.md', 'GUIDE_AR.pdf', 'HAND_CONTROLS.md', 'HAND_CONTROL_REPORT.md', 'VOICE_COMMANDS.md', 'PHYSICAL_TEST_PROTOCOL.md', 'HANDS_AND_MEDIAPIPE_AR.md', 'OPTIONAL_PLAN.md']
+DOCS = ['GUIDE_AR.md', 'GUIDE_AR.pdf', 'HAND_CONTROLS.md', 'PHONE_CAMERA.md', 'HAND_CONTROL_REPORT.md', 'VOICE_COMMANDS.md', 'PHYSICAL_TEST_PROTOCOL.md', 'HANDS_AND_MEDIAPIPE_AR.md', 'OPTIONAL_PLAN.md']
 
 
 def copy(src, dst, ignore=SKIP):

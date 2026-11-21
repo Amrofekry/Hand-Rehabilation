@@ -37,7 +37,8 @@
   - **How:** the depth is how big the hand looks. Palm size and MediaPipe's 3D bone lengths are combined, so a tilted hand fools it less. It is smoothed, and it holds while the hand sweeps across the picture.
   - **Limits:** surfaces still stop the hand 3 cm short. When the assist is sure of an object, depth moves most of the way to it.
   - **AUTOMATIC:** keeps the hand on whatever is under it.
-- CAMERA: LAPTOP WEBCAM / PHONE (USB) / PHONE (PHONE LINK).
+- CAMERA: LAPTOP WEBCAM / PHONE (USB) / PHONE (PHONE LINK) / PHONE (CAMO) (default; without Camo the laptop webcam is used). 2026-11-22.
+- **The hand's look:** the game shows your hand as you see it from behind: fingers up with the palm toward the camera shows the back of the hand, thumb on the left for a right hand; every turn of the wrist is followed in full. 2026-11-22.
   - **Phone Link:** uses the phone's connected camera through Windows Phone Link, with no cable. Turn on the connected camera in Phone Link on the phone first.
   - **Details:** [PHONE_CAMERA](PHONE_CAMERA.md).
 - RECALIBRATE CAMERA HAND: also the C key or voice "recenter hand".

@@ -4,6 +4,7 @@
 **What it is:** Reincubate Camo (free): the Camo app on the phone, Camo Studio on the PC (`C:\Program Files (x86)\Camo Studio\CamoStudio.exe`), paired by a QR code (Camo Studio → Device → Pair a device). Windows sees a camera named "Camo".
 - **In the game:** Settings → CAMERA: PHONE (CAMO), the default. The game starts Camo Studio if it is not running and picks the camera by name; without Camo it uses the laptop webcam.
 - **From the command line:** `mediapipe_bridge.py --camera-name Camo --camera-fps 60 --fallback-webcam`.
+- **Black picture:** when the phone app pauses (phone locked), Camo still sends frames, all black. After 2 s the game's prompt says "The camera picture is black: unlock the phone and open the camera app on it"; it clears when the picture returns.
 
 **MEASURED on this laptop:**
 | | Laptop webcam | Phone Link | Camo | Phone over USB |

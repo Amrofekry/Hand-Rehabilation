@@ -53,6 +53,7 @@ namespace GripRehab
         public bool CameraOpened => IsRunning && State == "camera_open";
 
         Process worker;
+        bool darkReported;
         readonly ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         string projectRoot;
 
@@ -127,6 +128,8 @@ namespace GripRehab
                         CaptureReadMilliseconds = status.readMs;
                         InferenceMilliseconds = status.inferenceMs;
                         if (State == "camera_error") LastError = !string.IsNullOrEmpty(status.detail) ? status.detail : "Camera " + cameraIndex + " could not open";
+                        // An open camera reports a black picture (a paused phone camera app) in detail; it clears when the picture returns.
+                        else if (State == "camera_open") { if (!string.IsNullOrEmpty(status.detail)) { LastError = status.detail; darkReported = true; } else if (darkReported) { LastError = ""; darkReported = false; } }
                     }
                     catch (ArgumentException) { LastError = "Malformed vision status"; }
                 }
