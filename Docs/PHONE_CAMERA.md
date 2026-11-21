@@ -1,4 +1,19 @@
-# Phone camera (Android): through Windows Phone Link, or over USB
+# Phone camera (Android): Camo (default), Windows Phone Link, or USB
+
+## Camo (the default camera choice), 2026-11-21
+**What it is:** Reincubate Camo (free): the Camo app on the phone, Camo Studio on the PC (`C:\Program Files (x86)\Camo Studio\CamoStudio.exe`), paired by a QR code (Camo Studio → Device → Pair a device). Windows sees a camera named "Camo".
+- **In the game:** Settings → CAMERA: PHONE (CAMO), the default. The game starts Camo Studio if it is not running and picks the camera by name; without Camo it uses the laptop webcam.
+- **From the command line:** `mediapipe_bridge.py --camera-name Camo --camera-fps 60 --fallback-webcam`.
+
+**MEASURED on this laptop:**
+| | Laptop webcam | Phone Link | Camo | Phone over USB |
+|---|---|---|---|---|
+| Picture | 640x480 at 30 fps | 1280x720 at 30 fps | 1920x1080 at 60 fps | 1280x720 at 30 fps |
+| Hand tracker rate (no hand in view) | about 30 fps | not measured | about 38 fps | — |
+| Delay from a screen flip to the PC | not measurable (it cannot see its own screen) | not measured (Phone Link sent its paused picture) | median 219 ms, p90 235 ms (20/20 flips, includes the screen refresh) | about 610 ms |
+
+**Settings that are yours to set in Camo Studio:** the back camera, the widest lens that keeps the hand large, 720p (MediaPipe works at 192-224 px; 1080p only adds work), the highest frame rate offered, filters, smoothing and blur off, focus and exposure locked if offered.
+
 
 ## Through Windows Phone Link (no cable, no developer mode), 2026-11-21
 **What it is:** Phone Link's *connected camera* shows the phone's camera to Windows as a normal camera, named "<phone> (Windows Virtual Camera)". The game finds it by name.
