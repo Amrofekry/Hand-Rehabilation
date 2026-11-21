@@ -223,10 +223,13 @@ public sealed class TeaPouring : MonoBehaviour {
   var view=app.player.view.transform;
   int hc=Physics.RaycastNonAlloc(view.position,view.forward,hits,2.5f,~(1<<8),QueryTriggerInteraction.Ignore);float best=float.MaxValue;
   for(int i=0;i<hc;i++){var c=hits[i].collider;if(c==null||c.transform.IsChildOf(teapot.transform))continue;if(hits[i].distance<best){best=hits[i].distance;aimPoint=hits[i].point;}}
-  if(best==float.MaxValue)return;aimValid=true;
+  if(best==float.MaxValue&&!app.CameraMode)return;aimValid=true;
   // Looking at the cup aims at its mouth (not the rim the ray happens to hit).
   var ct=cup.transform;var mouth=ct.TransformPoint(0,CupBottom+CupDepth,0);var flat=aimPoint-mouth;flat.y=0;
   if(flat.magnitude<CupR*1.6f&&aimPoint.y>mouth.y-CupDepth)aimPoint=mouth;
+  // Camera hand (2026-11-21): the pour goes into the cup, wherever the view rests (the movement assist steers the spout
+  // here; the view-centre aim poured onto the table when the view rested between the table and the cup).
+  if(app.CameraMode)aimPoint=mouth;
   // The presentation brings the held object's bounds centre to a world point: put it where the spout tip lands on 'want'.
   var renderer=held.visual!=null?held.visual.GetComponentInChildren<Renderer>():null;if(renderer==null)return;
   var bounds=renderer.bounds;var tipNow=teapot.transform.TransformPoint(SpoutTip);

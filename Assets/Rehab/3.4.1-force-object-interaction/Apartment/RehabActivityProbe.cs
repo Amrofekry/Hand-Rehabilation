@@ -35,7 +35,17 @@ namespace GripRehab
         readonly List<UiCheck> uiChecks = new List<UiCheck>();
         static bool UiOnly => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-ui-only") >= 0;
         static string OnlyKind => Environment.GetCommandLineArgs().Where(a => a.StartsWith("-activity-kind=")).Select(a => a.Substring(15)).FirstOrDefault();
-        static bool Camera => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-camera") >= 0;
+        static bool Camera => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-camera") >= 0 || Intent;
+        // Intent mode (2026-11-21): the view stays put and the SYNTHETIC hand only moves part of the way toward each item or
+        // place (IntentReach, default 0.7), slowly and with tremor; the movement assist must finish the move.
+        static bool Intent => Array.IndexOf(Environment.GetCommandLineArgs(), "-activity-intent") >= 0;
+        static float Arg(string name, float fallback) { var a = Environment.GetCommandLineArgs().FirstOrDefault(x => x.StartsWith(name + "=")); return a != null && float.TryParse(a.Substring(name.Length + 1), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : fallback; }
+        // Camera mode (2026-11-21) reaches with the hand all the way and steadily (the game works by where the hand is, not
+        // where the view looks); intent mode reaches part of the way with tremor.
+        static float IntentReach => Intent ? Arg("-intent-reach", .7f) : 1f;
+        static float IntentTremor => Intent ? Arg("-intent-tremor", .008f) : 0f;
+        static bool HandReach => Camera;
+        readonly System.Random shake = new System.Random(7);
         float closure; bool sending; long sequence;
         // Tea: the synthetic hand's wrist roll (degrees), lift toward the top of the image (0..1) and an injected tremor.
         float roll, lift, tremorMm, tremorHz = 6;
@@ -273,6 +283,7 @@ namespace GripRehab
                         // visible part (top, sides), as a patient shifts their gaze.
                         var bounds = step.item.Item.GetComponentInChildren<Renderer>() != null ? step.item.Item.GetComponentInChildren<Renderer>().bounds : new Bounds(step.item.transform.position, Vector3.one * .05f);
                         var looks = new[] { step.item.transform.position, bounds.center + Vector3.up * bounds.extents.y * .8f, bounds.center + Vector3.left * bounds.extents.x * .7f, bounds.center + Vector3.right * bounds.extents.x * .7f };
+                        if (HandReach) { yield return IntentGrab(step.item.Item, run); looks = new Vector3[0]; }
                         foreach (var look in looks)
                         {
                             yield return OpenHand(); yield return new WaitForSecondsRealtime(.4f);
@@ -280,16 +291,31 @@ namespace GripRehab
                             yield return CloseUntilHeld(step.item.Item, 3f);
                             if (app.Held == step.item.Item) break;
                             if (app.Held != null) { var eye = app.player.view.transform.position; var surface = step.item.Item.ClosestSurface(eye);
-                                run.notes += "look shifted (got " + app.Held.displayName + ", reach=" + Diag(app, "CanReach", step.item.Item) + ", blocker=" + (Physics.Raycast(eye, (surface - eye).normalized, out var blockHit, Vector3.Distance(eye, surface) + .01f, ~(1 << 8), QueryTriggerInteraction.Ignore) ? blockHit.collider.name + "<" + (blockHit.collider.transform.parent != null ? blockHit.collider.transform.parent.name : "") + "> layer " + LayerMask.LayerToName(blockHit.collider.gameObject.layer) + " at " + blockHit.distance.ToString("0.00") + "/" + Vector3.Distance(eye, surface).ToString("0.00") : "none") + ") | "; }
+                                run.notes += "look shifted (got " + app.Held.displayName + ", intent=" + (app.Intent.TargetId >= 0 ? app.Intent.TargetId.ToString() : "-") + " conf " + app.Intent.Confidence.ToString("0.00") + " under=" + (app.HandRayTarget != null ? app.HandRayTarget.displayName : "-") + ", reach=" + Diag(app, "CanReach", step.item.Item) + ", blocker=" + (Physics.Raycast(eye, (surface - eye).normalized, out var blockHit, Vector3.Distance(eye, surface) + .01f, ~(1 << 8), QueryTriggerInteraction.Ignore) ? blockHit.collider.name + "<" + (blockHit.collider.transform.parent != null ? blockHit.collider.transform.parent.name : "") + "> layer " + LayerMask.LayerToName(blockHit.collider.gameObject.layer) + " at " + blockHit.distance.ToString("0.00") + "/" + Vector3.Distance(eye, surface).ToString("0.00") : "none") + ") | "; }
                         }
                         if (app.Held != step.item.Item) { run.failedGrabs++; run.notes += "want=" + step.item.Item.displayName + " held=" + (app.Held != null ? app.Held.displayName : "none") + " score=" + app.CameraGripScore.ToString("0.00") + " gate=" + app.CameraGateClosed + " dist=" + Vector3.Distance(app.player.view.transform.position, step.item.transform.position).ToString("0.00") + " status=" + app.Status + " | "; yield break; }
                         yield return new WaitForSecondsRealtime(.5f);
                     }
-                    if (step.kind == ProbeStep.Kind.Place)
+                    if (step.kind == ProbeStep.Kind.Place && HandReach)
+                    {
+                        yield return IntentReachTo(step.aim(), run);
+                        var place = app.IntentPlace; var aimAt = step.aim(); var itemAt = app.Held != null ? app.Held.transform.position : Vector3.zero;
+                        run.notes += "place: intent=" + (place != null ? place.label : "none") + " item-to-aim " + (new Vector2(itemAt.x - aimAt.x, itemAt.z - aimAt.z).magnitude * 1000).ToString("0") + " mm"
+                            + (place != null ? " item-to-intent " + (new Vector2(itemAt.x - place.WorldPosition.x, itemAt.z - place.WorldPosition.z).magnitude * 1000).ToString("0") + " mm" : "") + " pull " + app.Intent.OffsetU.ToString("0.00") + "," + app.Intent.OffsetV.ToString("0.00")
+                            + (place != null ? " hand-to-point " + (Vector3.Distance(app.ActiveHand.transform.position, app.IntentPlacePoint) * 1000).ToString("0") + " mm reach " + app.CameraReach.ToString("0.000") + " want " + Vector3.Distance(app.player.view.transform.position, app.IntentPlacePoint).ToString("0.000") : "")
+                            + (app.Held != null && app.Held.Body != null ? " com-pivot " + (Vector3.Distance(app.Held.Body.worldCenterOfMass, app.Held.transform.position) * 1000).ToString("0") + " mm" : "") + " | ";
+                        yield return OpenHand(); yield return new WaitForSecondsRealtime(1.1f);
+                        run.notes += "-> " + runner.Feedback + " | ";
+                        wantDx = wantDy = 0;
+                    }
+                    else if (step.kind == ProbeStep.Kind.Place)
                     {
                         app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.35f);
+                        if (Camera) { var aimAt = step.aim(); var itemAt = app.Held != null ? app.Held.transform.position : Vector3.zero; var place = app.IntentPlace;
+                            run.notes += "camera place: intent=" + (place != null ? place.label : "none") + " item-to-aim " + (new Vector2(itemAt.x - aimAt.x, itemAt.z - aimAt.z).magnitude * 1000).ToString("0") + " mm | "; }
                         float yawBefore = runner.PlacementYaw;
                         yield return OpenHand(); yield return new WaitForSecondsRealtime(1.1f);
+                        if (Camera) run.notes += "-> " + runner.Feedback + " | ";
                         if (runner.Current is StorageBoxActivity)
                             run.notes += runner.LastPlacement + " | ";
                     }
@@ -317,6 +343,32 @@ namespace GripRehab
 
         TeaPouring Tea() => runner != null && runner.Current is TeaActivity t ? t.tea : null;
 
+        // ---- Intent mode: reach part of the way and let the movement assist finish.
+        Vector3 ActivityCentre() { var items = runner.Current.items.Where(i => i != null).ToList(); return items.Count == 0 ? app.player.view.transform.position + app.player.view.transform.forward : items.Aggregate(Vector3.zero, (a, i) => a + i.transform.position) / items.Count; }
+        IEnumerator IntentReachTo(Vector3 world, Run run)
+        {
+            // The view rests between the activity and the target, so the target is off-centre (a real reach, not a look).
+            app.player.LookAt(Vector3.Lerp(ActivityCentre(), world, .5f)); yield return new WaitForSecondsRealtime(.3f);
+            var cam = app.player.view; float tanV = Mathf.Tan(cam.fieldOfView * .5f * Mathf.Deg2Rad) * .92f, tanH = tanV * cam.aspect;
+            var l = cam.transform.InverseTransformPoint(world); if (l.z < .08f) { run.notes += "intent: target behind | "; yield break; }
+            float u = l.x / (l.z * tanH), v = (l.y / l.z + .05f) / tanV, scale = app.Intent.RangeScale, reach = IntentReach;
+            // Inverse of the game's hand mapping, only part of the way: wrist image x = .5 + u * rangeX, y = centre - v * rangeY.
+            float x = .5f + u * ApartmentExperience.HandRangeX * scale * reach, y = ApartmentExperience.HandCentreY - v * ApartmentExperience.HandRangeY * scale * reach;
+            wantDx = x - .5f; wantDy = y - ApartmentExperience.HandCentreY;
+            float end = Time.realtimeSinceStartup + 2.5f;
+            while (Time.realtimeSinceStartup < end && (Mathf.Abs(handDx - wantDx) > .01f || Mathf.Abs(handDy - wantDy) > .01f)) yield return null;
+            yield return new WaitForSecondsRealtime(1.2f); // a patient pauses before opening; the assist pulls the rest of the way
+            run.notes += "intent: target u " + u.ToString("0.00") + " v " + v.ToString("0.00") + " -> engaged=" + app.Intent.Engaged + " conf " + app.Intent.Confidence.ToString("0.00") + " | ";
+        }
+        IEnumerator IntentGrab(SqueezableObject item, Run run)
+        {
+            yield return OpenHand(); yield return new WaitForSecondsRealtime(.4f);
+            yield return IntentReachTo(item.transform.position, run);
+            yield return CloseUntilHeld(item, 3f);
+            if (app.Held != null && app.Held != item) run.notes += "intent WRONG GRAB " + app.Held.displayName + " for " + item.displayName + " | ";
+            wantDx = wantDy = 0;
+        }
+
         // Pour or drink the way a patient watches the cup: tip, slow down near the line, level off; raise the cup, tip, sip.
         IEnumerator Tea(ProbeStep step, Run run, Action<float> tilt, Action<bool> mouth)
         {
@@ -327,7 +379,15 @@ namespace GripRehab
                 app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.4f);
                 // Bring the spout over the cup first (a person does not tip the pot until it is there). With the camera
                 // hand that is the hand's own position and depth, steered by sight.
-                if (Camera) yield return Steer(() => tea.SpoutTipWorld, () => tea.AimWant, .015f, 14, run);
+                // With the movement assist (Medium or High) the game brings the spout over the cup; the hand just holds it there.
+                if (Camera && ApartmentExperience.AssistSetting >= AssistLevel.Medium)
+                {
+                    // A patient moves the teapot toward the cup (part of the way in intent mode), then the assist finishes.
+                    yield return IntentReachTo(app.ActiveHand.transform.position + (tea.AimWant - tea.SpoutTipWorld), run);
+                    float until = Time.realtimeSinceStartup + 6; while (Time.realtimeSinceStartup < until && tea.AimError > .015f) yield return null;
+                    run.notes += "assist brought the spout to " + (tea.AimError * 1000).ToString("0") + " mm | ";
+                }
+                else if (Camera) yield return Steer(() => tea.SpoutTipWorld, () => tea.AimWant, .015f, 14, run);
                 float settle = Seconds() + 5; while (tea.AimError > .015f && Seconds() < settle) yield return null;
                 run.notes += "aim error before tipping " + (tea.AimError * 1000).ToString("0") + " mm | ";
                 if (run.level == 2) yield return Shot("activity-7-pourtea-aim" + (Camera ? "-camera" : ""));
@@ -498,7 +558,9 @@ namespace GripRehab
         {
             var f = new LandmarkFrame { schemaVersion = 1, source = "mediapipe-test", handedness = "Right", confidence = .95f, sequence = ++sequence,
                 captureSeconds = Time.realtimeSinceStartupAsDouble, ageMs = 1, landmarks = new Vector3[21] };
-            float cx = .5f + handDx, wy = .58f - .36f * lift + handDy;
+            // The resting wrist row (ApartmentExperience.HandCentreY) points the camera hand at the view centre (2026-11-21:
+            // the old fixed 0.58 pointed above it once the mapping was centred on the measured resting hand).
+            float cx = .5f + handDx, wy = ApartmentExperience.HandCentreY - .36f * lift + handDy;
             f.imageWidth = 640; f.imageHeight = 480;
             f.landmarks[0] = new Vector3(cx, wy, 0);
             for (int finger = 0; finger < 4; finger++)
@@ -518,6 +580,12 @@ namespace GripRehab
             }
             if (handScale != 1)
                 for (int i = 1; i < 21; i++) { var d = f.landmarks[i] - f.landmarks[0]; f.landmarks[i] = f.landmarks[0] + d * handScale; }
+            if (IntentTremor > 0 && Tea() == null) // the tea run measures tremor itself: it keeps its own steady/known hand
+            {
+                // A shaky hand (intent mode): the whole hand moves by a random amount each frame (image units).
+                var jitter = new Vector3((float)(shake.NextDouble() - .5) * 2 * IntentTremor, (float)(shake.NextDouble() - .5) * 2 * IntentTremor, 0);
+                for (int i = 0; i < 21; i++) f.landmarks[i] += jitter;
+            }
             if (tremorMm > 0)
             {
                 // TeaPouring scales pixels to millimetres by an 80 mm knuckle breadth; this hand's breadth in pixels sets the scale.

@@ -42,6 +42,9 @@ public abstract class Activity {
 
  // ---- Hooks (defaults suit simple placement)
  public virtual bool Decide(ActivityItem item,SnapTarget target,out string reason){reason="";return true;}
+ /// <summary>Would this placement be accepted now? The same rules as Decide, with no side effects (no statistics), for
+ /// the movement assist choosing among places (2026-11-21).</summary>
+ public virtual bool Allows(ActivityItem item,SnapTarget target)=>true;
  public virtual void Placed(ActivityItem item,SnapTarget target,PlacementResult result){placements.Add(result);steps.Advance();}
  public virtual void Removed(ActivityItem item,SnapTarget target){steps.Retract();}
  public virtual void Grabbed(ActivityItem item){}
@@ -116,6 +119,7 @@ sealed class BookshelfActivity:Activity {
  public override IEnumerable<ProbeStep> Solution(){
   for(int slot=0;slot<heights.Length;slot++)foreach(var b in items)if(ActivityRules.BookFitsSlot(heights,b.index,slot))yield return ProbeStep.Place(b,At(targets[slot],.004f));
  }
+ public override bool Allows(ActivityItem item,SnapTarget target)=>ActivityRules.BookFitsSlot(heights,item.index,targets.IndexOf(target));
  public override bool Decide(ActivityItem item,SnapTarget target,out string reason){
   int slot=targets.IndexOf(target);bool right=ActivityRules.BookFitsSlot(heights,item.index,slot);
   if(!tried.Contains(item)){tried.Add(item);if(right)firstTry++;}
@@ -242,10 +246,11 @@ sealed class SimpleMealActivity:Activity {
  }
  public override bool Decide(ActivityItem item,SnapTarget target,out string reason){
   reason="";
-  if(target.id=="pan"&&steps.Current<1){reason="Put the pan on the burner first.";return false;}
+  if(target.id=="pan"&&steps.Current<1){reason="Put the pan on the burner first.";return false;} // keep in step with Allows
   if(target.id=="plate"&&steps.Current<3){reason="Cook the food before serving it.";return false;}
   return true;
  }
+ public override bool Allows(ActivityItem item,SnapTarget target)=>!(target.id=="pan"&&steps.Current<1)&&!(target.id=="plate"&&steps.Current<3);
  public override void Removed(ActivityItem item,SnapTarget target){if(target.id=="burner"&&steps.Current>0)return;base.Removed(item,target);}
  public override void Squeeze(ActivityRunner r,ActivityItem held,Collider target,float dt){
   if(held.kind!="spoon"||steps.Current!=2||target.GetComponentInParent<ActivityItem>()!=pan)return;
@@ -328,13 +333,15 @@ sealed class PrepareServeActivity:Activity {
   yield return ProbeStep.Place(plate,At(serve,.002f));
  }
  public override bool Decide(ActivityItem item,SnapTarget target,out string reason){
-  reason="";int s=steps.Current;
+  reason="";int s=steps.Current; // keep in step with Allows
   if(target.id=="prep"&&s!=0){reason="The plate is already prepared; serve it on the serving mat.";return false;}
   if(target.id=="serve"&&s<4){reason="Finish preparing the plate before serving it.";return false;}
   if(target.id=="onplate"&&item.kind=="bread"&&s<1){reason="Put the plate on the preparation mat first.";return false;}
   if(target.id=="onplate"&&item.kind=="tomato"&&s<3){reason=s<2?"Put the bread on the plate, then cut the tomato.":"Cut the tomato in half first.";return false;}
   return true;
  }
+ public override bool Allows(ActivityItem item,SnapTarget target){int s=steps.Current;
+  return !(target.id=="prep"&&s!=0)&&!(target.id=="serve"&&s<4)&&!(target.id=="onplate"&&item.kind=="bread"&&s<1)&&!(target.id=="onplate"&&item.kind=="tomato"&&s<3);}
  public override void Removed(ActivityItem item,SnapTarget target){if(target.id=="prep"&&steps.Current>=1)return;base.Removed(item,target);}
  public override void Chop(ActivityRunner r,CuttableFood food,Vector3 point){
   if(steps.Current!=2||food!=tomatoCut)return;

@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "aa6de7daed3fbbd24a79f62c815f7f37365be79a19ff1d730e458ef395e72f67",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Hand mapping (2026-11-20, second live Hand Lab session): the centre row follows where the hand works (20 s average), the looked-at object is grabbed only with the virtual hand within 12 cm, and a hold ended by an activity or a break needs the hand opened before the next grab."
+      "currentSha256": "6b9f08212559c50b05593b74aae3b632d527d64f67a1f151ae03e98c70ca8656",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Movement assist (2026-11-21): IntentAssist candidates (items, rule-accepted places, box, teapot pour), pull and depth, partial-close grab, confident intent over the hand's stop point, object-level place correction, camera hand reach = game reach, assisted grabs and placements counted apart."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
@@ -18,8 +18,8 @@
     },
     "Assets/ProductIntegration/ResearchPortalPages.cs": {
       "previousSha256": "0a67b70b37f552e7acd9f13c5b1ffc21c0f3a43ee4a7359f498dfb05c94b10f4",
-      "currentSha256": "c246dd9c520df429ccc541b25e4b23506e0d7fc5a89e482ccc4f659bae52989b",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Phone camera (2026-11-21): Settings button CAMERA: LAPTOP WEBCAM / PHONE (USB), saved, restarts the camera worker."
+      "currentSha256": "a14a3df1086d1fe9cf67ec5e19a4ba67b0adfc9554dfbbbfce807f036daae116",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Movement assist (2026-11-21): Settings button MOVEMENT ASSIST (CAMERA): OFF / LOW / MEDIUM / HIGH."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs": {
       "previousSha256": "fd1615e4106f4001299c49a203141347bb3b7becf38db21c59b6832b99ed2e9c",

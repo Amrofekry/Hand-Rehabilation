@@ -20,7 +20,7 @@ public sealed class ActivityRunner : MonoBehaviour {
  public ActivityKind Selected{get;private set;}=ActivityKind.Bookshelf;
  /// <summary>Last finished activity (probe and tests).</summary>
  public ActivityResult LastResult{get;private set;}
- int assistedAtStart;
+ int assistedAtStart,intentGrabsAtStart,intentPlacesAtStart;
  /// <summary>What the last release did (diagnostics for the probes).</summary>
  public string LastPlacement{get;private set;}="";
  /// <summary>Set by the probes; normal play builds no diagnostic strings.</summary>
@@ -55,7 +55,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   foreach(var item in kitchen?choices.kitchenObjects:choices.livingObjects)item.gameObject.SetActive(false);
   baseForward=Vector3.zero;root=null;var facing=app.player.transform.forward;facing.y=0;baseForward=facing.normalized;baseYaw=app.player.transform.eulerAngles.y;
   root=new GameObject("Activity: "+ActivityRules.Title(kind)).transform;
-  Current=Activity.Create(kind,ActivityTuning.ForLevel(Level));finished=false;Feedback="";PlacementYaw=0;LastResult=null;assistedAtStart=app.AssistedGrabs;
+  Current=Activity.Create(kind,ActivityTuning.ForLevel(Level));finished=false;Feedback="";PlacementYaw=0;LastResult=null;assistedAtStart=app.AssistedGrabs;intentGrabsAtStart=app.IntentAssistedGrabs;intentPlacesAtStart=app.IntentAssistedPlacements;
   Current.Build(this);
   savedObjects=app.objects;app.objects=savedObjects.Concat(Current.items.Select(i=>i.Item).Where(i=>i!=null)).ToArray();
   app.PresentationOffset=new Vector3(.14f,-.12f,0); // keep the held item low-right so the aim point stays visible
@@ -101,14 +101,31 @@ public sealed class ActivityRunner : MonoBehaviour {
  }
  void Released(SqueezableObject item){
   if(!Active||item==null)return;var a=item.GetComponent<ActivityItem>();if(a==null)return;
-  bool aimed=Aim(item,out var point);if(aimed)Put(a,point);
+  bool aimed=Aim(item,out var point,app.CameraMode);
+  // Movement assist (camera hand, 2026-11-21): let go near the place the assist was set on, and the game finishes the
+  // placement there (and, on High, turns the object to match). Counted as assisted, apart from the patient's own reach.
+  var intended=app.CameraMode?app.ReleasedIntentPlace:null;
+  if(intended!=null&&intended.id!="volume"&&intended.id!="pour"&&!intended.Full&&(intended.accepts==null||intended.accepts(a))){ // a box finds its own free spot
+   var w=intended.WorldPosition;var level=ApartmentExperience.AssistSetting;
+   if(new Vector2(item.transform.position.x-w.x,item.transform.position.z-w.z).magnitude<=ApartmentExperience.AssistPlaceRadius(level)){
+    // The surface under the place, ignoring the object itself (it is right above it).
+    int n=Physics.RaycastNonAlloc(w+Vector3.up*.3f,Vector3.down,hits,.6f,~(1<<8),QueryTriggerInteraction.Ignore);float top=float.MaxValue;float y=w.y;
+    for(int i=0;i<n;i++){var c=hits[i].collider;if(c==null||c.attachedRigidbody==item.Body)continue;if(hits[i].distance<top){top=hits[i].distance;y=hits[i].point.y;}}
+    if(level==AssistLevel.High)SetPlacementYaw(Mathf.DeltaAngle(Yaw,intended.yaw)); // High also turns it to match
+    point=new Vector3(w.x,y,w.z);aimed=true;app.CountAssistedPlacement();}
+  }
+  if(aimed)Put(a,point);
   if(RecordPlacement)LastPlacement=a.name+" half "+PlacedHalfWidth(item).ToString("F3")+(aimed?" put at "+point.ToString("F3")+" via "+(lastAimCollider!=null?lastAimCollider.name+"<"+(lastAimCollider.transform.parent!=null?lastAimCollider.transform.parent.name:"")+">":"?")+(lastAimVolume?" into volume":""):" not aimed");
   StartCoroutine(EvaluateLater(a));
  }
- /// <summary>Where the player is looking, ignoring the item itself; volumes (the box) redirect inside.</summary>
- bool Aim(SqueezableObject item,out Vector3 point){
+ /// <summary>Where the item goes: below it with the camera hand (where the hand put it), else where the player is
+ /// looking; the item itself is ignored and volumes (the box) redirect inside. 2026-11-21 (intent probe): the camera hand
+ /// used the view centre too, so an object the hand set on its place was moved to wherever the view pointed.</summary>
+ bool Aim(SqueezableObject item,out Vector3 point,bool placing=false){
   point=default;var view=app.player.view.transform;
-  int n=Physics.RaycastNonAlloc(view.position,view.forward,hits,1.4f,~(1<<8),QueryTriggerInteraction.Ignore);
+  bool below=placing&&item!=null&&item.Body!=null; // placing only: tools (knife, squeeze) still act on what is looked at
+  var origin=below?item.Body.worldCenterOfMass+Vector3.up*.05f:view.position;var direction=below?Vector3.down:view.forward;
+  int n=Physics.RaycastNonAlloc(origin,direction,hits,1.4f,~(1<<8),QueryTriggerInteraction.Ignore);
   float best=float.MaxValue;Collider found=null;
   for(int i=0;i<n;i++){var c=hits[i].collider;if(c==null||item!=null&&c.attachedRigidbody==item.Body)continue;if(hits[i].distance<best){best=hits[i].distance;point=hits[i].point;found=c;}}
   lastAimCollider=found;lastAimVolume=false;
@@ -264,6 +281,11 @@ public sealed class ActivityRunner : MonoBehaviour {
   var result=Current.Result(Level,seconds);LastResult=result;
   // Camera grabs made by aim assist (not a fingertip at the object) are recorded, so analysis can tell physical reach from help.
   if(app.CameraMode||app.AssistedGrabs!=assistedAtStart)result.outcomes.Add(new OutcomeMetric{key="handling.assistedGrabs",label="Camera grabs with aim assist",unit="",value=app.AssistedGrabs-assistedAtStart});
+  // Intent assist (2026-11-21): help is always reported apart from the patient's own reach, with the level used.
+  if(app.CameraMode&&ApartmentExperience.AssistSetting!=AssistLevel.Off){
+   result.outcomes.Add(new OutcomeMetric{key="handling.assistLevel",label="Movement assist level (0 off - 3 high)",unit="",value=(int)ApartmentExperience.AssistSetting});
+   result.outcomes.Add(new OutcomeMetric{key="handling.intentAssistedGrabs",label="Grabs the movement assist helped",unit="",value=app.IntentAssistedGrabs-intentGrabsAtStart});
+   result.outcomes.Add(new OutcomeMetric{key="handling.intentAssistedPlacements",label="Placements the movement assist helped",unit="",value=app.IntentAssistedPlacements-intentPlacesAtStart});}
   Feedback="Activity complete: "+result.score+"/100, "+ActivityRules.Stars(result.score)+" of 3 stars. K replays it, N picks the next one.";
   RehabAudio.Play(RehabSound.Complete);Refresh();
   StartCoroutine(Report(result));

@@ -20,7 +20,9 @@ namespace GripRehab
         // Control
         StopListening, StartListening,
         // Spelling
-        Letter, Space, DeleteLetter, ClearText, Done
+        Letter, Space, DeleteLetter, ClearText, Done,
+        // Movement assist level (2026-11-21)
+        AssistOff, AssistLow, AssistMedium, AssistHigh
     }
 
     public enum VoiceConfidence { High, Medium, Low, Rejected }
@@ -67,7 +69,8 @@ namespace GripRehab
             ["stop listening"] = VoiceCommand.StopListening, ["start listening"] = VoiceCommand.StartListening,
             ["sit down"] = VoiceCommand.SitDown, ["stand up"] = VoiceCommand.StandUp, ["reset objects"] = VoiceCommand.ResetObjects,
             ["next activity"] = VoiceCommand.NextActivity, ["camera mode"] = VoiceCommand.CameraMode, ["keyboard mode"] = VoiceCommand.KeyboardMode,
-            ["recenter hand"] = VoiceCommand.RecenterHand, ["rotate left"] = VoiceCommand.RotateLeft, ["rotate right"] = VoiceCommand.RotateRight
+            ["recenter hand"] = VoiceCommand.RecenterHand, ["rotate left"] = VoiceCommand.RotateLeft, ["rotate right"] = VoiceCommand.RotateRight,
+            ["assist off"] = VoiceCommand.AssistOff, ["assist low"] = VoiceCommand.AssistLow, ["assist medium"] = VoiceCommand.AssistMedium, ["assist high"] = VoiceCommand.AssistHigh
         };
 
         /// <summary>Spelling words: NATO alphabet (recognised far more reliably than single letters) plus the plain letters.</summary>

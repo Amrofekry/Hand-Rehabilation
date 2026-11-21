@@ -199,6 +199,9 @@ namespace GripRehab
             // Camera hand control (2026-10-29): reach, steadiness, aim assist and recalibration, no code changes needed.
             view.Button("HAND REACH (CAMERA): " + HandControlProfile.SensitivityNames[HandLocomotion.Sensitivity], () => { HandLocomotion.Sensitivity = (HandLocomotion.Sensitivity + 1) % 3; SettingsAt(view.ScrollPosition); });
             view.Button("HAND STEADINESS (CAMERA): " + HandControlProfile.SteadinessNames[HandLocomotion.Steadiness], () => { HandLocomotion.Steadiness = (HandLocomotion.Steadiness + 1) % 3; SettingsAt(view.ScrollPosition); });
+            // 2026-11-21: the movement assist finds the object or place the hand is going for and helps finish the move (small
+            // movements are enough); helped grabs and placements are always reported apart from the patient's own reach.
+            view.Button("MOVEMENT ASSIST (CAMERA): " + ApartmentExperience.AssistSetting.ToString().ToUpperInvariant(), () => { ApartmentExperience.AssistSetting = (AssistLevel)(((int)ApartmentExperience.AssistSetting + 1) % 4); SettingsAt(view.ScrollPosition); });
             view.Button("AIM ASSIST FOR GRABBING: " + (HandLocomotion.AimAssist ? "ON (ASSISTED)" : "OFF (REACH ONLY)"), () => { HandLocomotion.AimAssist = !HandLocomotion.AimAssist; SettingsAt(view.ScrollPosition); });
             // 2026-11-20: the Android phone's camera over USB (higher fps, wider view) or the laptop webcam; restarts the camera.
             view.Button("CAMERA: " + (PlayerPrefs.GetInt(VisionCameraLauncher.PhonePrefKey, 0) == 1 ? "PHONE (USB)" : "LAPTOP WEBCAM"), () => {

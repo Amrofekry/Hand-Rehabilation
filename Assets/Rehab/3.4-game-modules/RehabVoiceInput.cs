@@ -287,6 +287,10 @@ namespace GripRehab
                 case VoiceCommand.StartServe: return StartActivity(ActivityKind.PrepareAndServe);
                 case VoiceCommand.StartTea: return StartActivity(ActivityKind.PourTea);
                 case VoiceCommand.StopPouring: { var tea = FindAnyObjectByType<TeaPouring>(); if (tea == null) return "There is no tea to stop."; tea.Level(); return null; }
+                case VoiceCommand.AssistOff: ApartmentExperience.AssistSetting = AssistLevel.Off; return null;
+                case VoiceCommand.AssistLow: ApartmentExperience.AssistSetting = AssistLevel.Low; return null;
+                case VoiceCommand.AssistMedium: ApartmentExperience.AssistSetting = AssistLevel.Medium; return null;
+                case VoiceCommand.AssistHigh: ApartmentExperience.AssistSetting = AssistLevel.High; return null;
                 default: return null;
             }
         }

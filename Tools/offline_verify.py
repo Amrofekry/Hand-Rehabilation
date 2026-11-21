@@ -178,6 +178,12 @@ def main():
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',loco],OUTPUT/'hand-locomotion-tests.log')
             evidence['checks'].append(dict(name='hand-locomotion-tests',passed=True,result=result.stdout.strip(),
                 scope='Production hand look/walk policy with fabricated palm positions; no camera or Unity'))
+            intent=OUTPUT/'IntentAssistTests.exe'
+            run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(intent),
+                 *reference_flags,'Tools/Offline/IntentAssistTests.cs','Assets/Rehab/3.2-vision/IntentAssist.cs'],OUTPUT/'intent-assist-tests-compile.log')
+            result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',intent],OUTPUT/'intent-assist-tests.log')
+            evidence['checks'].append(dict(name='intent-assist-tests',passed=True,result=result.stdout.strip(),
+                scope='Production intent assist with fabricated (SYNTHETIC) hand paths and tremor; no camera or Unity'))
             health=OUTPUT/'DeviceHealthTests.exe'
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(health),
                  *reference_flags,'Tools/Offline/DeviceHealthTests.cs','Assets/Rehab/6.1-bluetooth-integration/DeviceHealth.cs'],OUTPUT/'device-health-tests-compile.log')

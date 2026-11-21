@@ -23,8 +23,11 @@ def play(width, height, ui_only):
                '-screen-width', str(width), '-screen-height', str(height), '-logFile', str(ROOT / 'Logs/activity-probe.log')]
     if ui_only:
         command.append('-activity-ui-only')
-    command.extend(a for a in sys.argv[1:] if a.startswith('-no-'))  # diagnostics switches pass through
+    command.extend(a for a in sys.argv[1:] if a.startswith('-no-') or a.startswith('-activity-kind='))  # diagnostics switches pass through
     if '--camera' in sys.argv: command.append('-activity-camera')  # play the activities with SYNTHETIC camera-hand frames
+    if '--intent' in sys.argv:  # camera hand that reaches only part of the way; the movement assist must finish (2026-11-21)
+        command.append('-activity-intent')
+        command.extend(a for a in sys.argv[1:] if a.startswith('-intent-') or a.startswith('-assist-level='))
     with subprocess.Popen(command, cwd=ROOT) as process:
         try:
             code = process.wait(timeout=900)
