@@ -26,7 +26,9 @@ class GraspBindings(unittest.TestCase):
         self.assertIn('item.isTrigger||player.isTrigger',self.guard)
     def test_mode_guards_and_shared_grab(self):
         self.assertIn('Hardware&&!forceReceiver.Latest.Valid||CameraMode&&!ForceValid',self.app)
-        self.assertIn('!CanReach(item)||!BeginGrab(item,false)',self.app)
+        # 2026-11-21: on-screen targets (the movement assist's choice, the object under the camera hand) use the distance
+        # check; every other grab keeps the eye's reach-and-visibility check. Both still need BeginGrab.
+        self.assertIn('!(onScreen?InReach(item):CanReach(item))||!BeginGrab(item,false)',self.app)
         self.assertIn('!BeginGrab(item,true)',self.app)
         self.assertIn('if(CameraMode)SetHardware(false);',self.app)
     def test_held_and_release_pose(self):
