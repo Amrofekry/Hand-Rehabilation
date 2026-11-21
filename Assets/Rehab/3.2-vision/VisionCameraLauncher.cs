@@ -158,7 +158,7 @@ namespace GripRehab
         {
             var c = System.Globalization.CultureInfo.InvariantCulture;
             if (CamoSelected)
-                return " --camera-name " + Quote(SafeName(camoCameraName)) + " --fallback-webcam --fallback-camera " + cameraIndex;
+                return " --camera-name " + Quote(SafeName(camoCameraName)) + " --camera-fps 60 --fallback-webcam --fallback-camera " + cameraIndex;
             if (PhoneLinkSelected)
                 return " --camera-name " + Quote(SafeName(phoneLinkCameraName));
             if (!PhoneSelected)
@@ -178,7 +178,7 @@ namespace GripRehab
                 foreach (var p in Process.GetProcesses())
                 {
                     string n; try { n = p.ProcessName; } catch { continue; } finally { p.Dispose(); }
-                    if (n.IndexOf("Camo", StringComparison.OrdinalIgnoreCase) >= 0) return true;
+                    if (n.IndexOf("CamoStudio", StringComparison.OrdinalIgnoreCase) >= 0 || n.Equals("Camo", StringComparison.OrdinalIgnoreCase)) return true; // not CamoService (always running)
                 }
                 var exe = FindCamoApp();
                 if (exe == null) return false;
@@ -194,7 +194,7 @@ namespace GripRehab
             foreach (var root in roots)
             {
                 if (string.IsNullOrEmpty(root) || !Directory.Exists(root)) continue;
-                foreach (var vendor in new[] { "Reincubate", "Camo", "camo" })
+                foreach (var vendor in new[] { "Camo Studio", "Reincubate", "Camo" }) // 2026-11-21: C:\Program Files (x86)\Camo Studio\CamoStudio.exe
                 {
                     var dir = Path.Combine(root, vendor);
                     if (!Directory.Exists(dir)) continue;
@@ -203,7 +203,7 @@ namespace GripRehab
                         foreach (var file in Directory.GetFiles(dir, "Camo*.exe", SearchOption.AllDirectories))
                         {
                             var name = Path.GetFileNameWithoutExtension(file);
-                            if (name.IndexOf("uninst", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("update", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("helper", StringComparison.OrdinalIgnoreCase) < 0) return file;
+                            if (name.IndexOf("uninst", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("update", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("helper", StringComparison.OrdinalIgnoreCase) < 0 && name.IndexOf("service", StringComparison.OrdinalIgnoreCase) < 0) return file;
                         }
                     }
                     catch (Exception) { }

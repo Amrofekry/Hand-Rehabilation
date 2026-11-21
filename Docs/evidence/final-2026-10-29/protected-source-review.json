@@ -108,8 +108,8 @@
     },
     "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs": {
       "previousSha256": "72f983f608eafb5e88b772cb630c5adf80fab5460dfc43f84b07716a6fbd1f80",
-      "currentSha256": "a06da5826c9404a13827d35a8604ca00b2cbc260917b84bb6c54860a3ac7f701",
-      "reason": "User-authorized final release (2026-10-29). 2026-11-21: Camo is the default camera choice, laptop webcam fallback by index option"
+      "currentSha256": "29558293c1603bddb16f5e70fe16bccf61c53393808c21af672ca01ab5826a01",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-21: Camo app detection (Camo Studio folder, not the service), 60 fps request"
     }
   }
 }
