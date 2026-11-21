@@ -21,6 +21,7 @@
     - pulls the hand the rest of the way;
     - sets front/back depth automatically;
     - grabs with a partial close;
+    - brings a held tool to its work (knife to the next cut, spoon to the pan, knife to the tomato), then the cut or stir happens by itself;
     - sets the held object onto the place, and releases with a partial opening (within 5 / 12 / 20 cm at Low / Medium / High; High also turns it to match);
     - for the teapot, brings the spout over the cup.
   - **Smaller real movements** cover the screen on Medium and High.
@@ -47,7 +48,8 @@ The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measu
 
 | Hand | Does | Notes |
 |---|---|---|
-| Move the hand left, right, up or down | The virtual hand moves to the same place on the screen and sits just above whatever is under it (automatic depth) | 2026-11-19, measured in the Hand Lab: a comfortable sweep (wrist x 0.12-0.88, y 0.50-0.95 of a laptop webcam image) covers the view; the resting hand (low in the image) maps to the view centre. Moving the hand toward or away from the camera adds at most 6 cm. A depth jump at an edge is followed only once it lasts (0.35 s away, 0.12 s toward) |
+| Move the hand left, right, up or down | The virtual hand moves to the same place on the screen | 2026-11-19, measured in the Hand Lab: a comfortable sweep (wrist x 0.12-0.88, y 0.50-0.95 of a laptop webcam image) covers the view; the resting hand (low in the image) maps to the view centre |
+| Move the hand toward / away from the camera | The virtual hand moves forward (up to 55 cm) / back (up to 15 cm); it stops 3 cm short of a surface, and the movement assist pulls depth toward a confident target | 2026-11-21 (ADR-DEPTH-1): hand size from palm and 3D bone lengths, held while the hand moves sideways; settings → HAND DEPTH: CAMERA (default) / AUTOMATIC |
 | Palm in the middle of the camera view | Nothing: a free work zone | Reach and grab without the view moving |
 | Palm held at the far left, right, top or bottom edge for 0.5 s | The view turns that way; the further out, the faster | Eases in and out; capped at 75°/s turning and 45°/s up/down; thin bars at the screen edge show the turn. The 0.5 s hold (2026-11-19) stops a reach toward an object from turning the view |
 | Point with the index finger | Walk forward where you look | Starts after 0.25 s and stops quickly when the hand changes |
