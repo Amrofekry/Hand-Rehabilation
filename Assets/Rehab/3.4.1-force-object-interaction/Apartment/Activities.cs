@@ -48,6 +48,9 @@ public abstract class Activity {
  /// <summary>Movement assist, camera hand (2026-11-21): the held tool near its work does the complex motion by itself (cut,
  /// stir). Returns true once per completed action (counted as assisted). tool: the held tool's position.</summary>
  public virtual bool AutoTool(ActivityRunner r,ActivityItem held,Vector3 tool,float dt)=>false;
+ /// <summary>Where the held tool's work is now (the pan to stir, the next cut, the tomato): the movement assist brings the
+ /// tool there, as it does an object to its place. False when the tool has no work now.</summary>
+ public virtual bool ToolWork(ActivityItem held,out Vector3 point){point=default;return false;}
  protected float autoToolWait;
  protected static float Flat(Vector3 a,Vector3 b)=>new Vector2(a.x-b.x,a.z-b.z).magnitude;
  public virtual void Placed(ActivityItem item,SnapTarget target,PlacementResult result){placements.Add(result);steps.Advance();}
@@ -271,6 +274,7 @@ sealed class SimpleMealActivity:Activity {
   if(held.kind!="spoon"||steps.Current!=2||pan==null||Flat(tool,pan.transform.position)>.16f)return false;
   var col=pan.GetComponentInChildren<Collider>();if(col==null)return false;
   int before=steps.Current;Squeeze(r,held,col,dt);return steps.Current!=before;}
+ public override bool ToolWork(ActivityItem held,out Vector3 point){point=pan!=null?pan.transform.position+Vector3.up*.06f:default;return held.kind=="spoon"&&steps.Current==2&&pan!=null;}
  public override string PraiseFor(ActivityItem item,SnapTarget target)=>target.id=="burner"?"The pan is on the burner.":target.id=="pan"?"In the pan.":"Served.";
  protected override void AddOutcomes(List<OutcomeMetric> o){o.Add(M("meal.stirSeconds","Stirring with grip","s",stir));o.Add(M("meal.ingredients","Ingredients","",food.Count));}
 }
@@ -315,6 +319,8 @@ sealed class CuttingActivity:Activity {
   autoToolWait-=dt;if(autoToolWait>0)return false;autoToolWait=.8f;
   int cut=cucumber.Cuts;if(cut>=tuning.cuts)return false;
   Chop(r,cucumber,Vector3.Lerp(start,end,ActivityRules.EvenCutPosition(cut,tuning.cuts)));return cucumber.Cuts>cut;}
+ public override bool ToolWork(ActivityItem held,out Vector3 point){point=default;if(held.kind!="knife"||steps.Current!=1||cucumber==null||cucumber.Cuts>=tuning.cuts)return false;
+  point=Vector3.Lerp(start,end,ActivityRules.EvenCutPosition(cucumber.Cuts,tuning.cuts))+Vector3.up*.08f;return true;}
  protected override float Accuracy=>cucumber==null||cucumber.Cuts==0?0:ActivityRules.Evenness(cucumber.Lengths());
  protected override void AddOutcomes(List<OutcomeMetric> o){o.Add(M("cut.evenness","Even pieces","%",Accuracy*100));o.Add(M("cut.cuts","Cuts","",cucumber==null?0:cucumber.Cuts));}
 }
@@ -367,6 +373,7 @@ sealed class PrepareServeActivity:Activity {
   if(Flat(tool,tomato.transform.position)>.12f){autoToolWait=.4f;return false;}
   autoToolWait-=dt;if(autoToolWait>0)return false;autoToolWait=.8f;
   int before=steps.Current;Chop(r,tomatoCut,tomato.transform.position);return steps.Current!=before;}
+ public override bool ToolWork(ActivityItem held,out Vector3 point){point=tomato!=null?tomato.transform.position+Vector3.up*.08f:default;return held.kind=="knife"&&steps.Current==2&&tomato!=null;}
  public override void Chop(ActivityRunner r,CuttableFood food,Vector3 point){
   if(steps.Current!=2||food!=tomatoCut)return;
   if(food.Cut(food.transform.position,.01f)){steps.Advance();r.Say("Halved. Put the tomato on the plate.");}

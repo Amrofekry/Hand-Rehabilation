@@ -3,6 +3,7 @@ first frame that sees the change is measured (includes the screen's own refresh,
 
   .venv/Scripts/python.exe Tools/Vision/camera_latency.py --phone --camera-id 2      # phone pointed at the screen
   .venv/Scripts/python.exe Tools/Vision/camera_latency.py --camera 1                 # a second webcam pointed at it
+  .venv/Scripts/python.exe Tools/Vision/camera_latency.py --camera-name "Windows Virtual Camera"   # Phone Link camera
 
 MEASURED on this computer; no image is saved (only the brightness of the frame's centre is read).
 """
@@ -24,6 +25,7 @@ def main() -> None:
     parser.add_argument("--ipwebcam", action="store_true", help="The IP Webcam app over USB (port 8080)")
     parser.add_argument("--camera-id", default="")
     parser.add_argument("--camera", type=int, default=0)
+    parser.add_argument("--camera-name", default="", help="Pick the camera by (part of) its name, e.g. the Phone Link camera")
     parser.add_argument("--size", default="1280x720")
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--extra", nargs="*", default=[], help="More scrcpy-server key=value options")
@@ -35,7 +37,16 @@ def main() -> None:
     elif args.phone:
         source = PhoneCamera(PhoneCameraConfig(camera_id=args.camera_id, size=args.size, fps=args.fps, extra=tuple(args.extra))).open()
     else:
-        source = cv2.VideoCapture(args.camera, cv2.CAP_DSHOW)
+        index = args.camera
+        if args.camera_name:
+            from mediapipe_bridge import find_camera
+            found = find_camera(args.camera_name)
+            if found is None:
+                raise SystemExit(f"No camera named like {args.camera_name!r}")
+            index = found
+        source = cv2.VideoCapture(index, cv2.CAP_DSHOW)
+        width, height = (int(v) for v in args.size.split("x"))
+        source.set(cv2.CAP_PROP_FRAME_WIDTH, width); source.set(cv2.CAP_PROP_FRAME_HEIGHT, height); source.set(cv2.CAP_PROP_FPS, args.fps)
     reader = LatestFrameReader(source)
     window = "GripRehab camera delay"
     cv2.namedWindow(window, cv2.WINDOW_NORMAL)

@@ -107,7 +107,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   // Movement assist (camera hand, 2026-11-21): let go near the place the assist was set on, and the game finishes the
   // placement there (and, on High, turns the object to match). Counted as assisted, apart from the patient's own reach.
   var intended=app.CameraMode?app.ReleasedIntentPlace:null;
-  if(intended!=null&&intended.id!="volume"&&intended.id!="pour"&&!intended.Full&&(intended.accepts==null||intended.accepts(a))){ // a box finds its own free spot
+  if(intended!=null&&intended.id!="volume"&&intended.id!="pour"&&intended.id!="work"&&!intended.Full&&(intended.accepts==null||intended.accepts(a))){ // a box finds its own free spot
    var w=intended.WorldPosition;var level=ApartmentExperience.AssistSetting;
    if(new Vector2(item.transform.position.x-w.x,item.transform.position.z-w.z).magnitude<=ApartmentExperience.AssistPlaceRadius(level)){
     // The surface under the place, ignoring the object itself (it is right above it).

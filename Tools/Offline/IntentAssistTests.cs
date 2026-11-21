@@ -117,6 +117,23 @@ class IntentAssistTests
             a.Step(0, 0, float.NaN, true); a.Step(0, 0, 5f, true);
             Check(!float.IsNaN(a.Confidence) && !float.IsNaN(a.OffsetU), "bad time steps are safe");
 
+            // A pile of equal choices (four foods in the pan, all going to the plate): split, none is confident; grouped, the
+            // pile is (SYNTHETIC, intent probe 2026-11-21: 0.23 each at a 70 % reach).
+            float split = 0, grouped = 0; int pick = -1;
+            for (int g = 0; g < 2; g++)
+            {
+                var p = new IntentAssist();
+                for (int i = 0; i < 40; i++)
+                {
+                    p.BeginFrame();
+                    for (int k = 0; k < 4; k++) p.AddCandidate(20 + k, .02f * k, .12f + .02f * (k & 1), 3f, g == 1 ? 0 : -1);
+                    p.AddCandidate(30, .45f, .35f, .25f); // the pan the foods lie in
+                    p.Step(0, 0, 1 / 30f, true);
+                }
+                if (g == 0) split = p.Confidence; else { grouped = p.Confidence; pick = p.TargetId; }
+            }
+            Check(split < .5f && grouped > .9f && pick >= 20 && pick <= 23, "equal choices share their confidence: split " + split + ", grouped " + grouped + " (target " + pick + ")");
+
             Console.WriteLine("ALL " + passed + " INTENT ASSIST TESTS PASSED");
             return 0;
         }

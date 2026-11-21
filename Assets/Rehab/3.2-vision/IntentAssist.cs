@@ -40,6 +40,7 @@ namespace GripRehab
 
         readonly int[] ids = new int[MaxCandidates], lastIds = new int[MaxCandidates];
         readonly float[] cu = new float[MaxCandidates], cv = new float[MaxCandidates], prior = new float[MaxCandidates];
+        readonly int[] group = new int[MaxCandidates];
         readonly float[] score = new float[MaxCandidates], lastScore = new float[MaxCandidates];
         int count, lastCount;
         float hu, hv, velU, velV, offU, offV, awayFor;
@@ -70,11 +71,13 @@ namespace GripRehab
 
         public void BeginFrame() { count = 0; }
 
-        /// <summary>One candidate this frame. id: the caller's stable identity (keeps the belief across frames).</summary>
-        public void AddCandidate(int id, float u, float v, float priorWeight = 1f)
+        /// <summary>One candidate this frame. id: the caller's stable identity (keeps the belief across frames).
+        /// equalGroup (0 or more): candidates that are equally right (any vegetable for the same plate) share their
+        /// confidence, so a pile of equal choices engages the nearest instead of splitting the belief (2026-11-21).</summary>
+        public void AddCandidate(int id, float u, float v, float priorWeight = 1f, int equalGroup = -1)
         {
             if (count >= MaxCandidates || !Finite(u) || !Finite(v) || !(priorWeight > 0) || float.IsInfinity(priorWeight)) return;
-            ids[count] = id; cu[count] = u; cv[count] = v; prior[count] = priorWeight; count++;
+            ids[count] = id; cu[count] = u; cv[count] = v; prior[count] = priorWeight; group[count] = equalGroup; count++;
         }
 
         public void Reset()
@@ -119,9 +122,9 @@ namespace GripRehab
                 if (score[i] > best) { best = score[i]; bestAt = i; }
             }
             // Softmax probability of the best candidate.
-            double sum = 0;
-            for (int i = 0; i < count; i++) sum += Math.Exp(score[i] - best);
-            Target = bestAt; Confidence = (float)(1 / sum);
+            double sum = 0, mine = 0;
+            for (int i = 0; i < count; i++) { double e = Math.Exp(score[i] - best); sum += e; if (i == bestAt || group[bestAt] >= 0 && group[i] == group[bestAt]) mine += e; }
+            Target = bestAt; Confidence = (float)(mine / sum);
             float tu = cu[bestAt] - hu, tv = cv[bestAt] - hv; TargetDistance = (float)Math.Sqrt(tu * tu + tv * tv);
             Pull(tu, tv, speed, dt);
             Remember();

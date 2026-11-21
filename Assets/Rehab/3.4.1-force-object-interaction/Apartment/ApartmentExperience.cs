@@ -99,12 +99,16 @@ public sealed class ApartmentExperience:MonoBehaviour {
  // finds a free spot inside instead of snapping to the middle). Listed once per activity, never per frame.
  Activity _volumesFor;PlacementVolume[] _volumes=new PlacementVolume[0];SnapTarget[] _volumePlaces=new SnapTarget[0];
  readonly SnapTarget _pourPlace=new SnapTarget{id="pour",label="cup",capacity=int.MaxValue};
+ // A held tool's work (Activity.ToolWork: the pan to stir, the next cut) is offered as a place too, so the assist brings the
+ // tool there and the activity's AutoTool cuts or stirs (activity probe 2026-11-21: with camera depth the tool stopped short).
+ readonly SnapTarget _workPlace=new SnapTarget{id="work",label="work",capacity=int.MaxValue};
  // Place assist on the object itself (2026-11-21): while the assist is set on a place (Medium, High), the held object is
  // moved by its remaining error to it (eased over 0.15 s, at most 50 cm), since a held object goes exactly where it is
  // requested each physics step. Steering it through the hand fell 8-25 cm short (depth lag, how it hangs in the hand).
  Vector3 _placeOffset;SqueezableObject _placeOffsetFor;
  // The held object's remaining error to the intended place (the teapot: its spout's error to the cup).
  Vector3 PlaceError(SnapTarget place){
+  if(place==_workPlace)return _workPlace.position-Held.transform.position;
   var teaRun=place==_pourPlace&&_intentRunner!=null&&_intentRunner.Current is TeaActivity ta?ta.tea:null;
   return teaRun!=null?teaRun.AimWant-teaRun.SpoutTipWorld:place.WorldPosition+Vector3.up*(place.id=="volume"?.05f:.02f)-Held.transform.position;}
  /// <summary>The place the movement assist was set on when the object was let go (read by the activity on release).</summary>
@@ -126,9 +130,11 @@ public sealed class ApartmentExperience:MonoBehaviour {
  bool ScreenPoint(Transform view,Vector3 world,float tanH,float tanV,out float u,out float v){var l=view.InverseTransformPoint(world);u=v=0;if(l.z<.08f)return false;u=l.x/(l.z*tanH);v=(l.y/l.z+.05f)/tanV;return Mathf.Abs(u)<1.4f&&Mathf.Abs(v)<1.4f;}
  // What the activity needs now weighs the guess: an item with a place the rules accept now is likely next (3), one with
  // places that are not open yet is unlikely (.3), a tool with no place is neutral (1), one already on its place rare (.25).
- static float ItemPrior(Activity act,ActivityItem a){
+ // group: the open place it goes to (items for the same place are equal choices; -1 none).
+ static float ItemPrior(Activity act,ActivityItem a,out int group){group=-1;
+  if(act.ToolWork(a,out _))return 3f; // the tool the activity needs now (spoon to stir; intent probe: the plate won at 70 % reach)
   bool any=false; // an open place the rules accept now comes first, even for an item already on a place (plate to serve)
-  for(int i=0;i<act.targets.Count;i++){var t=act.targets[i];if(t==null||t==a.snappedTo||t.accepts!=null&&!t.accepts(a))continue;any=true;if(!t.Full&&act.Allows(a,t))return 3f;}
+  for(int i=0;i<act.targets.Count;i++){var t=act.targets[i];if(t==null||t==a.snappedTo||t.accepts!=null&&!t.accepts(a))continue;any=true;if(!t.Full&&act.Allows(a,t)){group=i;return 3f;}}
   return a.snappedTo!=null?.25f:any?.3f:1f;}
  /// <summary>The assist's best guess of the object wanted, even below the confidence that engages it (null if none).</summary>
  public SqueezableObject IntentBestItem=>Held==null&&Intent.Target>=0&&Intent.TargetId>=0&&Intent.TargetId<IntentAssist.MaxCandidates?_intentItems[Intent.TargetId]:null;
@@ -142,14 +148,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
    // Objects to pick up: an activity's items (unplaced ones first), else the room's objects within reach.
    int n=0;
    if(act!=null){for(int i=0;i<act.items.Count&&n<IntentAssist.MaxCandidates;i++){var a=act.items[i];if(a==null)continue;var it=a.Item;if(it==null||!it.gameObject.activeInHierarchy||it.IsBroken)continue;
-     if(ScreenPoint(view,it.transform.position,tanH,tanV,out float cu,out float cv)){_intentItems[n]=it;Intent.AddCandidate(n,cu,cv,ItemPrior(act,a));n++;}}}
+     if(ScreenPoint(view,it.transform.position,tanH,tanV,out float cu,out float cv)){_intentItems[n]=it;float pr=ItemPrior(act,a,out int eq);Intent.AddCandidate(n,cu,cv,pr,eq);n++;}}}
    else{for(int i=0;i<objects.Length&&n<IntentAssist.MaxCandidates;i++){var it=objects[i];if(it==null||!it.gameObject.activeInHierarchy||it.IsBroken||Vector3.Distance(eye,it.transform.position)>1.3f)continue;
      if(ScreenPoint(view,it.transform.position,tanH,tanV,out float cu,out float cv)){_intentItems[n]=it;Intent.AddCandidate(n,cu,cv,1f);n++;}}}
-  } else if(act is TeaActivity tea&&tea.tea!=null&&Held.GetComponent<PourVessel>() is PourVessel pot&&pot.teapot&&tea.tea.CupMl<tea.tea.TargetMl*.9f){
+  } else if(act is TeaActivity tea&&tea.tea!=null&&Held.GetComponent<PourVessel>() is PourVessel pot&&pot.teapot&&(tea.tea.CupMl<tea.tea.TargetMl*.9f||tea.tea.CurrentTilt>8f)){ // held over the cup while still tipped (probe L8: the spout drifted 10 cm off at 90 %)
    // Teapot: the place is "spout over the cup". The tea activity knows where the spout should be (AimWant); the hand goes
    // by the spout's remaining error (intent probe 2026-11-21: palm-size depth could not bring the spout over the cup).
    if(float.IsFinite(tea.tea.AimError)&&ActiveHand!=null){var point=ActiveHand.transform.position+(tea.tea.AimWant-tea.tea.SpoutTipWorld);
     if(ScreenPoint(view,point,tanH,tanV,out float pu,out float pv)){_intentPlaces[0]=_pourPlace;_pourPlace.position=tea.tea.AimWant;_intentPlacePoints[0]=point;Intent.AddCandidate(IntentAssist.MaxCandidates,pu,pv,2f);}}
+  } else if(act!=null&&ActiveHand!=null&&Held.GetComponent<ActivityItem>() is ActivityItem tool&&act.ToolWork(tool,out var work)){
+   var point=ActiveHand.transform.position+(work-Held.transform.position);
+   if(ScreenPoint(view,point,tanH,tanV,out float wu,out float wv)){_intentPlaces[0]=_workPlace;_workPlace.position=work;_intentPlacePoints[0]=point;Intent.AddCandidate(IntentAssist.MaxCandidates,wu,wv,2f);}
   } else if(act!=null&&(Held.GetComponent<PourVessel>() is var vessel&&(vessel==null||vessel.teapot||act is TeaActivity drunk&&drunk.tea!=null&&drunk.tea.CupMl<5f))){
    // A teapot done pouring goes back to its mat; the cup gets place help only once it is empty (never while drinking).
    // Places for the held object: the activity's targets that accept it and still have room.

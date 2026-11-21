@@ -57,6 +57,8 @@ public sealed class TeaPouring : MonoBehaviour {
  public Vector3 Lips=>MouthPoint; // how long the teapot has been level (no flow) since it last poured
 
  readonly TremorEstimator estimator=new TremorEstimator();double lastFrameTime=-1;float nextTremor;
+ /// <summary>Diagnostics: the last 32 tremor windows as (rms mm, slow path mm, Hz, accepted 0/1).</summary>
+ public readonly float[] TremorWindows=new float[128];public int TremorWindowCount;
  OneEuroFilter rollFilter=new OneEuroFilter(1.2f,.02f);float rollBase=float.NaN;SqueezableObject rollFor;bool raised;float keyTilt;bool keyMouth;
  Vector3 cupPrevPos,cupPrevVel,cupAccel;bool cupPrimed,cupWasHeld;float handoverUntil;
 
@@ -247,9 +249,10 @@ public sealed class TeaPouring : MonoBehaviour {
   // Millimetres per pixel from the knuckle breadth (index to little finger base), about 80 mm in an adult hand: an estimate.
   float px=new Vector2((p[17].x-p[5].x)*w,(p[17].y-p[5].y)*h).magnitude;if(px<8)return;float mm=80f/px;
   estimator.Add(f.captureSeconds,p[0].x*w*mm,p[0].y*h*mm);
-  // Only windows where the hand holds position or pours (slow path under 20 mm): lifting the cup or moving the pot is a
-  // voluntary move, not tremor.
-  if(Time.unscaledTime>=nextTremor){nextTremor=Time.unscaledTime+.5f;if(estimator.Measure(out float rms,out float hz,out float slow)&&slow<20)tremor.Add(rms,hz);}
+  // Only windows where the hand holds position or pours (slow path under 10 mm): lifting the cup or moving the pot is a
+  // voluntary move, not tremor. 10 mm, not 20 (activity probe 2026-11-21, SYNTHETIC): the start or end of a move with a
+  // 17-22 mm path read as 0.3-1.3 mm of tremor; held windows travel 3-4 mm and read 0.01 mm.
+  if(Time.unscaledTime>=nextTremor){nextTremor=Time.unscaledTime+.5f;if(estimator.Measure(out float rms,out float hz,out float slow)){bool ok=slow<10;int k=(TremorWindowCount++%32)*4;TremorWindows[k]=rms;TremorWindows[k+1]=slow;TremorWindows[k+2]=hz;TremorWindows[k+3]=ok?1:0;if(ok)tremor.Add(rms,hz);}}
  }
 
  void Pour(float dt){

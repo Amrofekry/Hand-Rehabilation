@@ -46,7 +46,8 @@ namespace GripRehab
         static float IntentTremor => Intent ? Arg("-intent-tremor", .008f) : 0f;
         static bool HandReach => Camera;
         readonly System.Random shake = new System.Random(7);
-        SqueezableObject swapped; // intent mode: the equal item actually held for this step
+        SqueezableObject swapped; // camera hand: the equal item actually held for this step
+        readonly Dictionary<ActivityItem, ActivityItem> owed = new Dictionary<ActivityItem, ActivityItem>(); // placed early -> the item it stood in for
         float closure; bool sending; long sequence;
         // Tea: the synthetic hand's wrist roll (degrees), lift toward the top of the image (0..1) and an injected tremor.
         float roll, lift, tremorMm, tremorHz = 6;
@@ -277,7 +278,14 @@ namespace GripRehab
                 case ProbeStep.Kind.Place:
                 case ProbeStep.Kind.Grab:
                     swapped = null;
-                    if (Intent && step.item.snappedTo != null && app.Held == null) { run.notes += step.item.Item.displayName + " already placed (an equal choice earlier): step done | "; break; }
+                    // An item placed earlier as an equal choice: this step takes the item it stood in for (a plate moved on to the
+                    // serving mat is a new step, not a skipped one).
+                    if (HandReach && step.item.snappedTo != null && app.Held == null && owed.Remove(step.item))
+                    {
+                        var done = step.item; var other = runner.Current.items.FirstOrDefault(x => x != null && x != done && x.snappedTo == null && runner.Current.targets.Any(t => t.accepts != null && t.accepts(x) && t.accepts(done)));
+                        run.notes += done.Item.displayName + " placed earlier (an equal choice): " + (other != null ? "now " + other.Item.displayName : "step done") + " | ";
+                        if (other == null) break; step.item = other;
+                    }
                     if (app.Held != step.item.Item)
                     {
                         // Open the hand first, as a patient does: after the game releases an object (activity end), a hand
@@ -381,8 +389,7 @@ namespace GripRehab
         }
         IEnumerator IntentGrab(SqueezableObject item, Run run)
         {
-            if (item.GetComponent<ActivityItem>() is ActivityItem placed && placed.snappedTo != null && Intent) { run.notes += item.displayName + " already placed (an equal choice earlier) | "; yield break; }
-            yield return OpenHand(); yield return new WaitForSecondsRealtime(.4f);
+                        yield return OpenHand(); yield return new WaitForSecondsRealtime(.4f);
             yield return IntentReachTo(item.transform.position, run);
             run.notes += "before close: intent=" + (app.IntentItem != null ? app.IntentItem.displayName : "-") + " conf " + app.Intent.Confidence.ToString("0.00") + " under=" + (app.HandRayTarget != null ? app.HandRayTarget.displayName : "-") + " | ";
             yield return CloseUntilHeld(item, 3f);
@@ -390,9 +397,9 @@ namespace GripRehab
             {
                 // An equal choice (another vegetable for the same pan) is a valid move for the activity, not a wrong grab.
                 var want = item.GetComponent<ActivityItem>(); var got = app.Held.GetComponent<ActivityItem>();
-                bool equal = Intent && want != null && got != null && got.snappedTo == null && runner.Current.targets.Any(t => t.accepts != null && t.accepts(want) && t.accepts(got) && !t.Full && runner.Current.Allows(got, t));
+                bool equal = HandReach && want != null && got != null && got.snappedTo == null && runner.Current.targets.Any(t => t.accepts != null && t.accepts(want) && t.accepts(got) && !t.Full && runner.Current.Allows(got, t));
                 run.notes += (equal ? "equal choice " : "intent WRONG GRAB ") + app.Held.displayName + " for " + item.displayName + " | ";
-                if (equal) { swapped = app.Held; yield break; }
+                if (equal) { swapped = app.Held; owed[got] = want; yield break; }
             }
             wantDx = wantDy = 0;
         }
@@ -426,7 +433,7 @@ namespace GripRehab
                     float left = step.ml - tea.CupMl;
                     float want = left > 40 ? 62 : left > 15 ? 48 : 40; // slower near the line
                     if (tea.AimError > .03f) want = Mathf.Min(want, 15); // the spout drifted off the cup: tip back while it comes over again
-                    if (Camera && Seconds() > nextFix && tea.AimError > .008f) { nextFix = Seconds() + .12f; Correct(tea.AimWant - tea.SpoutTipWorld, .8f); }
+                    if (Camera && ApartmentExperience.AssistSetting < AssistLevel.Medium && Seconds() > nextFix && tea.AimError > .008f) { nextFix = Seconds() + .12f; Correct(tea.AimWant - tea.SpoutTipWorld, .8f); } // with the assist the hand just holds still
                     angle = Mathf.MoveTowards(angle, want, 60 * Time.unscaledDeltaTime); tilt(angle); yield return null;
                     if (run.level == 2 && !midShot && tea.CupMl > step.ml * .4f && tea.FlowMlPerSecond > 15) { midShot = true; yield return Shot("activity-7-pourtea-pouring" + (Camera ? "-camera" : "")); }
                     if (Seconds() > nextNote) { nextNote = Seconds() + .6f; var e = tea.AimWant - tea.SpoutTipWorld; run.notes += "<a=" + angle.ToString("0") + " err=" + (e * 1000).ToString("F0") + " dx=" + handDx.ToString("0.00") + " dy=" + handDy.ToString("0.00") + " s=" + handScale.ToString("0.00") + " yaw=" + app.player.transform.eulerAngles.y.ToString("0.0") + " pitch=" + app.player.view.transform.localEulerAngles.x.ToString("0.0") + " flow=" + tea.FlowMlPerSecond.ToString("0") + "> "; }
@@ -517,7 +524,10 @@ namespace GripRehab
                     tea.tremor.Samples + " windows, " + tea.tremor.MeanRmsMm.ToString("0.00") + " mm, " + tea.tremor.DominantHz.ToString("0.00") + " Hz");
             }
             else if (Camera)
+            {
+                var tw = tea.TremorWindows; int c = Mathf.Min(32, tea.TremorWindowCount); var sb = new StringBuilder("tremor windows (rms/slow/tilt/ok): "); for (int k = 0; k < c; k++) sb.Append(tw[k * 4].ToString("0.00")).Append('/').Append(tw[k * 4 + 1].ToString("0")).Append('/').Append(tw[k * 4 + 2].ToString("0")).Append('/').Append(tw[k * 4 + 3].ToString("0")).Append(' '); run.notes += sb + " | ";
                 TeaCheck(id + "a steady hand reads as small tremor", tea.tremor.Samples > 0 && tea.tremor.MeanRmsMm < .6f, tea.tremor.MeanRmsMm.ToString("0.00") + " mm");
+            }
             else
                 TeaCheck(id + "keyboard runs report no tremor", tea.tremor.Samples == 0, tea.tremor.Samples + " windows");
         }
