@@ -13,6 +13,14 @@ namespace GripRehab
         [Header("Local camera")]
         public bool autoStartOnPlay = false;
         [Min(0)] public int cameraIndex = 0;
+        [Header("Phone camera (Android over USB, 2026-11-20)")]
+        [Tooltip("Use the Android phone's camera over USB (adb + scrcpy-server) instead of the webcam. Also -vision-phone, or the saved setting PhonePrefKey.")]
+        public bool usePhone;
+        public string phoneFacing = "back", phoneSize = "1280x720";
+        [Range(15, 240)] public int phoneFps = 60;
+        /// <summary>Saved camera choice (1 = phone), set from the options; read when the worker starts.</summary>
+        public const string PhonePrefKey = "GripRehab.CameraSource.Phone";
+        public bool PhoneSelected => usePhone || HasArg("-vision-phone") || PlayerPrefs.GetInt(PhonePrefKey, 0) == 1;
         [Tooltip("Mirror a front-facing webcam before MediaPipe so Right/Left match the patient.")]
         public bool mirror = true;
         [Tooltip("Swap MediaPipe RIGHT/LEFT labels when this webcam reports the opposite physical hand. Enabled for the current laptop camera.")]
@@ -63,9 +71,8 @@ namespace GripRehab
                 var info = new ProcessStartInfo
                 {
                     FileName = python,
-                    Arguments = "-u " + Quote(script) + " --camera " + cameraIndex + " --model " + Quote(model) +
+                    Arguments = "-u " + Quote(script) + SourceArguments() + " --model " + Quote(model) +
                                 (mirror ? " --mirror" : "") + (swapHandedness ? " --swap-handedness" : "") +
-                                (lowLatencyCapture ? " --low-latency --exposure " + manualExposure.ToString(System.Globalization.CultureInfo.InvariantCulture) : "") +
                                 " --preview-port 27819" + (string.IsNullOrEmpty(RecordPath) ? "" : " --record " + Quote(RecordPath)),
                     WorkingDirectory = projectRoot,
                     UseShellExecute = false,
@@ -106,7 +113,7 @@ namespace GripRehab
                         DetectedHandsPerSecond = status.hands;
                         CaptureReadMilliseconds = status.readMs;
                         InferenceMilliseconds = status.inferenceMs;
-                        if (State == "camera_error") LastError = "Camera " + cameraIndex + " could not open";
+                        if (State == "camera_error") LastError = !string.IsNullOrEmpty(status.detail) ? status.detail : "Camera " + cameraIndex + " could not open";
                     }
                     catch (ArgumentException) { LastError = "Malformed vision status"; }
                 }
@@ -134,6 +141,16 @@ namespace GripRehab
             DetectedHandsPerSecond = 0;
             CaptureReadMilliseconds = InferenceMilliseconds = 0;
         }
+        string SourceArguments()
+        {
+            var c = System.Globalization.CultureInfo.InvariantCulture;
+            if (!PhoneSelected)
+                return " --camera " + cameraIndex + (lowLatencyCapture ? " --low-latency --exposure " + manualExposure.ToString(c) : "");
+            // Only safe values reach the command line (they are passed to the phone's shell by the bridge, which checks again).
+            string facing = phoneFacing == "front" || phoneFacing == "external" ? phoneFacing : "back";
+            string size = System.Text.RegularExpressions.Regex.IsMatch(phoneSize ?? "", @"^[1-9]\d{1,4}x[1-9]\d{1,4}$") ? phoneSize : "1280x720";
+            return " --phone --phone-facing " + facing + " --phone-size " + size + " --phone-fps " + Mathf.Clamp(phoneFps, 15, 240).ToString(c);
+        }
         void OnDisable() { StopWorker(); }
         void OnApplicationQuit() { StopWorker(); }
         void Fail(string reason) { State = "FAILED"; LastError = reason; UnityEngine.Debug.LogError("[VISION_CAMERA] " + reason); }
@@ -149,7 +166,7 @@ namespace GripRehab
 
         [Serializable] sealed class CameraStatus
         {
-            public string state;
+            public string state, detail;
             public int camera, frames, detections, hands;
             public float fps;
             public float readMs, inferenceMs;

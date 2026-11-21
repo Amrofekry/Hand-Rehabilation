@@ -18,8 +18,8 @@
     },
     "Assets/ProductIntegration/ResearchPortalPages.cs": {
       "previousSha256": "0a67b70b37f552e7acd9f13c5b1ffc21c0f3a43ee4a7359f498dfb05c94b10f4",
-      "currentSha256": "4ed86ce796220899e915f1a35a7461b392c3fcb1b5457a7b48b941f719a53bdc",
-      "reason": "User-authorized final release (2026-10-29). Settings: hand reach, hand steadiness, aim assist on/off, recalibrate camera hand."
+      "currentSha256": "c246dd9c520df429ccc541b25e4b23506e0d7fc5a89e482ccc4f659bae52989b",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Phone camera (2026-11-21): Settings button CAMERA: LAPTOP WEBCAM / PHONE (USB), saved, restarts the camera worker."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs": {
       "previousSha256": "fd1615e4106f4001299c49a203141347bb3b7becf38db21c59b6832b99ed2e9c",
@@ -108,8 +108,8 @@
     },
     "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs": {
       "previousSha256": "72f983f608eafb5e88b772cb630c5adf80fab5460dfc43f84b07716a6fbd1f80",
-      "currentSha256": "422473ab8037fecdb4a548ab5d867fcb4df3335c2deebf8bad058853ae092a32",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Hand Lab (2026-11-19): RecordPath passes --record to the MediaPipe bridge so a guided real-hand session saves landmark numbers and timings (never images)."
+      "currentSha256": "0596ec1aecb7f2988d4d72a73deea37f1d16d9028c298c0d013fd23619c2719a",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Phone camera (2026-11-21): optional Android phone camera over USB (--phone, saved setting or -vision-phone), validated phone arguments, the bridge's plain-language camera error shown in the game."
     }
   }
 }

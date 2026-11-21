@@ -200,6 +200,12 @@ namespace GripRehab
             view.Button("HAND REACH (CAMERA): " + HandControlProfile.SensitivityNames[HandLocomotion.Sensitivity], () => { HandLocomotion.Sensitivity = (HandLocomotion.Sensitivity + 1) % 3; SettingsAt(view.ScrollPosition); });
             view.Button("HAND STEADINESS (CAMERA): " + HandControlProfile.SteadinessNames[HandLocomotion.Steadiness], () => { HandLocomotion.Steadiness = (HandLocomotion.Steadiness + 1) % 3; SettingsAt(view.ScrollPosition); });
             view.Button("AIM ASSIST FOR GRABBING: " + (HandLocomotion.AimAssist ? "ON (ASSISTED)" : "OFF (REACH ONLY)"), () => { HandLocomotion.AimAssist = !HandLocomotion.AimAssist; SettingsAt(view.ScrollPosition); });
+            // 2026-11-20: the Android phone's camera over USB (higher fps, wider view) or the laptop webcam; restarts the camera.
+            view.Button("CAMERA: " + (PlayerPrefs.GetInt(VisionCameraLauncher.PhonePrefKey, 0) == 1 ? "PHONE (USB)" : "LAPTOP WEBCAM"), () => {
+                PlayerPrefs.SetInt(VisionCameraLauncher.PhonePrefKey, PlayerPrefs.GetInt(VisionCameraLauncher.PhonePrefKey, 0) == 1 ? 0 : 1);
+                var launcher = UnityEngine.Object.FindAnyObjectByType<VisionCameraLauncher>();
+                if (launcher != null && launcher.IsRunning) { launcher.StopWorker(); launcher.EnsureStarted(); }
+                SettingsAt(view.ScrollPosition); });
             view.Button("RECALIBRATE CAMERA HAND", () => { var e = UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>(); if (e != null) { e.Release(); e.ActiveHand.RecenterTracking(); } SettingsAt(view.ScrollPosition); });
             // Stage 13: voice commands (offline keyword recognition), off by default.
             view.Button("VOICE COMMANDS: " + RehabVoiceInput.ModeName(RehabVoiceInput.Mode) + (RehabVoiceInput.Mode != VoiceMode.Off && RehabVoiceInput.Instance != null && RehabVoiceInput.Instance.Unavailable != null ? " (UNAVAILABLE)" : ""), () => { RehabVoiceInput.Mode = (VoiceMode)(((int)RehabVoiceInput.Mode + 1) % 3); SettingsAt(view.ScrollPosition); });

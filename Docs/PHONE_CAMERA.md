@@ -1,0 +1,41 @@
+# Phone camera over USB (Android)
+
+Status (2026-11-21): **available, not the default**. The laptop webcam remains the main camera, because on the tested phone the USB camera stream is too slow to steer a hand.
+
+## How it works
+- **Transport:** `Tools/Vision/phone_camera.py` starts `scrcpy-server` v5.0.1 (Apache-2.0) on the phone over adb in camera mode (Android 12+). It streams raw H.264 over an `adb forward` socket, and OpenCV's FFmpeg decodes it single-threaded.
+  - Nothing is installed on the phone.
+  - USB debugging must be on.
+- **Tools:** in `E:\GP\codex\.local\tools\scrcpy\scrcpy-win64-v5.0.1` (checksum verified). Override the location with `GRIPREHAB_SCRCPY_DIR`.
+- **Bridge:** `mediapipe_bridge.py --phone [--phone-facing back] [--phone-size 1280x720] [--phone-fps 30]`.
+- **Game:** Settings → `CAMERA: LAPTOP WEBCAM / PHONE (USB)` (saved), or `-vision-phone`.
+- **IP Webcam:** the free app is also supported (`IPWebcamCamera`: its settings over HTTP through the same cable).
+- **Command-line tools:**
+  - `phone_camera.py --list` lists the cameras.
+  - `phone_camera.py --probe 5` measures fps.
+  - `camera_latency.py` measures the delay from a screen flip to the PC.
+
+## Measured on an OPPO CPH2625 (Android 16), MEASURED
+| Camera | FOV (h × v) | Frame rate | Delay from screen flip to PC |
+|---|---|---|---|
+| 0 main (auto focus) | 68° × 54° | 30.2 fps (high-speed 120/240 requested: 23-30 fps, not passed through) | ≈ 610 ms |
+| 2 ultrawide (fixed focus) | 95° × 79° | 30.2 fps | ≈ 610 ms |
+| Test window alone (no camera) | — | — | ≈ 60 ms |
+
+- **Where the delay is:** inside the phone. Raw H.264 frames already arrive 300-640 ms late, and decoding takes about 2 ms per frame.
+- **What did not help:** changing size, bitrate, H.265 or encoder options.
+- **The phone's own Camera app:** it cannot be mirrored instead, because it is blacked out in screen capture.
+- **Built-in webcam mode:** Android's own USB "Webcam" mode (`DeviceAsWebcam`) is not offered on this model (`ro.usb.uvc.enabled` unset).
+- **IP Webcam:** its server did not answer over USB in this session. Not measured yet.
+
+## Settings worth using when a phone path is fast enough
+| Setting | Choice | Why |
+|---|---|---|
+| Frame rate | Highest the path really delivers | Less camera delay |
+| Exposure | Short | No motion blur |
+| Focus | Fixed or locked at arm's length | No focus hunting |
+| Stabilization | Off | It adds delay and moves the image under the hand |
+| Lens | The widest that keeps the hand at least 15 % of the frame | The hand stays in frame when reaching |
+| Filters / beauty | Off | They change the landmarks |
+
+- **Resolution:** 1280x720 is enough. MediaPipe works at 192/224 px, so higher resolution adds delay, not accuracy.

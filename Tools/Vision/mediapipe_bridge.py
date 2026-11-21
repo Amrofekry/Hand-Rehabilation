@@ -18,6 +18,13 @@ def parse_args() -> argparse.Namespace:
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--camera", type=int, default=0, help="Local camera index (default: 0)")
     source.add_argument("--video", type=Path, help="Local video file instead of a camera")
+    source.add_argument("--phone", action="store_true", help="Android phone camera over USB (adb + scrcpy-server); see phone_camera.py")
+    parser.add_argument("--phone-facing", default="back", choices=("back", "front", "external"))
+    parser.add_argument("--phone-size", default="1280x720", help="Phone camera size WxH")
+    parser.add_argument("--phone-fps", type=int, default=60)
+    parser.add_argument("--phone-high-speed", action="store_true", help="Constrained high-speed mode (listed size/fps only)")
+    parser.add_argument("--phone-zoom", type=float, default=0, help="Phone zoom; below 1 picks a wider lens where allowed")
+    parser.add_argument("--max-hands", type=int, default=2, choices=(1, 2), help="1 is faster when only one hand plays")
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL)
     parser.add_argument("--port", type=int, default=27817)
     parser.add_argument("--preview-port", type=int, default=0, help="Optional local JPEG preview for Unity")
@@ -104,7 +111,7 @@ def main() -> None:
     options = mp.tasks.vision.HandLandmarkerOptions(
         base_options=mp.tasks.BaseOptions(model_asset_path=str(args.model)),
         running_mode=mp.tasks.vision.RunningMode.IMAGE if args.self_test else mp.tasks.vision.RunningMode.VIDEO,
-        num_hands=2,
+        num_hands=args.max_hands,
         min_hand_detection_confidence=0.65,
         min_hand_presence_confidence=0.65,
         min_tracking_confidence=0.65,
@@ -116,16 +123,26 @@ def main() -> None:
             print(f"MODEL_SELF_TEST_OK hands={len(result.hand_landmarks)} mediapipe={mp.__version__}")
             return
 
-        # DirectShow avoids the long MSMF startup/stall seen on some Windows webcams.
-        capture = (cv2.VideoCapture(str(args.video)) if args.video else
-                   cv2.VideoCapture(args.camera, cv2.CAP_DSHOW if __import__("sys").platform == "win32" else cv2.CAP_ANY))
+        if args.phone:
+            from phone_camera import PhoneCamera, PhoneCameraConfig
+            try:
+                capture = PhoneCamera(PhoneCameraConfig(facing=args.phone_facing, size=args.phone_size, fps=args.phone_fps,
+                                                        high_speed=args.phone_high_speed, zoom=args.phone_zoom)).open()
+            except Exception as error:  # a plain reason for the game's camera message (no phone, not authorised, ...)
+                print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':-1,'detail':str(error)}), flush=True)
+                raise SystemExit(f"Phone camera: {error}")
+        else:
+            # DirectShow avoids the long MSMF startup/stall seen on some Windows webcams.
+            capture = (cv2.VideoCapture(str(args.video)) if args.video else
+                       cv2.VideoCapture(args.camera, cv2.CAP_DSHOW if __import__("sys").platform == "win32" else cv2.CAP_ANY))
         if not capture.isOpened():
             print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':args.camera}), flush=True)
             raise SystemExit("Could not open camera/video. Check device access and index.")
-        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        if args.low_latency and not args.video:
+        if not args.phone:
+            capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        if args.low_latency and not args.video and not args.phone:
             capture.set(cv2.CAP_PROP_FPS, 30)
             if __import__("sys").platform == "win32":
                 # A fixed exposure avoids the 15 FPS auto-exposure mode on this laptop.
@@ -148,9 +165,17 @@ def main() -> None:
         # Hand Lab recording: landmark numbers and timings only, never an image (the face is not stored).
         record = open(args.record, "w", encoding="utf-8") if args.record else None
         handedness_filter = HandednessFilter()
+        # Live sources are read on their own thread and only the newest frame is tracked (2026-11-20): a frame never
+        # waits behind an older one, and "captured" is when the frame arrived, not when tracking started on it.
+        from phone_camera import LatestFrameReader
+        reader = None if args.video else LatestFrameReader(capture)
         try:
             while args.seconds <= 0 or time.monotonic() - started < args.seconds:
-                ok, frame = capture.read()
+                if reader is not None:
+                    ok, frame, captured = reader.read()
+                else:
+                    ok, frame = capture.read()
+                    captured = time.monotonic()
                 if not ok:
                     if args.video:
                         break
@@ -161,7 +186,6 @@ def main() -> None:
                     continue
                 if args.mirror:
                     frame = cv2.flip(frame, 1)
-                captured = time.monotonic()
                 research_camera.submit(frame, captured)
                 timestamp_ms = max(int((captured - started) * 1000), last_timestamp_ms + 1)
                 last_timestamp_ms = timestamp_ms
@@ -229,6 +253,8 @@ def main() -> None:
             if record is not None:
                 record.close()
             research_camera.close()
+            if reader is not None:
+                reader.stop()
             capture.release()
             sock.close()
             if preview_sock is not None:
