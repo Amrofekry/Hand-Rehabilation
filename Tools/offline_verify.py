@@ -178,6 +178,13 @@ def main():
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',loco],OUTPUT/'hand-locomotion-tests.log')
             evidence['checks'].append(dict(name='hand-locomotion-tests',passed=True,result=result.stdout.strip(),
                 scope='Production hand look/walk policy with fabricated palm positions; no camera or Unity'))
+            depth=OUTPUT/'HandDepthTests.exe'
+            run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(depth),
+                 *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),'Tools/Offline/HandDepthTests.cs',
+                 'Assets/Rehab/3.2-vision/HandDepth.cs','Tools/Offline/TrackingMathShim.cs'],OUTPUT/'hand-depth-tests-compile.log')
+            result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',depth],OUTPUT/'hand-depth-tests.log')
+            evidence['checks'].append(dict(name='hand-depth-tests',passed=True,result=result.stdout.strip(),
+                scope='Production camera-hand depth with fabricated (SYNTHETIC) hands: nearer, farther, tilted, swept, shaky; no camera or Unity'))
             intent=OUTPUT/'IntentAssistTests.exe'
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(intent),
                  *reference_flags,'Tools/Offline/IntentAssistTests.cs','Assets/Rehab/3.2-vision/IntentAssist.cs'],OUTPUT/'intent-assist-tests-compile.log')

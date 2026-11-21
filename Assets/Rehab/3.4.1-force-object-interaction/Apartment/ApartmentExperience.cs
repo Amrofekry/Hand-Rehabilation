@@ -76,6 +76,12 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public static float HandRangeX=.36f,HandRangeY=.25f,HandCentreY=.75f;
  /// <summary>The distance (m) from the eye at which the camera hand sits now (NaN outside camera mode).</summary>
  public float CameraReach=>_reach;
+ // ---- Camera-hand depth (2026-11-21): the hand nearer the camera moves the virtual hand forward (HandDepth). A setting;
+ // AUTOMATIC keeps the hand on whatever is under it (the previous behaviour).
+ public readonly HandDepth Depth=new HandDepth();float _depthAtPickup;
+ const string DepthKey="GripRehab.HandDepthCamera";static int _depthSetting=-1;
+ public static bool DepthFromCamera{get{if(_depthSetting<0)_depthSetting=PlayerPrefs.GetInt(DepthKey,1)==1?1:0;return _depthSetting==1;}
+  set{_depthSetting=value?1:0;PlayerPrefs.SetInt(DepthKey,_depthSetting);}}
  // ---- Intent assist (2026-11-21, plan Phase 4): which object or place the hand is going for, and bounded help to get there.
  /// <summary>The assist core (Unity-free, tested offline); its level is the saved setting (Medium by default).</summary>
  public readonly IntentAssist Intent=new IntentAssist();
@@ -201,14 +207,28 @@ public sealed class ApartmentExperience:MonoBehaviour {
   else if(HandRayTarget==null||under==null&&Time.unscaledTime-_underSeen>.25f){HandRayTarget=under;_underPending=null;}
   else if(under!=null){if(under!=_underPending){_underPending=under;_underSince=Time.unscaledTime;}else if(Time.unscaledTime-_underSince>=.2f){HandRayTarget=under;_underPending=null;}}
   if(under!=null&&under==HandRayTarget)_underSeen=Time.unscaledTime;
-  if(Held!=_reachHeldFor){_reachHeldFor=Held;_heldReach=float.IsFinite(_reach)?_reach:rest;}
+  // Depth from the camera: how big the hand looks, steadied and held while the hand travels across the image.
+  var depthFrame=LeftSelected?vision.LatestLeft:vision.LatestRight;
+  if(hand.TrackingUsed&&depthFrame!=null&&depthFrame.landmarks!=null){float aspect=depthFrame.imageWidth>0&&depthFrame.imageHeight>0?depthFrame.imageWidth/(float)depthFrame.imageHeight:4f/3f;Depth.Step(depthFrame.landmarks,depthFrame.worldLandmarks,aspect,dt);}
+  else if(!hand.TrackingUsed)Depth.Reset();
+  bool camDepth=DepthFromCamera&&Depth.Valid;float userDepth=camDepth?Depth.Offset:0f;
+  if(Held!=_reachHeldFor){_reachHeldFor=Held;_heldReach=float.IsFinite(_reach)?_reach:rest;_depthAtPickup=userDepth;}
   // Holding: the distance stays where the pickup happened (the palm-size push still moves it a little).
   var place=IntentPlace;
   // Holding: toward the intended place the depth follows it (a little above), so front/back needs no reach of its own.
   if(place!=null)_heldReach+=(Mathf.Clamp(Vector3.Distance(eye,_intentPlacePoints[Intent.TargetId-IntentAssist.MaxCandidates]),.2f,maxReach)-_heldReach)*(1-Mathf.Exp(-dt/.12f));
-  float want=Held!=null?_heldReach:HandRayHit?Mathf.Clamp(nearest-.03f,.2f,maxReach):Mathf.Clamp(rest,.2f,maxReach);
+  float want;
+  if(Held!=null)want=Mathf.Clamp(_heldReach+(camDepth?userDepth-_depthAtPickup:0f),.2f,maxReach);
+  else if(camDepth){
+   // Rest distance plus the hand's own depth; a surface under the hand stops it 3 cm short; an object the assist is sure
+   // of draws the depth most of the way (small toward/away moves are enough).
+   want=Mathf.Clamp(rest+userDepth,.2f,maxReach);
+   if(HandRayHit)want=Mathf.Min(want,Mathf.Max(.2f,nearest-.03f));
+   if(IntentItem!=null&&HandRayHit)want=Mathf.Lerp(want,Mathf.Clamp(nearest-.03f,.2f,maxReach),.7f);
+  }
+  else want=HandRayHit?Mathf.Clamp(nearest-.03f,.2f,maxReach):Mathf.Clamp(rest,.2f,maxReach);
   // Nothing under the hand (the line slips past an edge): keep the last depth and drift to rest slowly, not a 20 cm jump.
-  if(Held==null&&!HandRayHit&&float.IsFinite(_reachGoal))want=_reachGoal+(want-_reachGoal)*(1-Mathf.Exp(-dt/.8f));
+  if(Held==null&&!HandRayHit&&!camDepth&&float.IsFinite(_reachGoal))want=_reachGoal+(want-_reachGoal)*(1-Mathf.Exp(-dt/.8f));
   // A depth jump (the line crossing a table edge or an object's rim) is followed only once it lasts (0.35 s away from the
   // eye, 0.12 s toward it so the hand never sinks into what is in front): a still hand whose line grazed an edge swung
   // 20 cm (Hand Lab replay 2026-11-19). Small changes follow at once; the reach moves at most 0.8 m/s.
@@ -216,7 +236,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   else{if(Mathf.Abs(want-_reachPending)>.05f){_reachPending=want;_reachPendingFor=0;}_reachPendingFor+=dt;if(_reachPendingFor>=(want>_reachGoal?.35f:.12f)){_reachGoal=want;_reachPendingFor=0;}}
   _reach=float.IsFinite(_reach)?_reach+Mathf.Clamp((_reachGoal-_reach)*(1-Mathf.Exp(-dt/.1f)),-.8f*dt,.8f*dt):_reachGoal;
   // Palm size only adds a small push (6 % dead band, at most 6 cm): reaching in a little is still possible.
-  float grow=hand.LastPalmSize-1f;grow=Mathf.Sign(grow)*Mathf.Max(0,Mathf.Abs(grow)-.06f);
+  float grow=camDepth?0f:hand.LastPalmSize-1f;grow=Mathf.Sign(grow)*Mathf.Max(0,Mathf.Abs(grow)-.06f); // camera depth replaces the old push
   var world=eye+dir*(_reach+Mathf.Clamp(grow*.3f,-.06f,.06f));
   // (Not for the teapot: its place point already carries the spout's error, so the correction would count it twice.)
   if(place!=null&&Held!=null){var error=PlaceError(place);IntentPlaceError=new Vector2(error.x,error.z).magnitude;}else IntentPlaceError=float.PositiveInfinity;

@@ -7,7 +7,7 @@ Start with **[STATUS.md](STATUS.md)** (what is done, with evidence) and the **[A
 |---|---|
 | Status and audit | [STATUS](STATUS.md), [RELEASE_AUDIT](RELEASE_AUDIT.md) (plan vs build, v1.0.8), [STAGE16_AUDIT](STAGE16_AUDIT.md) (as-built diagrams, Gantt, gaps), [REQUIREMENTS_CHECKLIST](REQUIREMENTS_CHECKLIST.md), [DECISIONS](DECISIONS.md), [BLOCKERS](BLOCKERS.md) |
 | Architecture | [architecture/index.html](architecture/index.html) (layers, pipelines, "where does X live"), [architecture/graph.html](architecture/graph.html) (dependency graph) |
-| Camera hand and controls | [HAND_CONTROL_REPORT](HAND_CONTROL_REPORT.md) (measurements, fixes F1–F6), [HAND_CONTROLS](HAND_CONTROLS.md), [HAND_POINTER](HAND_POINTER.md), [HANDS_AND_MEDIAPIPE_AR](HANDS_AND_MEDIAPIPE_AR.md), [VOICE_COMMANDS](VOICE_COMMANDS.md) |
+| Camera hand and controls | [HAND_CONTROL_REPORT](HAND_CONTROL_REPORT.md) (measurements, fixes F1–F6), [HAND_CONTROLS](HAND_CONTROLS.md) (gestures, movement assist, hand depth), [PHONE_CAMERA](PHONE_CAMERA.md) (phone via Phone Link or USB, measured), [HAND_POINTER](HAND_POINTER.md), [HANDS_AND_MEDIAPIPE_AR](HANDS_AND_MEDIAPIPE_AR.md), [VOICE_COMMANDS](VOICE_COMMANDS.md) |
 | Interaction and physics | [HAND_OBJECT_INTERACTION](HAND_OBJECT_INTERACTION.md), [CORE_INTERACTION_AR](CORE_INTERACTION_AR.md) |
 | UI, audio, environment | [UI_DESIGN_SYSTEM](UI_DESIGN_SYSTEM.md) ([AR](UI_DESIGN_SYSTEM_AR.md)), [UI_UX_AR](UI_UX_AR.md), [AUDIO_DESIGN](AUDIO_DESIGN.md), [ENVIRONMENT](ENVIRONMENT.md), [APPEARANCE_AR](APPEARANCE_AR.md), [ASSET_SELECTION](ASSET_SELECTION.md) |
 | Hardware | [BLE_PROTOCOL](BLE_PROTOCOL.md), [BLE_INTEGRATION](BLE_INTEGRATION.md), [PHYSICAL_TEST_PROTOCOL](PHYSICAL_TEST_PROTOCOL.md) (all physical checks OPEN) |

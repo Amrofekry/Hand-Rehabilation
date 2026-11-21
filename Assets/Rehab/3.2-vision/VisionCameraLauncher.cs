@@ -18,9 +18,14 @@ namespace GripRehab
         public bool usePhone;
         public string phoneFacing = "back", phoneSize = "1280x720";
         [Range(15, 240)] public int phoneFps = 60;
-        /// <summary>Saved camera choice (1 = phone), set from the options; read when the worker starts.</summary>
+        /// <summary>Saved camera choice: 0 laptop webcam, 1 phone over USB, 2 phone through Windows Phone Link (2026-11-21).</summary>
         public const string PhonePrefKey = "GripRehab.CameraSource.Phone";
-        public bool PhoneSelected => usePhone || HasArg("-vision-phone") || PlayerPrefs.GetInt(PhonePrefKey, 0) == 1;
+        public static readonly string[] SourceNames = { "LAPTOP WEBCAM", "PHONE (USB)", "PHONE (PHONE LINK)" };
+        public static int SavedSource { get => Mathf.Clamp(PlayerPrefs.GetInt(PhonePrefKey, 0), 0, 2); set => PlayerPrefs.SetInt(PhonePrefKey, Mathf.Clamp(value, 0, 2)); }
+        public bool PhoneSelected => usePhone || HasArg("-vision-phone") || SavedSource == 1;
+        public bool PhoneLinkSelected => !PhoneSelected && (HasArg("-vision-phone-link") || SavedSource == 2);
+        [Tooltip("Part of the Windows camera name of the phone's connected camera in Phone Link.")]
+        public string phoneLinkCameraName = "Windows Virtual Camera";
         [Tooltip("Mirror a front-facing webcam before MediaPipe so Right/Left match the patient.")]
         public bool mirror = true;
         [Tooltip("Swap MediaPipe RIGHT/LEFT labels when this webcam reports the opposite physical hand. Enabled for the current laptop camera.")]
@@ -144,6 +149,8 @@ namespace GripRehab
         string SourceArguments()
         {
             var c = System.Globalization.CultureInfo.InvariantCulture;
+            if (PhoneLinkSelected)
+                return " --camera-name " + Quote(System.Text.RegularExpressions.Regex.Replace(phoneLinkCameraName ?? "", "[^A-Za-z0-9 ()_.-]", ""));
             if (!PhoneSelected)
                 return " --camera " + cameraIndex + (lowLatencyCapture ? " --low-latency --exposure " + manualExposure.ToString(c) : "");
             // Only safe values reach the command line (they are passed to the phone's shell by the bridge, which checks again).

@@ -202,10 +202,12 @@ namespace GripRehab
             // 2026-11-21: the movement assist finds the object or place the hand is going for and helps finish the move (small
             // movements are enough); helped grabs and placements are always reported apart from the patient's own reach.
             view.Button("MOVEMENT ASSIST (CAMERA): " + ApartmentExperience.AssistSetting.ToString().ToUpperInvariant(), () => { ApartmentExperience.AssistSetting = (AssistLevel)(((int)ApartmentExperience.AssistSetting + 1) % 4); SettingsAt(view.ScrollPosition); });
+            // 2026-11-21: hand depth from the camera (the hand nearer the camera moves the virtual hand forward) or automatic.
+            view.Button("HAND DEPTH (CAMERA): " + (ApartmentExperience.DepthFromCamera ? "MOVE TOWARD / AWAY FROM THE CAMERA" : "AUTOMATIC"), () => { ApartmentExperience.DepthFromCamera = !ApartmentExperience.DepthFromCamera; SettingsAt(view.ScrollPosition); });
             view.Button("AIM ASSIST FOR GRABBING: " + (HandLocomotion.AimAssist ? "ON (ASSISTED)" : "OFF (REACH ONLY)"), () => { HandLocomotion.AimAssist = !HandLocomotion.AimAssist; SettingsAt(view.ScrollPosition); });
             // 2026-11-20: the Android phone's camera over USB (higher fps, wider view) or the laptop webcam; restarts the camera.
-            view.Button("CAMERA: " + (PlayerPrefs.GetInt(VisionCameraLauncher.PhonePrefKey, 0) == 1 ? "PHONE (USB)" : "LAPTOP WEBCAM"), () => {
-                PlayerPrefs.SetInt(VisionCameraLauncher.PhonePrefKey, PlayerPrefs.GetInt(VisionCameraLauncher.PhonePrefKey, 0) == 1 ? 0 : 1);
+            view.Button("CAMERA: " + VisionCameraLauncher.SourceNames[VisionCameraLauncher.SavedSource], () => {
+                VisionCameraLauncher.SavedSource = (VisionCameraLauncher.SavedSource + 1) % VisionCameraLauncher.SourceNames.Length;
                 var launcher = UnityEngine.Object.FindAnyObjectByType<VisionCameraLauncher>();
                 if (launcher != null && launcher.IsRunning) { launcher.StopWorker(); launcher.EnsureStarted(); }
                 SettingsAt(view.ScrollPosition); });

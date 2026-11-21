@@ -45,6 +45,11 @@ public abstract class Activity {
  /// <summary>Would this placement be accepted now? The same rules as Decide, with no side effects (no statistics), for
  /// the movement assist choosing among places (2026-11-21).</summary>
  public virtual bool Allows(ActivityItem item,SnapTarget target)=>true;
+ /// <summary>Movement assist, camera hand (2026-11-21): the held tool near its work does the complex motion by itself (cut,
+ /// stir). Returns true once per completed action (counted as assisted). tool: the held tool's position.</summary>
+ public virtual bool AutoTool(ActivityRunner r,ActivityItem held,Vector3 tool,float dt)=>false;
+ protected float autoToolWait;
+ protected static float Flat(Vector3 a,Vector3 b)=>new Vector2(a.x-b.x,a.z-b.z).magnitude;
  public virtual void Placed(ActivityItem item,SnapTarget target,PlacementResult result){placements.Add(result);steps.Advance();}
  public virtual void Removed(ActivityItem item,SnapTarget target){steps.Retract();}
  public virtual void Grabbed(ActivityItem item){}
@@ -261,6 +266,11 @@ sealed class SimpleMealActivity:Activity {
    steps.Advance();placements.Add(new PlacementResult{accepted=true,score=1});r.Say("Cooked. Now put the food on the plate.");
   }
  }
+ // The spoon over the pan stirs by itself (no squeeze): the stirring time counts up as with a squeeze.
+ public override bool AutoTool(ActivityRunner r,ActivityItem held,Vector3 tool,float dt){
+  if(held.kind!="spoon"||steps.Current!=2||pan==null||Flat(tool,pan.transform.position)>.16f)return false;
+  var col=pan.GetComponentInChildren<Collider>();if(col==null)return false;
+  int before=steps.Current;Squeeze(r,held,col,dt);return steps.Current!=before;}
  public override string PraiseFor(ActivityItem item,SnapTarget target)=>target.id=="burner"?"The pan is on the burner.":target.id=="pan"?"In the pan.":"Served.";
  protected override void AddOutcomes(List<OutcomeMetric> o){o.Add(M("meal.stirSeconds","Stirring with grip","s",stir));o.Add(M("meal.ingredients","Ingredients","",food.Count));}
 }
@@ -297,6 +307,14 @@ sealed class CuttingActivity:Activity {
   if(food.Cut(p,.012f)){steps.Advance();r.Say("Cut "+food.Cuts+" of "+tuning.cuts+".");}
   else{misses++;r.Say("Too close to the end or another cut: move along a little.");}
  }
+ // The knife held over the cucumber cuts by itself, one even slice every 0.8 s (the next even cut position).
+ public override bool AutoTool(ActivityRunner r,ActivityItem held,Vector3 tool,float dt){
+  if(held.kind!="knife"||steps.Current!=1||cucumber==null)return false;
+  var axis=end-start;var nearest=start+axis*Mathf.Clamp01(Vector3.Dot(tool-start,axis)/axis.sqrMagnitude);
+  if(Flat(tool,nearest)>.12f){autoToolWait=.4f;return false;}
+  autoToolWait-=dt;if(autoToolWait>0)return false;autoToolWait=.8f;
+  int cut=cucumber.Cuts;if(cut>=tuning.cuts)return false;
+  Chop(r,cucumber,Vector3.Lerp(start,end,ActivityRules.EvenCutPosition(cut,tuning.cuts)));return cucumber.Cuts>cut;}
  protected override float Accuracy=>cucumber==null||cucumber.Cuts==0?0:ActivityRules.Evenness(cucumber.Lengths());
  protected override void AddOutcomes(List<OutcomeMetric> o){o.Add(M("cut.evenness","Even pieces","%",Accuracy*100));o.Add(M("cut.cuts","Cuts","",cucumber==null?0:cucumber.Cuts));}
 }
@@ -343,6 +361,12 @@ sealed class PrepareServeActivity:Activity {
  public override bool Allows(ActivityItem item,SnapTarget target){int s=steps.Current;
   return !(target.id=="prep"&&s!=0)&&!(target.id=="serve"&&s<4)&&!(target.id=="onplate"&&item.kind=="bread"&&s<1)&&!(target.id=="onplate"&&item.kind=="tomato"&&s<3);}
  public override void Removed(ActivityItem item,SnapTarget target){if(target.id=="prep"&&steps.Current>=1)return;base.Removed(item,target);}
+ // The knife held by the tomato cuts it in half by itself.
+ public override bool AutoTool(ActivityRunner r,ActivityItem held,Vector3 tool,float dt){
+  if(held.kind!="knife"||steps.Current!=2||tomato==null||tomatoCut==null)return false;
+  if(Flat(tool,tomato.transform.position)>.12f){autoToolWait=.4f;return false;}
+  autoToolWait-=dt;if(autoToolWait>0)return false;autoToolWait=.8f;
+  int before=steps.Current;Chop(r,tomatoCut,tomato.transform.position);return steps.Current!=before;}
  public override void Chop(ActivityRunner r,CuttableFood food,Vector3 point){
   if(steps.Current!=2||food!=tomatoCut)return;
   if(food.Cut(food.transform.position,.01f)){steps.Advance();r.Say("Halved. Put the tomato on the plate.");}

@@ -1,29 +1,60 @@
-# Grip Rehab — Unity apartment and live hand tracking
+# Grip Rehab: Unity game for hand-grip rehabilitation
 
-**Current status (23 October 2026): see [Docs/STATUS.md](Docs/STATUS.md).** That file is the single source of truth for the 23 software tasks, their evidence and open blockers. The active roadmap is the [ultimate upgrade plan](Docs/superpowers/plans/2026-10-23-ultimate-upgrade-plan.md). Dated reports such as `CLOSEOUT_2026_10_06.md`, `TASKS.md` and `REPAIR_REPORT.md` are history.
+A furnished apartment with living-room and kitchen activities. You play with your **hand in front of a camera** (MediaPipe hand tracking), helped by a **movement assist**. Keyboard and mouse also work, and an optional force sensor (BLE) adds grip force. Research software: **not a clinical assessment**.
 
-This directory is the unified research-product workspace. `Assets`, `Packages` and `ProjectSettings` are the Unity Hub project; `firmware/`, `hardware/`, `ai-engine/` and `tests/` hold imported sources. All three modules are playable; Modules 2/3 are research prototypes. The doctor screen is a local preview. The fatigue AI is research software trained on a public EMG proxy. None of it is a clinical assessment. The original Gantt and architecture copies are in `Docs/Source/`.
+- **Unity:** 2022.3.20f1. Open this folder in Unity Hub; the main scene is `Assets/Scenes/GripRehab.unity`.
+- **First time:** [START_HERE_AR.html](START_HERE_AR.html), then [Docs/HAND_CONTROLS.md](Docs/HAND_CONTROLS.md) (every gesture and setting).
+- **Status:** [Docs/STATUS.md](Docs/STATUS.md). **Decisions:** [Docs/DECISIONS.md](Docs/DECISIONS.md). **Project rules:** [CLAUDE.md](CLAUDE.md).
 
-Open `Assets/Scenes/GripRehab.unity` to edit the complete game in one scene. **Grip Rehab > Scenes > Open Complete Workspace** opens that same scene. See [the editing guide](Docs/SCENE_ORGANIZATION.md).
+## Folder map
+```
+GripRehab-Unity/
+├── Assets/                      Unity project content
+│   ├── Rehab/                   game code, one folder per WBS task
+│   │   ├── 3.1-environment/       apartment, stations, settings
+│   │   ├── 3.2-vision/            camera hand: bridge launcher, receiver, depth, movement assist, Hand Lab
+│   │   ├── 3.3-deformation/       squeezable objects, tea liquid physics
+│   │   ├── 3.4-game-modules/      menus, voice, audio, exercise suite, probes
+│   │   ├── 3.4.1-force-object-interaction/Apartment/   hand-object interaction and the 7 activities
+│   │   ├── 3.4.2-cognitive-performance/  3.4.3-visuomotor-coordination/   modules 2 and 3
+│   │   └── 6.1-bluetooth-integration/    force sensor (BLE)
+│   ├── Product/  ProductIntegration/  UI/  UIBridge/  _Project/   app shell, profiles, settings, dashboards
+│   ├── Scenes/                  GripRehab.unity (the whole game) and the UI gallery
+│   ├── ThirdParty/  com.gleechi.unity.virtualgrasp/  TextMesh Pro/   vendor code (never edited)
+│   └── Editor/                  build, verification and console-zero tools
+├── Packages/  ProjectSettings/  Unity package list and settings (local packages: Tools/AI)
+├── Builds/Windows/              the built game (GripRehab.exe)
+├── Tools/                       everything that runs outside Unity
+│   ├── Vision/                  MediaPipe bridge, phone camera (USB / Phone Link), camera delay test
+│   ├── Offline/                 C# tests that run without Unity (offline_verify.py)
+│   ├── run_*.py                 game test suites (activity, handlook, perf, UI, ...); run_full_regression.py runs all
+│   ├── hand_lab_report.py  hand_replay.py  hand_depth_eval.py   real-hand recording, replay and analysis
+│   ├── AI/                      local Unity packages used by Packages/manifest.json
+│   └── release/                 installer, release and clean-up scripts
+├── ai-engine/                   fatigue AI (data, training, ONNX export), research only
+├── models/                      hand_landmarker.task and the other bundled models
+├── firmware/  hardware/         force-sensor firmware (Arduino) and grip/electronics designs
+├── tests/                       test sources per WBS task
+├── Docs/                        all documentation (map: Docs/README.md)
+├── CVTraining/weights/          small weights of the optional YOLO hand detector (not used by the game)
+└── .local/  .venv/              local tools and the Python environment (not in git)
+```
 
-Open `E:\GP\codex\GripRehab-Unity` in Unity Hub with Editor **2022.3.20f1**. The saved main scene is `Assets/Scenes/GripRehab.unity`. For first-time instructions, read [START_HERE_AR.html](START_HERE_AR.html) and the [Arabic camera/hand guide](Docs/HANDS_AND_MEDIAPIPE_AR.md).
+## Build and test (Unity Editor closed)
+| What | Command |
+|---|---|
+| Build (hidden) | `"C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Unity.exe" -batchmode -nographics -quit -projectPath . -executeMethod GripRehab.Editor.RehabVerification.BuildWindows -logFile Logs/build.log` |
+| Offline C# + Python tests | `ai-engine/.venv-ai/Scripts/python.exe Tools/offline_verify.py --meta --compile --tests` and `python -m unittest discover -s Tools -p "test_*.py"` |
+| Activities with the camera hand | `ai-engine/.venv-ai/Scripts/python.exe Tools/run_activity_probe.py --camera` (or `--intent` for a 70 % reach with tremor) |
+| Everything | `ai-engine/.venv-ai/Scripts/python.exe Tools/run_full_regression.py` (about 75 min) |
+| Clean caches and old outputs | `powershell -ExecutionPolicy Bypass -File Tools/release/Cleanup-Project.ps1` |
 
-Current display controls and the independent component gallery are explained in [APPEARANCE_AR.md](Docs/APPEARANCE_AR.md). The saved gallery is `Assets/UI/GripUiGallery.unity`; its preview data is unrelated to patient sessions. [UI completion checklist](Docs/UI_COMPLETION_CHECKLIST.md) records current English UI verification and remaining live/device trials.
+## Camera
+- **Laptop webcam:** the default.
+- **Phone through Windows Phone Link:** connected camera, no cable.
+- **Phone over USB:** needs USB debugging.
 
-**Default Play mode opens the Main Menu.** Start as a guest or sign in/create a local account and hand profile, choose an input on preparation, then select one of three playable module demos. In Force + Object, the project-local Python worker opens webcam index 0, estimates 21 landmarks, and streams them on loopback UDP 27817. The annotated local preview is shown in Game view via UDP 27819. The game automatically selects the detected RIGHT or LEFT hand; when both are visible it keeps the current hand until that stream stops updating. Exactly one imported Gleechi VirtualGrasp hand is rendered. Approach a chosen object with the tracked hand and close the fingers briefly to pick it up, or press **G** to bring the station's selected object into the tracked hand without changing camera mode. Close the hand within about a second to keep it; opening the hand or losing tracking releases it. The visual grip percentage and object indentation are demonstrations, not measured force or clinical validation. [The Arabic UI guide](Docs/UI_UX_AR.md) explains every screen, button and saved field.
+Choose in Settings → CAMERA. See [Docs/PHONE_CAMERA.md](Docs/PHONE_CAMERA.md).
 
-The refreshed saved menu and HUD use editable Unity uGUI elements. [Figma design board](https://www.figma.com/design/2xyEji05scuske6RwWG8g4/GripRehab-Phase-3-Menu-and-HUD) contains four editable reference screens; [Arabic design specification](Docs/UI_DESIGN_SYSTEM_AR.md) maps them to the implemented scene and live data. The Figma board is a visual reference, while Unity controls and bindings remain the working application.
-
-The saved camera calibration swaps MediaPipe's hand labels to match the user's laptop: a physical right hand selects RIGHT and a physical left hand selects LEFT. Palm motion is calibrated from the first tracked pose and now follows turns up to 160° instead of the previous 55° limit; press **C** in camera mode to recenter if the starting pose was unusual. Held objects are isolated from the player collider while carried, so squeezing them cannot push the player backward. Single-webcam tracking remains an approximation of 3D pose, especially under occlusion.
-
-Pressing **E** while aiming at an object in camera mode explicitly switches to keyboard demo and picks it up; this works even without a tracked hand. Press **B** during gameplay to cycle Camera → Keyboard Demo → Phase 2 → Camera; it cannot change input while a menu is open. The keyboard demo works without camera or hardware: WASD/mouse navigate, E picks up, Q releases, Space/click squeezes, 1–5 selects fingers, J chooses a joint, X/Z bends/opens, C resets, arrows/PageUp/PageDown move the hand, F sits or stands, and V toggles the preview. **Space only squeezes in Keyboard Demo; Enter confirms menu buttons.** Space has been removed from Unity's UI Submit mapping so gripping cannot activate a selected Quit or Main Menu button. Phase 2 expects Nano 33 IoT + HX711 through the supplied bridge on UDP 27818; no such physical hardware has been tested. The HUD labels accepted synthetic force **SYNTHETIC REPLAY** and shows `--` for expired force or camera tracking. There is no automatic fallback from an invalid Phase 2 sample to demo force.
-
-The single furnished apartment from Brick Project Studio has seated living-room and kitchen stations with three selectable objects each. Their local deformation and breakage are approximations. The imported VirtualGrasp package supplies the visible rig, output bones and controller; automatic object-specific Grasp DB baking has not been performed. Older screenshots in `Docs/images` may show previous modes or synthetic tracking and are labelled as such.
-
-- Scene settings: `Assets/Rehab/3.1-environment/Apartment/ApartmentSettings.asset`.
-- Camera bridge: `Tools/Vision/mediapipe_bridge.py`; Unity lifecycle and preview: `Assets/Rehab/3.2-vision/`.
-- Hand interaction: `Assets/Rehab/3.4.1-force-object-interaction/Apartment/`.
-- Phase 2 protocol: [Docs/BLE_INTEGRATION.md](Docs/BLE_INTEGRATION.md).
-- Verification and remaining limits: [Docs/QA.md](Docs/QA.md).
-
-Build and Verify preserve the authored scene. Edit scene assets outside Play and save. The parent `E:\GP\codex` sources remain intact; `Docs/Source/IMPORT_MANIFEST.json` records the imported copy, and no automatic synchronization will replace your edits. Cognitive and Visuomotor modules now have playable research-prototype exercises; they are not clinical assessments. The doctor screen remains a local research preview. The encrypted profile migration/recovery path passed software fixtures, but this is not a validated medical record system. A real-person live-camera landmark/dwell/grasp trial and real load-cell validation remain outstanding.
+## Notes
+Single-camera tracking estimates depth: it does not measure it. Force from the camera is a visual estimate unless a sensor is connected. Every assisted grab, placement, cut or stir is recorded separately from the patient's own movement.

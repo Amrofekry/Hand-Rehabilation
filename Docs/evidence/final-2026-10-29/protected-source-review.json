@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "a3f76027645025e904e8607b741d60c75c0d8b976e6654c1722207079f835134",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Movement assist (2026-11-21): needs-now priors, best-guess over an already-placed object, under-hand hysteresis, on-screen grabs use distance only, placing continues when the hand target is unsafe, 50 cm place cap."
+      "currentSha256": "12aadc4b1b6393d1ae3fec4d6c9558782ea7ab575526364402ba4fabc9f57999",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Hand depth (2026-11-21): camera depth (HandDepth: the hand nearer the camera moves the virtual hand forward), setting HAND DEPTH CAMERA/AUTOMATIC, surfaces still stop the hand, the assist draws depth toward a sure target."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
@@ -18,8 +18,8 @@
     },
     "Assets/ProductIntegration/ResearchPortalPages.cs": {
       "previousSha256": "0a67b70b37f552e7acd9f13c5b1ffc21c0f3a43ee4a7359f498dfb05c94b10f4",
-      "currentSha256": "a14a3df1086d1fe9cf67ec5e19a4ba67b0adfc9554dfbbbfce807f036daae116",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Movement assist (2026-11-21): Settings button MOVEMENT ASSIST (CAMERA): OFF / LOW / MEDIUM / HIGH."
+      "currentSha256": "717b7c6714135620e7e01c4da244a52a467622da19f86a9cb7c41b99e5a43009",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Settings (2026-11-21): CAMERA cycles laptop / phone USB / Phone Link; HAND DEPTH (CAMERA) setting."
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/HandRigRules.cs": {
       "previousSha256": "fd1615e4106f4001299c49a203141347bb3b7becf38db21c59b6832b99ed2e9c",
@@ -108,8 +108,8 @@
     },
     "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs": {
       "previousSha256": "72f983f608eafb5e88b772cb630c5adf80fab5460dfc43f84b07716a6fbd1f80",
-      "currentSha256": "0596ec1aecb7f2988d4d72a73deea37f1d16d9028c298c0d013fd23619c2719a",
-      "reason": "User-authorized final release (2026-10-29). 3.2 Phone camera (2026-11-21): optional Android phone camera over USB (--phone, saved setting or -vision-phone), validated phone arguments, the bridge's plain-language camera error shown in the game."
+      "currentSha256": "b9c2e6c23fe8d5c74c68db615c3ea490d8cec84376d9b305bfedda891acbb9c7",
+      "reason": "User-authorized final release (2026-10-29). 3.2 Phone Link camera (2026-11-21): third camera source PHONE (PHONE LINK), passed to the bridge by camera name (filtered characters)."
     }
   }
 }

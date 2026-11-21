@@ -26,6 +26,8 @@ public sealed class ActivityRunner : MonoBehaviour {
  /// <summary>Set by the probes; normal play builds no diagnostic strings.</summary>
  public bool RecordPlacement;Collider lastAimCollider;bool lastAimVolume;SqueezableObject armedTool;
  public string Feedback{get;private set;}="";
+ /// <summary>Cuts and stirs the movement assist did by itself (counted apart from the patient's own grip).</summary>
+ public int AutoToolActions{get;private set;}int autoToolsAtStart;
  public float PlacementYaw{get;private set;}
  bool finished;float startedAt;Transform root;Material source;SqueezableObject[] savedObjects;
  readonly RaycastHit[] hits=new RaycastHit[24];
@@ -55,7 +57,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   foreach(var item in kitchen?choices.kitchenObjects:choices.livingObjects)item.gameObject.SetActive(false);
   baseForward=Vector3.zero;root=null;var facing=app.player.transform.forward;facing.y=0;baseForward=facing.normalized;baseYaw=app.player.transform.eulerAngles.y;
   root=new GameObject("Activity: "+ActivityRules.Title(kind)).transform;
-  Current=Activity.Create(kind,ActivityTuning.ForLevel(Level));finished=false;Feedback="";PlacementYaw=0;LastResult=null;assistedAtStart=app.AssistedGrabs;intentGrabsAtStart=app.IntentAssistedGrabs;intentPlacesAtStart=app.IntentAssistedPlacements;
+  Current=Activity.Create(kind,ActivityTuning.ForLevel(Level));finished=false;Feedback="";PlacementYaw=0;LastResult=null;assistedAtStart=app.AssistedGrabs;intentGrabsAtStart=app.IntentAssistedGrabs;autoToolsAtStart=AutoToolActions;intentPlacesAtStart=app.IntentAssistedPlacements;
   Current.Build(this);
   savedObjects=app.objects;app.objects=savedObjects.Concat(Current.items.Select(i=>i.Item).Where(i=>i!=null)).ToArray();
   app.PresentationOffset=new Vector3(.14f,-.12f,0); // keep the held item low-right so the aim point stays visible
@@ -111,7 +113,7 @@ public sealed class ActivityRunner : MonoBehaviour {
     // The surface under the place, ignoring the object itself (it is right above it).
     int n=Physics.RaycastNonAlloc(w+Vector3.up*.3f,Vector3.down,hits,.6f,~(1<<8),QueryTriggerInteraction.Ignore);float top=float.MaxValue;float y=w.y;
     for(int i=0;i<n;i++){var c=hits[i].collider;if(c==null||c.attachedRigidbody==item.Body)continue;if(hits[i].distance<top){top=hits[i].distance;y=hits[i].point.y;}}
-    if(level==AssistLevel.High)SetPlacementYaw(Mathf.DeltaAngle(Yaw,intended.yaw)); // High also turns it to match
+    if(level>=AssistLevel.Medium)SetPlacementYaw(Mathf.DeltaAngle(Yaw,intended.yaw)); // Medium and High also turn it to match
     point=new Vector3(w.x,y,w.z);aimed=true;app.CountAssistedPlacement();}
   }
   if(aimed)Put(a,point);
@@ -242,6 +244,8 @@ public sealed class ActivityRunner : MonoBehaviour {
   if(input&&Input.GetKeyDown(KeyCode.Period))TurnPlacement(15);
   // Tools act on what the player looks at while squeezing.
   var held=app.Held!=null?app.Held.GetComponent<ActivityItem>():null;
+  // Movement assist (camera hand, Medium or High): the held tool near its work cuts or stirs by itself.
+  if(held!=null&&app.CameraMode&&ApartmentExperience.AssistSetting>=AssistLevel.Medium&&Current.AutoTool(this,held,app.Held.transform.position,Time.deltaTime)){AutoToolActions++;Refresh();}
   if(held!=null&&app.ForceValid){
    bool aimed=Aim(app.Held,out var point);
    var target=aimed?AimedCollider():null;
@@ -285,6 +289,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   if(app.CameraMode&&ApartmentExperience.AssistSetting!=AssistLevel.Off){
    result.outcomes.Add(new OutcomeMetric{key="handling.assistLevel",label="Movement assist level (0 off - 3 high)",unit="",value=(int)ApartmentExperience.AssistSetting});
    result.outcomes.Add(new OutcomeMetric{key="handling.intentAssistedGrabs",label="Grabs the movement assist helped",unit="",value=app.IntentAssistedGrabs-intentGrabsAtStart});
+   result.outcomes.Add(new OutcomeMetric{key="handling.autoToolActions",label="Cuts and stirs the movement assist did",unit="",value=AutoToolActions-autoToolsAtStart});
    result.outcomes.Add(new OutcomeMetric{key="handling.intentAssistedPlacements",label="Placements the movement assist helped",unit="",value=app.IntentAssistedPlacements-intentPlacesAtStart});}
   Feedback="Activity complete: "+result.score+"/100, "+ActivityRules.Stars(result.score)+" of 3 stars. K replays it, N picks the next one.";
   RehabAudio.Play(RehabSound.Complete);Refresh();

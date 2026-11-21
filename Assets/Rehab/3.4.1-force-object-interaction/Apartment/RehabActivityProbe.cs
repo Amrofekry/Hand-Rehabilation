@@ -329,6 +329,18 @@ namespace GripRehab
                     break;
                 case ProbeStep.Kind.Squeeze:
                 case ProbeStep.Kind.Chop:
+                    if (HandReach && ApartmentExperience.AssistSetting >= AssistLevel.Medium && app.Held != null)
+                    {
+                        // Movement assist: bring the tool to its work (part of the way in intent mode) and wait; the game cuts
+                        // or stirs by itself (no squeeze, no chopping motion).
+                        int stepBefore = runner.Current.steps.Current, doneBefore = runner.Current.steps.CurrentDone; // a step can count several cuts
+                        yield return IntentReachTo(app.ActiveHand.transform.position + (step.aim() - app.Held.transform.position), run);
+                        float until = Time.realtimeSinceStartup + (step.kind == ProbeStep.Kind.Squeeze ? step.seconds + 4 : 4);
+                        while (Time.realtimeSinceStartup < until && runner.Current.steps.Current == stepBefore && runner.Current.steps.CurrentDone == doneBefore && runner.LastResult == null) yield return null;
+                        run.notes += "auto " + step.kind + ": step " + stepBefore + " -> " + runner.Current.steps.Current + " (" + runner.Feedback + ") | ";
+                        wantDx = wantDy = 0;
+                        break;
+                    }
                     app.player.LookAt(step.aim()); yield return new WaitForSecondsRealtime(.3f);
                     string seenArmed = ""; float peak = 0; yield return SqueezeTo(step.newtons, step.kind == ProbeStep.Kind.Chop ? .45f : step.seconds, f => { if (f > peak) { peak = f; seenArmed = DiagField(runner, "chopArmed") + " valid=" + app.ForceValid + " kind=" + (app.Held != null && app.Held.GetComponent<ActivityItem>() != null ? app.Held.GetComponent<ActivityItem>().kind : "-") + " step=" + runner.Current.steps.Current + " ray=" + Diag(runner, "AimedCollider"); } });
                     run.notes += "[" + seenArmed + " fb=" + runner.Feedback + "] ";

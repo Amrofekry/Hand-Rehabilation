@@ -18,12 +18,14 @@ def parse_args() -> argparse.Namespace:
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--camera", type=int, default=0, help="Local camera index (default: 0)")
     source.add_argument("--video", type=Path, help="Local video file instead of a camera")
+    source.add_argument("--camera-name", help="Pick the camera whose Windows name contains this text, e.g. 'Windows Virtual Camera' (the phone through Phone Link)")
     source.add_argument("--phone", action="store_true", help="Android phone camera over USB (adb + scrcpy-server); see phone_camera.py")
     parser.add_argument("--phone-facing", default="back", choices=("back", "front", "external"))
     parser.add_argument("--phone-size", default="1280x720", help="Phone camera size WxH")
     parser.add_argument("--phone-fps", type=int, default=60)
     parser.add_argument("--phone-high-speed", action="store_true", help="Constrained high-speed mode (listed size/fps only)")
     parser.add_argument("--phone-zoom", type=float, default=0, help="Phone zoom; below 1 picks a wider lens where allowed")
+    parser.add_argument("--no-world", action="store_true", help="Do not send MediaPipe world landmarks (depth and finger angles then use the image)")
     parser.add_argument("--max-hands", type=int, default=2, choices=(1, 2), help="1 is faster when only one hand plays")
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL)
     parser.add_argument("--port", type=int, default=27817)
@@ -60,6 +62,18 @@ class HandednessFilter:
             self.pending, self.count = None, 0
         self.seen = now
         return self.label
+
+
+def find_camera(name: str):
+    """DirectShow index of the first camera whose name contains `name` (case-insensitive); None if none or unavailable."""
+    try:
+        from pygrabber.dshow_graph import FilterGraph
+        for index, device in enumerate(FilterGraph().get_input_devices()):
+            if name.lower() in device.lower():
+                return index
+    except Exception:
+        return None
+    return None
 
 
 def make_payload(hand, category, captured: float, sequence: int, version: str, swap: bool,
@@ -131,6 +145,16 @@ def main() -> None:
             except Exception as error:  # a plain reason for the game's camera message (no phone, not authorised, ...)
                 print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':-1,'detail':str(error)}), flush=True)
                 raise SystemExit(f"Phone camera: {error}")
+        elif args.camera_name:
+            # Phone Link's connected camera (or any camera) by name, so the index never has to be guessed.
+            index = find_camera(args.camera_name)
+            if index is None:
+                print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':-1,'detail':f"No camera named '{args.camera_name}': open Phone Link and turn on the phone's connected camera."}), flush=True)
+                raise SystemExit(f"No camera named {args.camera_name}")
+            capture = cv2.VideoCapture(index, cv2.CAP_DSHOW)
+            capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+            capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+            capture.set(cv2.CAP_PROP_FPS, 30)
         else:
             # DirectShow avoids the long MSMF startup/stall seen on some Windows webcams.
             capture = (cv2.VideoCapture(str(args.video)) if args.video else
@@ -138,11 +162,11 @@ def main() -> None:
         if not capture.isOpened():
             print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':args.camera}), flush=True)
             raise SystemExit("Could not open camera/video. Check device access and index.")
-        if not args.phone:
+        if not args.phone and not args.camera_name:
             capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
             capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
             capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        if args.low_latency and not args.video and not args.phone:
+        if args.low_latency and not args.video and not args.phone and not args.camera_name:
             capture.set(cv2.CAP_PROP_FPS, 30)
             if __import__("sys").platform == "win32":
                 # A fixed exposure avoids the 15 FPS auto-exposure mode on this laptop.
@@ -204,10 +228,17 @@ def main() -> None:
                     if len(hand) != 21 or not handedness:
                         continue
                     sequence += 1
-                    payload = make_payload(hand, handedness[0], captured, sequence,
-                                           mp.__version__, args.swap_handedness,
-                                           max(0.0, (time.monotonic() - captured) * 1000),
-                                           image_width=int(frame.shape[1]), image_height=int(frame.shape[0]))
+                    # World landmarks (metres, about the hand's centre) let the game tell distance from tilt (HandDepth).
+                    hand_index = list(result.hand_landmarks).index(hand)
+                    world_hand = None if args.no_world else result.hand_world_landmarks[hand_index] if hand_index < len(result.hand_world_landmarks) else None
+                    try:
+                        payload = make_payload(hand, handedness[0], captured, sequence, mp.__version__, args.swap_handedness,
+                                               max(0.0, (time.monotonic() - captured) * 1000), world_hand=world_hand,
+                                               image_width=int(frame.shape[1]), image_height=int(frame.shape[0]))
+                    except ValueError:  # an implausible world pose: send the image landmarks alone
+                        payload = make_payload(hand, handedness[0], captured, sequence, mp.__version__, args.swap_handedness,
+                                               max(0.0, (time.monotonic() - captured) * 1000),
+                                               image_width=int(frame.shape[1]), image_height=int(frame.shape[0]))
                     payload["handedness"] = handedness_filter.update(payload["handedness"], captured, len(result.hand_landmarks))
                     sock.sendto(json.dumps(payload, separators=(",", ":")).encode("utf-8"),
                                 ("127.0.0.1", args.port))
