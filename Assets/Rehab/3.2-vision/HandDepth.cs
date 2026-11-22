@@ -29,11 +29,16 @@ namespace GripRehab
         public float deadZone = .03f;                  // log size (about 3 %)
         public float forwardGain = 1.6f, backGain = .5f; // metres per unit of log size beyond the dead zone
         public float maxForward = .55f, maxBack = .15f;
+        /// <summary>Calibrated resting size (log; HandCalibration, 2026-11-22). Set: a new hand starts from it (not from the size it
+        /// happens to have when it appears) and it still follows slowly (baselineSeconds). NaN: the first size is the rest.</summary>
+        public float fixedBaseline = float.NaN;
 
         float level, baseline, speed, lastX, lastY, seenFor;
         bool primed;
 
         public float Level => primed ? level - baseline : 0;
+        /// <summary>The smoothed log size itself (NaN before a hand), what the calibration records.</summary>
+        public float RawLevel => primed ? level : float.NaN;
         public float Offset { get; private set; }
         public bool Valid => primed;
 
@@ -74,7 +79,7 @@ namespace GripRehab
             cy = (image[0].y + image[5].y + image[9].y + image[13].y + image[17].y) * .2f;
             if (!primed || !(dt > 0) || dt > .5f)
             {
-                level = baseline = cue; lastX = cx; lastY = cy; speed = 0; seenFor = 0; primed = true; Offset = 0; return;
+                level = cue; baseline = Fixed ? fixedBaseline : cue; lastX = cx; lastY = cy; speed = 0; seenFor = 0; primed = true; Offset = 0; return;
             }
             float v = (float)Math.Sqrt(Sq(cx - lastX) + Sq(cy - lastY)) / dt;
             lastX = cx; lastY = cy;
@@ -82,12 +87,13 @@ namespace GripRehab
             float hold = Clamp01((speed - holdFrom) / Math.Max(1e-3f, holdFull - holdFrom));
             level += (cue - level) * (1 - (float)Math.Exp(-dt / smoothSeconds)) * (1 - hold);
             seenFor += dt;
-            float bt = seenFor < acquireSeconds ? .15f : baselineSeconds;
+            float bt = seenFor < acquireSeconds && !Fixed ? .15f : baselineSeconds;
             baseline += (level - baseline) * (1 - (float)Math.Exp(-dt / bt));
             float x = level - baseline, beyond = Math.Sign(x) * Math.Max(0, Math.Abs(x) - deadZone);
             Offset = beyond >= 0 ? Math.Min(maxForward, beyond * forwardGain) : Math.Max(-maxBack, beyond * backGain);
         }
 
+        bool Fixed => !float.IsNaN(fixedBaseline) && !float.IsInfinity(fixedBaseline);
         static float Image(Vector3[] p, int a, int b, float aspect) => (float)Math.Sqrt(Sq((p[a].x - p[b].x) * aspect) + Sq(p[a].y - p[b].y));
         static float Sq(float v) => v * v;
         static float Clamp01(float v) => v < 0 ? 0 : v > 1 ? 1 : v;

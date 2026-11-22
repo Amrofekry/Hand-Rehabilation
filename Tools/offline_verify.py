@@ -185,6 +185,13 @@ def main():
             result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',depth],OUTPUT/'hand-depth-tests.log')
             evidence['checks'].append(dict(name='hand-depth-tests',passed=True,result=result.stdout.strip(),
                 scope='Production camera-hand depth with fabricated (SYNTHETIC) hands: nearer, farther, tilted, swept, shaky; no camera or Unity'))
+            calib=OUTPUT/'HandCalibrationTests.exe'
+            run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(calib),
+                 *reference_flags,'-r:'+str(refs/'System.Numerics.dll'),'-r:'+str(refs/'System.Numerics.Vectors.dll'),'Tools/Offline/HandCalibrationTests.cs',
+                 'Assets/Rehab/3.2-vision/HandCalibration.cs','Assets/Rehab/3.2-vision/HandDepth.cs','Tools/Offline/TrackingMathShim.cs'],OUTPUT/'hand-calibration-tests-compile.log')
+            result=run([EDITOR/'MonoBleedingEdge/bin/mono.exe',calib],OUTPUT/'hand-calibration-tests.log')
+            evidence['checks'].append(dict(name='hand-calibration-tests',passed=True,result=result.stdout.strip(),
+                scope='Production hand calibration with a fabricated (SYNTHETIC) patient: ranges, mapping, depth gains, saving; no camera or Unity'))
             intent=OUTPUT/'IntentAssistTests.exe'
             run([EDITOR/'NetCoreRuntime/dotnet.exe',EDITOR/'DotNetSdkRoslyn/csc.dll','-nologo','-noconfig','-nostdlib','-target:exe','-out:'+str(intent),
                  *reference_flags,'Tools/Offline/IntentAssistTests.cs','Assets/Rehab/3.2-vision/IntentAssist.cs'],OUTPUT/'intent-assist-tests-compile.log')

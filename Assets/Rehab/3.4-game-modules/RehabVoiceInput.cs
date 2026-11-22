@@ -277,6 +277,7 @@ namespace GripRehab
                 case VoiceCommand.CameraMode: if (app.CameraMode) return "Camera hand is already on."; app.SetCameraMode(); return null;
                 case VoiceCommand.KeyboardMode: if (!app.CameraMode && !app.Hardware) return "Keyboard demo is already on."; app.SetHardware(false); return null;
                 case VoiceCommand.RecenterHand: app.Release(); app.ActiveHand.RecenterTracking(); return null;
+                case VoiceCommand.CalibrateHand: HandCalibrationRun.Begin(app); return null;
                 case VoiceCommand.RotateLeft: runner.TurnPlacement(-15); return null;
                 case VoiceCommand.RotateRight: runner.TurnPlacement(15); return null;
                 case VoiceCommand.StartBookshelf: return StartActivity(ActivityKind.Bookshelf);

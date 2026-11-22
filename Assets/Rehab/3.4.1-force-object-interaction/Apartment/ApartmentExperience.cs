@@ -74,6 +74,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
  /// The resting row differs per sitting (0.73 and 0.78 in two sessions), so HandCentreY follows where the hand works: a slow
  /// average (20 s) of the tracked wrist row, kept within 0.55-0.85.</summary>
  public static float HandRangeX=.36f,HandRangeY=.25f,HandCentreY=.75f;
+ /// <summary>The patient's saved hand calibration (HandCalibration; PlayerPrefs, eleven numbers). Default: none (the ranges above).</summary>
+ public static HandCalibration.Result Calibration;static bool _calibrationLoaded;bool _calibrationApplied;
+ public const string CalibrationKey="GripRehab.HandCalibration";
+ public static bool HasCalibration{get{if(!_calibrationLoaded){_calibrationLoaded=true;HandCalibration.TryLoad(PlayerPrefs.GetString(CalibrationKey,""),out Calibration);}return Calibration.Any;}}
+ void EnsureCalibration(){if(_calibrationApplied)return;_calibrationApplied=true;if(HasCalibration)ApplyDepthCalibration();}
+ /// <summary>Save a new calibration and use it at once (CALIBRATE HAND).</summary>
+ public void SetCalibration(HandCalibration.Result r){Calibration=r;_calibrationLoaded=true;PlayerPrefs.SetString(CalibrationKey,HandCalibration.Save(r));PlayerPrefs.Save();ApplyDepthCalibration();Depth.Reset();}
+ void ApplyDepthCalibration(){
+  if(!Calibration.depthValid){Depth.fixedBaseline=float.NaN;return;}
+  HandCalibration.DepthSettings(Calibration,Depth.maxForward,Depth.maxBack,out var dead,out var forward,out var back);
+  Depth.deadZone=dead;Depth.forwardGain=forward;Depth.backGain=back;Depth.fixedBaseline=Calibration.d0;}
  /// <summary>The distance (m) from the eye at which the camera hand sits now (NaN outside camera mode).</summary>
  public float CameraReach=>_reach;
  // ---- Camera-hand depth (2026-11-21): the hand nearer the camera moves the virtual hand forward (HandDepth). A setting;
@@ -195,7 +206,10 @@ public sealed class ApartmentExperience:MonoBehaviour {
   // Screen mapping: the wrist's comfortable image range covers the view (image centre a little below the view centre).
   var cam=player.view;float tanV=Mathf.Tan(cam.fieldOfView*.5f*Mathf.Deg2Rad)*.92f,tanH=tanV*cam.aspect;
   var imageDelta=hand.LastImageDelta;
-  if(hand.TrackingUsed&&float.IsFinite(imageDelta.y))HandCentreY=Mathf.Clamp(HandCentreY+(.5f-imageDelta.y-HandCentreY)*(1-Mathf.Exp(-dt/20f)),.55f,.85f);float scale=Intent.RangeScale;float u=imageDelta.x/(HandRangeX*scale),v=(imageDelta.y+HandCentreY-.5f)/(HandRangeY*scale);
+  EnsureCalibration();float scale=Intent.RangeScale,u,v;
+  // The patient's own calibrated range (CALIBRATE HAND) maps to the full view; without one, the measured defaults below.
+  if(Calibration.lateralValid&&float.IsFinite(imageDelta.x)&&float.IsFinite(imageDelta.y))HandCalibration.Map(Calibration,imageDelta.x+.5f,.5f-imageDelta.y,scale,out u,out v);
+  else{if(hand.TrackingUsed&&float.IsFinite(imageDelta.y))HandCentreY=Mathf.Clamp(HandCentreY+(.5f-imageDelta.y-HandCentreY)*(1-Mathf.Exp(-dt/20f)),.55f,.85f);u=imageDelta.x/(HandRangeX*scale);v=(imageDelta.y+HandCentreY-.5f)/(HandRangeY*scale);}
   // Intent assist: the patient's own hand point picks the intent; a confident, nearby target pulls the hand to it.
   FeedIntent(view,tanH,tanV);Intent.Step(u,v,dt,hand.TrackingUsed&&!player.Paused);
   u=Mathf.Clamp(u+Intent.OffsetU,-1.05f,1.05f);v=Mathf.Clamp(v+Intent.OffsetV,-1.05f,1.05f);
@@ -271,7 +285,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
  _testing|=RehabAppShell.JourneyAcceptance;
  if(!_testing&&FindAnyObjectByType<RehabAppShell>()!=null)SetHardware(false);
  else if(settings.startWithHardware)SetHardware(true);else if(settings.startWithCamera&&!_testing)SetCameraMode();else SetHardware(false);}
- public void SetCameraMode(){SetHardware(false);Application.runInBackground=true;vision?.BeginNewSession();CameraMode=true;_cameraGrip.Reset();if(!_testing)cameraLauncher?.EnsureStarted();Status="Starting local MediaPipe camera";}
+ public void SetCameraMode(){SetHardware(false);Application.runInBackground=true;vision?.BeginNewSession();CameraMode=true;_cameraGrip.Reset();if(!_testing)cameraLauncher?.EnsureStarted();Status="Starting local MediaPipe camera";
+  // First camera session without a calibration: offer the 30 s CALIBRATE HAND once (never in automated or batch runs).
+  if(!_testing&&!HasCalibration&&!Application.isBatchMode&&PlayerPrefs.GetInt(CalibrationKey+".Offered",0)==0&&System.Array.FindIndex(System.Environment.GetCommandLineArgs(),a=>a.StartsWith("-apartment")||a.StartsWith("-rehab")||a.StartsWith("-hand-lab"))<0){PlayerPrefs.SetInt(CalibrationKey+".Offered",1);HandCalibrationRun.Begin(this);}}
  public void CycleInputMode(){if(CameraMode)SetHardware(false);else if(Hardware)SetCameraMode();else SetHardware(true);}
  public void SetHardware(bool hardware){Release();player?.ResetGameplayInput();CameraMode=false;_cameraReleaseBlocked=false;CameraGripScore=0;_cameraGrip.Reset();cameraLauncher?.StopWorker();Hardware=hardware;_manualRight=_manualLeft=Vector3.zero;if(!hardware){rightHand.UseDemoPose();leftHand.UseDemoPose();}ForceNewtons=ContactForceNewtons=0;_filter.Reset();_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
  private void Update(){

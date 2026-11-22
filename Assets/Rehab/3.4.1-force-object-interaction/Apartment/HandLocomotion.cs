@@ -12,6 +12,8 @@ namespace GripRehab {
 public sealed class HandLocomotion : MonoBehaviour {
  const string Key="GripRehab.HandLocomotion";
  public static bool Enabled{get=>PlayerPrefs.GetInt(Key,1)==1;set=>PlayerPrefs.SetInt(Key,value?1:0);}
+ /// <summary>True while CALIBRATE HAND runs: the view does not turn and hand actions wait (2026-11-22).</summary>
+ public static bool Suspended;
  const string AimKey="GripRehab.CameraAimAssist";
  /// <summary>On (default): a closed hand also picks up what you look at within reach, counted as assisted. Off: only a fingertip at the object grabs (physical reach).</summary>
  public static bool AimAssist{get=>PlayerPrefs.GetInt(AimKey,1)==1;set=>PlayerPrefs.SetInt(AimKey,value?1:0);}
@@ -53,7 +55,7 @@ public sealed class HandLocomotion : MonoBehaviour {
  }
 
  void Update(){
-  var player=app!=null?app.player:null;if(player==null||app.vision==null){Show(0,0);return;}
+  var player=app!=null?app.player:null;if(player==null||app.vision==null||Suspended){Show(0,0);return;}
   var frame=app.LeftSelected?app.vision.LatestLeft:app.vision.LatestRight;
   bool tracked=Enabled&&app.CameraMode&&(app.LeftSelected?app.vision.LeftValid:app.vision.RightValid)&&frame!=null&&
    (app.cameraLauncher==null||app.cameraLauncher.CameraOpened||acceptance)&&HandKinematics.HasPoseGeometry(frame);

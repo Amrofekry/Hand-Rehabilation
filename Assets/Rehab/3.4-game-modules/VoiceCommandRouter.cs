@@ -14,7 +14,7 @@ namespace GripRehab
         MoveForward, MoveBack, MoveLeft, MoveRight, Stop, LookAtObject, GrabObject, ReleaseObject, OpenInventory,
         StartBookshelf, StartCoffeeTable, StartStorageBox, StartMeal, StartCutting, StartServe, StartTea, StopPouring,
         // Special actions that were keys only (2026-10-28): F, R, N, B, C and , .
-        SitDown, StandUp, ResetObjects, NextActivity, CameraMode, KeyboardMode, RecenterHand, RotateLeft, RotateRight,
+        SitDown, StandUp, ResetObjects, NextActivity, CameraMode, KeyboardMode, RecenterHand, RotateLeft, RotateRight, CalibrateHand,
         // Session
         Restart, Pause, Resume, Instructions, MainMenu,
         // Control
@@ -69,7 +69,7 @@ namespace GripRehab
             ["stop listening"] = VoiceCommand.StopListening, ["start listening"] = VoiceCommand.StartListening,
             ["sit down"] = VoiceCommand.SitDown, ["stand up"] = VoiceCommand.StandUp, ["reset objects"] = VoiceCommand.ResetObjects,
             ["next activity"] = VoiceCommand.NextActivity, ["camera mode"] = VoiceCommand.CameraMode, ["keyboard mode"] = VoiceCommand.KeyboardMode,
-            ["recenter hand"] = VoiceCommand.RecenterHand, ["rotate left"] = VoiceCommand.RotateLeft, ["rotate right"] = VoiceCommand.RotateRight,
+            ["recenter hand"] = VoiceCommand.RecenterHand, ["calibrate hand"] = VoiceCommand.CalibrateHand, ["rotate left"] = VoiceCommand.RotateLeft, ["rotate right"] = VoiceCommand.RotateRight,
             ["assist off"] = VoiceCommand.AssistOff, ["assist low"] = VoiceCommand.AssistLow, ["assist medium"] = VoiceCommand.AssistMedium, ["assist high"] = VoiceCommand.AssistHigh
         };
 
@@ -167,7 +167,7 @@ namespace GripRehab
                     return x.inGame && x.activityRunning ? null : "Restart works during an activity.";
                 case VoiceCommand.StopPouring:
                     return x.inGame && x.activityRunning && x.holding ? null : "Stop pouring works while you hold the teapot or cup.";
-                case VoiceCommand.SitDown: case VoiceCommand.StandUp: case VoiceCommand.ResetObjects: case VoiceCommand.CameraMode: case VoiceCommand.KeyboardMode: case VoiceCommand.RecenterHand:
+                case VoiceCommand.SitDown: case VoiceCommand.StandUp: case VoiceCommand.ResetObjects: case VoiceCommand.CameraMode: case VoiceCommand.KeyboardMode: case VoiceCommand.RecenterHand: case VoiceCommand.CalibrateHand:
                     return x.inGame ? null : "That works in the apartment.";
                 case VoiceCommand.NextActivity:
                     return x.inGame ? null : "Activities are chosen in the apartment.";

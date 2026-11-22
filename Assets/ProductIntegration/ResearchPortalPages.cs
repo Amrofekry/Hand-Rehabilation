@@ -211,6 +211,8 @@ namespace GripRehab
                 var launcher = UnityEngine.Object.FindAnyObjectByType<VisionCameraLauncher>();
                 if (launcher != null && launcher.IsRunning) { launcher.StopWorker(); launcher.EnsureStarted(); }
                 SettingsAt(view.ScrollPosition); });
+            // 2026-11-22: the 30 s personal calibration (left/right, up/down, toward/away), saved; also voice "calibrate hand".
+            view.Button("CALIBRATE HAND (30 S): " + (ApartmentExperience.HasCalibration ? "DONE - PRESS TO REDO" : "NOT DONE YET"), () => { var e = UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>(); if (e != null) HandCalibrationRun.Begin(e); SettingsAt(view.ScrollPosition); });
             view.Button("RECALIBRATE CAMERA HAND", () => { var e = UnityEngine.Object.FindAnyObjectByType<ApartmentExperience>(); if (e != null) { e.Release(); e.ActiveHand.RecenterTracking(); } SettingsAt(view.ScrollPosition); });
             // Stage 13: voice commands (offline keyword recognition), off by default.
             view.Button("VOICE COMMANDS: " + RehabVoiceInput.ModeName(RehabVoiceInput.Mode) + (RehabVoiceInput.Mode != VoiceMode.Off && RehabVoiceInput.Instance != null && RehabVoiceInput.Instance.Unavailable != null ? " (UNAVAILABLE)" : ""), () => { RehabVoiceInput.Mode = (VoiceMode)(((int)RehabVoiceInput.Mode + 1) % 3); SettingsAt(view.ScrollPosition); });
