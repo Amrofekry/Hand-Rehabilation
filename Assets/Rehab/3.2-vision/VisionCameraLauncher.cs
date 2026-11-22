@@ -19,11 +19,11 @@ namespace GripRehab
         public string phoneFacing = "back", phoneSize = "1280x720";
         [Range(15, 240)] public int phoneFps = 60;
         /// <summary>Saved camera choice: 0 laptop webcam, 1 phone over USB, 2 phone through Windows Phone Link (2026-11-21),
-        /// 3 phone through the Camo app, the default (2026-11-21, the user's choice; the laptop webcam takes over when Camo is not
-        /// connected, so a PC without Camo plays with its webcam).</summary>
+        /// 3 phone through the Camo app (2026-11-21; the laptop webcam takes over when Camo is not connected). The laptop webcam is
+        /// the default again (2026-11-22, the user's choice: the three standing goals are tuned on it).</summary>
         public const string PhonePrefKey = "GripRehab.CameraSource.Phone";
         public static readonly string[] SourceNames = { "LAPTOP WEBCAM", "PHONE (USB)", "PHONE (PHONE LINK)", "PHONE (CAMO)" };
-        public static int SavedSource { get => Mathf.Clamp(PlayerPrefs.GetInt(PhonePrefKey, 3), 0, 3); set => PlayerPrefs.SetInt(PhonePrefKey, Mathf.Clamp(value, 0, 3)); }
+        public static int SavedSource { get => Mathf.Clamp(PlayerPrefs.GetInt(PhonePrefKey, 0), 0, 3); set => PlayerPrefs.SetInt(PhonePrefKey, Mathf.Clamp(value, 0, 3)); }
         /// <summary>Tests that need a given camera index (the fault probe's missing camera 9) set this to ignore the saved choice.</summary>
         public bool forceCameraIndex;
         public bool PhoneSelected => !forceCameraIndex && (usePhone || HasArg("-vision-phone") || SavedSource == 1);

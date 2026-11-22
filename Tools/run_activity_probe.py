@@ -49,6 +49,9 @@ def show(result):
         print(f"L{run['level']} {run['activity'][:26]:26} done={run['completed']!s:5} score={run['score']:3} steps={run['stepsDone']}/{run['stepsTotal']} "
               f"errors={run['errors']} misses={run['misses']} grabsFailed={run['failedGrabs']} t={run['seconds']:.0f}s "
               f"acc={outcomes.get('activity.accuracy', '-')} posMm={outcomes.get('activity.positionErrorMm', '-')}")
+        if run.get('holdFrames'):  # hold quality (SYNTHETIC hands), 2026-11-22
+            print(f"   hold: frames={run['holdFrames']} penetration<={run['holdMaxPenetrationMm']:.1f}mm padGap~{run['holdMeanPadGapMm']:.1f}mm "
+                  f"handCorrection<={run['holdMaxCorrectionMm']:.0f}mm padsTouching={run['holdTouchingShare']*100:.0f}%")
 
 
 def main():

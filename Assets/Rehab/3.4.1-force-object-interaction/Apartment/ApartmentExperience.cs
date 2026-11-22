@@ -113,6 +113,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
   return teaRun!=null?teaRun.AimWant-teaRun.SpoutTipWorld:place.WorldPosition+Vector3.up*(place.id=="volume"?.05f:.02f)-Held.transform.position;}
  /// <summary>The place the movement assist was set on when the object was let go (read by the activity on release).</summary>
  public SnapTarget ReleasedIntentPlace{get;private set;}
+ /// <summary>How near (m) the palm or a fingertip must be to an object's surface for closing the hand to grab it: Low 6,
+ /// Medium 10, High 15 cm (2026-11-22, the user's choice).</summary>
+ public static float AssistGrabRadius(AssistLevel level)=>level==AssistLevel.High?.15f:level==AssistLevel.Medium?.10f:level==AssistLevel.Low?.06f:0f;
  /// <summary>How near (m, horizontal) the object must be for the assist to finish a placement: Low 5, Medium 12, High 20 cm.</summary>
  public static float AssistPlaceRadius(AssistLevel level)=>level==AssistLevel.High?.20f:level==AssistLevel.Medium?.12f:level==AssistLevel.Low?.05f:0f;
  /// <summary>The held object's horizontal distance (m) to the intended place (diagnostics; +inf without one).</summary>
@@ -272,6 +275,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
  public void CycleInputMode(){if(CameraMode)SetHardware(false);else if(Hardware)SetCameraMode();else SetHardware(true);}
  public void SetHardware(bool hardware){Release();player?.ResetGameplayInput();CameraMode=false;_cameraReleaseBlocked=false;CameraGripScore=0;_cameraGrip.Reset();cameraLauncher?.StopWorker();Hardware=hardware;_manualRight=_manualLeft=Vector3.zero;if(!hardware){rightHand.UseDemoPose();leftHand.UseDemoPose();}ForceNewtons=ContactForceNewtons=0;_filter.Reset();_filteredSamples=forceReceiver.State.SampleCount;_sessionValidSamples=0;_task.Reset();_generation=forceReceiver.State.Generation;Status=hardware?"Waiting for calibrated Phase 2 input":"Keyboard & mouse demo";}
  private void Update(){
+  UndoVisualShift(); // the hand's tracked pose drives everything below; the hold shift is for what is drawn only
   AutoSelectCameraHand();
   bool gameplayInput=player.GameplayInputAllowed;
   if(gameplayInput&&Input.GetKeyDown(KeyCode.B))CycleInputMode();
@@ -353,6 +357,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
   rightHand.Pose(rightTracked?vision.LatestRight:null,rightTracked,LeftSelected?(twoHands?closure:0):closure,Time.deltaTime,settings.trackingSmoothing,_rightRest+_manualRight+_presentRight+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
   float leftDemo=LeftSelected||twoHands?closure:0;
   leftHand.Pose(leftTracked?vision.LatestLeft:null,leftTracked,leftDemo,Time.deltaTime,settings.trackingSmoothing,_leftRest+_manualLeft+_presentLeft+Vector3.back*settings.leftWristSetbackMeters+Vector3.up*handLift,settings.trackingTravelMeters,CameraMode);
+  ApplyVisualShift();
   // Stage 8: fingers stop at the held object's surface; the object settles into the pads, out of the palm.
   bool otherTracked=LeftSelected?rightTracked:leftTracked;
   if(virtualGrasp!=null)virtualGrasp.ShowBoth(twoHands);
@@ -451,7 +456,11 @@ public sealed class ApartmentExperience:MonoBehaviour {
   var placing=IntentPlace;
   bool assisting=placing!=null&&Intent.Level>=AssistLevel.Medium&&(placing!=_pourPlace||_intentRunner!=null&&_intentRunner.Current is TeaActivity pr&&pr.tea!=null&&float.IsFinite(pr.tea.AimError));
   bool direct=false;
-  if(!TrySafeGripTarget(Held,out var requested)){
+  // The object's target comes from the tracked hand, never from the drawn (object-led) hand.
+  var shiftHand=_visualShiftHand;var shiftNow=_visualShift;if(shiftHand!=null)shiftHand.transform.position-=shiftNow;
+  bool safe=TrySafeGripTarget(Held,out var requested);
+  if(shiftHand!=null)shiftHand.transform.position+=shiftNow;
+  if(!safe){
    // The hand's own target is unsafe (inside the stove at full reach): while placing with the assist, the object moves
    // from where it is toward the place instead of stopping (intent probe 2026-11-21: the pan froze 26 cm off the burner).
    if(!assisting){_velocity=Vector3.zero;return;}
@@ -469,6 +478,24 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(HeldOriented){var pivot=requested+heldRotation*HeldTiltPivotLocal;if(HeldPivotBlend>0)pivot=Vector3.Lerp(pivot,HeldPivotWorld,HeldPivotBlend);heldRotation=HeldOrientation;requested=pivot-heldRotation*HeldTiltPivotLocal;}
   Held.MoveHeld(requested,heldRotation);
  }
+ // Object-led hand (2026-11-22, the user's grip goal: the object always sits in the hand, never floating beside it or
+ // passing through it). The object goes where the tracked hand, the movement assist and the safety checks put it; the
+ // hand is then drawn so its grip anchor lies on the object's grip point, and the fingers close onto the surface. The
+ // shift is drawn only: it is undone before the next frame's tracking and around the object's own target.
+ Vector3 _visualShift;FingerPoseDriver _visualShiftHand;GripProp _heldProp;SqueezableObject _heldPropFor;
+ /// <summary>How far the held object's grip point was from the tracked hand's grip anchor this frame (m, before the shift).</summary>
+ public float HoldSeparation{get;private set;}
+ void UndoVisualShift(){if(_visualShiftHand!=null&&_visualShift!=Vector3.zero)_visualShiftHand.transform.position-=_visualShift;_visualShift=Vector3.zero;_visualShiftHand=null;}
+ void ApplyVisualShift(){
+  HoldSeparation=0;
+  if(Held==null||ActiveHand==null||!GraspContactSolver.Enabled)return;
+  if(_heldPropFor!=Held){_heldPropFor=Held;_heldProp=Held.GetComponent<GripProp>();}
+  if(_heldProp==null||!GraspContactSolver.TryGripPose(ActiveHand,Held,_palmExtra,out var pos,out var rot))return;
+  var handGrip=pos+rot*Vector3.Scale(_heldProp.gripLocal,Held.transform.lossyScale)+ActiveHand.transform.TransformVector(_holdCorrectionLocal);
+  var shift=Held.transform.TransformPoint(_heldProp.gripLocal)-handGrip;
+  HoldSeparation=shift.magnitude;
+  if(!GraspMotionPolicy.Finite(shift)||shift.sqrMagnitude>.6f*.6f)return; // far apart means something else is wrong: never fling the hand
+  ActiveHand.transform.position+=shift;_visualShift=shift;_visualShiftHand=ActiveHand;}
  private Vector3 GripTarget(SqueezableObject item){
   // Stage 8 grip chart: the object's grip point sits at the grip's anchor (palm, finger tips, thumb and
   // index side, or hooked fingers), turned into the hand.
@@ -629,17 +656,23 @@ public sealed class ApartmentExperience:MonoBehaviour {
   if(intent==null&&underPlaced&&guess!=null&&Intent.Confidence>=.35f)intent=guess;
   var aimed=intent!=null&&(Intent.Confidence>=.6f||underPlaced&&Intent.Confidence>=.35f)?intent:HandRayTarget!=null?HandRayTarget:intent!=null?intent:looked!=null&&Vector3.Distance(palmAt,looked.ClosestSurface(palmAt))<.12f?looked:null;
   bool intentHelped=aimed!=null&&aimed==intent&&(Intent.Pulling||Intent.CloseFactor<1f||HandRayTarget==null);
-  SqueezableObject nearest=null;float best=settings.cameraGrabRadiusMeters;bool aimedTouched=false;
+  // Grab range (2026-11-22, the user's choice): the palm or a fingertip within the assist level's range of the object's
+  // surface (Low 6, Medium 10, High 15 cm; the setting's radius with the assist off). Touching means within 3 cm.
+  float range=Intent.Level==AssistLevel.Off?settings.cameraGrabRadiusMeters:AssistGrabRadius(Intent.Level);
+  bool hasPalm=GraspContactSolver.TryPalmPoint(ActiveHand,out var palmPoint);
+  SqueezableObject nearest=null;float best=range;bool aimedTouched=false;
   foreach(var item in objects){
    if(!CanReach(item))continue;
+   if(hasPalm){float d=Vector3.Distance(palmPoint,item.ClosestSurface(palmPoint));if(d<best){best=d;nearest=item;}if(item==aimed&&d<.03f)aimedTouched=true;}
    foreach(var bone in contactRig.contactBones){
     if(bone==null)continue;
     var tip=bone.childCount>0?bone.GetChild(0).position:bone.position;
     float distance=Vector3.Distance(tip,item.ClosestSurface(tip));
     if(distance<best){best=distance;nearest=item;}
-    if(item==aimed&&distance<settings.cameraGrabRadiusMeters)aimedTouched=true;
+    if(item==aimed&&distance<.03f)aimedTouched=true;
    }
   }
+  if(nearest!=null&&best>.03f&&aimed==null)aimed=nearest; // in range but not touching: the assist closes the gap (counted)
   if(aimed!=null&&TryGrab(aimed,aimed==intent||aimed==HandRayTarget)){
    // Counted separately when no fingertip reached it, so assisted pickups are never mistaken for physical reach.
    if(intentHelped)IntentAssistedGrabs++;

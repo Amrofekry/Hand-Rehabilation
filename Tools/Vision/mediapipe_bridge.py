@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     source.add_argument("--video", type=Path, help="Local video file instead of a camera")
     source.add_argument("--camera-name", help="Pick the camera whose Windows name contains this text, e.g. 'Windows Virtual Camera' (the phone through Phone Link)")
     parser.add_argument("--fallback-webcam", action="store_true", help="If no camera matches --camera-name, use --camera (the laptop webcam) instead of stopping")
+    parser.add_argument("--webcam-size", default="auto", choices=("auto", "640x480", "hd"), help="Laptop webcam mode: auto tries the wide 1280x720 stream at 30 fps (asked as 1920x1080) and falls back to 640x480")
     parser.add_argument("--fallback-camera", type=int, default=0, help="Webcam index used by --fallback-webcam")
     parser.add_argument("--camera-fps", type=int, default=30, help="Frame rate requested from a camera picked by name")
     source.add_argument("--phone", action="store_true", help="Android phone camera over USB (adb + scrcpy-server); see phone_camera.py")
@@ -167,17 +168,35 @@ def main() -> None:
         if not capture.isOpened():
             print('VISION_STATUS '+json.dumps({'state':'camera_error','camera':args.camera}), flush=True)
             raise SystemExit("Could not open camera/video. Check device access and index.")
-        if not args.phone and not args.camera_name:
-            capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        def exposure():
+            if args.low_latency and not args.video and not args.phone and not args.camera_name:
+                capture.set(cv2.CAP_PROP_FPS, 30)
+                if __import__("sys").platform == "win32":
+                    # A fixed exposure avoids the 15 FPS auto-exposure mode on this laptop.
+                    # Unsupported webcams simply ignore these requests.
+                    capture.set(cv2.CAP_PROP_AUTO_EXPOSURE, .25)
+                    capture.set(cv2.CAP_PROP_EXPOSURE, args.exposure)
+        if not args.phone and not args.camera_name and not args.video:
+            # 2026-11-22, MEASURED on this laptop's integrated webcam: asking for 1920x1080 gives its wide 1280x720 stream at
+            # 30 fps (asking for 1280x720 gives 10 fps; 640x480 is 30 fps but narrower and half the pixels on the hand).
+            # A bigger hand in the image gives steadier landmarks and depth; keep it only if it really runs at 25 fps or more.
+            chosen = "640x480"
+            if args.webcam_size in ("auto", "hd"):
+                capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920); capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080); exposure()
+                for _ in range(5): capture.read()
+                t0, n, width = time.monotonic(), 0, 0
+                while time.monotonic() - t0 < 1.0:
+                    ok, probe = capture.read()
+                    if ok: n += 1; width = probe.shape[1]
+                rate = n / max(1e-3, time.monotonic() - t0)
+                if width >= 1280 and (rate >= 25 or args.webcam_size == "hd"):
+                    chosen = f"{width}x{probe.shape[0]}"
+            if chosen == "640x480":
+                capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
             capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        if args.low_latency and not args.video and not args.phone and not args.camera_name:
-            capture.set(cv2.CAP_PROP_FPS, 30)
-            if __import__("sys").platform == "win32":
-                # A fixed exposure avoids the 15 FPS auto-exposure mode on this laptop.
-                # Unsupported webcams simply ignore these requests.
-                capture.set(cv2.CAP_PROP_AUTO_EXPOSURE, .25)
-                capture.set(cv2.CAP_PROP_EXPOSURE, args.exposure)
+            print(f"VISION_NOTE webcam mode {chosen}", flush=True)
+        exposure()
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         preview_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) if args.preview_port else None
         import sys

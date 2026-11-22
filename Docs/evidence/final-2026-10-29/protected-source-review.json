@@ -3,8 +3,8 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "71c1e09f608678166bcf5398391ab6c4cbb55a6b9a43ac6337081d4135e19ace",
-      "reason": "User-authorized final release (2026-10-29). 2026-11-21: equal choices (items for the same open place) grouped for the assist's confidence"
+      "currentSha256": "f045e295b5e5d57fb627ef36e2fe3704f0c24fc28b165d8e52204a93ec8f341d",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-22: object-led hand (drawn on the held object), grab range by assist level, webcam default and wide mode, hold-quality metrics"
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
@@ -108,8 +108,8 @@
     },
     "Assets/Rehab/3.2-vision/VisionCameraLauncher.cs": {
       "previousSha256": "72f983f608eafb5e88b772cb630c5adf80fab5460dfc43f84b07716a6fbd1f80",
-      "currentSha256": "3500100ea2b700b65aeb5a41a0defee0f6003e73069f4cd1064dd035cb142330",
-      "reason": "User-authorized final release (2026-10-29). 2026-11-22: a black camera picture (paused phone app) shows in the prompt and clears when the picture returns"
+      "currentSha256": "7567c28fdffb768af9c3a52eb202562f584fbd8cdd6db20722407a556d231a54",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-22: object-led hand (drawn on the held object), grab range by assist level, webcam default and wide mode, hold-quality metrics"
     }
   }
 }

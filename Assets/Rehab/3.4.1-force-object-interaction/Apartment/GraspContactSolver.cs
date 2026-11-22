@@ -334,6 +334,11 @@ public static class GraspContactSolver {
   if(any==0)foreach(var c in CollidersOf(item))extent=Mathf.Max(extent,Support(c,from,now));
   return extent;
  }
+ /// <summary>The palm's centre in world space (where power grips rest), for the grab range (2026-11-22).</summary>
+ public static bool TryPalmPoint(FingerPoseDriver hand,out Vector3 palm){
+  palm=Vector3.zero;var frame=FrameOf(hand);if(frame==null)return false;var t=hand.transform;
+  palm=t.TransformPoint(frame.palm)+t.TransformVector(frame.alongVector)*.25f;return GraspMotionPolicy.Finite(palm);
+ }
  /// <summary>Hand rotation that shows the grip like its chart photograph to the given camera.</summary>
  public static bool TryViewRotation(FingerPoseDriver hand,Transform camera,GripView view,bool left,out Quaternion rotation){
   rotation=Quaternion.identity;var frame=FrameOf(hand);if(frame==null||camera==null)return false;

@@ -25,6 +25,10 @@ namespace GripRehab
         {
             public string activity; public int level, score, stepsDone, stepsTotal, errors, misses, actions, failedGrabs; public bool completed; public float seconds; public string notes = "";
             public OutcomeView[] outcomes;
+            // Hold quality (2026-11-22, SYNTHETIC hands): finger depth into the held object, pad gap to its surface, how far the
+            // object-led hand had to move to sit on it, and the share of held frames with every grip pad touching.
+            public int holdFrames; public float holdMaxPenetrationMm, holdMeanPadGapMm, holdMaxCorrectionMm, holdTouchingShare;
+            [NonSerialized] public double padGapSum; [NonSerialized] public int touchingFrames;
         }
         [Serializable] public sealed class OutcomeView { public string key, label, unit; public float value; }
         [Serializable] public sealed class UiCheck { public string name, value; public bool passed; }
@@ -91,6 +95,18 @@ namespace GripRehab
             Application.Quit(report.passed ? 0 : 1);
         }
 
+        Run holdRun;
+        void LateUpdate()
+        {
+            var r = holdRun; if (r == null || app == null || app.Held == null) return;
+            var c = app.LastContact; if (!c.valid) return;
+            r.holdFrames++;
+            r.holdMaxPenetrationMm = Mathf.Max(r.holdMaxPenetrationMm, c.maxPenetration * 1000);
+            r.holdMaxCorrectionMm = Mathf.Max(r.holdMaxCorrectionMm, app.HoldSeparation * 1000);
+            r.padGapSum += c.padGap * 1000; r.holdMeanPadGapMm = (float)(r.padGapSum / r.holdFrames);
+            if (c.padGap <= .003f) r.touchingFrames++;
+            r.holdTouchingShare = r.touchingFrames / (float)r.holdFrames;
+        }
         IEnumerator Play()
         {
             yield return new WaitForSecondsRealtime(2);
@@ -108,7 +124,7 @@ namespace GripRehab
                 foreach (ActivityKind kind in Enum.GetValues(typeof(ActivityKind)))
                 {
                     if (OnlyKind != null && kind.ToString() != OnlyKind) continue; // development only: one activity
-                    var run = new Run { activity = ActivityRules.Title(kind), level = level }; runs.Add(run);
+                    var run = new Run { activity = ActivityRules.Title(kind), level = level }; runs.Add(run); holdRun = run;
                     if (!runner.Begin(kind, level)) { run.activity += " (did not start: " + runner.Feedback + ")"; continue; }
                     app.player.SetPaused(false); app.TestForce = 0;
                     yield return new WaitForSecondsRealtime(.8f);
