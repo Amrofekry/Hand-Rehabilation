@@ -37,11 +37,13 @@
   - **How:** the depth is how big the hand looks. Palm size and MediaPipe's 3D bone lengths are combined, so a tilted hand fools it less. It is smoothed, and it holds while the hand sweeps across the picture.
   - **Limits:** surfaces still stop the hand 3 cm short. When the assist is sure of an object, depth moves most of the way to it.
   - **AUTOMATIC:** keeps the hand on whatever is under it.
-- CAMERA: LAPTOP WEBCAM / PHONE (USB) / PHONE (PHONE LINK) / PHONE (CAMO) (default; without Camo the laptop webcam is used). 2026-11-22.
+- CAMERA: LAPTOP WEBCAM (default, its wide 1280x720 mode at 30 fps) / PHONE (USB) / PHONE (PHONE LINK) / PHONE (CAMO). 2026-11-22.
 - **The hand's look:** the game shows your hand as you see it from behind: fingers up with the palm toward the camera shows the back of the hand, thumb on the left for a right hand; every turn of the wrist is followed in full. 2026-11-22.
   - **Phone Link:** uses the phone's connected camera through Windows Phone Link, with no cable. Turn on the connected camera in Phone Link on the phone first.
   - **Details:** [PHONE_CAMERA](PHONE_CAMERA.md).
 - RECALIBRATE CAMERA HAND: also the C key or voice "recenter hand".
+- CALIBRATE HAND (30 S): also voice "calibrate hand"; offered once on the first camera session. Follow the prompts: rest in the middle, far left, far right, up, down, near the camera, far from it (3.5 s each). Your own range then reaches the whole view, and your near/far gives the full forward/back reach. Saved; press again to redo. 2026-11-22.
+- **Holding:** your hand is drawn around the object you hold: the palm and finger pads rest on it, it never floats beside the hand or passes through it. Close your open hand with the palm or a fingertip within 6 / 10 / 15 cm of an object (assist Low / Medium / High) and it goes into your hand in its natural grip. 2026-11-22.
 
 The input strip shows the camera state: TRACKING / READY / HOLDING / LOST. Measurements are in `Docs/HAND_CONTROL_REPORT.md`.
 

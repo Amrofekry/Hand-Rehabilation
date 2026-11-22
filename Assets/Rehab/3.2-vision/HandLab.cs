@@ -32,6 +32,10 @@ namespace GripRehab
             new Step { text = "Reach for the LEFT object, close your hand to pick it up, lift it, then open your hand", seconds = 16, target = 0 },
             new Step { text = "Reach for the MIDDLE object, close your hand to pick it up, lift it, then open your hand", seconds = 16, target = 1 },
             new Step { text = "Reach for the RIGHT object, close your hand to pick it up, lift it, then open your hand", seconds = 16, target = 2 },
+            // 2026-11-22: the hand's look from behind (orientation), added after the grabs so older recordings still line up.
+            new Step { text = "Turn your palm DOWN, fingers pointing at the screen, and hold it", seconds = 8, target = -1 },
+            new Step { text = "Turn your palm UP, fingers pointing at the screen, and hold it", seconds = 8, target = -1 },
+            new Step { text = "Fingers up: roll your wrist slowly left and right, as if pouring", seconds = 10, target = -1 },
             new Step { text = "Done. Thank you: the session is saved.", seconds = 3, target = -1 },
         };
 
@@ -86,7 +90,7 @@ namespace GripRehab
             float showUntil = Time.realtimeSinceStartup + (Replay ? 30 : 90);
             while (!(app.vision.RightValid || app.vision.LeftValid) && Time.realtimeSinceStartup < showUntil) yield return null;
             csv = new StreamWriter(Path.Combine(dir, "game.csv"));
-            csv.WriteLine("t,step,seq,capture,ageMs,hand,valid,wristX,wristY,palm,tracked,targetX,targetY,targetZ,handX,handY,handZ,size,score,gate,held,targetName,targetDist,fps,paused,reach,rayTarget,viewYaw,viewPitch");
+            csv.WriteLine("t,step,seq,capture,ageMs,hand,valid,wristX,wristY,palm,tracked,targetX,targetY,targetZ,handX,handY,handZ,size,score,gate,held,targetName,targetDist,fps,paused,reach,rayTarget,viewYaw,viewPitch,rotX,rotY,rotZ,rotW,holdCorrection,penetration,padGap");
             for (step = 0; step < Steps.Length; step++)
             {
                 stepStarted = Time.realtimeSinceStartup;
@@ -108,7 +112,7 @@ namespace GripRehab
                 while (Time.realtimeSinceStartup - stepStarted < s.seconds)
                 {
                     // Replay only: a few screenshots per step (the game view, never the camera image) to see the hand.
-                    if (Replay && (step == 1 || step >= 6 && step <= 8) && Time.realtimeSinceStartup - stepStarted > 2 + shot * 3 && shot < 4)
+                    if (Replay && (step == 1 || step >= 6 && step <= 11) && Time.realtimeSinceStartup - stepStarted > 2 + shot * 3 && shot < 4)
                     { shot++; ScreenCapture.CaptureScreenshot(Path.GetFullPath(Path.Combine(dir, "step" + step + "-" + shot + ".png"))); }
                     // Replay only: a screenshot on request (Tools/hand_pose_check.py writes <name>.shot; the game view only).
                     if (Replay && Time.realtimeSinceStartup >= nextShotLook) { nextShotLook = Time.realtimeSinceStartup + .2f; foreach (var req in Directory.GetFiles(dir, "*.shot")) { ScreenCapture.CaptureScreenshot(Path.ChangeExtension(Path.GetFullPath(req), ".png")); File.Delete(req); } }
@@ -148,6 +152,12 @@ namespace GripRehab
                 .Append(app.player.Paused ? 1 : 0).Append(',').Append(float.IsFinite(app.CameraReach) ? app.CameraReach.ToString("0.000", C) : "").Append(',')
                 .Append(app.HandRayTarget != null ? app.HandRayTarget.displayName.Replace(',', ' ') : "").Append(',')
                 .Append(app.player.view.transform.eulerAngles.y.ToString("0.0", C)).Append(',').Append(app.player.view.transform.eulerAngles.x.ToString("0.0", C));
+            // 2026-11-22: the virtual hand's rotation in its parent (the view) and the hold quality, for Tools/hand_check_report.py.
+            var q = hand.transform.localRotation; var contact = app.LastContact;
+            line.Append(',').Append(q.x.ToString("0.0000", C)).Append(',').Append(q.y.ToString("0.0000", C)).Append(',').Append(q.z.ToString("0.0000", C)).Append(',').Append(q.w.ToString("0.0000", C))
+                .Append(',').Append(app.Held != null ? (app.HoldSeparation * 1000).ToString("0.0", C) : "")
+                .Append(',').Append(app.Held != null && contact.valid ? (contact.maxPenetration * 1000).ToString("0.0", C) : "")
+                .Append(',').Append(app.Held != null && contact.valid ? (contact.padGap * 1000).ToString("0.0", C) : "");
             csv.WriteLine(line.ToString()); frames++;
         }
 
