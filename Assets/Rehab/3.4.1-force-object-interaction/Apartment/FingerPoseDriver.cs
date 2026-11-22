@@ -279,6 +279,14 @@ namespace GripRehab
                     var neutral = finger == 4 ? 35f : (finger - 1.5f) * 8f;
                     _spread[finger] = Mathf.Clamp(
                         Vector3.SignedAngle(palmUp, proximal, PalmNormal) - neutral, -22f, 22f);
+                    // Holding with the camera hand (2026-11-22, the user's grip goal): the fingers take the held object's grip shape
+                    // (curl and spread, thumb opposed), as a hand closed on it would be; the contact solver then stops each joint at
+                    // the surface. Following the camera's flat thumb left the pads 1-2 cm off the object (activity probe).
+                    if (DemoGrip != null)
+                    {
+                        for (int jj = 0; jj < 3; jj++) { int m = finger * 3 + jj; _angles[m] = DemoGrip.CurlAt(m, 1f); }
+                        _spread[finger] = DemoGrip.spread[finger];
+                    }
                 }
                 else
                 {

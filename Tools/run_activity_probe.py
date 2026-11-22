@@ -50,8 +50,8 @@ def show(result):
               f"errors={run['errors']} misses={run['misses']} grabsFailed={run['failedGrabs']} t={run['seconds']:.0f}s "
               f"acc={outcomes.get('activity.accuracy', '-')} posMm={outcomes.get('activity.positionErrorMm', '-')}")
         if run.get('holdFrames'):  # hold quality (SYNTHETIC hands), 2026-11-22
-            print(f"   hold: frames={run['holdFrames']} penetration<={run['holdMaxPenetrationMm']:.1f}mm padGap~{run['holdMeanPadGapMm']:.1f}mm "
-                  f"handCorrection<={run['holdMaxCorrectionMm']:.0f}mm padsTouching={run['holdTouchingShare']*100:.0f}%")
+            print(f"   hold: frames={run['holdFrames']} penetrationP90={run['holdMaxPenetrationMm']:.1f}mm padGap~{run['holdMeanPadGapMm']:.1f}mm "
+                  f"handCorrectionP90={run['holdMaxCorrectionMm']:.0f}mm padsTouching={run['holdTouchingShare']*100:.0f}%")
 
 
 def main():

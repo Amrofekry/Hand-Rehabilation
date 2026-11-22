@@ -3,13 +3,13 @@
   "changes": {
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentExperience.cs": {
       "previousSha256": "f1c51d6e521f69632a8065221c7efddf2e82067c124effbee5bc38439f45165b",
-      "currentSha256": "68ccaf5da1bcba170f8a087fe7e04b3acf41e6a80c75faad67ebbda5e2117b48",
-      "reason": "User-authorized final release (2026-10-29). 2026-11-22: personal hand calibration (CALIBRATE HAND: mapping and depth ranges, saved), hand look paused while it runs"
+      "currentSha256": "cf9789f3bea0db874974466eef2b27cc96d54ad3aefca165bd8b5d832d17d9ae",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-22: holding with the camera hand takes the object's grip shape (curl, spread, thumb opposed); the solver stops it at the surface"
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/FingerPoseDriver.cs": {
       "previousSha256": "c9136f6a4f2791dab4d8e7fbfaefdc39d18beb51f5f63466f666c45c235a9780",
-      "currentSha256": "16e3c7f5837d89a756386268360caab3d8e22502c19acbe27b7e593506212ccf",
-      "reason": "User-authorized final release (2026-10-29). 2026-11-22: camera hand takes the measured orientation unlimited (a 180 degree limit path was ambiguous)"
+      "currentSha256": "83e61d097ba56985c2b73dfd01a874f3c751d711bbe18ca3bb847aac39f07b18",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-22: holding with the camera hand takes the object's grip shape (curl, spread, thumb opposed); the solver stops it at the surface"
     },
     "Assets/Rehab/3.2-vision/VisionUdpReceiver.cs": {
       "previousSha256": "ea2faf1c7d6e8e89e5f1887bfd524dbc2fd5a39c7bf5965548bd88014eadb5de",

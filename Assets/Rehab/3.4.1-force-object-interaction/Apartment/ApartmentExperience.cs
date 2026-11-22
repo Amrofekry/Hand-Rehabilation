@@ -498,15 +498,17 @@ public sealed class ApartmentExperience:MonoBehaviour {
  // passing through it). The object goes where the tracked hand, the movement assist and the safety checks put it; the
  // hand is then drawn so its grip anchor lies on the object's grip point, and the fingers close onto the surface. The
  // shift is drawn only: it is undone before the next frame's tracking and around the object's own target.
- Vector3 _visualShift;FingerPoseDriver _visualShiftHand;GripProp _heldProp;SqueezableObject _heldPropFor;
+ Vector3 _visualShift;FingerPoseDriver _visualShiftHand;GripProp _heldProp;SqueezableObject _heldPropFor;bool _heldIsVessel;
  /// <summary>How far the held object's grip point was from the tracked hand's grip anchor this frame (m, before the shift).</summary>
  public float HoldSeparation{get;private set;}
  void UndoVisualShift(){if(_visualShiftHand!=null&&_visualShift!=Vector3.zero)_visualShiftHand.transform.position-=_visualShift;_visualShift=Vector3.zero;_visualShiftHand=null;}
  void ApplyVisualShift(){
   HoldSeparation=0;
   if(Held==null||ActiveHand==null||!GraspContactSolver.Enabled)return;
-  if(_heldPropFor!=Held){_heldPropFor=Held;_heldProp=Held.GetComponent<GripProp>();}
-  if(_heldProp==null||!GraspContactSolver.TryGripPose(ActiveHand,Held,_palmExtra,out var pos,out var rot))return;
+  if(_heldPropFor!=Held){_heldPropFor=Held;_heldProp=Held.GetComponent<GripProp>();_heldIsVessel=Held.GetComponent<PourVessel>()!=null;}
+  // The teapot and the tea cup are moved and presented by the tea activity itself (pour, raise to drink): left as they are
+  // (activity probe 2026-11-22: shifting the drawn hand there stopped the cup reaching the mouth).
+  if(_heldProp==null||_heldIsVessel||!GraspContactSolver.TryGripPose(ActiveHand,Held,_palmExtra,out var pos,out var rot))return;
   var handGrip=pos+rot*Vector3.Scale(_heldProp.gripLocal,Held.transform.lossyScale)+ActiveHand.transform.TransformVector(_holdCorrectionLocal);
   var shift=Held.transform.TransformPoint(_heldProp.gripLocal)-handGrip;
   HoldSeparation=shift.magnitude;

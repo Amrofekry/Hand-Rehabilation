@@ -27,8 +27,10 @@ namespace GripRehab
             public OutcomeView[] outcomes;
             // Hold quality (2026-11-22, SYNTHETIC hands): finger depth into the held object, pad gap to its surface, how far the
             // object-led hand had to move to sit on it, and the share of held frames with every grip pad touching.
+            // 90th percentiles, not maxima: the frame an activity snaps the object onto its place is not a hold.
             public int holdFrames; public float holdMaxPenetrationMm, holdMeanPadGapMm, holdMaxCorrectionMm, holdTouchingShare;
             [NonSerialized] public double padGapSum; [NonSerialized] public int touchingFrames;
+            [NonSerialized] public readonly System.Collections.Generic.List<float> penetrations = new System.Collections.Generic.List<float>(), corrections = new System.Collections.Generic.List<float>();
         }
         [Serializable] public sealed class OutcomeView { public string key, label, unit; public float value; }
         [Serializable] public sealed class UiCheck { public string name, value; public bool passed; }
@@ -101,12 +103,13 @@ namespace GripRehab
             var r = holdRun; if (r == null || app == null || app.Held == null) return;
             var c = app.LastContact; if (!c.valid) return;
             r.holdFrames++;
-            r.holdMaxPenetrationMm = Mathf.Max(r.holdMaxPenetrationMm, c.maxPenetration * 1000);
-            r.holdMaxCorrectionMm = Mathf.Max(r.holdMaxCorrectionMm, app.HoldSeparation * 1000);
+            r.penetrations.Add(c.maxPenetration * 1000); r.corrections.Add(app.HoldSeparation * 1000);
+            if (r.holdFrames % 30 == 0) { r.holdMaxPenetrationMm = P90(r.penetrations); r.holdMaxCorrectionMm = P90(r.corrections); }
             r.padGapSum += c.padGap * 1000; r.holdMeanPadGapMm = (float)(r.padGapSum / r.holdFrames);
             if (c.padGap <= .003f) r.touchingFrames++;
             r.holdTouchingShare = r.touchingFrames / (float)r.holdFrames;
         }
+        static float P90(System.Collections.Generic.List<float> v) { var a = v.ToArray(); Array.Sort(a); return a.Length == 0 ? 0 : a[(int)(.9f * (a.Length - 1))]; }
         IEnumerator Play()
         {
             yield return new WaitForSecondsRealtime(2);
