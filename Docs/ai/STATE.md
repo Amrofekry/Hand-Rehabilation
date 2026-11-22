@@ -18,6 +18,7 @@
 - **v1.0.0–v1.0.4 (2026-11-01 to 11-06):** hybrid camera hand (fixes F1–F6, camera activity run 12/12), Stage 18 hardware readiness, installer, slides, demo video. Details: [HAND_CONTROL_REPORT](../HAND_CONTROL_REPORT.md), [STAGE16_AUDIT](../STAGE16_AUDIT.md).
 
 ## Watch list
+- 2026-11-22: two one-off regression failures that did not reproduce (UI checks without fresh output; keyboard tea L8 once in six runs). The camera hand's pads stay about 6 mm off the knife (keyboard hand touches it): open.
 - A-OB1: intermittent activity grab failures seen on 2026-10-28; not reproduced since 2026-11-01. The regression runs the activity probe three times plus the camera run to keep watching it.
 - Unity 2022.3 rewrites the Unity-6-format main scene if it saves it. Do not save the scene from the Editor.
 

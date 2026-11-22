@@ -6,6 +6,7 @@
 - Activity probe keyboard / camera / intent (70 % reach, tremor, Medium assist): 14/14 each. Contact probes (3), perf, player checks, AI player smoke/replay/rendered, pose check pass; console zero 0/0/0 (earlier run of this branch).
 - Hold quality per activity (90th percentiles; camera hand): pads touching went from 0 % to 54-100 % on books, cups, box items, meal and serve (pad gap 0.2-2.4 mm); tea 48 % (penetration 13.6 mm, was 47 mm); the knife stays at 0 % (pads about 6 mm off) with the camera hand while the keyboard hand touches it: open.
 - The drawn hand moves up to about 10-25 cm (90th percentile) from the tracked hand while the assist finishes a placement or the safety stop holds the object: by design (the object stays in the hand), to be judged in the live check.
+- Full regression on commit 4f66561: 27 of 29 suites passed (build, player and AI player checks, journey, gallery, perf, contact x3, activities incl. camera, handlook, hand benchmark, voice, audio, fault probe, EditMode 10/10, console zero 0/0/0 with MCP, offline C#, Python, calibration, workspace, camera models, pytest 32). Two did not, both not reproducible: the UI checks found no fresh output once (rerun alone: all 6 sizes x 60 checks pass); the third keyboard activity repeat left tea L8 unfinished (three keyboard tea reruns: done, score 95 each). Watch both.
 - Not covered: a real hand on the webcam (NEEDS A PERSON): `GripRehab.exe -apartment-hand-lab`, then `Tools/hand_check_report.py`.
 
 ## 2026-11-22 v1.2.0 full regression (SYNTHETIC input, game windows)
