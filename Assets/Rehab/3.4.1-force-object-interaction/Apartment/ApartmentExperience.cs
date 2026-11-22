@@ -396,6 +396,12 @@ public sealed class ApartmentExperience:MonoBehaviour {
     var correction=ContactGeometry.HoldCorrection(ActiveHand.transform.TransformVector(_holdCorrectionLocal),LastContact.padGap,LastContact.towardPads,LastContact.palmDepth,LastContact.outOfPalm,Time.deltaTime);
     _holdCorrectionLocal=ActiveHand.transform.InverseTransformVector(correction);
    }
+   // Pinches: a finger segment still inside the object eases it off that segment (2026-11-22, activity probe: a book held
+   // with the side pinch sat 18 mm into the fingers). Bounded (4 cm) and rate-limited (5 cm/s), so it settles without jumps.
+   if(GraspContactSolver.Enabled&&LastContact.valid&&LastContact.shape==HandGrip.Pinch&&LastContact.maxPenetration>.0015f&&LastContact.outOfFingers!=Vector3.zero){
+    var push=LastContact.outOfFingers*Mathf.Min(LastContact.maxPenetration,.05f*Time.deltaTime);
+    _holdCorrectionLocal=Vector3.ClampMagnitude(_holdCorrectionLocal+ActiveHand.transform.InverseTransformVector(push),.04f);
+   }
   } else {LastContact=default;_holdCorrectionLocal=Vector3.zero;_palmExtra=0;}
   if(CameraMode&&cameraValid&&!_cameraReleaseBlocked&&_cameraGrip.Closed&&_cameraClosedFor>=.15f&&Held==null&&Time.unscaledTime>=_nextCameraGrabTry)TryCameraGrab();
   if(Time.unscaledTime>=_nextUi){_nextUi=Time.unscaledTime+.08f;RefreshHUD();}
@@ -501,14 +507,18 @@ public sealed class ApartmentExperience:MonoBehaviour {
  Vector3 _visualShift;FingerPoseDriver _visualShiftHand;GripProp _heldProp;SqueezableObject _heldPropFor;bool _heldIsVessel;
  /// <summary>How far the held object's grip point was from the tracked hand's grip anchor this frame (m, before the shift).</summary>
  public float HoldSeparation{get;private set;}
+ /// <summary>The palm grip's extra offset off the palm now (m; diagnostics).</summary>
+ public float PalmExtra=>_palmExtra;
+ /// <summary>Where the tracked camera hand is (before it is drawn on the held object): what game logic reads.</summary>
+ public Vector3 TrackedHandPosition=>ActiveHand==null?Vector3.zero:ActiveHand.transform.position-(_visualShiftHand==ActiveHand?_visualShift:Vector3.zero);
  void UndoVisualShift(){if(_visualShiftHand!=null&&_visualShift!=Vector3.zero)_visualShiftHand.transform.position-=_visualShift;_visualShift=Vector3.zero;_visualShiftHand=null;}
  void ApplyVisualShift(){
   HoldSeparation=0;
   if(Held==null||ActiveHand==null||!GraspContactSolver.Enabled)return;
   if(_heldPropFor!=Held){_heldPropFor=Held;_heldProp=Held.GetComponent<GripProp>();_heldIsVessel=Held.GetComponent<PourVessel>()!=null;}
-  // The teapot and the tea cup are moved and presented by the tea activity itself (pour, raise to drink): left as they are
-  // (activity probe 2026-11-22: shifting the drawn hand there stopped the cup reaching the mouth).
-  if(_heldProp==null||_heldIsVessel||!GraspContactSolver.TryGripPose(ActiveHand,Held,_palmExtra,out var pos,out var rot))return;
+  // The teapot and cup too: the tea reads TrackedHandPosition, never the drawn hand (reading the drawn hand made a loop and
+  // the cup never reached the mouth, activity probe 2026-11-22).
+  if(_heldProp==null||!GraspContactSolver.TryGripPose(ActiveHand,Held,_palmExtra,out var pos,out var rot))return;
   var handGrip=pos+rot*Vector3.Scale(_heldProp.gripLocal,Held.transform.lossyScale)+ActiveHand.transform.TransformVector(_holdCorrectionLocal);
   var shift=Held.transform.TransformPoint(_heldProp.gripLocal)-handGrip;
   HoldSeparation=shift.magnitude;
@@ -690,6 +700,7 @@ public sealed class ApartmentExperience:MonoBehaviour {
     if(item==aimed&&distance<.03f)aimedTouched=true;
    }
   }
+  var aimedBefore=aimed;
   if(nearest!=null&&best>.03f&&aimed==null)aimed=nearest; // in range but not touching: the assist closes the gap (counted)
   if(aimed!=null&&TryGrab(aimed,aimed==intent||aimed==HandRayTarget)){
    // Counted separately when no fingertip reached it, so assisted pickups are never mistaken for physical reach.
@@ -697,7 +708,9 @@ public sealed class ApartmentExperience:MonoBehaviour {
    if(!aimedTouched){AssistedGrabs++;Status="Camera grip (aim assist): holding "+aimed.displayName;}else Status="Camera grip: holding "+aimed.displayName;
    return;
   }
-  if(nearest!=null&&TryGrab(nearest)){Status="Camera grip: holding "+nearest.displayName;return;}
+  // The intended object could not be taken: never take a neighbour instead (activity probe 2026-11-22: the palm range
+  // picked up the plate under the wanted mushroom). Only without an intended object does the nearest one in range count.
+  if(aimedBefore==null&&nearest!=null&&TryGrab(nearest)){Status="Camera grip: holding "+nearest.displayName;return;}
   // Nothing grabbed: a closed empty hand retries at 10 Hz, not every frame (the look-target scan visits every object).
   _nextCameraGrabTry=Time.unscaledTime+.1f;
  }

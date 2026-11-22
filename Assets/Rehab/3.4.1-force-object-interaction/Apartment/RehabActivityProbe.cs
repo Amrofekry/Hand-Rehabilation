@@ -29,6 +29,7 @@ namespace GripRehab
             // object-led hand had to move to sit on it, and the share of held frames with every grip pad touching.
             // 90th percentiles, not maxima: the frame an activity snaps the object onto its place is not a hold.
             public int holdFrames; public float holdMaxPenetrationMm, holdMeanPadGapMm, holdMaxCorrectionMm, holdTouchingShare;
+            public float holdMaxPalmExtraMm; public int holdMaxLimitedJoints, holdTouchingPadsMin;
             [NonSerialized] public double padGapSum; [NonSerialized] public int touchingFrames;
             [NonSerialized] public readonly System.Collections.Generic.List<float> penetrations = new System.Collections.Generic.List<float>(), corrections = new System.Collections.Generic.List<float>();
         }
@@ -107,6 +108,7 @@ namespace GripRehab
             if (r.holdFrames % 30 == 0) { r.holdMaxPenetrationMm = P90(r.penetrations); r.holdMaxCorrectionMm = P90(r.corrections); }
             r.padGapSum += c.padGap * 1000; r.holdMeanPadGapMm = (float)(r.padGapSum / r.holdFrames);
             if (c.padGap <= .003f) r.touchingFrames++;
+            r.holdMaxPalmExtraMm = Mathf.Max(r.holdMaxPalmExtraMm, app.PalmExtra * 1000); r.holdMaxLimitedJoints = Mathf.Max(r.holdMaxLimitedJoints, c.limitedJoints); r.holdTouchingPadsMin = r.holdFrames == 1 ? c.touchingPads : Mathf.Min(r.holdTouchingPadsMin, c.touchingPads);
             r.holdTouchingShare = r.touchingFrames / (float)r.holdFrames;
         }
         static float P90(System.Collections.Generic.List<float> v) { var a = v.ToArray(); Array.Sort(a); return a.Length == 0 ? 0 : a[(int)(.9f * (a.Length - 1))]; }
@@ -361,7 +363,7 @@ namespace GripRehab
                         // Movement assist: bring the tool to its work (part of the way in intent mode) and wait; the game cuts
                         // or stirs by itself (no squeeze, no chopping motion).
                         int stepBefore = runner.Current.steps.Current, doneBefore = runner.Current.steps.CurrentDone; // a step can count several cuts
-                        yield return IntentReachTo(app.ActiveHand.transform.position + (step.aim() - app.Held.transform.position), run);
+                        yield return IntentReachTo(app.TrackedHandPosition + (step.aim() - app.Held.transform.position), run);
                         float until = Time.realtimeSinceStartup + (step.kind == ProbeStep.Kind.Squeeze ? step.seconds + 4 : 4);
                         while (Time.realtimeSinceStartup < until && runner.Current.steps.Current == stepBefore && runner.Current.steps.CurrentDone == doneBefore && runner.LastResult == null) yield return null;
                         run.notes += "auto " + step.kind + ": step " + stepBefore + " -> " + runner.Current.steps.Current + " (" + runner.Feedback + ") | ";
@@ -437,7 +439,7 @@ namespace GripRehab
                 if (Camera && ApartmentExperience.AssistSetting >= AssistLevel.Medium)
                 {
                     // A patient moves the teapot toward the cup (part of the way in intent mode), then the assist finishes.
-                    yield return IntentReachTo(app.ActiveHand.transform.position + (tea.AimWant - tea.SpoutTipWorld), run);
+                    yield return IntentReachTo(app.TrackedHandPosition + (tea.AimWant - tea.SpoutTipWorld), run);
                     float until = Time.realtimeSinceStartup + 6; while (Time.realtimeSinceStartup < until && tea.AimError > .015f) yield return null;
                     run.notes += "assist brought the spout to " + (tea.AimError * 1000).ToString("0") + " mm | ";
                 }

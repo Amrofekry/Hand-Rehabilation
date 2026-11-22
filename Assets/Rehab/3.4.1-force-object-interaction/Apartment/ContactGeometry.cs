@@ -46,9 +46,13 @@ public static class ContactGeometry {
  public static float LimitAngle<T>(float target,ref T depthAt,float tolerance,int iterations=7,float minimum=0) where T:struct,IAngleDepth{
   if(!float.IsFinite(minimum)||minimum>0)minimum=0;
   if(!float.IsFinite(target))return 0;
-  if(depthAt.Depth(target)<=tolerance)return target;
   float low=Math.Min(minimum,target),high=target;
   if(depthAt.Depth(low)>tolerance)return low;
+  // The first contact along the closing sweep (2026-11-22): a finger closing on a thin object (a book) could pass it and
+  // end clear of it behind; checking only the final angle accepted that, so the pads never touched. Six steps, then bisect.
+  bool hit=false;float previous=low;
+  for(int k=1;k<=6;k++){float a=low+(target-low)*k/6f;if(depthAt.Depth(a)>tolerance){low=previous;high=a;hit=true;break;}previous=a;}
+  if(!hit)return target;
   for(int i=0;i<Math.Max(1,iterations);i++){
    float middle=(low+high)*.5f;
    if(depthAt.Depth(middle)<=tolerance)low=middle;else high=middle;

@@ -196,7 +196,7 @@ public sealed class TeaPouring : MonoBehaviour {
    // hand's own motion since then is added, so a shaking hand still shakes the cup at the mouth.
    // Only the hand's quick motion (tremor, a shake) is carried to the cup: the reference follows the hand slowly (0.4 s),
    // so the raise itself and slow drift are absorbed.
-   var handNow=app.ActiveHand.transform.position;
+   var handNow=app.TrackedHandPosition; // the tracked hand, not the one drawn on the cup (2026-11-22)
    mouthHandStart=app.HeldPivotBlend<=0?handNow:Vector3.Lerp(mouthHandStart,handNow,1-Mathf.Exp(-dt/.4f));
    app.HeldPivotWorld=MouthPoint+(handNow-mouthHandStart);app.HeldPivotBlend=Mathf.MoveTowards(app.HeldPivotBlend,1,2*dt);
    return;

@@ -14,6 +14,8 @@ public struct ContactReport {
  public float palmDepth;
  public int touchingPads, limitedJoints;
  public Vector3 towardPads, outOfPalm;
+ /// <summary>Unit direction that moves the object off the deepest finger segment (zero when nothing passes into it).</summary>
+ public Vector3 outOfFingers;
  public HandGrip shape;
  /// <summary>True when the object has a chart grip (GripProp); grip names it.</summary>
  public bool hasGrip;public GripType grip;
@@ -152,7 +154,9 @@ public static class GraspContactSolver {
     bool wraps=definition!=null?definition.Wraps(finger):Array.IndexOf(pads,finger*3+2)>=0;
     for(int j=0;j<3;j++){
      // Some chart grips may close past their photographed shape (CloseFactor); contact stops the finger at the surface.
-     int n=finger*3+j;float full=definition!=null?Mathf.Min(110,definition.curl[n]*definition.CloseFactor):HandRigRules.DemoLimit(finger,j);
+     // 2026-11-22: a wrapping finger closes until its first contact, up to the hand's own limit (the chart's photographed shape
+     // left the pads 7-9 mm off a 2.2 cm knife handle); ContactGeometry.LimitAngle stops it at the first touch on the way.
+     int n=finger*3+j;float full=definition!=null?Mathf.Max(Mathf.Min(110,definition.curl[n]*definition.CloseFactor),HandRigRules.DemoLimit(finger,j)):HandRigRules.DemoLimit(finger,j);
      float target=wraps?Mathf.Max(hand.JointCurl(n),full):hand.JointCurl(n);
      var depthAt=new JointDepth{hand=hand,surface=surface,n=n,finger=finger,joint=j,radius=radius};
      float allowed=ContactGeometry.LimitAngle(target,ref depthAt,tolerance,7,MinimumCurl(finger,j));
@@ -176,6 +180,7 @@ public static class GraspContactSolver {
   report.padGap=gap/pads.Length;padCentre/=pads.Length;
   var centre=item.Body!=null?item.Body.position:item.transform.position;
   report.towardPads=padCentre-centre;
+  if(report.maxPenetration>0){var away=centre-deepestPoint;if(away.sqrMagnitude>1e-8f)report.outOfFingers=away.normalized;}
   var palm=(hand.transform.position+joints[0].position+joints[3].position+joints[6].position+joints[9].position)/5f;
   report.palmDepth=Mathf.Max(0,SphereDepth(item,palm,PalmRadius));
   // A finger segment the curl limit cannot clear (already inside while open) is pushed out like the palm.
