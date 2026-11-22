@@ -2,6 +2,12 @@
 
 [Current closeout](history/CLOSEOUT_2026_10_06.md) supersedes the pending native/build statements in the historical entries below. The repaired Windows build passes 168/169/168 gameplay checks, 60 UI checks at each of two resolutions and 87 gallery checks at each of three resolutions. Three Play/Stop cycles pass after the TMP font fix. Live human-camera and physical hardware trials remain unverified. Voice remains future task 7; UI remains English.
 
+## 2026-11-22 v1.2.0 full regression (SYNTHETIC input, game windows)
+- `Tools/run_full_regression.py`: 24 of 29 suites passed: build, journey, UI, gallery, perf, contact (3), activity keyboard (3 runs), handlook, hand benchmark, voice, audio, fault probe, EditMode 10/10, console zero (0/0/0 at start and after play, MCP up), offline C#, Python, calibration, workspace, camera models, pytest 32.
+- 5 failures, one cause in the test hands, not the game: the synthetic camera hands had the middle knuckle 12-17 degrees off the wrist line (a real hand's sits above the wrist). With the absolute hand orientation (ADR-TRACK-3) they read as rolled: the player acceptance's rest-facing check failed (player checks and AI player smoke, replay, rendered stop there), and at L8 the held pan turned and could not reach the burner (activity, camera). With the old orientation code the L8 meal passed; with the new one it failed twice.
+- Fix: the acceptance and activity-probe hands are drawn anatomically (middle knuckle above the wrist); the acceptance tolerance is unchanged from before. Rerun: player checks, AI player smoke, replay, rendered pass; activity keyboard 14/14, camera 14/14, intent (70 % reach, tremor, Medium assist) 14/14; hand pose check 6 poses as expected (upright shows the back of the hand, thumb on the left).
+- Not covered here: a real hand with Camo (NEEDS A PERSON).
+
 ## 2026-10-02 menu input status
 
 Mouse, keyboard and the whole-hand MediaPipe pointer remain available. Five-second palm dwell and the managed-event cache repair are retained. Voice commands are not implemented; task 7 in [TASKS.md](history/TASKS.md) is future work. Earlier native/build evidence predates this removal; current file compilation and source-test evidence is separate.

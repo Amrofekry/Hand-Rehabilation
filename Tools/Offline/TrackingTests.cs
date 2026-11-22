@@ -22,6 +22,16 @@ class TrackingTests
         }
         return f;
     }
+    static LandmarkFrame AcceptanceFixture(bool left)
+    {
+        string side=left?"Left":"Right";float center=.5f,wristY=.5f;
+        var frame=new LandmarkFrame{schemaVersion=1,source="mediapipe-test",handedness=side,confidence=.96f,sequence=1,captureSeconds=1,landmarks=new Vector3[21]};
+        frame.landmarks[0]=new Vector3(center,wristY,0);
+        for(int finger=0;finger<4;finger++){int n=5+finger*4;float x=center+(left?-1:1)*(finger-1f)*.045f;
+            frame.landmarks[n]=new Vector3(x,wristY-.10f,0);frame.landmarks[n+1]=new Vector3(x,wristY-.18f,0);frame.landmarks[n+2]=new Vector3(x,wristY-.26f,0);frame.landmarks[n+3]=new Vector3(x,wristY-.34f,0);}
+        for(int i=1;i<5;i++)frame.landmarks[i]=new Vector3(center+(left?1:-1)*(.12f-i*.015f),wristY-.06f-i*.03f,0);
+        return frame;
+    }
     static FingerPoseDriver Driver(Quaternion rest)
     {
         var d=new FingerPoseDriver { joints=new Transform[15] };
@@ -45,6 +55,11 @@ class TrackingTests
     {
         string side=left?"Left":"Right";var d=Driver(authoredRest);var open=Frame(left,Quaternion.identity);
         Settle(d,open);var neutral=d.transform.localRotation;
+        // The player acceptance's own fixture (image landmarks only, no image size): relative rest, then camera rest.
+        {var f=AcceptanceFixture(left);var g=Driver(authoredRest);Settle(g,f,false);var rel=g.transform.localRotation;Settle(g,f,true);
+         var turn180=Quaternion.AngleAxis(180,Vector3.up)*Quaternion.AngleAxis(180,Vector3.forward);
+         float df=Vector3.Dot(g.transform.localRotation*Vector3.forward,turn180*rel*Vector3.forward),du=Vector3.Dot(g.transform.localRotation*Vector3.up,turn180*rel*Vector3.up);
+         Check(df>.99f&&du>.99f,side+" acceptance fixture (middle knuckle above the wrist): camera rest is the patient-facing turn of the relative rest: fwd "+df.ToString("0.000")+" up "+du.ToString("0.000"));}
         // 2026-11-22 absolute orientation: a hand that first appears tilted shows upright as soon as it is upright (the old
         // relative reference kept it tilted), and palm up (180 degrees from upright) is a clean half turn, not a sideways one.
         {var e=Driver(authoredRest);Settle(e,Frame(left,Quaternion.AngleAxis(70,Vector3.forward)));Settle(e,open);

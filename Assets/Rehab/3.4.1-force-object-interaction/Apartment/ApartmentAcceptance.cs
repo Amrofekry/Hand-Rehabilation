@@ -692,7 +692,7 @@ public sealed class ApartmentAcceptance:MonoBehaviour {
   var frame=new LandmarkFrame{schemaVersion=1,source="mediapipe-test",handedness=side,confidence=.96f,sequence=sequence,captureSeconds=captured,landmarks=new Vector3[21]};
   frame.landmarks[0]=new Vector3(center,wristY,0);
   for(int finger=0;finger<4;finger++){
-   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1.5f)*.045f*palmScale;
+   int n=5+finger*4;float x=center+(side=="Left"?-1:1)*(finger-1f)*.045f*palmScale; // middle knuckle above the wrist, as in a real hand (2026-11-22)
    frame.landmarks[n]=new Vector3(x,wristY-.10f,0);
    frame.landmarks[n+1]=new Vector3(x,wristY-.18f,0);
    frame.landmarks[n+2]=new Vector3(x,wristY+(closed?-.12f:-.26f),0);

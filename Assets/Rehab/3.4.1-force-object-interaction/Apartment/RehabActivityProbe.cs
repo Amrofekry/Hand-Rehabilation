@@ -603,7 +603,7 @@ namespace GripRehab
             f.landmarks[0] = new Vector3(cx, wy, 0);
             for (int finger = 0; finger < 4; finger++)
             {
-                int n = 5 + finger * 4; float x = cx + (finger - 1.5f) * .045f;
+                int n = 5 + finger * 4; float x = cx + (finger - 1f) * .045f; // middle knuckle above the wrist, as in a real hand (2026-11-22)
                 f.landmarks[n] = new Vector3(x, wy - .10f, 0);
                 f.landmarks[n + 1] = new Vector3(x, wy - .18f, 0);
                 f.landmarks[n + 2] = new Vector3(x, wy + Mathf.Lerp(-.26f, -.12f, c), 0);

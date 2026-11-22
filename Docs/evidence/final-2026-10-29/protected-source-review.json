@@ -28,8 +28,8 @@
     },
     "Assets/Rehab/3.4.1-force-object-interaction/Apartment/ApartmentAcceptance.cs": {
       "previousSha256": "5b62eae2d1c1389a0637b87aa62cd5ea1284cd38b7b084247190e355e9dba56d",
-      "currentSha256": "b197389e60023f85692aa6f0f4f0c0528c91bf4a9909c4432063974e308158b8",
-      "reason": "User-authorized final release (2026-10-29). Stale-landmark check waits out the 0.6 s loss grace of the hybrid hold rule before asserting release."
+      "currentSha256": "72c2b72fba82f95bdddb22918a4e2884a8b95d1ac33a2b3818935f56c80a991d",
+      "reason": "User-authorized final release (2026-10-29). 2026-11-22: camera fixture drawn with the middle knuckle above the wrist (absolute orientation); tolerance back to the original"
     },
     "Assets/_Recovery/0 (1).unity": {
       "previousSha256": "198658a6d2df4f8b486988497db1abf303b27b45fededd042063dd0aa71eb142",

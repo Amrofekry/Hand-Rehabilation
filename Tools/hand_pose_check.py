@@ -25,7 +25,7 @@ def right_hand():
     """21 points (m) of an open right hand, patient's frame, fingers up, palm toward the camera (+z), thumb on the left."""
     pts = [(0.0, 0.0, 0.0)]
     pts += [(-0.03, 0.03, 0.0), (-0.05, 0.05, 0.0), (-0.065, 0.07, 0.0), (-0.075, 0.09, 0.0)]  # thumb
-    for x in (-0.028, -0.009, 0.01, 0.028):  # index, middle, ring, little: index on the left
+    for x in (-0.019, 0.0, 0.019, 0.037):  # index, middle, ring, little: index on the left, middle above the wrist
         pts += [(x, 0.09, 0.0), (x, 0.125, 0.0), (x, 0.15, 0.0), (x, 0.17, 0.0)]
     return pts
 

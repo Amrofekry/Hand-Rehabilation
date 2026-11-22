@@ -1,102 +1,186 @@
 {
   "passed": false,
-  "complete": false,
-  "utc": "2026-11-17T22:46:34Z",
-  "commit": "6025180",
+  "complete": true,
+  "utc": "2026-11-22T01:28:21Z",
+  "commit": "9a53775",
   "uncommittedSourceChanges": [],
   "buildSkipped": false,
   "scope": "SYNTHETIC input in the Windows build and offline tests; no webcam, device or person",
-  "suites": 15,
+  "suites": 29,
   "results": [
     {
       "suite": "build",
       "passed": true,
-      "seconds": 57.5,
+      "seconds": 23.2,
       "detail": "Success"
     },
     {
       "suite": "run_player_checks.py",
-      "passed": true,
-      "seconds": 129.9,
-      "detail": ""
+      "passed": false,
+      "seconds": 6.2,
+      "detail": "      Peak Large allocation bytes 0 B"
     },
     {
       "suite": "run_ai_player_checks.py smoke",
-      "passed": true,
-      "seconds": 42.3,
-      "detail": ""
+      "passed": false,
+      "seconds": 5.7,
+      "detail": "      Peak Large allocation bytes 0 B"
     },
     {
       "suite": "run_ai_player_checks.py replay",
-      "passed": true,
-      "seconds": 44.6,
-      "detail": ""
+      "passed": false,
+      "seconds": 5.4,
+      "detail": "      Peak Large allocation bytes 0 B"
     },
     {
       "suite": "run_ai_player_checks.py rendered",
-      "passed": true,
-      "seconds": 46.3,
-      "detail": ""
+      "passed": false,
+      "seconds": 8.7,
+      "detail": "      Peak Large allocation bytes 0 B"
     },
     {
       "suite": "run_ai_player_checks.py journey",
       "passed": true,
-      "seconds": 71.1,
+      "seconds": 68.0,
       "detail": ""
     },
     {
       "suite": "run_ui_checks.py",
       "passed": true,
-      "seconds": 77.8,
+      "seconds": 61.8,
       "detail": ""
     },
     {
       "suite": "run_gallery_checks.py",
-      "passed": false,
-      "seconds": 100.5,
-      "detail": "subprocess.TimeoutExpired: Command '['E:\\\\GP\\\\codex\\\\GripRehab-Unity\\\\Builds\\\\Windows\\\\GripRehab.exe', '-apartment-gallery-smoke', '-force-d3d11', '-screen-fullscreen', '0', '-screen-width', '1280', '"
+      "passed": true,
+      "seconds": 24.7,
+      "detail": ""
     },
     {
       "suite": "run_perf_probe.py",
       "passed": true,
-      "seconds": 93.8,
+      "seconds": 91.6,
       "detail": ""
     },
     {
       "suite": "run_contact_probe.py",
       "passed": true,
-      "seconds": 437.4,
+      "seconds": 405.8,
       "detail": ""
     },
     {
       "suite": "run_contact_probe.py --grip-lab",
       "passed": true,
-      "seconds": 177.8,
+      "seconds": 168.7,
       "detail": ""
     },
     {
       "suite": "run_contact_probe.py --material-lab",
       "passed": true,
-      "seconds": 254.9,
+      "seconds": 243.8,
       "detail": ""
     },
     {
       "suite": "run_activity_probe.py",
-      "passed": false,
-      "seconds": 319.5,
-      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Pour and drink tea L2, Pour and drink tea L8"
+      "passed": true,
+      "seconds": 271.2,
+      "detail": ""
     },
     {
       "suite": "run_activity_probe.py",
-      "passed": false,
-      "seconds": 310.6,
-      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Pour and drink tea L2, Pour and drink tea L8"
+      "passed": true,
+      "seconds": 270.6,
+      "detail": ""
     },
     {
       "suite": "run_activity_probe.py",
+      "passed": true,
+      "seconds": 270.4,
+      "detail": ""
+    },
+    {
+      "suite": "run_activity_probe.py --camera",
       "passed": false,
-      "seconds": 310.3,
-      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Pour and drink tea L2, Pour and drink tea L8"
+      "seconds": 456.3,
+      "detail": "RuntimeError: Activity probe failed: exit 1, Not completed: Cook a simple meal L8"
+    },
+    {
+      "suite": "run_handlook_probe.py",
+      "passed": true,
+      "seconds": 41.0,
+      "detail": ""
+    },
+    {
+      "suite": "run_hand_benchmark.py after",
+      "passed": true,
+      "seconds": 46.4,
+      "detail": ""
+    },
+    {
+      "suite": "run_voice_probe.py",
+      "passed": true,
+      "seconds": 24.8,
+      "detail": ""
+    },
+    {
+      "suite": "run_audio_probe.py",
+      "passed": true,
+      "seconds": 30.9,
+      "detail": ""
+    },
+    {
+      "suite": "run_fault_probe.py",
+      "passed": true,
+      "seconds": 24.1,
+      "detail": ""
+    },
+    {
+      "suite": "EditMode",
+      "passed": true,
+      "seconds": 30.2,
+      "detail": "10/10 passed"
+    },
+    {
+      "suite": "console zero",
+      "passed": true,
+      "seconds": 60.1,
+      "detail": "startup 0,0,0, after play 0,0,0, MCP True"
+    },
+    {
+      "suite": "offline C# (meta, compile, tests)",
+      "passed": true,
+      "seconds": 96.0,
+      "detail": ""
+    },
+    {
+      "suite": "python: Tools",
+      "passed": true,
+      "seconds": 4.4,
+      "detail": "OK"
+    },
+    {
+      "suite": "python: tests/2.3-calibration",
+      "passed": true,
+      "seconds": 0.2,
+      "detail": "OK"
+    },
+    {
+      "suite": "workspace: verify_research_workspace.py",
+      "passed": true,
+      "seconds": 24.6,
+      "detail": ""
+    },
+    {
+      "suite": "camera models: check_research_camera_models.py",
+      "passed": true,
+      "seconds": 0.6,
+      "detail": ""
+    },
+    {
+      "suite": "pytest: ai-engine",
+      "passed": true,
+      "seconds": 24.4,
+      "detail": "32 passed in 22.49s"
     }
   ]
 }
