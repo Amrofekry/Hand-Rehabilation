@@ -39,7 +39,7 @@ Hand-grip rehabilitation game: the apartment and its activities, hand tracking b
 ## Git
 - One branch per task: `claude/<feature>`, from the current work branch. Make small commits and a checkpoint before risky changes.
 - Commit subjects start with the WBS ID and end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Stage named paths only.
-- No remote is configured, so nothing is pushed.
+- A GitHub remote (`origin`) exists; nothing is pushed without explicit approval.
 
 ## Tokens
 - Stay terse: tables and bullets, and list paths instead of pasting files.

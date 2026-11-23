@@ -1,6 +1,6 @@
 # State (2026-11-21, release v1.2.0)
 
-**Branch:** `claude/final-delivery` (from `claude/hand-mapping`). Remote `origin` (GitHub) exists; the assistant pushes nothing without your OK.
+**Branch:** `main` (2026-11-23: fast-forwarded to all work; the other 20 branches, all merged, deleted; version tags kept). Remote `origin` (GitHub) exists; `main` is ahead of it and the assistant pushes nothing without your OK.
 
 ## Where things stand
 - **Software:** every WBS item is built ([RELEASE_AUDIT](../RELEASE_AUDIT.md)). Nothing is in progress.
