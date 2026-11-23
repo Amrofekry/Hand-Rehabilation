@@ -62,3 +62,4 @@ __pycache__/
 
 # graphify knowledge graph output (regenerate with /graphify)
 /graphify-out/
+cleanup-log.txt
