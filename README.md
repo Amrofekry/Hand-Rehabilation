@@ -25,10 +25,13 @@ GripRehab-Unity/
 ├── Packages/  ProjectSettings/  Unity package list and settings (local packages: Tools/AI)
 ├── Builds/Windows/              the built game (GripRehab.exe)
 ├── Tools/                       everything that runs outside Unity
-│   ├── Vision/                  MediaPipe bridge, phone camera (USB / Phone Link), camera delay test
+│   ├── Vision/                  MediaPipe bridge (laptop webcam, Camo, Phone Link, USB phone), camera delay test
 │   ├── Offline/                 C# tests that run without Unity (offline_verify.py)
 │   ├── run_*.py                 game test suites (activity, handlook, perf, UI, ...); run_full_regression.py runs all
 │   ├── hand_lab_report.py  hand_replay.py  hand_depth_eval.py   real-hand recording, replay and analysis
+│   ├── hand_check_report.py     real hand vs game hand: mapping, depth, orientation, grip (one Hand Lab session)
+│   ├── hand_pose_check.py       SYNTHETIC hand poses into the game, screenshots of the virtual hand
+│   ├── test_*.py                Python tests (python -m unittest discover -s Tools -p "test_*.py")
 │   ├── AI/                      local Unity packages used by Packages/manifest.json
 │   └── release/                 installer, release and clean-up scripts
 ├── ai-engine/                   fatigue AI (data, training, ONNX export), research only
@@ -50,7 +53,8 @@ GripRehab-Unity/
 | Clean caches and old outputs | `powershell -ExecutionPolicy Bypass -File Tools/release/Cleanup-Project.ps1` |
 
 ## Camera
-- **Laptop webcam:** the default.
+- **Laptop webcam:** the default (its wide 1280x720 mode at 30 fps). Run CALIBRATE HAND once (Settings, or say "calibrate hand").
+- **Phone through Camo:** Camo Studio on the PC, the Camo app on the phone.
 - **Phone through Windows Phone Link:** connected camera, no cable.
 - **Phone over USB:** needs USB debugging.
 
