@@ -17,7 +17,10 @@ $paths = @(
   'ai-engine\.venv-ai-old', '.venv-old', '.venv-cv',
   'CVTraining\datasets', 'CVTraining\runs', 'CVTraining\cache',
   'firmware\.arduino-data', 'firmware\.arduino-downloads', 'firmware\.tools', 'firmware\.build',
-  '.local\scratch', 'graphify-out', '.mcp.json.bak', '.local\cache\pip', '.local\cache\npm'
+  '.local\scratch', 'graphify-out', '.mcp.json.bak', '.local\cache\pip', '.local\cache\npm',
+  # Unity's package download cache (2.5 GB): the project's packages are already in Library; Unity downloads into it again
+  # only if Library is rebuilt (needs the internet then). Added 2026-11-23.
+  '.local\cache\unity-upm'
 )
 foreach ($p in $paths) { if (Test-Path $p) { Write-Host "Deleting $p"; Remove-Item $p -Recurse -Force -ErrorAction Continue } }
 
@@ -40,7 +43,9 @@ Get-ChildItem -Path $root -Recurse -Force -Directory -ErrorAction SilentlyContin
   Where-Object { $_.FullName -notmatch '\\(Library|\.venv|ai-engine\\\.venv-ai)\\' } | ForEach-Object { Remove-Item $_.FullName -Recurse -Force -ErrorAction SilentlyContinue }
 
 # Tool cache: drop only entries nothing uses (the tools Claude runs, such as Unity MCP, start from this cache: never wiped).
-if (Test-Path '.local\bin\uv.exe') { $env:UV_CACHE_DIR = (Join-Path $root '.local\cache\uv'); & '.local\bin\uv.exe' cache prune }
+# Skipped while any uv tool runs (Claude's MCP servers): prune would wait for them forever (2026-11-23).
+if ((Test-Path '.local\bin\uv.exe') -and -not (Get-Process uv, uvx -ErrorAction SilentlyContinue)) { $env:UV_CACHE_DIR = (Join-Path $root '.local\cache\uv'); & '.local\bin\uv.exe' cache prune }
+else { Write-Host 'uv cache prune skipped: uv tools are running (run again with them closed)' }
 
 # Pack git's loose objects (keeps all history) and drop old local copies of large files git LFS already has (current ones stay).
 git gc --quiet
