@@ -8,6 +8,7 @@ $ErrorActionPreference = 'Continue'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 Set-Location $root
 function Size($p) { if (Test-Path $p) { [math]::Round(((Get-ChildItem $p -Recurse -Force -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum) / 1GB, 2) } else { 0 } }
+Write-Host "GripRehab cleanup. Measuring the project first (1-3 minutes, nothing else shows meanwhile)..."
 $before = Size $root
 Write-Host "Project before: $before GB"
 
@@ -22,6 +23,7 @@ $paths = @(
   # only if Library is rebuilt (needs the internet then). Added 2026-11-23.
   '.local\cache\unity-upm'
 )
+Write-Host "Deleting old outputs, environments and caches (several minutes)..."
 foreach ($p in $paths) { if (Test-Path $p) { Write-Host "Deleting $p"; Remove-Item $p -Recurse -Force -ErrorAction Continue } }
 
 # Hand Lab replays (re-creatable from the recordings).
