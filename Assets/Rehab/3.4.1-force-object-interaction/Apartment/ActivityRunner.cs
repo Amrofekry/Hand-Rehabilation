@@ -187,7 +187,8 @@ public sealed class ActivityRunner : MonoBehaviour {
   if(bottom<float.MaxValue)item.transform.position+=Vector3.up*(point.y-bottom+.002f);
   // Assisted placement rests the item exactly on the aimed surface and keeps it there (no settling physics, which
   // let a pan sink through the stove's open grate collider). Items let go into empty space still fall.
-  body.position=item.transform.position;body.rotation=rotation;body.velocity=Vector3.zero;body.angularVelocity=Vector3.zero;
+  // A kinematic body has no velocity to stop: setting it warns in the console (2026-11-23, Unity console).
+  body.position=item.transform.position;body.rotation=rotation;if(!body.isKinematic){body.velocity=Vector3.zero;body.angularVelocity=Vector3.zero;}
  }
  IEnumerator EvaluateLater(ActivityItem a){
   yield return new WaitForSeconds(.35f);
@@ -219,7 +220,7 @@ public sealed class ActivityRunner : MonoBehaviour {
   Refresh();CheckDone();
  }
  public void Snap(ActivityItem a,SnapTarget t){
-  t.occupants.Add(a);a.snappedTo=t;var item=a.Item;item.Body.isKinematic=true;item.Body.velocity=Vector3.zero;
+  t.occupants.Add(a);a.snappedTo=t;var item=a.Item;if(!item.Body.isKinematic){item.Body.velocity=Vector3.zero;item.Body.angularVelocity=Vector3.zero;}item.Body.isKinematic=true; // stop it first, then make it kinematic (no console warning)
   if(t.carrier!=null){a.transform.SetParent(t.carrier,true);SetColliders(a,false);}
   else{
    var w=t.WorldPosition;var p=item.transform.position;
