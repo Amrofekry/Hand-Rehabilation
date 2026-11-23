@@ -1,14 +1,15 @@
-# State (2026-11-21, release v1.2.0)
+# State (2026-11-23, release v1.3.0)
 
 **Branch:** `main` (2026-11-23: fast-forwarded to all work; the other 20 branches, all merged, deleted; version tags kept). Remote `origin` (GitHub) exists; `main` is ahead of it and the assistant pushes nothing without your OK.
 
 ## Where things stand
 - **Software:** every WBS item is built ([RELEASE_AUDIT](../RELEASE_AUDIT.md)). Nothing is in progress.
 - **Verify everything:** `ai-engine/.venv-ai/Scripts/python.exe Tools/run_full_regression.py` (Editor closed, about 75 min). The latest result is `Docs/full-regression.json`. `Tools/test_repo_hygiene.py` fails if a suite is missing from that runner or a document link is broken.
-- **Release files:** `.local/release/GripRehab-Setup-1.2.0.exe` and `GripRehab-1.2.0-portable.zip` (`Tools/release/stage_release.py --version <v>`).
+- **Release files:** `.local/release/GripRehab-Setup-1.3.0.exe` and `GripRehab-1.3.0-portable.zip` (`Tools/release/stage_release.py --version <v>`).
 - **Layout:** game code in `Assets/Rehab/<WBS>`; the WBS index for the assembly layers is in [PROJECT_MAP](PROJECT_MAP.md) (ADR-WBS-1). Superseded documents are in `Docs/history/`.
 
 ## Recent history
+- **v1.3.0 (2026-11-23):** the three standing goals (webcam mapping and depth with CALIBRATE HAND, orientation seen from behind the hand, natural grip with the object-led hand), the kinematic-velocity console fix, and the project cleanup (40 GB to 12 GB on disk).
 - **2026-11-22 (branch `claude/hand-goals`):** the three standing goals: object-led hand and grab range (ADR-GRIP-1); laptop webcam default with its wide mode and CALIBRATE HAND (ADR-MAP-1); `Tools/hand_check_report.py` compares a Hand Lab session's real hand with the game hand (mapping, orientation, grip).
 - **2026-11-22 (in v1.2.0):** camera-hand orientation is absolute, seen from behind the hand (ADR-TRACK-3); Camo is the default phone camera with a laptop-webcam fallback and a black-picture warning (ADR-PHONE-2).
 - **v1.2.0 (2026-11-21):** the camera hand is the main input. Movement assist (ADR-ASSIST-1, -2): it predicts the object or place and finishes the reach, brings tools to their work, and cuts and stirs by itself. Hand-controlled depth: toward the camera moves the hand forward (ADR-DEPTH-1). Phone camera through Phone Link or USB (ADR-PHONE-1). Tremor only while the hand holds (ADR-TEA-2). Activity probe (SYNTHETIC): keyboard, camera and 70 %-reach intent each 14/14. Root `README.md` folder map; `Tools/release/Cleanup-Project.ps1`.

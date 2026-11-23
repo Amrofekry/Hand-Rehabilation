@@ -98,10 +98,15 @@ namespace GripRehab
             Application.Quit(report.passed ? 0 : 1);
         }
 
-        Run holdRun;
+        Run holdRun; SqueezableObject shotHeld; float shotHeldSince; bool shotTaken;
         void LateUpdate()
         {
-            var r = holdRun; if (r == null || app == null || app.Held == null) return;
+            var r = holdRun;
+            // One picture of each held object a second into the hold, level 2 (grip review, 2026-11-23): the game's view only.
+            if (app != null && app.Held != shotHeld) { shotHeld = app.Held; shotHeldSince = Time.realtimeSinceStartup; shotTaken = false; }
+            if (r != null && shotHeld != null && !shotTaken && r.level == 2 && Time.realtimeSinceStartup - shotHeldSince > 1f)
+            { shotTaken = true; StartCoroutine(Shot("hold-" + (Camera ? "camera-" : "keys-") + shotHeld.name.Replace(' ', '-'))); }
+            if (r == null || app == null || app.Held == null) return;
             var c = app.LastContact; if (!c.valid) return;
             r.holdFrames++;
             r.penetrations.Add(c.maxPenetration * 1000); r.corrections.Add(app.HoldSeparation * 1000);

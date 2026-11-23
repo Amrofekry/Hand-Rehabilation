@@ -1,6 +1,6 @@
 # GripRehab status: single source of truth
 
-Updated 2026-11-21 (release v1.2.0). The plan-by-plan audit is [RELEASE_AUDIT.md](RELEASE_AUDIT.md). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history; [README.md](README.md) is the index.
+Updated 2026-11-23 (release v1.3.0). The plan-by-plan audit is [RELEASE_AUDIT.md](RELEASE_AUDIT.md). If another document disagrees with this file, this file wins. Older documents in `Docs/` are dated history; [README.md](README.md) is the index.
 
 | Item | Current value |
 |---|---|
